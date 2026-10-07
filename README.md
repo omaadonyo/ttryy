@@ -13,8 +13,10 @@ This repository contains the Ttryy marketing landing page, built on
 
 ## What the landing page includes
 
-- **Hero** — "We Build Your Website. You Find the Customers." with workflow
-  visual (Business → Website → Prospects → Opportunities → You Close)
+- **Hero** — "We Build Your Website. We Find the Customers. You Close Them."
+  with an interactive **prospect-scraper demo**: pick a niche (or describe the
+  business), watch 10 sample records stream into a PDF preview, with 500–1,000
+  further records blurred until a UGX 10,000 unlock (demo data only)
 - **The Problem** — why a website alone doesn't bring business
 - **How It Works** — 4-step process (niche → website → market → close)
 - **More Than a Website** — website, custom CMS (no WordPress), SEO,
