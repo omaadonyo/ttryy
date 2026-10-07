@@ -158,7 +158,7 @@
               <svg class="w-5 h-5 text-zinc-400"><use href="#i-doc"/></svg>
               <span id="pdfName" class="text-[13px] font-semibold text-zinc-800 dark:text-zinc-200">prospects.pdf</span>
               <span id="pdfCount" class="ml-auto text-[11px] font-semibold text-zinc-500">0 records</span>
-              <button id="pdfDl" onclick="downloadSamplePdf()" class="hidden ml-2 shrink-0 text-[11px] font-bold text-zinc-900 dark:text-white border border-zinc-300 dark:border-white/20 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 rounded-full px-3 py-1 transition">Download PDF</button>
+              <button id="pdfDl" onclick="downloadSamplePdf()" class="hidden ml-2 shrink-0 text-[11px] font-bold text-zinc-950 bg-white border border-zinc-200 shadow-sm hover:bg-zinc-950 hover:text-white hover:border-zinc-950 rounded-full px-3 py-1 transition">Download PDF</button>
             </div>
             <div id="scrapeRows" class="divide-y divide-zinc-100 dark:divide-white/5 max-h-72 overflow-y-auto">
               <p id="scrapeEmpty" class="px-4 py-8 text-center text-sm text-zinc-400">Choose your niche and hit <strong>Scrape</strong> to pull 10 sample records.</p>
@@ -180,7 +180,7 @@
 </section>
 
 <!-- READING GUIDE (sticky) -->
-<div class="sticky top-16 lg:top-[72px] z-40 bg-white/90 dark:bg-[#0A0A0B]/90 backdrop-blur-xl">
+  <div id="guideBar" class="sticky top-16 lg:top-[72px] z-40 bg-white/90 dark:bg-[#0A0A0B]/90 backdrop-blur-xl">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-2 overflow-x-auto">
       <span class="hidden md:inline text-xs font-semibold text-zinc-500 shrink-0 mr-1">New here? Read in order:</span>
       <a href="#what" data-spy="what" class="spy-link shrink-0 text-[13px] font-semibold rounded-full border border-zinc-200 dark:border-white/15 px-4 py-1.5 text-zinc-600 dark:text-zinc-300 hover:border-zinc-950 dark:hover:border-white transition">1 &middot; What we do</a>
@@ -355,7 +355,7 @@
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">How we can help &middot; Your niche</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">We Don&rsquo;t Give You Random Contacts.</h2>
       <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Your potential customers are selected around <strong class="text-zinc-900 dark:text-white">what you actually sell.</strong> Search your industry below to see what your package would cover.</p>
-      <div class="sticky top-16 lg:top-[72px] z-30 mt-6 -mx-4 px-4 sm:-mx-6 sm:px-6 py-3 bg-white/90 dark:bg-[#0A0A0B]/90 backdrop-blur-xl">
+      <div id="nicheBar" class="sticky top-16 lg:top-[72px] z-30 mt-6 -mx-4 px-4 sm:-mx-6 sm:px-6 py-3 bg-white/90 dark:bg-[#0A0A0B]/90 backdrop-blur-xl">
         <div class="flex flex-col sm:flex-row gap-3 max-w-3xl">
         <div class="relative flex-1">
           <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg>
@@ -419,7 +419,7 @@
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0 text-zinc-400 dark:text-zinc-500"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <button onclick="openLead('START')" class="mt-7 w-full border-2 border-zinc-950 dark:border-white/30 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 font-bold py-3 rounded-full transition">Get Started</button>
+        <button onclick="openLead('START')" class="mt-7 w-full bg-white text-zinc-950 border border-zinc-200 dark:border-white/25 shadow-sm hover:bg-zinc-950 hover:text-white hover:border-zinc-950 dark:hover:bg-zinc-200 dark:hover:text-zinc-950 dark:hover:border-white font-bold py-3 rounded-full transition">Get Started</button>
       </div>
       <!-- GROW -->
       <div class="reveal relative bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 rounded-xl p-6 flex flex-col lg:scale-[1.05] shadow-2xl shadow-zinc-950/30 ring-1 ring-zinc-950/10 dark:ring-white/20 order-2">
@@ -448,7 +448,7 @@
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0 text-zinc-400 dark:text-zinc-500"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <button onclick="openLead('BUSINESS')" class="mt-7 w-full border-2 border-zinc-950 dark:border-white/30 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 font-bold py-3 rounded-full transition">Choose Business</button>
+        <button onclick="openLead('BUSINESS')" class="mt-7 w-full bg-white text-zinc-950 border border-zinc-200 dark:border-white/25 shadow-sm hover:bg-zinc-950 hover:text-white hover:border-zinc-950 dark:hover:bg-zinc-200 dark:hover:text-zinc-950 dark:hover:border-white font-bold py-3 rounded-full transition">Choose Business</button>
       </div>
     </div>
     <!-- comparison table -->
@@ -865,11 +865,13 @@ function toggleTheme(){ const next=currentTheme()==='dark'?'light':'dark'; docum
     cloneTable.style.width=table.offsetWidth+'px';
     origThs.forEach((th,i)=>{ if(cloneThs[i]) cloneThs[i].style.width=th.offsetWidth+'px'; });
   }
+  function stickyTop(){ const g=document.getElementById('guideBar'); return nav.offsetHeight+(g?g.offsetHeight:0); }
   function update(){
-    const r=table.getBoundingClientRect(), navH=nav.offsetHeight, headH=origHead.offsetHeight||56;
-    const show=r.top<navH&&r.bottom>navH+headH;
+    const r=table.getBoundingClientRect(), top=stickyTop(), headH=origHead.offsetHeight||56;
+    const show=r.top<top&&r.bottom>top+headH;
     bar.classList.toggle('hidden',!show);
-    if(show){ bar.style.top=navH+'px'; cloneTable.style.transform='translateX('+(-wrap.scrollLeft)+'px)'; }
+    if(show){ bar.style.top=top+'px'; cloneTable.style.transform='translateX('+(-wrap.scrollLeft)+'px)'; }
+    const nb=document.getElementById('nicheBar'); if(nb) nb.style.top=top+'px';
   }
   let ticking=false;
   function onScroll(){ if(ticking) return; ticking=true; requestAnimationFrame(()=>{ update(); ticking=false; }); }
@@ -882,25 +884,26 @@ function toggleTheme(){ const next=currentTheme()==='dark'?'light':'dark'; docum
 })();
 
 /* ---------- SMOOTH SCROLL + SCROLLSPY ---------- */
+function stickyOffset(){ const nav=document.getElementById('nav'), g=document.getElementById('guideBar'); return (nav?nav.offsetHeight:64)+(g?g.offsetHeight:0)+12; }
+function goToHash(hash){
+  const el=document.querySelector(hash); if(!el) return;
+  const top=el.getBoundingClientRect().top+window.scrollY-stickyOffset();
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ window.scrollTo(0,top); return; }
+  const from=window.scrollY, dist=top-from, t0=performance.now(), dur=900;
+  function step(t){ const p=Math.min((t-t0)/dur,1), ez=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+    window.scrollTo(0,from+dist*ez); if(p<1) requestAnimationFrame(step); }
+  requestAnimationFrame(step);
+}
+document.addEventListener('click',e=>{
+  if(!e.target||!e.target.closest) return;
+  const a=e.target.closest('a[href^="#"]'); if(!a) return;
+  const hash=a.getAttribute('href'); if(!hash||hash.length<2||!document.querySelector(hash)) return;
+  e.preventDefault();
+  mobileMenu.classList.add('hidden'); mO.classList.remove('hidden'); mC.classList.add('hidden');
+  try{ history.replaceState(null,'',hash); }catch(err){}
+  requestAnimationFrame(()=>goToHash(hash));
+});
 (function(){
-  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function goTo(hash){
-    const el=document.querySelector(hash); if(!el) return;
-    const top=el.getBoundingClientRect().top+window.scrollY-84;
-    if(reduce){ window.scrollTo(0,top); return; }
-    const from=window.scrollY, dist=top-from, t0=performance.now(), dur=900;
-    function step(t){ const p=Math.min((t-t0)/dur,1), ez=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
-      window.scrollTo(0,from+dist*ez); if(p<1) requestAnimationFrame(step); }
-    requestAnimationFrame(step);
-  }
-  document.querySelectorAll('a[href^="#"]').forEach(a=>{
-    a.addEventListener('click',e=>{
-      const hash=a.getAttribute('href'); if(!hash||hash.length<2||!document.querySelector(hash)) return;
-      e.preventDefault();
-      try{ history.replaceState(null,'',hash); }catch(err){}
-      goTo(hash);
-    });
-  });
   const spyLinks=[...document.querySelectorAll('[data-spy]')];
   if(spyLinks.length&&'IntersectionObserver' in window){
     const secs=spyLinks.map(l=>document.getElementById(l.dataset.spy)).filter(Boolean);
