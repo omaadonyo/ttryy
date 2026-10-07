@@ -406,6 +406,7 @@
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">How we can help &middot; Pricing</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Choose Your Growth Package</h2>
       <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Every package includes a professional website, custom CMS, SEO and a niche-specific business development resource.</p>
+      <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pay in full, or spread it with Ttryy payment plans — monthly, daily, or weekly. From <strong class="text-zinc-950 dark:text-white">UGX 700/day</strong>.</p>
     </div>
     <div class="mt-10 grid lg:grid-cols-3 gap-6 items-stretch max-w-6xl mx-auto">
       <!-- START -->
@@ -413,6 +414,14 @@
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">START</p>
         <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white">UGX 250,000</p>
         <p class="text-xs text-zinc-500 mt-2">100% deposit to start</p>
+        <div class="mt-4 rounded-xl bg-white dark:bg-[#1E1E22] shadow-sm p-4">
+          <p class="text-[11px] font-bold uppercase tracking-wide text-zinc-500">Or spread it out</p>
+          <div class="mt-2 space-y-1.5 text-sm">
+            <div class="flex justify-between gap-2"><span class="text-zinc-500">12-month plan</span><strong class="text-zinc-950 dark:text-white">UGX 21,000/mo</strong></div>
+            <div class="flex justify-between gap-2"><span class="text-zinc-500">365-day plan</span><strong class="text-zinc-950 dark:text-white">UGX 700/day</strong></div>
+            <div class="flex justify-between gap-2"><span class="text-zinc-500">Approx. weekly</span><strong class="text-zinc-950 dark:text-white">UGX 4,800/week</strong></div>
+          </div>
+        </div>
         <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-3">For businesses getting online and starting prospecting.</p>
         <ul class="mt-6 space-y-2.5 text-sm flex-1 text-zinc-700 dark:text-zinc-300">
           @foreach(['Full professional website','Custom CMS','Mobile responsive','SEO included','5,000 niche-specific potential customers','Lead/resource PDF','100 application/opportunity resources','Contact/lead forms','WhatsApp integration','No WordPress'] as $f)
@@ -427,6 +436,14 @@
         <p class="font-display font-bold text-sm tracking-wide text-white/70 dark:text-zinc-500">GROW</p>
         <p class="mt-2 font-display font-extrabold text-4xl">UGX 350,000</p>
         <p class="text-xs text-white/70 dark:text-zinc-500 mt-2">60% deposit to start</p>
+        <div class="mt-4 rounded-xl bg-white/10 dark:bg-zinc-100 p-4">
+          <p class="text-[11px] font-bold uppercase tracking-wide text-white/60 dark:text-zinc-500">Or spread it out</p>
+          <div class="mt-2 space-y-1.5 text-sm">
+            <div class="flex justify-between gap-2"><span class="text-white/60 dark:text-zinc-500">12-month plan</span><strong>UGX 30,000/mo</strong></div>
+            <div class="flex justify-between gap-2"><span class="text-white/60 dark:text-zinc-500">365-day plan</span><strong>UGX 1,000/day</strong></div>
+            <div class="flex justify-between gap-2"><span class="text-white/60 dark:text-zinc-500">Approx. weekly</span><strong>UGX 6,700/week</strong></div>
+          </div>
+        </div>
         <p class="text-sm text-white/80 dark:text-zinc-600 mt-3">For businesses ready to actively pursue customers and opportunities.</p>
         <p class="text-xs font-semibold text-white/60 dark:text-zinc-500 mt-5 uppercase tracking-wider">Everything in Start, plus:</p>
         <ul class="mt-3 space-y-2.5 text-sm flex-1">
@@ -441,6 +458,14 @@
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">BUSINESS</p>
         <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white">UGX 650,000</p>
         <p class="text-xs text-zinc-500 mt-2">70% deposit to start</p>
+        <div class="mt-4 rounded-xl bg-white dark:bg-[#1E1E22] shadow-sm p-4">
+          <p class="text-[11px] font-bold uppercase tracking-wide text-zinc-500">Or spread it out</p>
+          <div class="mt-2 space-y-1.5 text-sm">
+            <div class="flex justify-between gap-2"><span class="text-zinc-500">12-month plan</span><strong class="text-zinc-950 dark:text-white">UGX 55,000/mo</strong></div>
+            <div class="flex justify-between gap-2"><span class="text-zinc-500">365-day plan</span><strong class="text-zinc-950 dark:text-white">UGX 1,800/day</strong></div>
+            <div class="flex justify-between gap-2"><span class="text-zinc-500">Approx. weekly</span><strong class="text-zinc-950 dark:text-white">UGX 12,500/week</strong></div>
+          </div>
+        </div>
         <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-3">For businesses that want a larger business-development database.</p>
         <p class="text-xs font-semibold text-zinc-500 mt-5 uppercase tracking-wider">Everything in Grow, plus:</p>
         <ul class="mt-3 space-y-2.5 text-sm flex-1 text-zinc-700 dark:text-zinc-300">
@@ -457,7 +482,7 @@
       <table id="featTable" class="tbl w-full text-sm min-w-[640px]">
         <thead class="tbl-head"><tr class="text-white text-left"><th class="px-6 py-4 font-bold whitespace-nowrap rounded-tl-xl">Feature</th><th class="px-6 py-4 font-bold whitespace-nowrap">Start</th><th class="px-6 py-4 font-bold whitespace-nowrap">Grow</th><th class="px-6 py-4 font-bold whitespace-nowrap rounded-tr-xl">Business</th></tr></thead>
         <tbody class="tbl-body divide-y divide-zinc-100 dark:divide-white/10 text-zinc-700 dark:text-zinc-300">
-          @php $rows=[['Price','UGX 250K','UGX 350K','UGX 650K'],['Deposit','100%','60%','70%'],['Professional website','Yes','Yes','Yes'],['Custom CMS','Yes','Yes','Yes'],['WordPress','No','No','No'],['SEO','Yes','Yes','Yes'],['Mobile responsive','Yes','Yes','Yes'],['Domain + hosting setup','Yes','Yes','Yes'],['SSL certificate','Yes','Yes','Yes'],['Business email setup','No','Yes','Yes'],['Gallery / portfolio pages','No','Yes','Yes'],['Blog / news section','No','No','Yes'],['Google Analytics + Maps setup','No','Yes','Yes'],['Social media integration','Yes','Yes','Yes'],['Social media pages setup','No','Yes','Yes'],['Social profile branding','No','Yes','Yes'],['Social marketing starter plan','No','No','Yes'],['Google Ads setup','No','No','Yes'],['Facebook + Instagram ads','No','No','Yes'],['YouTube ads setup','No','No','Yes'],['Niche potential customers','5,000','5,000','5,000'],['Application/opportunity resources','100','200','2,000'],['Business directory contacts','—','—','2,000'],['Lead/resource PDF','Yes','Yes','Yes'],['Contact forms','Yes','Yes','Yes'],['WhatsApp integration','Yes','Yes','Yes'],['Proposal resources','Yes','Yes','Yes'],['Quotation resources','Yes','Yes','Yes'],['Maintenance + support','1 month','3 months','6 months']]; @endphp
+          @php $rows=[['Price','UGX 250K','UGX 350K','UGX 650K'],['12-month plan','UGX 21,000/mo','UGX 30,000/mo','UGX 55,000/mo'],['365-day plan','UGX 700/day','UGX 1,000/day','UGX 1,800/day'],['Approx. weekly','UGX 4,800/wk','UGX 6,700/wk','UGX 12,500/wk'],['Deposit','100%','60%','70%'],['Professional website','Yes','Yes','Yes'],['Custom CMS','Yes','Yes','Yes'],['WordPress','No','No','No'],['SEO','Yes','Yes','Yes'],['Mobile responsive','Yes','Yes','Yes'],['Domain + hosting setup','Yes','Yes','Yes'],['SSL certificate','Yes','Yes','Yes'],['Business email setup','No','Yes','Yes'],['Gallery / portfolio pages','No','Yes','Yes'],['Blog / news section','No','No','Yes'],['Google Analytics + Maps setup','No','Yes','Yes'],['Social media integration','Yes','Yes','Yes'],['Social media pages setup','No','Yes','Yes'],['Social profile branding','No','Yes','Yes'],['Social marketing starter plan','No','No','Yes'],['Google Ads setup','No','No','Yes'],['Facebook + Instagram ads','No','No','Yes'],['YouTube ads setup','No','No','Yes'],['Niche potential customers','5,000','5,000','5,000'],['Application/opportunity resources','100','200','2,000'],['Business directory contacts','—','—','2,000'],['Lead/resource PDF','Yes','Yes','Yes'],['Contact forms','Yes','Yes','Yes'],['WhatsApp integration','Yes','Yes','Yes'],['Proposal resources','Yes','Yes','Yes'],['Quotation resources','Yes','Yes','Yes'],['Maintenance + support','1 month','3 months','6 months']]; @endphp
           @foreach($rows as $r)
           <tr class="hover:bg-zinc-50 dark:hover:bg-white/5"><td class="px-6 py-3 font-medium">{{ $r[0] }}</td>@foreach([$r[1],$r[2],$r[3]] as $c)<td class="px-6 py-3">@if($c==='Yes')<svg class="w-5 h-5 text-zinc-700 dark:text-zinc-200"><use href="#i-check"/></svg>@elseif($c==='No'||$c==='—')<svg class="w-5 h-5 text-zinc-300 dark:text-zinc-600"><use href="#i-x"/></svg>@else{{ $c }}@endif</td>@endforeach</tr>
           @endforeach
