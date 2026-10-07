@@ -34,7 +34,17 @@
   .niche-card{ transition:transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s, border-color .3s; }
   .niche-card:hover{ transform:translateY(-5px); box-shadow:0 24px 48px -20px rgba(158,0,93,.28); }
   .spy-link.spy-active{ background:#9e005d; border-color:#9e005d; color:#fff; }
-  .reveal.bg-white{ box-shadow:0 2px 14px -6px rgba(10,10,12,.10); }
+  thead.tbl-head th{ background:#9e005d; }
+  @media(min-width:768px){
+    thead.tbl-head th{ position:sticky; top:64px; z-index:20; box-shadow:0 14px 24px -14px rgba(10,10,12,.55); }
+  }
+  @media(min-width:1024px){ thead.tbl-head th{ top:72px; } }
+  @media(max-width:767px){
+    thead.tbl-head th:first-child, tbody.tbl-body td:first-child{ position:sticky; left:0; z-index:10; background:#fff; box-shadow:10px 0 18px -12px rgba(10,10,12,.4); }
+    .dark tbody.tbl-body td:first-child{ background:#141416; }
+    thead.tbl-head th:first-child{ z-index:30; background:#9e005d; }
+  }
+  .reveal.bg-white{ box-shadow:0 12px 32px -12px rgba(10,10,12,.28); }
   .dark .reveal.bg-white{ box-shadow:0 8px 28px -10px rgba(0,0,0,.8); }
   .record-in{ animation:fadeSlide .45s cubic-bezier(.22,.61,.36,1) both; }
   .scan-pulse{ animation:scanPulse 1.1s ease-in-out infinite; }
@@ -445,11 +455,11 @@
       </div>
     </div>
     <!-- comparison table -->
-    <div class="reveal mt-10 bg-white dark:bg-[#141416] rounded-xl   overflow-hidden max-w-6xl mx-auto">
+    <div class="reveal mt-10 bg-white dark:bg-[#141416] rounded-xl max-w-6xl mx-auto">
       <div class="overflow-x-auto md:overflow-visible">
       <table class="w-full text-sm min-w-[640px]">
-        <thead><tr class="text-white text-left"><th class="px-6 py-4 font-bold bg-[#9e005d] md:sticky md:top-16 lg:top-[72px] z-10">Feature</th><th class="px-6 py-4 font-bold bg-[#9e005d] md:sticky md:top-16 lg:top-[72px] z-10">Start</th><th class="px-6 py-4 font-bold bg-[#9e005d] md:sticky md:top-16 lg:top-[72px] z-10">Grow</th><th class="px-6 py-4 font-bold bg-[#9e005d] md:sticky md:top-16 lg:top-[72px] z-10">Business</th></tr></thead>
-        <tbody class="divide-y divide-zinc-100 dark:divide-white/10 text-zinc-700 dark:text-zinc-300">
+        <thead class="tbl-head"><tr class="text-white text-left"><th class="px-6 py-4 font-bold whitespace-nowrap rounded-tl-xl">Feature</th><th class="px-6 py-4 font-bold whitespace-nowrap">Start</th><th class="px-6 py-4 font-bold whitespace-nowrap">Grow</th><th class="px-6 py-4 font-bold whitespace-nowrap rounded-tr-xl">Business</th></tr></thead>
+        <tbody class="tbl-body divide-y divide-zinc-100 dark:divide-white/10 text-zinc-700 dark:text-zinc-300">
           @php $rows=[['Price','UGX 250K','UGX 350K','UGX 650K'],['Deposit','100%','60%','70%'],['Professional website','Yes','Yes','Yes'],['Custom CMS','Yes','Yes','Yes'],['WordPress','No','No','No'],['SEO','Yes','Yes','Yes'],['Mobile responsive','Yes','Yes','Yes'],['Domain + hosting setup','Yes','Yes','Yes'],['SSL certificate','Yes','Yes','Yes'],['Business email setup','No','Yes','Yes'],['Gallery / portfolio pages','No','Yes','Yes'],['Blog / news section','No','No','Yes'],['Google Analytics + Maps setup','No','Yes','Yes'],['Social media integration','Yes','Yes','Yes'],['Social media pages setup','No','Yes','Yes'],['Social profile branding','No','Yes','Yes'],['Social marketing starter plan','No','No','Yes'],['Niche potential customers','5,000','5,000','5,000'],['Application/opportunity resources','100','200','2,000'],['Business directory contacts','—','—','2,000'],['Lead/resource PDF','Yes','Yes','Yes'],['Contact forms','Yes','Yes','Yes'],['WhatsApp integration','Yes','Yes','Yes'],['Proposal resources','Yes','Yes','Yes'],['Quotation resources','Yes','Yes','Yes'],['Maintenance + support','1 month','3 months','6 months']]; @endphp
           @foreach($rows as $r)
           <tr class="hover:bg-zinc-50 dark:hover:bg-white/5"><td class="px-6 py-3 font-medium">{{ $r[0] }}</td>@foreach([$r[1],$r[2],$r[3]] as $c)<td class="px-6 py-3">@if($c==='Yes')<svg class="w-5 h-5 text-[#9e005d]"><use href="#i-check"/></svg>@elseif($c==='No'||$c==='—')<svg class="w-5 h-5 text-zinc-300 dark:text-zinc-600"><use href="#i-x"/></svg>@else{{ $c }}@endif</td>@endforeach</tr>
