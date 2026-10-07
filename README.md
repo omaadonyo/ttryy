@@ -53,6 +53,22 @@ routes/web.php                      # Route::view('/', 'welcome')
 resources/css/app.css               # Tailwind entry
 ```
 
+## Accounts & checkout
+
+Choosing a package sends the visitor through login/register (Fortify, with
+`intended()` redirects back to checkout), then to a checkout page where they
+pick a package, a billing rhythm (full / monthly / weekly / daily), and **how
+long they want to pay to keep their website running** (3–24 months for
+installments; full payment covers 12 months). Totals are always recomputed
+server-side (`CheckoutController::quote()`), stored as `package_orders`
+(`pending` status), and confirmed with an order reference plus a WhatsApp
+follow-up link. Customers can review their orders at `/my-packages`.
+
+```bash
+php artisan migrate                 # creates package_orders (use XAMPP's PHP on Windows: C:\xampp\php\php.exe)
+php artisan test --filter=CheckoutTest
+```
+
 ## Getting started
 
 Requirements: PHP 8.3+, Composer, Node.js 20+.

@@ -97,7 +97,10 @@
         <svg class="w-5 h-5"><use href="#i-chat"/></svg>
         WhatsApp
       </a>
-      <button onclick="openLead('')" class="bg-[#9e005d] hover:bg-[#7e0049] text-white text-sm font-bold px-6 py-2 rounded-full transition shadow-lg shadow-[#9e005d]/25">Get Started</button>
+      <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white text-sm font-bold px-6 py-2 rounded-full transition shadow-lg shadow-[#9e005d]/25">Get Started</a>
+      @auth
+      <a href="/my-packages" class="hidden md:inline-flex text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">My packages</a>
+      @endauth
       <button id="menuBtn" class="lg:hidden p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/10" aria-label="Menu">
         <svg id="menuOpen" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
         <svg id="menuClose" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
@@ -112,7 +115,10 @@
     <a href="#pricing" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Pricing</a>
     <a href="#tools" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Business Tools</a>
     <a href="#faq" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">FAQ</a>
-    <button onclick="openLead('')" class="w-full mt-2 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full">Get Started</button>
+    <a href="/checkout" class="block text-center w-full mt-2 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full">Get Started</a>
+    @auth
+    <a href="/my-packages" class="block text-center w-full mt-2 border border-zinc-300 dark:border-white/20 font-bold py-3 rounded-full">My packages</a>
+    @endauth
   </div>
 </header>
 
@@ -130,7 +136,7 @@
         Get a professional, SEO-ready business website plus targeted potential customers and business opportunities specific to your niche. We help you get online and find where the business is. <strong class="text-zinc-900 dark:text-white">Your job is to close the client.</strong>
       </p>
       <div class="mt-8 flex flex-col sm:flex-row gap-3">
-        <button onclick="openLead('')" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/25">Get Your Website</button>
+        <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/25 text-center">Get Your Website</a>
         <a href="#pricing" class="inline-flex justify-center items-center border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold px-7 py-3 rounded-full text-base transition">View Packages</a>
       </div>
       <p class="mt-5 text-sm text-zinc-500">Starting from <strong class="text-zinc-900 dark:text-white">UGX 250,000</strong>. No WordPress. Full CMS. SEO included.</p>
@@ -215,7 +221,7 @@
       </div>
     </div>
     <div class="mt-8 reveal flex flex-col sm:flex-row gap-3">
-      <button onclick="openLead('')" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Get Your Website</button>
+      <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25 text-center">Get Your Website</a>
       <a href="#why" class="inline-flex justify-center items-center font-bold px-8 py-3 rounded-full border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white transition">Next: why this works &rarr;</a>
     </div>
   </div>
@@ -276,7 +282,7 @@
       <div><p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Proof &middot; Our work</p>
         <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Websites We&rsquo;ve Built</h2>
         <p class="text-zinc-600 dark:text-zinc-400 mt-2">Placeholder concepts showing the standard each site ships to.</p></div>
-      <button onclick="openLead('')" class="shrink-0 border-2 border-zinc-950 dark:border-white/30 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 font-bold px-6 py-3 rounded-full transition text-sm">Get One Like This</button>
+      <a href="/checkout" class="shrink-0 border-2 border-zinc-950 dark:border-white/30 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 font-bold px-6 py-3 rounded-full transition text-sm text-center">Get One Like This</a>
     </div>
     <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
       @php $works=[['SB','Savanna Build Ltd','Construction','Company site with tender-ready profile and contractor prospect pack.'],['BC','BrightSmile Clinics','Medical','Clinic site with booking pages, SEO and a hospital buyer directory.'],['EF','EduCare Foundation','NGO and Charity','Donor-ready NGO site with a grant platform resource pack.'],['VA','VoltAfrica Solar','Solar and Energy','Solar installer site with an institutional buyer prospect pack.'],['FP','FreshPlate Catering','Catering','Catering site with quote forms and a corporate events directory.'],['SL','SwiftLine Logistics','Logistics','Logistics site with service pages and an importer directory.']]; @endphp
@@ -328,7 +334,7 @@
       </div>
       @endforeach
     </div>
-    <div class="mt-10 reveal"><button onclick="openLead('')" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Start Building My Business</button></div>
+    <div class="mt-10 reveal"><a href="/checkout" class="inline-block bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Start Building My Business</a></div>
 
     <!-- Everything included -->
     <div class="mt-16 max-w-2xl reveal">
@@ -428,7 +434,7 @@
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0 text-zinc-400 dark:text-zinc-500"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <button onclick="openLead('START')" class="mt-7 w-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Get Started</button>
+        <a href="/checkout?package=START" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Get Started</a>
       </div>
       <!-- GROW -->
       <div class="reveal relative bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 rounded-xl p-6 flex flex-col lg:scale-[1.05] shadow-2xl shadow-zinc-950/30 ring-1 ring-zinc-950/10 dark:ring-white/20 order-2">
@@ -451,7 +457,7 @@
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <button onclick="openLead('GROW')" class="mt-7 w-full bg-white dark:bg-zinc-950 text-zinc-950 dark:text-white font-bold py-3 rounded-full transition hover:bg-zinc-100 dark:hover:bg-zinc-800">Choose Grow</button>
+        <a href="/checkout?package=GROW" class="mt-7 w-full text-center bg-white dark:bg-zinc-950 text-zinc-950 dark:text-white font-bold py-3 rounded-full transition hover:bg-zinc-100 dark:hover:bg-zinc-800">Choose Grow</a>
       </div>
       <!-- BUSINESS -->
       <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-1">
@@ -473,7 +479,7 @@
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0 text-zinc-400 dark:text-zinc-500"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <button onclick="openLead('BUSINESS')" class="mt-7 w-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Choose Business</button>
+        <a href="/checkout?package=BUSINESS" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Choose Business</a>
       </div>
     </div>
     <!-- comparison table -->
@@ -581,7 +587,7 @@
     <h2 class="reveal font-display font-extrabold text-3xl sm:text-5xl leading-tight">Your Next Customer Is Already Out There.</h2>
     <p class="reveal text-zinc-400 text-lg mt-4 max-w-2xl mx-auto">We help you get online, identify the right prospects and find opportunities. You focus on turning them into customers.</p>
     <div class="reveal mt-8 flex flex-col sm:flex-row justify-center gap-3">
-      <button onclick="openLead('')" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-xl shadow-[#9e005d]/30">Get My Website</button>
+      <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-xl shadow-[#9e005d]/30 text-center">Get My Website</a>
       <a href="https://wa.me/256700000000?text=Hi%20Ttryy!%20I%20want%20to%20talk%20about%20growing%20my%20business." target="_blank" class="border border-white/25 hover:bg-white/10 font-bold px-8 py-3 rounded-full transition">Talk to Ttryy</a>
     </div>
     <p class="reveal mt-5 text-sm text-zinc-500">Starting from <strong class="text-white">UGX 250,000</strong></p>
@@ -623,7 +629,7 @@
   <svg class="w-6 h-6"><use href="#i-chat"/></svg>
 </a>
 <div class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-[#0A0A0B]/95 backdrop-blur border-t border-zinc-200 dark:border-white/10 px-4 py-3 flex gap-2">
-  <button onclick="openLead('')" class="flex-1 bg-[#9e005d] text-white font-bold py-3 rounded-full text-sm">Get Your Website</button>
+  <a href="/checkout" class="flex-1 text-center bg-[#9e005d] text-white font-bold py-3 rounded-full text-sm">Get Your Website</a>
   <a href="#pricing" class="flex-1 text-center border-2 border-zinc-950 dark:border-white/30 font-bold py-2 rounded-full text-sm">See Packages</a>
 </div>
 <div class="h-16 sm:hidden"></div>
@@ -691,7 +697,7 @@ function nicheCard(n){
     + `<p class="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">Opportunities</p>`
     + `<ul class="mt-2 space-y-1.5 text-[13px] text-zinc-700 dark:text-zinc-300">${n.opps.slice(0,4).map(li).join('')}</ul></div>`
     + (n.note?`<p class="mx-5 mt-4 text-xs text-zinc-500 border-l-2 border-zinc-300 dark:border-zinc-600 pl-3">${n.note}</p>`:'')
-    + `<div class="p-5"><button onclick="openLead('', '${n.name} package')" class="w-full border border-zinc-300 dark:border-white/15 hover:border-zinc-950 dark:hover:border-white text-zinc-900 dark:text-white font-bold py-2 rounded-full text-sm transition">Get the ${n.name} Package</button></div></div>`;
+    + `<div class="p-5"><a href="/checkout?niche=${encodeURIComponent(n.name)}" class="block text-center w-full border border-zinc-300 dark:border-white/15 hover:border-zinc-950 dark:hover:border-white text-zinc-900 dark:text-white font-bold py-2 rounded-full text-sm transition">Get the ${n.name} Package</a></div></div>`;
 }
 function renderNiches(filter=''){
   const grid = document.getElementById('nicheGrid');
