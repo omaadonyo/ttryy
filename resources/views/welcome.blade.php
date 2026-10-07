@@ -34,6 +34,7 @@
   .niche-card{ transition:transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s, border-color .3s; }
   .niche-card:hover{ transform:translateY(-5px); box-shadow:0 24px 48px -20px rgba(158,0,93,.28); }
   .spy-link.spy-active{ background:#9e005d; border-color:#9e005d; color:#fff; }
+  table.tbl{ border-collapse:separate; border-spacing:0; }
   thead.tbl-head th{ background:#9e005d; }
   @media(min-width:768px){
     thead.tbl-head th{ position:sticky; top:64px; z-index:20; box-shadow:0 14px 24px -14px rgba(10,10,12,.55); }
@@ -447,7 +448,7 @@
         <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-3">For businesses that want a larger business-development database.</p>
         <p class="text-xs font-semibold text-zinc-500 mt-5 uppercase tracking-wider">Everything in Grow, plus:</p>
         <ul class="mt-3 space-y-2.5 text-sm flex-1 text-zinc-700 dark:text-zinc-300">
-          @foreach(['5,000 niche-specific potential customers','2,000 business directory contacts','2,000 applications/opportunities','Advanced business-development resources','Advanced CMS','Advanced SEO setup'] as $f)
+          @foreach(['5,000 niche-specific potential customers','2,000 business directory contacts','2,000 applications/opportunities','Advanced business-development resources','Advanced CMS','Advanced SEO setup','Google Ads setup','Facebook + Instagram ads setup','YouTube ads setup'] as $f)
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0 text-[#9e005d]"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
@@ -457,10 +458,10 @@
     <!-- comparison table -->
     <div class="reveal mt-10 bg-white dark:bg-[#141416] rounded-xl max-w-6xl mx-auto">
       <div class="overflow-x-auto md:overflow-visible">
-      <table class="w-full text-sm min-w-[640px]">
+      <table class="tbl w-full text-sm min-w-[640px]">
         <thead class="tbl-head"><tr class="text-white text-left"><th class="px-6 py-4 font-bold whitespace-nowrap rounded-tl-xl">Feature</th><th class="px-6 py-4 font-bold whitespace-nowrap">Start</th><th class="px-6 py-4 font-bold whitespace-nowrap">Grow</th><th class="px-6 py-4 font-bold whitespace-nowrap rounded-tr-xl">Business</th></tr></thead>
         <tbody class="tbl-body divide-y divide-zinc-100 dark:divide-white/10 text-zinc-700 dark:text-zinc-300">
-          @php $rows=[['Price','UGX 250K','UGX 350K','UGX 650K'],['Deposit','100%','60%','70%'],['Professional website','Yes','Yes','Yes'],['Custom CMS','Yes','Yes','Yes'],['WordPress','No','No','No'],['SEO','Yes','Yes','Yes'],['Mobile responsive','Yes','Yes','Yes'],['Domain + hosting setup','Yes','Yes','Yes'],['SSL certificate','Yes','Yes','Yes'],['Business email setup','No','Yes','Yes'],['Gallery / portfolio pages','No','Yes','Yes'],['Blog / news section','No','No','Yes'],['Google Analytics + Maps setup','No','Yes','Yes'],['Social media integration','Yes','Yes','Yes'],['Social media pages setup','No','Yes','Yes'],['Social profile branding','No','Yes','Yes'],['Social marketing starter plan','No','No','Yes'],['Niche potential customers','5,000','5,000','5,000'],['Application/opportunity resources','100','200','2,000'],['Business directory contacts','—','—','2,000'],['Lead/resource PDF','Yes','Yes','Yes'],['Contact forms','Yes','Yes','Yes'],['WhatsApp integration','Yes','Yes','Yes'],['Proposal resources','Yes','Yes','Yes'],['Quotation resources','Yes','Yes','Yes'],['Maintenance + support','1 month','3 months','6 months']]; @endphp
+          @php $rows=[['Price','UGX 250K','UGX 350K','UGX 650K'],['Deposit','100%','60%','70%'],['Professional website','Yes','Yes','Yes'],['Custom CMS','Yes','Yes','Yes'],['WordPress','No','No','No'],['SEO','Yes','Yes','Yes'],['Mobile responsive','Yes','Yes','Yes'],['Domain + hosting setup','Yes','Yes','Yes'],['SSL certificate','Yes','Yes','Yes'],['Business email setup','No','Yes','Yes'],['Gallery / portfolio pages','No','Yes','Yes'],['Blog / news section','No','No','Yes'],['Google Analytics + Maps setup','No','Yes','Yes'],['Social media integration','Yes','Yes','Yes'],['Social media pages setup','No','Yes','Yes'],['Social profile branding','No','Yes','Yes'],['Social marketing starter plan','No','No','Yes'],['Google Ads setup','No','No','Yes'],['Facebook + Instagram ads','No','No','Yes'],['YouTube ads setup','No','No','Yes'],['Niche potential customers','5,000','5,000','5,000'],['Application/opportunity resources','100','200','2,000'],['Business directory contacts','—','—','2,000'],['Lead/resource PDF','Yes','Yes','Yes'],['Contact forms','Yes','Yes','Yes'],['WhatsApp integration','Yes','Yes','Yes'],['Proposal resources','Yes','Yes','Yes'],['Quotation resources','Yes','Yes','Yes'],['Maintenance + support','1 month','3 months','6 months']]; @endphp
           @foreach($rows as $r)
           <tr class="hover:bg-zinc-50 dark:hover:bg-white/5"><td class="px-6 py-3 font-medium">{{ $r[0] }}</td>@foreach([$r[1],$r[2],$r[3]] as $c)<td class="px-6 py-3">@if($c==='Yes')<svg class="w-5 h-5 text-[#9e005d]"><use href="#i-check"/></svg>@elseif($c==='No'||$c==='—')<svg class="w-5 h-5 text-zinc-300 dark:text-zinc-600"><use href="#i-x"/></svg>@else{{ $c }}@endif</td>@endforeach</tr>
           @endforeach
