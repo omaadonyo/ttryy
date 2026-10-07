@@ -34,16 +34,19 @@
   .niche-card{ transition:transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s, border-color .3s; }
   .niche-card:hover{ transform:translateY(-5px); box-shadow:0 24px 48px -20px rgba(158,0,93,.28); }
   .spy-link.spy-active{ background:#9e005d; border-color:#9e005d; color:#fff; }
+  .reveal.bg-white{ box-shadow:0 2px 14px -6px rgba(10,10,12,.10); }
+  .dark .reveal.bg-white{ box-shadow:0 8px 28px -10px rgba(0,0,0,.8); }
   .record-in{ animation:fadeSlide .45s cubic-bezier(.22,.61,.36,1) both; }
   .scan-pulse{ animation:scanPulse 1.1s ease-in-out infinite; }
   @keyframes scanPulse{ 0%,100%{ opacity:1;} 50%{ opacity:.35;} }
 </style>
 </head>
-<body class="bg-white text-zinc-900 dark:bg-[#0A0A0B] dark:text-zinc-300 overflow-x-hidden">
+<body class="bg-white text-zinc-900 dark:bg-[#0A0A0B] dark:text-zinc-300 overflow-x-clip">
 
 <!-- ICON SYSTEM -->
 <svg xmlns="http://www.w3.org/2000/svg" class="hidden" aria-hidden="true">
   <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
   <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-8 8H4l2-3a8 8 0 1115-5z"/><path d="M9 11h.01M12.5 11h.01M16 11h.01"/></symbol>
   <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></symbol>
@@ -128,7 +131,7 @@
 
     <!-- SCRAPER DEMO -->
     <div class="reveal visible" id="scraperDemo">
-      <div class="bg-white dark:bg-[#141416] border border-zinc-200 dark:border-white/10 rounded-xl shadow-2xl shadow-zinc-950/10 dark:shadow-black/50 overflow-hidden">
+      <div class="bg-white dark:bg-[#141416]   rounded-xl shadow-2xl shadow-zinc-950/10 dark:shadow-black/50 overflow-hidden">
         <div class="flex items-center justify-between px-6 pt-5">
           <p class="font-display font-bold text-zinc-950 dark:text-white">Prospect scraper <span class="scan-pulse inline-block w-2 h-2 rounded-full bg-[#9e005d] ml-1 align-middle"></span></p>
           <span class="text-[11px] font-semibold text-zinc-500 border border-zinc-200 dark:border-white/15 rounded-full px-2.5 py-1">LIVE DEMO &middot; SAMPLE DATA</span>
@@ -143,7 +146,7 @@
           <div class="mt-1.5 h-2 bg-zinc-100 dark:bg-white/10 rounded-full overflow-hidden"><div id="scrapeBar" class="h-2 bg-[#9e005d] rounded-full transition-all duration-300" style="width:0%"></div></div>
         </div>
         <div class="px-6 py-5">
-          <div class="rounded-xl border border-zinc-200 dark:border-white/10 overflow-hidden">
+          <div class="rounded-xl bg-zinc-50 dark:bg-[#17171A] overflow-hidden">
             <div class="flex items-center gap-2.5 bg-zinc-50 dark:bg-[#17171A] border-b border-zinc-200 dark:border-white/10 px-4 py-3">
               <svg class="w-5 h-5 text-[#9e005d]"><use href="#i-doc"/></svg>
               <span id="pdfName" class="text-[13px] font-semibold text-zinc-800 dark:text-zinc-200">prospects.pdf</span>
@@ -167,16 +170,17 @@
       </div>
     </div>
   </div>
-  <!-- READING GUIDE (sticky) -->
-  <div class="sticky top-16 lg:top-[72px] z-40 bg-white/90 dark:bg-[#0A0A0B]/90 backdrop-blur-xl border-t border-zinc-200 dark:border-white/10">
+</section>
+
+<!-- READING GUIDE (sticky) -->
+<div class="sticky top-16 lg:top-[72px] z-40 bg-white/90 dark:bg-[#0A0A0B]/90 backdrop-blur-xl">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-2 overflow-x-auto">
       <span class="hidden md:inline text-xs font-semibold text-zinc-500 shrink-0 mr-1">New here? Read in order:</span>
       <a href="#what" data-spy="what" class="spy-link shrink-0 text-[13px] font-semibold rounded-full border border-zinc-200 dark:border-white/15 px-4 py-1.5 text-zinc-600 dark:text-zinc-300 hover:border-[#9e005d] transition">1 &middot; What we do</a>
       <a href="#why" data-spy="why" class="spy-link shrink-0 text-[13px] font-semibold rounded-full border border-zinc-200 dark:border-white/15 px-4 py-1.5 text-zinc-600 dark:text-zinc-300 hover:border-[#9e005d] transition">2 &middot; Why Ttryy</a>
       <a href="#help" data-spy="help" class="spy-link shrink-0 text-[13px] font-semibold rounded-full border border-zinc-200 dark:border-white/15 px-4 py-1.5 text-zinc-600 dark:text-zinc-300 hover:border-[#9e005d] transition">3 &middot; How we can help</a>
     </div>
-  </div>
-</section>
+</div>
 
 <!-- PART 1: WHAT WE DO -->
 <section id="what" class="py-16 lg:py-24 bg-white dark:bg-[#0A0A0B]">
@@ -187,12 +191,12 @@
       <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Ttryy handles the first two. You handle the third, where the money is.</p>
     </div>
     <div class="mt-10 grid md:grid-cols-3 gap-4">
-      <div class="reveal rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-[#141416] p-6">
+      <div class="reveal rounded-xl   bg-zinc-50 dark:bg-[#141416] p-6">
         <p class="font-display font-extrabold text-5xl text-zinc-200 dark:text-zinc-700">01</p>
         <h3 class="font-display font-bold text-xl mt-4 text-zinc-950 dark:text-white">We build your website</h3>
         <p class="text-zinc-600 dark:text-zinc-400 text-[15px] mt-2">A professional, mobile-friendly website with a custom content system and SEO foundations, designed around what you sell. No WordPress.</p>
       </div>
-      <div class="reveal rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-[#141416] p-6">
+      <div class="reveal rounded-xl   bg-zinc-50 dark:bg-[#141416] p-6">
         <p class="font-display font-extrabold text-5xl text-zinc-200 dark:text-zinc-700">02</p>
         <h3 class="font-display font-bold text-xl mt-4 text-zinc-950 dark:text-white">We find your potential customers</h3>
         <p class="text-zinc-600 dark:text-zinc-400 text-[15px] mt-2">A targeted list of 5,000 prospects in your niche, plus business directories and relevant tenders, grants and procurement opportunities.</p>
@@ -211,7 +215,7 @@
 </section>
 
 <!-- PART 2: WHY TTRYY -->
-<section id="why" class="py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012] border-y border-zinc-200 dark:border-white/10">
+<section id="why" class="py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <div class="max-w-2xl reveal">
       <p class="text-xs font-semibold tracking-wide uppercase text-[#9e005d]">Part 2 &middot; Why Ttryy</p>
@@ -228,7 +232,7 @@
     <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
       @php $why=[['Website','A professional online presence that makes buyers trust you.'],['Visibility','SEO and discoverability foundations so customers can find you.'],['Prospecting','Potential customers relevant to your niche, organised and ready.'],['Opportunities','Business, procurement, funding and application resources.']]; @endphp
       @foreach($why as $i=>$w)
-      <div class="reveal border border-zinc-200 dark:border-white/10 rounded-xl p-6 bg-white dark:bg-[#141416] hover:border-[#9e005d]/50 transition">
+      <div class="reveal   rounded-xl p-6 bg-white dark:bg-[#141416] hover:border-[#9e005d]/50 transition">
         <p class="font-display font-extrabold text-2xl text-zinc-300 dark:text-zinc-600">{{ sprintf('%02d', $i+1) }}</p>
         <h3 class="font-display font-bold text-lg mt-3 text-zinc-950 dark:text-white">{{ $w[0] }}</h3>
         <p class="text-zinc-600 dark:text-zinc-400 text-[15px] mt-2">{{ $w[1] }}</p>
@@ -237,7 +241,7 @@
     </div>
 
     <!-- Comparison -->
-    <div class="reveal mt-10 bg-white dark:bg-[#141416] rounded-xl border border-zinc-200 dark:border-white/10 overflow-hidden max-w-4xl">
+    <div class="reveal mt-10 bg-white dark:bg-[#141416] rounded-xl   overflow-hidden max-w-4xl">
       <p class="px-6 sm:px-8 pt-6 font-display font-bold text-lg text-zinc-950 dark:text-white">Ttryy vs. a typical website designer</p>
       <div class="overflow-x-auto mt-2">
       <table class="w-full text-sm min-w-[520px]">
@@ -270,7 +274,7 @@
     <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
       @php $works=[['SB','Savanna Build Ltd','Construction','Company site with tender-ready profile and contractor prospect pack.'],['BC','BrightSmile Clinics','Medical','Clinic site with booking pages, SEO and a hospital buyer directory.'],['EF','EduCare Foundation','NGO and Charity','Donor-ready NGO site with a grant platform resource pack.'],['VA','VoltAfrica Solar','Solar and Energy','Solar installer site with an institutional buyer prospect pack.'],['FP','FreshPlate Catering','Catering','Catering site with quote forms and a corporate events directory.'],['SL','SwiftLine Logistics','Logistics','Logistics site with service pages and an importer directory.']]; @endphp
       @foreach($works as $w)
-      <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl overflow-hidden border border-zinc-200 dark:border-white/10 hover:border-[#9e005d]/40 hover:shadow-xl hover:shadow-[#9e005d]/10 transition">
+      <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl overflow-hidden   hover:border-[#9e005d]/40 hover:shadow-xl hover:shadow-[#9e005d]/10 transition">
         <div class="bg-zinc-950 dark:bg-black px-4 pt-3">
           <div class="flex gap-1.5 px-1"><span class="w-2.5 h-2.5 rounded-full bg-white/25"></span><span class="w-2.5 h-2.5 rounded-full bg-white/25"></span><span class="w-2.5 h-2.5 rounded-full bg-white/25"></span></div>
           <div class="mt-3 bg-white dark:bg-zinc-900 rounded-t-xl p-4">
@@ -296,7 +300,7 @@
 </section>
 
 <!-- PART 3: HOW WE CAN HELP -->
-<section id="help" class="relative overflow-hidden py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012] border-y border-zinc-200 dark:border-white/10">
+<section id="help" class="relative overflow-hidden py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012]">
   <div class="absolute inset-0 sqgrid pointer-events-none" aria-hidden="true"></div>
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
     <div class="max-w-2xl reveal" id="how">
@@ -307,7 +311,7 @@
     <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
       @php $steps=[['01','Tell Us Your Niche','Tell us what your business sells and who you want to reach.','You'],['02','We Build Your Website','A professional, mobile-friendly website with a custom CMS and SEO foundation.','Ttryy'],['03','We Identify Your Market','Niche-specific potential customers, business contacts, directories and opportunities.','Ttryy'],['04','You Close the Deal','Use the website, prospect database and opportunity resources to contact buyers, apply and win work.','You']]; @endphp
       @foreach($steps as $s)
-      <div class="reveal bg-white dark:bg-[#141416] rounded-xl p-6 border border-zinc-200 dark:border-white/10">
+      <div class="reveal bg-white dark:bg-[#141416] rounded-xl p-6  ">
         <div class="flex items-center justify-between">
           <span class="font-display font-extrabold text-2xl text-zinc-300 dark:text-zinc-600">{{ $s[0] }}</span>
           <span class="text-[11px] font-semibold px-3 py-1 rounded-full {{ $s[3]==='Ttryy' ? 'bg-[#9e005d] text-white' : 'bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-zinc-300' }}">{{ $s[3] }}</span>
@@ -327,7 +331,7 @@
     <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
       @php $gets=[['Professional Website','A modern website designed around your business, products and services.'],['Custom CMS','Manage your website content without depending on WordPress.'],['SEO','SEO foundations included to help you become discoverable online.'],['Potential Customers','Targeted business prospects based on your niche.'],['Business Directories','Businesses and organisations that may need your products or services.'],['Opportunities','Tenders, procurement, grants, applications and business opportunities.'],['Sales Resources','Company profiles, proposals and quotation templates so you approach buyers professionally.'],['Business Tools','Tools for accounting, CRM, inventory, POS, invoicing and daily management.']]; @endphp
       @foreach($gets as $i=>$g)
-      <div class="reveal border border-zinc-200 dark:border-white/10 rounded-xl p-6 bg-white dark:bg-[#141416] hover:border-[#9e005d]/40 transition">
+      <div class="reveal   rounded-xl p-6 bg-white dark:bg-[#141416] hover:border-[#9e005d]/40 transition">
         <p class="font-display font-extrabold text-xl text-zinc-300 dark:text-zinc-600">{{ sprintf('%02d', $i+1) }}</p>
         <h4 class="font-display font-bold text-[17px] mt-3 text-zinc-950 dark:text-white">{{ $g[0] }}</h4>
         <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-1.5">{{ $g[1] }}</p>
@@ -360,7 +364,7 @@
 </section>
 
 <!-- RESPONSIBILITIES -->
-<section class="py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012] border-y border-zinc-200 dark:border-white/10">
+<section class="py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012]">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="reveal max-w-2xl"><p class="text-xs font-semibold tracking-wide uppercase text-[#9e005d]">How we can help &middot; Who does what</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">We Find the Market. You Close the Business.</h2>
@@ -374,7 +378,7 @@
           @endforeach
         </ul>
       </div>
-      <div class="reveal bg-white dark:bg-[#141416] border border-zinc-200 dark:border-white/10 rounded-xl p-6">
+      <div class="reveal bg-white dark:bg-[#141416]   rounded-xl p-6">
         <p class="text-xs font-bold tracking-wide uppercase text-zinc-500">You do</p>
         <ul class="mt-5 space-y-3 text-[15px] font-medium text-zinc-800 dark:text-zinc-200">
           @foreach(['Contact prospects','Build relationships','Send quotations','Attend meetings','Submit applications','Negotiate','Close the deal'] as $t)
@@ -398,7 +402,7 @@
     </div>
     <div class="mt-10 grid lg:grid-cols-3 gap-6 items-stretch max-w-6xl mx-auto">
       <!-- START -->
-      <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl border border-zinc-200 dark:border-white/10 p-6 flex flex-col">
+      <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-3">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">START</p>
         <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white">UGX 250,000</p>
         <p class="text-xs text-zinc-500 mt-2">100% deposit to start</p>
@@ -411,8 +415,8 @@
         <button onclick="openLead('START')" class="mt-7 w-full border-2 border-zinc-950 dark:border-white/30 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 font-bold py-3 rounded-full transition">Get Started</button>
       </div>
       <!-- GROW -->
-      <div class="reveal relative bg-[#9e005d] text-white rounded-xl p-6 flex flex-col lg:scale-[1.03] shadow-2xl shadow-[#9e005d]/30">
-        <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-zinc-950 text-white text-xs font-bold px-5 py-1.5 rounded-full whitespace-nowrap">MOST POPULAR</span>
+      <div class="reveal relative bg-gradient-to-br from-[#c40074] via-[#9e005d] to-[#6e003f] text-white rounded-xl p-6 flex flex-col lg:scale-[1.05] shadow-2xl shadow-[#9e005d]/40 ring-1 ring-white/25 order-2">
+        <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-white text-[#9e005d] text-xs font-extrabold px-5 py-1.5 rounded-full whitespace-nowrap shadow-lg">MOST POPULAR</span>
         <p class="font-display font-bold text-sm tracking-wide text-white/70">GROW</p>
         <p class="mt-2 font-display font-extrabold text-4xl">UGX 350,000</p>
         <p class="text-xs text-white/70 mt-2">60% deposit to start</p>
@@ -426,7 +430,7 @@
         <button onclick="openLead('GROW')" class="mt-7 w-full bg-white text-[#9e005d] font-bold py-3 rounded-full transition hover:bg-zinc-100">Choose Grow</button>
       </div>
       <!-- BUSINESS -->
-      <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl border border-zinc-200 dark:border-white/10 p-6 flex flex-col">
+      <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-1">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">BUSINESS</p>
         <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white">UGX 650,000</p>
         <p class="text-xs text-zinc-500 mt-2">70% deposit to start</p>
@@ -441,14 +445,14 @@
       </div>
     </div>
     <!-- comparison table -->
-    <div class="reveal mt-10 bg-white dark:bg-[#141416] rounded-xl border border-zinc-200 dark:border-white/10 overflow-hidden max-w-6xl mx-auto">
-      <div class="overflow-x-auto">
+    <div class="reveal mt-10 bg-white dark:bg-[#141416] rounded-xl   overflow-hidden max-w-6xl mx-auto">
+      <div class="overflow-x-auto md:overflow-visible">
       <table class="w-full text-sm min-w-[640px]">
-        <thead><tr class="bg-[#9e005d] text-white text-left"><th class="px-6 py-4 font-bold">Feature</th><th class="px-6 py-4 font-bold">Start</th><th class="px-6 py-4 font-bold">Grow</th><th class="px-6 py-4 font-bold">Business</th></tr></thead>
+        <thead><tr class="text-white text-left"><th class="px-6 py-4 font-bold bg-[#9e005d] md:sticky md:top-16 lg:top-[72px] z-10">Feature</th><th class="px-6 py-4 font-bold bg-[#9e005d] md:sticky md:top-16 lg:top-[72px] z-10">Start</th><th class="px-6 py-4 font-bold bg-[#9e005d] md:sticky md:top-16 lg:top-[72px] z-10">Grow</th><th class="px-6 py-4 font-bold bg-[#9e005d] md:sticky md:top-16 lg:top-[72px] z-10">Business</th></tr></thead>
         <tbody class="divide-y divide-zinc-100 dark:divide-white/10 text-zinc-700 dark:text-zinc-300">
-          @php $rows=[['Price','UGX 250K','UGX 350K','UGX 650K'],['Deposit','100%','60%','70%'],['Professional website','Yes','Yes','Yes'],['Custom CMS','Yes','Yes','Yes'],['WordPress','No','No','No'],['SEO','Yes','Yes','Yes'],['Mobile responsive','Yes','Yes','Yes'],['Niche potential customers','5,000','5,000','5,000'],['Application/opportunity resources','100','200','2,000'],['Business directory contacts','—','—','2,000'],['Lead/resource PDF','Yes','Yes','Yes'],['Contact forms','Yes','Yes','Yes'],['WhatsApp integration','Yes','Yes','Yes'],['Proposal resources','Yes','Yes','Yes'],['Quotation resources','Yes','Yes','Yes']]; @endphp
+          @php $rows=[['Price','UGX 250K','UGX 350K','UGX 650K'],['Deposit','100%','60%','70%'],['Professional website','Yes','Yes','Yes'],['Custom CMS','Yes','Yes','Yes'],['WordPress','No','No','No'],['SEO','Yes','Yes','Yes'],['Mobile responsive','Yes','Yes','Yes'],['Domain + hosting setup','Yes','Yes','Yes'],['SSL certificate','Yes','Yes','Yes'],['Business email setup','No','Yes','Yes'],['Gallery / portfolio pages','No','Yes','Yes'],['Blog / news section','No','No','Yes'],['Google Analytics + Maps setup','No','Yes','Yes'],['Social media integration','Yes','Yes','Yes'],['Social media pages setup','No','Yes','Yes'],['Social profile branding','No','Yes','Yes'],['Social marketing starter plan','No','No','Yes'],['Niche potential customers','5,000','5,000','5,000'],['Application/opportunity resources','100','200','2,000'],['Business directory contacts','—','—','2,000'],['Lead/resource PDF','Yes','Yes','Yes'],['Contact forms','Yes','Yes','Yes'],['WhatsApp integration','Yes','Yes','Yes'],['Proposal resources','Yes','Yes','Yes'],['Quotation resources','Yes','Yes','Yes'],['Maintenance + support','1 month','3 months','6 months']]; @endphp
           @foreach($rows as $r)
-          <tr class="hover:bg-zinc-50 dark:hover:bg-white/5"><td class="px-6 py-3 font-medium">{{ $r[0] }}</td><td class="px-6 py-3">{{ $r[1] }}</td><td class="px-6 py-3">{{ $r[2] }}</td><td class="px-6 py-3">{{ $r[3] }}</td></tr>
+          <tr class="hover:bg-zinc-50 dark:hover:bg-white/5"><td class="px-6 py-3 font-medium">{{ $r[0] }}</td>@foreach([$r[1],$r[2],$r[3]] as $c)<td class="px-6 py-3">@if($c==='Yes')<svg class="w-5 h-5 text-[#9e005d]"><use href="#i-check"/></svg>@elseif($c==='No'||$c==='—')<svg class="w-5 h-5 text-zinc-300 dark:text-zinc-600"><use href="#i-x"/></svg>@else{{ $c }}@endif</td>@endforeach</tr>
           @endforeach
         </tbody>
       </table>
@@ -458,7 +462,7 @@
 </section>
 
 <!-- APPLICATION SUPPORT -->
-<section class="py-16 lg:py-20 bg-zinc-50 dark:bg-[#101012] border-y border-zinc-200 dark:border-white/10">
+<section class="py-16 lg:py-20 bg-zinc-50 dark:bg-[#101012]">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="reveal bg-zinc-950 dark:bg-[#151517] dark:border dark:border-white/10 text-white rounded-xl p-6 sm:p-8 grid lg:grid-cols-2 gap-10">
       <div>
@@ -473,7 +477,7 @@
         <button onclick="openLead('', 'Application support')" class="mt-7 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition">Request Application Support</button>
         <p class="mt-4 text-xs text-white/50 leading-relaxed">Application support does not guarantee funding, contract awards or successful applications. Eligibility and final submission decisions remain with the relevant funder, procuring organisation or institution.</p>
       </div>
-      <div class="bg-white dark:bg-[#0A0A0B] dark:border dark:border-white/10 text-zinc-900 dark:text-zinc-200 rounded-xl p-6 sm:p-6 self-center">
+      <div class="bg-white dark:bg-[#141416] text-zinc-900 dark:text-zinc-200 rounded-xl p-6 sm:p-6 self-center">
         <p class="font-display font-bold">What a prepared bid pack covers</p>
         <div class="mt-5 space-y-4 text-sm">
           <div><div class="flex justify-between text-xs font-semibold mb-1.5"><span>Compliance checklist</span><span>92%</span></div><div class="h-2 bg-zinc-100 dark:bg-white/10 rounded-full"><div class="h-2 bg-[#9e005d] rounded-full" style="width:92%"></div></div></div>
@@ -497,9 +501,9 @@
     <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
       @php $tools=[['Accounting',['Income','Expenses','P&L','Balance Sheet','Cash Flow']],['Sales',['Quotations','Invoices','Receipts','Sales Orders']],['CRM',['Customers','Leads','Follow-ups','Customer history']],['Inventory',['Products','Stock','Suppliers','Purchases']],['POS',['Point of sale','Receipts','Inventory updates','Sales tracking']],['Business Management',['Tasks','Documents','Projects','Reports']]]; @endphp
       @foreach($tools as $t)
-      <div class="reveal bg-zinc-50 dark:bg-[#141416] border border-zinc-200 dark:border-white/10 rounded-xl p-6 hover:border-[#9e005d]/40 transition">
+      <div class="reveal bg-zinc-50 dark:bg-[#141416]   rounded-xl p-6 hover:border-[#9e005d]/40 transition">
         <h3 class="font-display font-bold text-zinc-950 dark:text-white">{{ $t[0] }}</h3>
-        <div class="mt-3 flex flex-wrap gap-1.5 text-xs">@foreach($t[1] as $f)<span class="text-zinc-600 dark:text-zinc-400 bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/10 rounded-full px-2.5 py-1">{{ $f }}</span>@endforeach</div>
+        <div class="mt-3 flex flex-wrap gap-1.5 text-xs">@foreach($t[1] as $f)<span class="text-zinc-600 dark:text-zinc-400 bg-white dark:bg-[#17171A]   rounded-full px-2.5 py-1">{{ $f }}</span>@endforeach</div>
       </div>
       @endforeach
     </div>
@@ -509,14 +513,14 @@
 </section>
 
 <!-- FAQ -->
-<section id="faq" class="py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012] border-t border-zinc-200 dark:border-white/10">
+<section id="faq" class="py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012]">
   <div class="max-w-3xl mx-auto px-4 sm:px-6">
     <div class="reveal"><p class="text-xs font-semibold tracking-wide uppercase text-[#9e005d]">Still unsure? &middot; FAQ</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Questions, Answered</h2></div>
     <div class="mt-8 space-y-3">
       @php $faqs=[['Do I get a website?','Yes. Every package includes a professional website and custom CMS.'],['Do you use WordPress?','No. Ttryy websites use a custom CMS rather than WordPress.'],['Are the 5,000 contacts guaranteed customers?','No. They are potential customers and prospects relevant to your selected niche. Ttryy provides the prospecting resource. You contact and close the customers.'],['What kind of contacts do I receive?','It depends on your niche. They can include businesses, organisations, institutions, procurement contacts, potential buyers, donors, funders, partners and other relevant prospects.'],['Can you help me apply for opportunities?','Yes. Application and proposal support is available as an additional paid service.'],['Does Ttryy guarantee grants or tenders?','No. Ttryy helps identify relevant opportunities and can assist with applications, but final decisions belong to the funder, buyer or procuring organisation.'],['Can I manage my website myself?','Yes. Your website includes a CMS for managing supported content.'],['Is SEO included?','Yes. SEO foundations are included in all packages.'],['Can you build websites for any industry?','Yes. Tell us what your business does and we will create a niche-specific website and prospecting package.']]; @endphp
       @foreach($faqs as $f)
-      <details class="faq reveal group bg-white dark:bg-[#141416] border border-zinc-200 dark:border-white/10 rounded-xl transition">
+      <details class="faq reveal group bg-white dark:bg-[#141416]   rounded-xl transition">
         <summary class="cursor-pointer list-none flex items-center justify-between gap-4 px-5 sm:px-6 py-4 font-semibold text-[15px] text-zinc-900 dark:text-zinc-100">{{ $f[0] }}<span class="w-8 h-8 shrink-0 grid place-items-center rounded-full bg-[#9e005d] text-white text-lg leading-none transition-transform group-open:rotate-45">+</span></summary>
         <p class="faq-body px-5 sm:px-6 pb-5 text-zinc-600 dark:text-zinc-400 text-[15px] leading-relaxed">{{ $f[1] }}</p>
       </details>
@@ -582,7 +586,7 @@
 <!-- LEAD MODAL -->
 <div id="leadModal" class="fixed inset-0 z-[60] hidden items-center justify-center p-4">
   <div class="absolute inset-0 bg-zinc-950/70 dark:bg-black/80" onclick="closeLead()"></div>
-  <div class="relative bg-white dark:bg-[#141416] dark:border dark:border-white/15 text-zinc-900 dark:text-zinc-200 rounded-xl w-full max-w-2xl max-h-[92vh] overflow-y-auto shadow-2xl">
+  <div class="relative bg-white dark:bg-[#141416] text-zinc-900 dark:text-zinc-200 rounded-xl w-full max-w-2xl max-h-[92vh] overflow-y-auto shadow-2xl">
     <div class="sticky top-0 bg-white dark:bg-[#141416] px-6 sm:px-8 pt-6 pb-4 border-b border-zinc-100 dark:border-white/10 flex items-start justify-between rounded-t-xl">
       <div><h3 class="font-display font-extrabold text-2xl">Get Started</h3><p class="text-sm text-zinc-500 mt-1">Request your Ttryy package. We reply fast on WhatsApp.</p></div>
       <button onclick="closeLead()" class="w-9 h-9 grid place-items-center rounded-full bg-zinc-100 dark:bg-white/10 hover:bg-zinc-200 dark:hover:bg-white/20 text-xl" aria-label="Close">&times;</button>
@@ -632,7 +636,7 @@ const NICHES = [
 ];
 function nicheCard(n){
   const li=t=>`<li class="flex items-start gap-2 pl-4"><svg class="w-3.5 h-3.5 shrink-0 mt-1 text-[#9e005d]"><use href="#i-check"/></svg><span>${t}</span></li>`;
-  return `<div class="niche-card bg-zinc-50 dark:bg-[#141416] border border-zinc-200 dark:border-white/10 hover:border-[#9e005d]/50 rounded-xl overflow-hidden text-left">`
+  return `<div class="niche-card bg-zinc-50 dark:bg-[#141416]   hover:border-[#9e005d]/50 rounded-xl overflow-hidden text-left">`
     + `<div class="flex items-center gap-3 px-5 pt-5"><span class="w-9 h-9 grid place-items-center rounded-full bg-[#9e005d] text-white text-[11px] font-bold shrink-0">${n.code}</span>`
     + `<div class="min-w-0"><h3 class="font-display font-bold text-[16px] leading-tight text-zinc-900 dark:text-white">${n.name}</h3><p class="text-[11px] text-zinc-500">${n.prospects.length} prospect groups &middot; ${n.opps.length} opportunity types</p></div></div>`
     + `<div class="mx-5 mt-4 pt-4 border-t border-zinc-200 dark:border-white/10">`
