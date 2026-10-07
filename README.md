@@ -1,2 +1,100 @@
-# ttryy
-Build a modern, high-converting landing page for Ttryy, an African business technology platform.
+# Ttryy — African Business Technology Platform
+
+> **We build your website. We find your potential customers. You close the deals.**
+
+Ttryy helps African businesses get online with a professional website **plus**
+niche-specific prospecting resources: potential customers, business directories,
+and tender / grant / procurement opportunity resources. The customer contacts
+prospects and closes the deal — Ttryy provides the website, the market
+intelligence, and the business tools.
+
+This repository contains the Ttryy marketing landing page, built on
+[Laravel](https://laravel.com) with Blade + Tailwind CSS + Vite.
+
+## What the landing page includes
+
+- **Hero** — "We Build Your Website. You Find the Customers." with workflow
+  visual (Business → Website → Prospects → Opportunities → You Close)
+- **The Problem** — why a website alone doesn't bring business
+- **How It Works** — 4-step process (niche → website → market → close)
+- **More Than a Website** — website, custom CMS (no WordPress), SEO,
+  prospects, directories, opportunities, sales resources, business tools
+- **Niche Lead Engine** — searchable grid covering 14 industries
+  (NGOs, Construction, IT, Marketing, Cleaning, Security, Catering, Printing,
+  Furniture, Accounting, Logistics, Agriculture, Solar, Medical)
+- **Business Development Model** — what Ttryy does vs. what you do
+- **Pricing** — Start (UGX 250,000) / Grow (UGX 350,000) / Business (UGX 650,000)
+  + comparison table
+- **Application Support**, **Portfolio**, **Why Ttryy**, **Business Tools preview**,
+  **FAQ**, final CTA, and a full ecosystem **footer**
+- **Lead-capture modal** on every package CTA, WhatsApp CTAs throughout,
+  sticky mobile CTA bar, scroll-reveal animations
+
+All prospecting copy deliberately uses "potential customers / prospects /
+opportunities" — Ttryy never guarantees customers, contracts, grants, or funding.
+
+## Tech stack
+
+| Layer    | Technology                          |
+| -------- | ----------------------------------- |
+| Backend  | PHP 8.3+, Laravel 13, Livewire 4    |
+| Styling  | Tailwind CSS 4 (via Vite plugin)    |
+| Build    | Vite (`vite-plus`)                  |
+| Auth kit | Laravel Fortify + Flux UI (unused by landing page) |
+
+The landing page itself is a single Blade view with vanilla JS for the mobile
+menu, lead modal, niche search/filter, FAQ accordion, and scroll animations:
+
+```
+resources/views/welcome.blade.php   # entire landing page
+routes/web.php                      # Route::view('/', 'welcome')
+resources/css/app.css               # Tailwind entry
+```
+
+## Getting started
+
+Requirements: PHP 8.3+, Composer, Node.js 20+.
+
+```bash
+# 1. Install dependencies
+composer install
+npm install
+
+# 2. Environment
+cp .env.example .env
+php artisan key:generate
+
+# 3. Database (SQLite by default)
+php artisan migrate
+
+# 4a. Develop (hot reload)
+composer dev        # or: npm run dev + php artisan serve
+
+# 4b. Production build
+npm run build
+php artisan serve
+```
+
+Then visit `http://localhost:8000`.
+
+## Configuration
+
+- **WhatsApp number** — the page currently uses the placeholder `256700000000`
+  in all `wa.me` links (top bar, nav, hero, floating button, footer, modal).
+  Search the view for `256700000000` and replace it with the real business number.
+- **Portfolio** — the "Websites We've Built" cards are placeholders; swap the
+  `$works` array in `welcome.blade.php` for real projects and screenshots.
+- **Lead form** — the modal currently confirms client-side only. Wire
+  `leadForm` to a `POST` route / controller + notification (mail/WhatsApp) to
+  receive enquiries.
+
+## Tests & lint
+
+```bash
+php artisan test        # Pest suite
+./vendor/bin/pint --test  # code style (use --parallel on large repos)
+```
+
+## License
+
+MIT. © 2026 Ttryy. All rights reserved.
