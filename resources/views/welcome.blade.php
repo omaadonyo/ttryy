@@ -33,6 +33,7 @@
   @keyframes fadeSlide{ from{ opacity:0; transform:translateY(-6px);} to{ opacity:1; transform:none;} }
   .niche-card{ transition:transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s, border-color .3s; }
   .niche-card:hover{ transform:translateY(-5px); box-shadow:0 24px 48px -20px rgba(158,0,93,.28); }
+  .spy-link.spy-active{ background:#9e005d; border-color:#9e005d; color:#fff; }
   .record-in{ animation:fadeSlide .45s cubic-bezier(.22,.61,.36,1) both; }
   .scan-pulse{ animation:scanPulse 1.1s ease-in-out infinite; }
   @keyframes scanPulse{ 0%,100%{ opacity:1;} 50%{ opacity:.35;} }
@@ -147,6 +148,7 @@
               <svg class="w-5 h-5 text-[#9e005d]"><use href="#i-doc"/></svg>
               <span id="pdfName" class="text-[13px] font-semibold text-zinc-800 dark:text-zinc-200">prospects.pdf</span>
               <span id="pdfCount" class="ml-auto text-[11px] font-semibold text-zinc-500">0 records</span>
+              <button id="pdfDl" onclick="downloadSamplePdf()" class="hidden ml-2 shrink-0 text-[11px] font-bold text-[#9e005d] border border-[#9e005d]/40 hover:bg-[#9e005d] hover:text-white rounded-full px-3 py-1 transition">Download PDF</button>
             </div>
             <div id="scrapeRows" class="divide-y divide-zinc-100 dark:divide-white/5 max-h-72 overflow-y-auto">
               <p id="scrapeEmpty" class="px-4 py-8 text-center text-sm text-zinc-400">Choose your niche and hit <strong>Scrape</strong> to pull 10 sample records.</p>
@@ -165,27 +167,13 @@
       </div>
     </div>
   </div>
-  <!-- READING GUIDE -->
-  <div class="relative border-t border-zinc-200 dark:border-white/10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-      <p class="text-sm text-zinc-500">New here? Read this page in order:</p>
-      <div class="mt-3 grid sm:grid-cols-3 gap-3">
-        <a href="#what" class="group flex items-center gap-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#141416] hover:border-[#9e005d] px-5 py-4 transition">
-          <span class="font-display font-extrabold text-2xl text-zinc-300 dark:text-zinc-600">1</span>
-          <span><span class="block font-bold text-zinc-900 dark:text-white">What we do</span><span class="block text-[13px] text-zinc-500">Website, prospects, and your part.</span></span>
-          <span class="ml-auto group-hover:translate-x-1 transition">&rarr;</span>
-        </a>
-        <a href="#why" class="group flex items-center gap-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#141416] hover:border-[#9e005d] px-5 py-4 transition">
-          <span class="font-display font-extrabold text-2xl text-zinc-300 dark:text-zinc-600">2</span>
-          <span><span class="block font-bold text-zinc-900 dark:text-white">Why Ttryy</span><span class="block text-[13px] text-zinc-500">Why the combination beats a website alone.</span></span>
-          <span class="ml-auto group-hover:translate-x-1 transition">&rarr;</span>
-        </a>
-        <a href="#help" class="group flex items-center gap-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#141416] hover:border-[#9e005d] px-5 py-4 transition">
-          <span class="font-display font-extrabold text-2xl text-zinc-300 dark:text-zinc-600">3</span>
-          <span><span class="block font-bold text-zinc-900 dark:text-white">How we can help</span><span class="block text-[13px] text-zinc-500">Steps, niches, packages and pricing.</span></span>
-          <span class="ml-auto group-hover:translate-x-1 transition">&rarr;</span>
-        </a>
-      </div>
+  <!-- READING GUIDE (sticky) -->
+  <div class="sticky top-16 lg:top-[72px] z-40 bg-white/90 dark:bg-[#0A0A0B]/90 backdrop-blur-xl border-t border-zinc-200 dark:border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-2 overflow-x-auto">
+      <span class="hidden md:inline text-xs font-semibold text-zinc-500 shrink-0 mr-1">New here? Read in order:</span>
+      <a href="#what" data-spy="what" class="spy-link shrink-0 text-[13px] font-semibold rounded-full border border-zinc-200 dark:border-white/15 px-4 py-1.5 text-zinc-600 dark:text-zinc-300 hover:border-[#9e005d] transition">1 &middot; What we do</a>
+      <a href="#why" data-spy="why" class="spy-link shrink-0 text-[13px] font-semibold rounded-full border border-zinc-200 dark:border-white/15 px-4 py-1.5 text-zinc-600 dark:text-zinc-300 hover:border-[#9e005d] transition">2 &middot; Why Ttryy</a>
+      <a href="#help" data-spy="help" class="spy-link shrink-0 text-[13px] font-semibold rounded-full border border-zinc-200 dark:border-white/15 px-4 py-1.5 text-zinc-600 dark:text-zinc-300 hover:border-[#9e005d] transition">3 &middot; How we can help</a>
     </div>
   </div>
 </section>
@@ -356,12 +344,14 @@
       <p class="text-xs font-semibold tracking-wide uppercase text-[#9e005d]">How we can help &middot; Your niche</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">We Don&rsquo;t Give You Random Contacts.</h2>
       <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Your potential customers are selected around <strong class="text-zinc-900 dark:text-white">what you actually sell.</strong> Search your industry below to see what your package would cover.</p>
-      <div class="mt-6 flex flex-col sm:flex-row gap-3">
+      <div class="sticky top-16 lg:top-[72px] z-30 mt-6 -mx-4 px-4 sm:-mx-6 sm:px-6 py-3 bg-white/90 dark:bg-[#0A0A0B]/90 backdrop-blur-xl">
+        <div class="flex flex-col sm:flex-row gap-3 max-w-3xl">
         <div class="relative flex-1">
           <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg>
           <input id="nicheSearch" type="text" placeholder="Search your industry: construction, NGO, solar" class="w-full bg-zinc-50 dark:bg-[#17171A] border border-zinc-300 dark:border-white/15 rounded-full pl-11 pr-4 py-3.5 text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 outline-none focus:border-[#9e005d]">
         </div>
         <button onclick="openLead('')" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-6 py-3 rounded-full transition shrink-0 shadow-lg shadow-[#9e005d]/25">Tell Us Your Niche</button>
+        </div>
       </div>
     </div>
     <div id="nicheGrid" class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
@@ -621,6 +611,8 @@
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script>
 const NICHES = [
  {code:'NGO',biz:['Foundation','Initiative','Trust','Relief','Outreach'],name:'NGOs & Charities',tags:'ngo charity donor grant foundation',prospects:['Grant makers','Foundations','Donors','Development agencies','UN organisations','Corporate foundations','CSR programs','Philanthropic orgs','International NGOs','Government programs','Research funders','NGO partners'],opps:['Grants','Funding opportunities','Fellowships','NGO partnerships','Procurement','Program funding','Research grants','CSR funding'],note:'Example resource: 100+ donor and grant platforms relevant to NGOs in Africa and Uganda.'},
@@ -639,14 +631,18 @@ const NICHES = [
  {code:'MED',biz:['Medical','Pharma','Health','Labs','Care'],name:'Medical Suppliers',tags:'medical health pharma hospital',prospects:['Hospitals','Clinics','Pharmacies','NGOs','Government agencies','Laboratories','Health programs','Medical centres'],opps:['Medical equipment tenders','Pharma procurement','Lab equipment','Health project procurement']},
 ];
 function nicheCard(n){
-  return `<div class="niche-card bg-zinc-50 dark:bg-[#141416] border border-zinc-200 dark:border-white/10 hover:border-[#9e005d]/50 rounded-xl p-6 text-left">`
-    + `<div class="flex items-center justify-between gap-3"><h3 class="font-display font-bold text-[17px] leading-tight text-zinc-900 dark:text-white">${n.name}</h3><span class="text-[11px] font-bold text-zinc-500 bg-zinc-200/60 dark:bg-white/10 dark:text-zinc-300 rounded-full px-2.5 py-1 shrink-0">${n.code}</span></div>`
-    + `<p class="text-[11px] font-semibold uppercase tracking-wide text-zinc-500 mt-5">Potential customers</p>`
-    + `<div class="mt-2 flex flex-wrap gap-1.5">${n.prospects.slice(0,8).map(p=>`<span class="text-xs text-zinc-600 dark:text-zinc-300 bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/10 rounded-full px-2.5 py-1">${p}</span>`).join('')}<span class="text-[11px] text-zinc-400">+${n.prospects.length-8} more</span></div>`
-    + `<p class="text-[11px] font-semibold uppercase tracking-wide text-zinc-500 mt-4">Opportunities</p>`
-    + `<div class="mt-2 flex flex-wrap gap-1.5">${n.opps.slice(0,4).map(p=>`<span class="text-xs text-zinc-600 dark:text-zinc-300 bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/10 rounded-full px-2.5 py-1">${p}</span>`).join('')}</div>`
-    + (n.note?`<p class="mt-4 text-xs text-zinc-500 border-l-2 border-[#9e005d] pl-3">${n.note}</p>`:'')
-    + `<button onclick="openLead('', '${n.name} package')" class="mt-5 w-full border border-zinc-300 dark:border-white/15 hover:border-[#9e005d] hover:text-[#9e005d] text-zinc-900 dark:text-white font-bold py-2 rounded-full text-sm transition">Get the ${n.name} Package</button></div>`;
+  const li=t=>`<li class="flex items-start gap-2 pl-4"><svg class="w-3.5 h-3.5 shrink-0 mt-1 text-[#9e005d]"><use href="#i-check"/></svg><span>${t}</span></li>`;
+  return `<div class="niche-card bg-zinc-50 dark:bg-[#141416] border border-zinc-200 dark:border-white/10 hover:border-[#9e005d]/50 rounded-xl overflow-hidden text-left">`
+    + `<div class="flex items-center gap-3 px-5 pt-5"><span class="w-9 h-9 grid place-items-center rounded-full bg-[#9e005d] text-white text-[11px] font-bold shrink-0">${n.code}</span>`
+    + `<div class="min-w-0"><h3 class="font-display font-bold text-[16px] leading-tight text-zinc-900 dark:text-white">${n.name}</h3><p class="text-[11px] text-zinc-500">${n.prospects.length} prospect groups &middot; ${n.opps.length} opportunity types</p></div></div>`
+    + `<div class="mx-5 mt-4 pt-4 border-t border-zinc-200 dark:border-white/10">`
+    + `<p class="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">Potential customers</p>`
+    + `<ul class="mt-2 space-y-1.5 text-[13px] text-zinc-700 dark:text-zinc-300">${n.prospects.slice(0,6).map(li).join('')}<li class="pl-4 text-[12px] text-zinc-400">+${n.prospects.length-6} more groups</li></ul></div>`
+    + `<div class="mx-5 mt-4">`
+    + `<p class="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">Opportunities</p>`
+    + `<ul class="mt-2 space-y-1.5 text-[13px] text-zinc-700 dark:text-zinc-300">${n.opps.slice(0,4).map(li).join('')}</ul></div>`
+    + (n.note?`<p class="mx-5 mt-4 text-xs text-zinc-500 border-l-2 border-[#9e005d] pl-3">${n.note}</p>`:'')
+    + `<div class="p-5"><button onclick="openLead('', '${n.name} package')" class="w-full border border-zinc-300 dark:border-white/15 hover:border-[#9e005d] hover:text-[#9e005d] text-zinc-900 dark:text-white font-bold py-2 rounded-full text-sm transition">Get the ${n.name} Package</button></div></div>`;
 }
 function renderNiches(filter=''){
   const grid = document.getElementById('nicheGrid');
@@ -681,7 +677,7 @@ function makeRecord(n){
 }
 const scrapeSel=document.getElementById('scrapeNiche');
 NICHES.forEach(n=>{ const o=document.createElement('option'); o.value=n.code; o.textContent=n.name; scrapeSel.appendChild(o); });
-let scraping=false, scrapeTimers=[], currentNiche=null, currentTotal=0;
+let scraping=false, scrapeTimers=[], currentNiche=null, currentTotal=0, currentRecords=[];
 function scrapeFinishedName(){ const b=document.getElementById('scrapeBiz').value.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); return 'prospects-'+currentNiche.code.toLowerCase()+(b?'-'+b.slice(0,24):'')+'.pdf'; }
 function runScrape(){
   if(scraping) return; scraping=true;
@@ -691,7 +687,8 @@ function runScrape(){
         bar=document.getElementById('scrapeBar'), label=document.getElementById('scrapeLabel'),
         pct=document.getElementById('scrapePct'), locked=document.getElementById('lockedZone'),
         btn=document.getElementById('scrapeBtn');
-  rowsEl.innerHTML=''; locked.classList.add('hidden'); statusEl.classList.remove('hidden');
+  rowsEl.innerHTML=''; locked.classList.add('hidden'); statusEl.classList.remove('hidden'); currentRecords=[];
+  document.getElementById('pdfDl').classList.add('hidden');
   btn.disabled=true; btn.classList.add('opacity-50');
   document.getElementById('pdfName').textContent=scrapeFinishedName();
   document.getElementById('pdfCount').textContent='scanning…';
@@ -699,7 +696,7 @@ function runScrape(){
   phases.forEach(([text,p],i)=>{ scrapeTimers.push(setTimeout(()=>{ label.textContent=text; bar.style.width=p+'%'; pct.textContent=p+'%'; }, i*900)); });
   for(let i=0;i<10;i++){
     scrapeTimers.push(setTimeout(()=>{
-      const r=makeRecord(currentNiche);
+      const r=makeRecord(currentNiche); currentRecords.push(r);
       const div=document.createElement('div');
       div.className='record-in flex items-center justify-between gap-3 px-4 py-2.5';
       div.innerHTML=`<div class="min-w-0"><p class="text-[13px] font-bold text-zinc-900 dark:text-white truncate">${i+1}. ${r.name}</p>`
@@ -719,9 +716,39 @@ function runScrape(){
       blur.appendChild(row); }
     document.getElementById('lockedText').textContent=currentTotal+' more records locked in this PDF';
     locked.classList.remove('hidden');
+    document.getElementById('pdfDl').classList.remove('hidden');
     label.textContent='Done — 10 free records ready.'; bar.style.width='100%'; pct.textContent='100%';
     btn.disabled=false; btn.classList.remove('opacity-50'); scraping=false;
   }, 600+10*380+600));
+}
+function downloadSamplePdf(){
+  if(!window.jspdf||typeof window.jspdf.jsPDF==='undefined'){ document.getElementById('pdfCount').textContent='PDF engine still loading — check your connection and retry.'; return; }
+  const { jsPDF }=window.jspdf;
+  const doc=new jsPDF();
+  const n=currentNiche||NICHES[0], biz=document.getElementById('scrapeBiz').value.trim()||'Not specified';
+  const brand=[158,0,93], total=10+currentTotal;
+  doc.setFillColor(...brand); doc.rect(0,0,210,36,'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(22);
+  doc.text('TTRYY',14,16);
+  doc.setFontSize(11); doc.setFont('helvetica','normal');
+  doc.text('Prospect sample  ·  '+n.name,14,25);
+  doc.setFontSize(9); doc.setTextColor(80,80,80);
+  const date=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  doc.text('Business: '+biz,14,44);
+  doc.text('Date: '+date+'     Records in this sample: 10 of '+total,14,50);
+  if(typeof doc.autoTable==='function'){
+    doc.autoTable({ startY:55, head:[['#','Business','Type','District','Contact','Phone','Need']],
+      body:currentRecords.map((r,i)=>[i+1,r.name,r.type,r.district,r.contact,r.phone,r.need]),
+      styles:{fontSize:7.5,cellPadding:2.2}, headStyles:{fillColor:brand,textColor:255,fontStyle:'bold'},
+      alternateRowStyles:{fillColor:[250,243,247]}, margin:{left:14,right:14} });
+  }
+  let y=(doc.lastAutoTable?doc.lastAutoTable.finalY:60)+10;
+  doc.setFontSize(9); doc.setTextColor(110,110,110);
+  doc.text('This sample shows 10 of '+total+' records mapped for '+n.name+'.',14,y);
+  doc.text('Unlock the full PDF for UGX 10,000 — request it via the Ttryy website or WhatsApp.',14,y+6);
+  const pages=doc.getNumberOfPages();
+  for(let i=1;i<=pages;i++){ doc.setPage(i); doc.setFontSize(8); doc.setTextColor(160,160,160); doc.text('Page '+i+' of '+pages+'  ·  Ttryy sample PDF — sample data for demonstration',14,287); }
+  doc.save(scrapeFinishedName());
 }
 function unlockPdf(){
   const msg='I want to unlock the full prospect PDF (UGX 10,000) for '+(currentNiche?currentNiche.name:'my niche')
@@ -743,6 +770,7 @@ function syncCS(sel){
   const empty=!opt||opt.value==='';
   label.classList.toggle('text-zinc-400', empty);
   wrap.querySelector('.cs-btn').style.borderColor='';
+  wrap.querySelectorAll('.cs-list button').forEach(b=>{ const tick=b.querySelector('.cs-tick'); if(tick) tick.classList.toggle('hidden', b.dataset.value!==sel.value); });
 }
 function enhanceSelect(sel){
   const wrap=document.createElement('div'); wrap.className='cs-wrap relative';
@@ -759,8 +787,8 @@ function enhanceSelect(sel){
   [...sel.options].forEach(o=>{
     const item=document.createElement('button');
     item.type='button'; item.dataset.value=o.value; item.setAttribute('role','option');
-    item.className='w-full text-left px-4 py-2 rounded-lg text-sm transition hover:bg-zinc-100 dark:hover:bg-white/10 '+(o.value===''?'text-zinc-400':'text-zinc-800 dark:text-zinc-200');
-    item.textContent=o.textContent;
+    item.className='w-full flex items-center justify-between gap-2 text-left px-4 py-2 rounded-lg text-sm transition hover:bg-zinc-100 dark:hover:bg-white/10 '+(o.value===''?'text-zinc-400':'text-zinc-800 dark:text-zinc-200');
+    item.innerHTML=`<span class="truncate">${o.textContent}</span><svg class="cs-tick w-4 h-4 shrink-0 text-[#9e005d] hidden"><use href="#i-check"/></svg>`;
     item.addEventListener('click',()=>{ sel.value=o.value; sel.dispatchEvent(new Event('change',{bubbles:true})); syncCS(sel); closeAllCS(); });
     list.appendChild(item);
   });
@@ -799,6 +827,33 @@ window.addEventListener('scroll',()=>{ document.getElementById('nav').style.boxS
 function currentTheme(){ return document.documentElement.classList.contains('dark') ? 'dark' : 'light'; }
 function paintThemeBtn(){ const dark=currentTheme()==='dark'; document.getElementById('iconMoon').classList.toggle('hidden',dark); document.getElementById('iconSun').classList.toggle('hidden',!dark); }
 function toggleTheme(){ const next=currentTheme()==='dark'?'light':'dark'; document.documentElement.classList.toggle('dark',next==='dark'); try{localStorage.setItem('ttryy-theme',next);}catch(e){} paintThemeBtn(); }
+/* ---------- SMOOTH SCROLL + SCROLLSPY ---------- */
+(function(){
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function goTo(hash){
+    const el=document.querySelector(hash); if(!el) return;
+    const top=el.getBoundingClientRect().top+window.scrollY-84;
+    if(reduce){ window.scrollTo(0,top); return; }
+    const from=window.scrollY, dist=top-from, t0=performance.now(), dur=900;
+    function step(t){ const p=Math.min((t-t0)/dur,1), ez=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+      window.scrollTo(0,from+dist*ez); if(p<1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      const hash=a.getAttribute('href'); if(!hash||hash.length<2||!document.querySelector(hash)) return;
+      e.preventDefault();
+      try{ history.replaceState(null,'',hash); }catch(err){}
+      goTo(hash);
+    });
+  });
+  const spyLinks=[...document.querySelectorAll('[data-spy]')];
+  if(spyLinks.length&&'IntersectionObserver' in window){
+    const secs=spyLinks.map(l=>document.getElementById(l.dataset.spy)).filter(Boolean);
+    const spy=new IntersectionObserver(es=>{ es.forEach(en=>{ if(en.isIntersecting){ spyLinks.forEach(l=>l.classList.toggle('spy-active',l.dataset.spy===en.target.id)); } }); },{rootMargin:'-40% 0px -55% 0px'});
+    secs.forEach(s=>spy.observe(s));
+  }
+})();
 paintThemeBtn();
 </script>
 </body>
