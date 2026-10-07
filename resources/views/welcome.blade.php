@@ -20,8 +20,8 @@
   h1,h2,h3,.font-display{ font-family:'Sora',sans-serif; }
   section[id]{ scroll-margin-top:80px; }
   ::selection{ background:#9e005d; color:#fff; }
-  .sqgrid{ background-image:linear-gradient(to right, rgba(17,17,19,.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(17,17,19,.05) 1px, transparent 1px); background-size:30px 30px; -webkit-mask-image:radial-gradient(ellipse 90% 85% at 50% 32%, black 20%, transparent 75%); mask-image:radial-gradient(ellipse 90% 85% at 50% 32%, black 20%, transparent 75%); }
-  .dark .sqgrid{ background-image:linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px); }
+  .sqgrid{ background-image:linear-gradient(to right, rgba(17,17,19,.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(17,17,19,.05) 1px, transparent 1px); background-size:30px 30px; background-attachment:fixed; -webkit-mask-image:radial-gradient(ellipse 90% 85% at 50% 32%, black 20%, transparent 75%); mask-image:radial-gradient(ellipse 90% 85% at 50% 32%, black 20%, transparent 75%); }
+  .dark .sqgrid{ background-image:linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px); background-attachment:fixed; }
   .cs-wrap:focus-within .cs-btn{ border-color:#9e005d; }
   .cs-btn svg{ transition:transform .25s ease; }
   .cs-btn[aria-expanded="true"] svg{ transform:rotate(180deg); }
@@ -419,7 +419,7 @@
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0 text-zinc-400 dark:text-zinc-500"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <button onclick="openLead('START')" class="mt-7 w-full bg-white text-zinc-950 border border-zinc-200 dark:border-white/25 shadow-sm hover:bg-zinc-950 hover:text-white hover:border-zinc-950 dark:hover:bg-zinc-200 dark:hover:text-zinc-950 dark:hover:border-white font-bold py-3 rounded-full transition">Get Started</button>
+        <button onclick="openLead('START')" class="mt-7 w-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Get Started</button>
       </div>
       <!-- GROW -->
       <div class="reveal relative bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 rounded-xl p-6 flex flex-col lg:scale-[1.05] shadow-2xl shadow-zinc-950/30 ring-1 ring-zinc-950/10 dark:ring-white/20 order-2">
@@ -448,7 +448,7 @@
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0 text-zinc-400 dark:text-zinc-500"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <button onclick="openLead('BUSINESS')" class="mt-7 w-full bg-white text-zinc-950 border border-zinc-200 dark:border-white/25 shadow-sm hover:bg-zinc-950 hover:text-white hover:border-zinc-950 dark:hover:bg-zinc-200 dark:hover:text-zinc-950 dark:hover:border-white font-bold py-3 rounded-full transition">Choose Business</button>
+        <button onclick="openLead('BUSINESS')" class="mt-7 w-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Choose Business</button>
       </div>
     </div>
     <!-- comparison table -->
