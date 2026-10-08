@@ -4,13 +4,13 @@ use App\Models\PackageOrder;
 use App\Models\User;
 
 test('guests are redirected to login when visiting checkout', function () {
-    $this->get('/checkout?package=GROW')->assertRedirect('/login');
+    $this->get('/dashboard/checkout?package=GROW')->assertRedirect('/login');
 });
 
 test('checkout page shows the preselected package', function () {
     $user = User::factory()->create();
 
-    $this->actingAs($user)->get('/checkout?package=BUSINESS')
+    $this->actingAs($user)->get('/dashboard/checkout?package=BUSINESS')
         ->assertOk()
         ->assertSee('UGX 650,000', false);
 });
@@ -18,9 +18,10 @@ test('checkout page shows the preselected package', function () {
 test('authenticated users can place a monthly package order', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->post('/checkout', [
+    $response = $this->actingAs($user)->post('/dashboard/checkout', [
         'package' => 'GROW',
         'billing_frequency' => 'monthly',
+        'domain' => 'budget',
         'duration_months' => 12,
         'business_name' => 'Savanna Build Ltd',
         'phone' => '+256 700 000000',
@@ -30,19 +31,41 @@ test('authenticated users can place a monthly package order', function () {
     $order = PackageOrder::first();
     expect($order)->not->toBeNull()
         ->and($order->user_id)->toBe($user->id)
-        ->and($order->total_amount)->toBe(30000 * 12)
+        ->and($order->total_amount)->toBe(30000 * 12 + 29000)
+        ->and($order->due_today)->toBe(30000 + 29000)
+        ->and($order->domain_fee)->toBe(29000)
         ->and($order->periods)->toBe(12)
         ->and($order->status)->toBe('pending');
 
     $response->assertRedirect(route('checkout.success', $order));
 });
 
+test('pay per day on the START package shows the deposit-first breakdown', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->post('/dashboard/checkout', [
+        'package' => 'START',
+        'billing_frequency' => 'daily',
+        'domain' => 'premium',
+        'duration_months' => 3,
+        'business_name' => 'Test Biz',
+        'phone' => '+256 700 000001',
+    ]);
+
+    // 91 daily payments of UGX 700 + UGX 80,000 domain deposit, all due upfront first.
+    $order = PackageOrder::first();
+    expect($order->total_amount)->toBe(700 * 91 + 80000)
+        ->and($order->due_today)->toBe(700 + 80000)
+        ->and($order->periods)->toBe(91);
+});
+
 test('order totals are computed server-side, not trusted from the client', function () {
     $user = User::factory()->create();
 
-    $this->actingAs($user)->post('/checkout', [
+    $this->actingAs($user)->post('/dashboard/checkout', [
         'package' => 'START',
         'billing_frequency' => 'weekly',
+        'domain' => 'none',
         'duration_months' => 12,
         'business_name' => 'Test Biz',
         'phone' => '+256 700 000001',
@@ -56,15 +79,17 @@ test('order totals are computed server-side, not trusted from the client', funct
 test('full payment always covers a single one-time charge', function () {
     $user = User::factory()->create();
 
-    $this->actingAs($user)->post('/checkout', [
+    $this->actingAs($user)->post('/dashboard/checkout', [
         'package' => 'BUSINESS',
         'billing_frequency' => 'full',
+        'domain' => 'none',
         'business_name' => 'Test Biz',
         'phone' => '+256 700 000002',
     ]);
 
     $order = PackageOrder::first();
     expect($order->total_amount)->toBe(650000)
+        ->and($order->due_today)->toBe(650000)
         ->and($order->duration_months)->toBe(12);
 });
 
@@ -92,9 +117,10 @@ test('users cannot view other users orders', function () {
 test('my packages page lists the users orders', function () {
     $user = User::factory()->create();
 
-    $this->actingAs($user)->post('/checkout', [
+    $this->actingAs($user)->post('/dashboard/checkout', [
         'package' => 'START',
         'billing_frequency' => 'full',
+        'domain' => 'none',
         'business_name' => 'Test Biz',
         'phone' => '+256 700 000004',
     ]);

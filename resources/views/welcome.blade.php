@@ -97,9 +97,9 @@
         <svg class="w-5 h-5"><use href="#i-chat"/></svg>
         WhatsApp
       </a>
-      <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white text-sm font-bold px-6 py-2 rounded-full transition shadow-lg shadow-[#9e005d]/25">Get Started</a>
+      <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white text-sm font-bold px-6 py-2 rounded-full transition shadow-lg shadow-[#9e005d]/25">Get Started</a>
       @auth
-      <a href="/my-packages" class="hidden md:inline-flex text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">My packages</a>
+      <a href="/dashboard/packages" class="hidden md:inline-flex text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">My packages</a>
       @endauth
       <button id="menuBtn" class="lg:hidden p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/10" aria-label="Menu">
         <svg id="menuOpen" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -115,9 +115,9 @@
     <a href="#pricing" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Pricing</a>
     <a href="#tools" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Business Tools</a>
     <a href="#faq" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">FAQ</a>
-    <a href="/checkout" class="block text-center w-full mt-2 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full">Get Started</a>
+    <a href="/dashboard/checkout" class="block text-center w-full mt-2 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full">Get Started</a>
     @auth
-    <a href="/my-packages" class="block text-center w-full mt-2 border border-zinc-300 dark:border-white/20 font-bold py-3 rounded-full">My packages</a>
+    <a href="/dashboard/packages" class="block text-center w-full mt-2 border border-zinc-300 dark:border-white/20 font-bold py-3 rounded-full">My packages</a>
     @endauth
   </div>
 </header>
@@ -136,7 +136,7 @@
         Get a professional, SEO-ready business website plus targeted potential customers and business opportunities specific to your niche. We help you get online and find where the business is. <strong class="text-zinc-900 dark:text-white">Your job is to close the client.</strong>
       </p>
       <div class="mt-8 flex flex-col sm:flex-row gap-3">
-        <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/25 text-center">Get Your Website</a>
+        <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/25 text-center">Get Your Website</a>
         <a href="#pricing" class="inline-flex justify-center items-center border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold px-7 py-3 rounded-full text-base transition">View Packages</a>
       </div>
       <p class="mt-5 text-sm text-zinc-500">Starting from <strong class="text-zinc-900 dark:text-white">UGX 250,000</strong>. No WordPress. Full CMS. SEO included.</p>
@@ -221,7 +221,7 @@
       </div>
     </div>
     <div class="mt-8 reveal flex flex-col sm:flex-row gap-3">
-      <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25 text-center">Get Your Website</a>
+      <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25 text-center">Get Your Website</a>
       <a href="#why" class="inline-flex justify-center items-center font-bold px-8 py-3 rounded-full border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white transition">Next: why this works &rarr;</a>
     </div>
   </div>
@@ -282,7 +282,7 @@
       <div><p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Proof &middot; Our work</p>
         <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Websites We&rsquo;ve Built</h2>
         <p class="text-zinc-600 dark:text-zinc-400 mt-2">Placeholder concepts showing the standard each site ships to.</p></div>
-      <a href="/checkout" class="shrink-0 border-2 border-zinc-950 dark:border-white/30 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 font-bold px-6 py-3 rounded-full transition text-sm text-center">Get One Like This</a>
+      <a href="/dashboard/checkout" class="shrink-0 border-2 border-zinc-950 dark:border-white/30 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 font-bold px-6 py-3 rounded-full transition text-sm text-center">Get One Like This</a>
     </div>
     <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
       @php $works=[['SB','Savanna Build Ltd','Construction','Company site with tender-ready profile and contractor prospect pack.'],['BC','BrightSmile Clinics','Medical','Clinic site with booking pages, SEO and a hospital buyer directory.'],['EF','EduCare Foundation','NGO and Charity','Donor-ready NGO site with a grant platform resource pack.'],['VA','VoltAfrica Solar','Solar and Energy','Solar installer site with an institutional buyer prospect pack.'],['FP','FreshPlate Catering','Catering','Catering site with quote forms and a corporate events directory.'],['SL','SwiftLine Logistics','Logistics','Logistics site with service pages and an importer directory.']]; @endphp
@@ -334,7 +334,7 @@
       </div>
       @endforeach
     </div>
-    <div class="mt-10 reveal"><a href="/checkout" class="inline-block bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Start Building My Business</a></div>
+    <div class="mt-10 reveal"><a href="/dashboard/checkout" class="inline-block bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Start Building My Business</a></div>
 
     <!-- Everything included -->
     <div class="mt-16 max-w-2xl reveal">
@@ -414,42 +414,42 @@
       <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Every package includes a professional website, custom CMS, SEO and a niche-specific business development resource.</p>
       <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pay in full, or spread it with Ttryy payment plans — monthly, daily, or weekly. From <strong class="text-zinc-950 dark:text-white">UGX 700/day</strong>.</p>
     </div>
+    <div class="mt-8 reveal">
+      <div class="inline-flex rounded-full bg-zinc-100 dark:bg-white/10 p-1" id="planTabs" role="tablist" aria-label="Billing period">
+        <button data-billing="daily" role="tab" class="plan-tab rounded-full px-5 py-2 text-sm font-bold transition">Per day</button>
+        <button data-billing="weekly" role="tab" class="plan-tab rounded-full px-5 py-2 text-sm font-bold transition">Per week</button>
+        <button data-billing="monthly" role="tab" class="plan-tab rounded-full px-5 py-2 text-sm font-bold transition">Per month</button>
+      </div>
+      <div class="mt-4 flex flex-col sm:flex-row sm:items-center gap-3">
+        <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Add a domain:</p>
+        <div class="inline-flex self-start rounded-full border border-zinc-200 dark:border-white/15 p-1" id="domainToggle" role="group" aria-label="Domain choice">
+          <button data-domain="none" class="domain-opt rounded-full px-4 py-2 text-[13px] font-bold transition">No domain</button>
+          <button data-domain="budget" class="domain-opt rounded-full px-4 py-2 text-[13px] font-bold transition">.xyz · .online · .shop <span class="font-semibold opacity-70">+29,000</span></button>
+          <button data-domain="premium" class="domain-opt rounded-full px-4 py-2 text-[13px] font-bold transition">.com · .org <span class="font-semibold opacity-70">+80,000</span></button>
+        </div>
+      </div>
+      <p class="mt-3 text-sm text-zinc-500">First payment plus domain deposit gets your website live within 5 days.</p>
+    </div>
     <div class="mt-10 grid lg:grid-cols-3 gap-6 items-stretch max-w-6xl mx-auto">
       <!-- START -->
       <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-3">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">START</p>
-        <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white">UGX 250,000</p>
-        <p class="text-xs text-zinc-500 mt-2">100% deposit to start</p>
-        <div class="mt-4 rounded-xl bg-white dark:bg-[#1E1E22] shadow-sm p-4">
-          <p class="text-[11px] font-bold uppercase tracking-wide text-zinc-500">Or spread it out</p>
-          <div class="mt-2 space-y-1.5 text-sm">
-            <div class="flex justify-between gap-2"><span class="text-zinc-500">12-month plan</span><strong class="text-zinc-950 dark:text-white">UGX 21,000/mo</strong></div>
-            <div class="flex justify-between gap-2"><span class="text-zinc-500">365-day plan</span><strong class="text-zinc-950 dark:text-white">UGX 700/day</strong></div>
-            <div class="flex justify-between gap-2"><span class="text-zinc-500">Approx. weekly</span><strong class="text-zinc-950 dark:text-white">UGX 4,800/week</strong></div>
-          </div>
-        </div>
+        <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white"><span data-plan-price="START">UGX 21,000</span><span class="text-lg font-bold text-zinc-500" data-plan-per="START">/mo</span></p>
+        <p class="text-xs text-zinc-500 mt-2">Full UGX 250,000 · Domain from UGX 29,000</p>
         <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-3">For businesses getting online and starting prospecting.</p>
         <ul class="mt-6 space-y-2.5 text-sm flex-1 text-zinc-700 dark:text-zinc-300">
           @foreach(['Full professional website','Custom CMS','Mobile responsive','SEO included','5,000 niche-specific potential customers','Lead/resource PDF','100 application/opportunity resources','Contact/lead forms','WhatsApp integration','No WordPress'] as $f)
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0 text-zinc-400 dark:text-zinc-500"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <a href="/checkout?package=START" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Get Started</a>
+        <a href="/dashboard/checkout?package=START" data-plan-cta="START" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Get Started</a>
       </div>
       <!-- GROW -->
       <div class="reveal relative bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 rounded-xl p-6 flex flex-col lg:scale-[1.05] shadow-2xl shadow-zinc-950/30 ring-1 ring-zinc-950/10 dark:ring-white/20 order-2">
         <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#9e005d] text-white text-xs font-extrabold px-5 py-1.5 rounded-full whitespace-nowrap shadow-lg">MOST POPULAR</span>
         <p class="font-display font-bold text-sm tracking-wide text-white/70 dark:text-zinc-500">GROW</p>
-        <p class="mt-2 font-display font-extrabold text-4xl">UGX 350,000</p>
-        <p class="text-xs text-white/70 dark:text-zinc-500 mt-2">60% deposit to start</p>
-        <div class="mt-4 rounded-xl bg-white/10 dark:bg-zinc-100 p-4">
-          <p class="text-[11px] font-bold uppercase tracking-wide text-white/60 dark:text-zinc-500">Or spread it out</p>
-          <div class="mt-2 space-y-1.5 text-sm">
-            <div class="flex justify-between gap-2"><span class="text-white/60 dark:text-zinc-500">12-month plan</span><strong>UGX 30,000/mo</strong></div>
-            <div class="flex justify-between gap-2"><span class="text-white/60 dark:text-zinc-500">365-day plan</span><strong>UGX 1,000/day</strong></div>
-            <div class="flex justify-between gap-2"><span class="text-white/60 dark:text-zinc-500">Approx. weekly</span><strong>UGX 6,700/week</strong></div>
-          </div>
-        </div>
+        <p class="mt-2 font-display font-extrabold text-4xl"><span data-plan-price="GROW">UGX 30,000</span><span class="text-lg font-bold opacity-60" data-plan-per="GROW">/mo</span></p>
+        <p class="text-xs text-white/60 dark:text-zinc-500 mt-2">Full UGX 350,000 · Domain from UGX 29,000</p>
         <p class="text-sm text-white/80 dark:text-zinc-600 mt-3">For businesses ready to actively pursue customers and opportunities.</p>
         <p class="text-xs font-semibold text-white/60 dark:text-zinc-500 mt-5 uppercase tracking-wider">Everything in Start, plus:</p>
         <ul class="mt-3 space-y-2.5 text-sm flex-1">
@@ -457,21 +457,13 @@
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <a href="/checkout?package=GROW" class="mt-7 w-full text-center bg-white dark:bg-zinc-950 text-zinc-950 dark:text-white font-bold py-3 rounded-full transition hover:bg-zinc-100 dark:hover:bg-zinc-800">Choose Grow</a>
+        <a href="/dashboard/checkout?package=GROW" data-plan-cta="GROW" class="mt-7 w-full text-center bg-white dark:bg-zinc-950 text-zinc-950 dark:text-white font-bold py-3 rounded-full transition hover:bg-zinc-100 dark:hover:bg-zinc-800">Choose Grow</a>
       </div>
       <!-- BUSINESS -->
       <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-1">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">BUSINESS</p>
-        <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white">UGX 650,000</p>
-        <p class="text-xs text-zinc-500 mt-2">70% deposit to start</p>
-        <div class="mt-4 rounded-xl bg-white dark:bg-[#1E1E22] shadow-sm p-4">
-          <p class="text-[11px] font-bold uppercase tracking-wide text-zinc-500">Or spread it out</p>
-          <div class="mt-2 space-y-1.5 text-sm">
-            <div class="flex justify-between gap-2"><span class="text-zinc-500">12-month plan</span><strong class="text-zinc-950 dark:text-white">UGX 55,000/mo</strong></div>
-            <div class="flex justify-between gap-2"><span class="text-zinc-500">365-day plan</span><strong class="text-zinc-950 dark:text-white">UGX 1,800/day</strong></div>
-            <div class="flex justify-between gap-2"><span class="text-zinc-500">Approx. weekly</span><strong class="text-zinc-950 dark:text-white">UGX 12,500/week</strong></div>
-          </div>
-        </div>
+        <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white"><span data-plan-price="BUSINESS">UGX 55,000</span><span class="text-lg font-bold text-zinc-500" data-plan-per="BUSINESS">/mo</span></p>
+        <p class="text-xs text-zinc-500 mt-2">Full UGX 650,000 · Domain from UGX 29,000</p>
         <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-3">For businesses that want a larger business-development database.</p>
         <p class="text-xs font-semibold text-zinc-500 mt-5 uppercase tracking-wider">Everything in Grow, plus:</p>
         <ul class="mt-3 space-y-2.5 text-sm flex-1 text-zinc-700 dark:text-zinc-300">
@@ -479,7 +471,7 @@
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0 text-zinc-400 dark:text-zinc-500"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <a href="/checkout?package=BUSINESS" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Choose Business</a>
+        <a href="/dashboard/checkout?package=BUSINESS" data-plan-cta="BUSINESS" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Choose Business</a>
       </div>
     </div>
     <!-- comparison table -->
@@ -488,7 +480,7 @@
       <table id="featTable" class="tbl w-full text-sm min-w-[640px]">
         <thead class="tbl-head"><tr class="text-white text-left"><th class="px-6 py-4 font-bold whitespace-nowrap rounded-tl-xl">Feature</th><th class="px-6 py-4 font-bold whitespace-nowrap">Start</th><th class="px-6 py-4 font-bold whitespace-nowrap">Grow</th><th class="px-6 py-4 font-bold whitespace-nowrap rounded-tr-xl">Business</th></tr></thead>
         <tbody class="tbl-body divide-y divide-zinc-100 dark:divide-white/10 text-zinc-700 dark:text-zinc-300">
-          @php $rows=[['Price','UGX 250K','UGX 350K','UGX 650K'],['12-month plan','UGX 21,000/mo','UGX 30,000/mo','UGX 55,000/mo'],['365-day plan','UGX 700/day','UGX 1,000/day','UGX 1,800/day'],['Approx. weekly','UGX 4,800/wk','UGX 6,700/wk','UGX 12,500/wk'],['Deposit','100%','60%','70%'],['Professional website','Yes','Yes','Yes'],['Custom CMS','Yes','Yes','Yes'],['WordPress','No','No','No'],['SEO','Yes','Yes','Yes'],['Mobile responsive','Yes','Yes','Yes'],['Domain + hosting setup','Yes','Yes','Yes'],['SSL certificate','Yes','Yes','Yes'],['Business email setup','No','Yes','Yes'],['Gallery / portfolio pages','No','Yes','Yes'],['Blog / news section','No','No','Yes'],['Google Analytics + Maps setup','No','Yes','Yes'],['Social media integration','Yes','Yes','Yes'],['Social media pages setup','No','Yes','Yes'],['Social profile branding','No','Yes','Yes'],['Social marketing starter plan','No','No','Yes'],['Google Ads setup','No','No','Yes'],['Facebook + Instagram ads','No','No','Yes'],['YouTube ads setup','No','No','Yes'],['Niche potential customers','5,000','5,000','5,000'],['Application/opportunity resources','100','200','2,000'],['Business directory contacts','—','—','2,000'],['Lead/resource PDF','Yes','Yes','Yes'],['Contact forms','Yes','Yes','Yes'],['WhatsApp integration','Yes','Yes','Yes'],['Proposal resources','Yes','Yes','Yes'],['Quotation resources','Yes','Yes','Yes'],['Maintenance + support','1 month','3 months','6 months']]; @endphp
+          @php $rows=[['Price','UGX 250K','UGX 350K','UGX 650K'],['12-month plan','UGX 21,000/mo','UGX 30,000/mo','UGX 55,000/mo'],['365-day plan','UGX 700/day','UGX 1,000/day','UGX 1,800/day'],['Approx. weekly','UGX 4,800/wk','UGX 6,700/wk','UGX 12,500/wk'],['Deposit','100%','60%','70%'],['Professional website','Yes','Yes','Yes'],['Custom CMS','Yes','Yes','Yes'],['WordPress','No','No','No'],['SEO','Yes','Yes','Yes'],['Mobile responsive','Yes','Yes','Yes'],['Domain + hosting setup','Yes','Yes','Yes'],['SSL certificate','Yes','Yes','Yes'],['Business email setup','No','Yes','Yes'],['Gallery / portfolio pages','No','Yes','Yes'],['Blog / news section','No','No','Yes'],['Google Analytics + Maps setup','No','Yes','Yes'],['Social media integration','Yes','Yes','Yes'],['Social media pages setup','No','Yes','Yes'],['Social profile branding','No','Yes','Yes'],['Social marketing starter plan','No','No','Yes'],['Google Ads setup','No','No','Yes'],['Facebook + Instagram ads','No','No','Yes'],['YouTube ads setup','No','No','Yes'],['Niche potential customers','5,000','5,000','5,000'],['Application/opportunity resources','100','200','2,000'],['Business directory contacts','—','—','2,000'],['Lead/resource PDF','Yes','Yes','Yes'],['Contact forms','Yes','Yes','Yes'],['WhatsApp integration','Yes','Yes','Yes'],['Proposal resources','Yes','Yes','Yes'],['Quotation resources','Yes','Yes','Yes'],['Maintenance + support','3 months','6 months','12 months'],['Domain name (optional)','From UGX 29,000','From UGX 29,000','From UGX 29,000']]; @endphp
           @foreach($rows as $r)
           <tr class="hover:bg-zinc-50 dark:hover:bg-white/5"><td class="px-6 py-3 font-medium">{{ $r[0] }}</td>@foreach([$r[1],$r[2],$r[3]] as $c)<td class="px-6 py-3">@if($c==='Yes')<svg class="w-5 h-5 text-zinc-700 dark:text-zinc-200"><use href="#i-check"/></svg>@elseif($c==='No'||$c==='—')<svg class="w-5 h-5 text-zinc-300 dark:text-zinc-600"><use href="#i-x"/></svg>@else{{ $c }}@endif</td>@endforeach</tr>
           @endforeach
@@ -587,7 +579,7 @@
     <h2 class="reveal font-display font-extrabold text-3xl sm:text-5xl leading-tight">Your Next Customer Is Already Out There.</h2>
     <p class="reveal text-zinc-400 text-lg mt-4 max-w-2xl mx-auto">We help you get online, identify the right prospects and find opportunities. You focus on turning them into customers.</p>
     <div class="reveal mt-8 flex flex-col sm:flex-row justify-center gap-3">
-      <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-xl shadow-[#9e005d]/30 text-center">Get My Website</a>
+      <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-xl shadow-[#9e005d]/30 text-center">Get My Website</a>
       <a href="https://wa.me/256700000000?text=Hi%20Ttryy!%20I%20want%20to%20talk%20about%20growing%20my%20business." target="_blank" class="border border-white/25 hover:bg-white/10 font-bold px-8 py-3 rounded-full transition">Talk to Ttryy</a>
     </div>
     <p class="reveal mt-5 text-sm text-zinc-500">Starting from <strong class="text-white">UGX 250,000</strong></p>
@@ -629,7 +621,7 @@
   <svg class="w-6 h-6"><use href="#i-chat"/></svg>
 </a>
 <div class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-[#0A0A0B]/95 backdrop-blur border-t border-zinc-200 dark:border-white/10 px-4 py-3 flex gap-2">
-  <a href="/checkout" class="flex-1 text-center bg-[#9e005d] text-white font-bold py-3 rounded-full text-sm">Get Your Website</a>
+  <a href="/dashboard/checkout" class="flex-1 text-center bg-[#9e005d] text-white font-bold py-3 rounded-full text-sm">Get Your Website</a>
   <a href="#pricing" class="flex-1 text-center border-2 border-zinc-950 dark:border-white/30 font-bold py-2 rounded-full text-sm">See Packages</a>
 </div>
 <div class="h-16 sm:hidden"></div>
@@ -697,7 +689,7 @@ function nicheCard(n){
     + `<p class="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">Opportunities</p>`
     + `<ul class="mt-2 space-y-1.5 text-[13px] text-zinc-700 dark:text-zinc-300">${n.opps.slice(0,4).map(li).join('')}</ul></div>`
     + (n.note?`<p class="mx-5 mt-4 text-xs text-zinc-500 border-l-2 border-zinc-300 dark:border-zinc-600 pl-3">${n.note}</p>`:'')
-    + `<div class="p-5"><a href="/checkout?niche=${encodeURIComponent(n.name)}" class="block text-center w-full border border-zinc-300 dark:border-white/15 hover:border-zinc-950 dark:hover:border-white text-zinc-900 dark:text-white font-bold py-2 rounded-full text-sm transition">Get the ${n.name} Package</a></div></div>`;
+    + `<div class="p-5"><a href="/dashboard/checkout?niche=${encodeURIComponent(n.name)}" class="block text-center w-full border border-zinc-300 dark:border-white/15 hover:border-zinc-950 dark:hover:border-white text-zinc-900 dark:text-white font-bold py-2 rounded-full text-sm transition">Get the ${n.name} Package</a></div></div>`;
 }
 function renderNiches(filter=''){
   const grid = document.getElementById('nicheGrid');
@@ -913,6 +905,29 @@ function toggleTheme(){ const next=currentTheme()==='dark'?'light':'dark'; docum
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>{ syncWidths(); update(); });
   syncWidths(); update();
 })();
+
+/* ---------- PRICING PLAN TABS + DOMAIN TOGGLE ---------- */
+const PLAN_PRICES={START:{full:250000,monthly:21000,weekly:4800,daily:700},GROW:{full:350000,monthly:30000,weekly:6700,daily:1000},BUSINESS:{full:650000,monthly:55000,weekly:12500,daily:1800}};
+const PER_SUFFIX={monthly:'/mo',weekly:'/wk',daily:'/day'};
+let planBilling='monthly', planDomain='budget';
+function refreshPlanCards(){
+  document.querySelectorAll('#planTabs .plan-tab').forEach(b=>{
+    const on=b.dataset.billing===planBilling;
+    b.className='plan-tab rounded-full px-5 py-2 text-sm font-bold transition '+(on?'bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow':'text-zinc-500 hover:text-zinc-900 dark:hover:text-white');
+  });
+  document.querySelectorAll('#domainToggle .domain-opt').forEach(b=>{
+    const on=b.dataset.domain===planDomain;
+    b.className='domain-opt rounded-full px-4 py-2 text-[13px] font-bold transition '+(on?'bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow':'text-zinc-500 hover:text-zinc-900 dark:hover:text-white');
+  });
+  ['START','GROW','BUSINESS'].forEach(pkg=>{
+    document.querySelectorAll(`[data-plan-price="${pkg}"]`).forEach(el=>{ el.textContent='UGX '+PLAN_PRICES[pkg][planBilling].toLocaleString('en-US'); });
+    document.querySelectorAll(`[data-plan-per="${pkg}"]`).forEach(el=>{ el.textContent=PER_SUFFIX[planBilling]; });
+    document.querySelectorAll(`[data-plan-cta="${pkg}"]`).forEach(el=>{ el.href=`/dashboard/checkout?package=${pkg}&billing=${planBilling}&domain=${planDomain}`; });
+  });
+}
+document.querySelectorAll('#planTabs .plan-tab').forEach(b=>b.addEventListener('click',()=>{ planBilling=b.dataset.billing; refreshPlanCards(); }));
+document.querySelectorAll('#domainToggle .domain-opt').forEach(b=>b.addEventListener('click',()=>{ planDomain=b.dataset.domain; refreshPlanCards(); }));
+refreshPlanCards();
 
 /* ---------- SMOOTH SCROLL + SCROLLSPY ---------- */
 function stickyOffset(){ const nav=document.getElementById('nav'), g=document.getElementById('guideBar'); return (nav?nav.offsetHeight:64)+(g?g.offsetHeight:0)+12; }

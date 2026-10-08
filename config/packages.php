@@ -5,7 +5,15 @@ return [
 
     // Durations (in months) a customer may spread payment over.
     // Full upfront payment always covers 12 months of the website running.
-    'durations' => [3, 6, 12, 24],
+    'durations' => [3, 6, 12],
+
+    // Domain options. The fee is an initial deposit added to the order,
+    // always due upfront with the first payment.
+    'domains' => [
+        'none' => ['label' => 'No domain — I already have one', 'fee' => 0],
+        'budget' => ['label' => '.xyz / .online / .shop', 'fee' => 29000],
+        'premium' => ['label' => '.com / .org', 'fee' => 80000],
+    ],
 
     'frequencies' => ['full', 'monthly', 'weekly', 'daily'],
 
