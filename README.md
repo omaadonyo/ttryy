@@ -69,7 +69,10 @@ recomputed server-side (`CheckoutController::quote()`), stored as
 `package_orders` (`pending` status), and confirmed with an order reference
 plus a WhatsApp follow-up link. Every order can download a branded **PDF
 invoice**. All account pages live under `/dashboard`
-in the app sidebar layout: overview, `packages`, and `checkout`.
+in the app sidebar layout: overview, `packages`, `checkout`, and a
+**prospect scraper** (masked 3-record preview, full contacts locked behind
+the UGX 10,000 unlock). Paid orders also track subscription
+**expiry, days left, and progress** on the dashboard and My packages.
 
 **Payments.** Checkout integrates **Flutterwave** (card + Mobile Money
 popup, amount = first payment due today, verified server-side before an

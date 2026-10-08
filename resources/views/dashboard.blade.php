@@ -26,6 +26,33 @@
             <flux:button href="{{ route('home') }}#pricing" variant="ghost">View pricing</flux:button>
         </div>
 
+        @php $spotlight = $orders->first(fn ($o) => $o->isActive()) ?? $orders->first(); @endphp
+        @if($spotlight)
+        <div class="rounded-xl border border-neutral-200 dark:border-neutral-700 p-5">
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+                <div>
+                    <flux:heading>{{ $spotlight->package }} subscription</flux:heading>
+                    <flux:text class="mt-1 text-sm">
+                        @if($spotlight->isActive())
+                        {{ $spotlight->daysLeft() }} of {{ $spotlight->totalDays() }} days left · expires {{ $spotlight->expiresAt()->format('d M Y') }}
+                        @elseif($spotlight->isExpired())
+                        Expired {{ $spotlight->expiresAt()->format('d M Y') }} — renew to keep your website running.
+                        @else
+                        Awaiting payment — your website goes live once the first payment lands.
+                        @endif
+                    </flux:text>
+                </div>
+                <flux:badge size="sm">{{ $spotlight->isActive() ? 'active' : $spotlight->status }}</flux:badge>
+            </div>
+            @if($spotlight->isActive() || $spotlight->isExpired())
+            <div class="mt-3 h-2 rounded-full bg-zinc-100 dark:bg-white/10 overflow-hidden">
+                <div class="h-2 rounded-full bg-[#9e005d]" style="width:{{ $spotlight->progressPercent() }}%"></div>
+            </div>
+            <p class="mt-1.5 text-xs text-zinc-500">{{ $spotlight->progressPercent() }}% of subscription period used</p>
+            @endif
+        </div>
+        @endif
+
         <div class="rounded-xl border border-neutral-200 dark:border-neutral-700 p-5">
             <flux:heading>Recent orders</flux:heading>
             @if($recentOrders->isEmpty())

@@ -25,6 +25,16 @@
                 <p class="text-sm text-zinc-500">{{ $order->business_name }}@if($order->niche) · {{ $order->niche }}@endif</p>
                 <p class="text-xl font-extrabold mt-3">UGX {{ number_format($order->total_amount) }}</p>
                 <p class="text-xs text-zinc-500 mt-1">Due today was UGX {{ number_format($order->due_today) }} · Ordered {{ $order->created_at->format('d M Y') }}</p>
+                @if($order->isActive())
+                <div class="mt-3 h-1.5 rounded-full bg-zinc-100 dark:bg-white/10 overflow-hidden">
+                    <div class="h-1.5 rounded-full bg-[#9e005d]" style="width:{{ $order->progressPercent() }}%"></div>
+                </div>
+                <p class="mt-1.5 text-xs text-zinc-500">{{ $order->daysLeft() }} days left · expires {{ $order->expiresAt()->format('d M Y') }}</p>
+                @elseif($order->isExpired())
+                <p class="mt-3 text-xs font-semibold text-red-600 dark:text-red-400">Expired {{ $order->expiresAt()->format('d M Y') }} — renew to keep your website running.</p>
+                @else
+                <p class="mt-3 text-xs text-zinc-500">Awaiting payment — subscription starts once paid.</p>
+                @endif
                 <a href="{{ route('orders.invoice', $order) }}" class="inline-block mt-3 text-sm font-bold text-[#9e005d] hover:underline">Download invoice PDF →</a>
             </div>
             @endforeach

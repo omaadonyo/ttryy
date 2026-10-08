@@ -47,4 +47,56 @@ class PackageOrder extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * When the subscription period ends. The website stays running
+     * while the plan is active and paid for.
+     */
+    public function expiresAt(): ?\Carbon\CarbonInterface
+    {
+        if (! $this->created_at) {
+            return null;
+        }
+
+        return $this->created_at->copy()->addMonths($this->duration_months ?? 12);
+    }
+
+    public function totalDays(): int
+    {
+        if (! $this->created_at || ! $this->expiresAt()) {
+            return 0;
+        }
+
+        return max(1, $this->created_at->diffInDays($this->expiresAt()));
+    }
+
+    public function daysLeft(): int
+    {
+        if (! $this->expiresAt()) {
+            return 0;
+        }
+
+        return max(0, (int) now()->diffInDays($this->expiresAt(), false));
+    }
+
+    public function progressPercent(): int
+    {
+        if ($this->totalDays() <= 0) {
+            return 0;
+        }
+
+        $elapsed = $this->totalDays() - $this->daysLeft();
+
+        return (int) min(100, max(0, round($elapsed / $this->totalDays() * 100)));
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'paid' && $this->expiresAt() !== null && now()->lt($this->expiresAt());
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->expiresAt() !== null && now()->gte($this->expiresAt());
+    }
 }

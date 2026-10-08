@@ -18,4 +18,9 @@ class DashboardController extends Controller
             'totalCommitted' => $orders->sum('total_amount'),
         ]);
     }
+
+    public function scraper()
+    {
+        return view('scraper');
+    }
 }

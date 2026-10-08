@@ -18,6 +18,9 @@
                     <flux:sidebar.item icon="shopping-bag" :href="route('packages.index')" :current="request()->routeIs('packages.*')" wire:navigate>
                         {{ __('My packages') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="magnifying-glass" :href="route('scraper.index')" :current="request()->routeIs('scraper.*')" wire:navigate>
+                        {{ __('Prospect scraper') }}
+                    </flux:sidebar.item>
                     <flux:sidebar.item icon="plus" :href="route('checkout')" :current="request()->routeIs('checkout*')" wire:navigate>
                         {{ __('New order') }}
                     </flux:sidebar.item>
