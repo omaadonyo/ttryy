@@ -3,6 +3,8 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MarketingController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -31,7 +33,14 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('contacts', [DashboardController::class, 'contacts'])->name('contacts.index');
     Route::delete('contacts/{contact}', [DashboardController::class, 'destroyContact'])->name('contacts.destroy');
     Route::get('contacts/export', [DashboardController::class, 'exportContacts'])->name('contacts.export');
-    Route::get('marketing', [DashboardController::class, 'marketing'])->name('marketing.index');
+    Route::get('marketing', [MarketingController::class, 'index'])->name('marketing.index');
+    Route::post('marketing/generate', [MarketingController::class, 'generate'])->name('marketing.generate');
+    Route::post('marketing/templates', [MarketingController::class, 'storeTemplate'])->name('marketing.templates.store');
+    Route::delete('marketing/templates/{template}', [MarketingController::class, 'destroyTemplate'])->name('marketing.templates.destroy');
+    Route::post('groups/{group}/unlock', [MarketingController::class, 'unlockGroup'])->name('groups.unlock');
+    Route::get('wallet', [WalletController::class, 'index'])->name('wallet.index');
+    Route::post('wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');
+    Route::post('wallet/verify', [WalletController::class, 'verify'])->name('wallet.verify');
 });
 
 // Guests may browse checkout and sign in inline; placing an order needs an account.

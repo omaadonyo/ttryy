@@ -24,10 +24,21 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
         ]);
+
+        // Welcome bonus so new members can try AI messages immediately.
+        $user->forceFill(['token_balance' => 20])->save();
+        $user->tokenTransactions()->create([
+            'type' => 'credit',
+            'amount' => 20,
+            'balance_after' => 20,
+            'description' => 'Welcome bonus',
+        ]);
+
+        return $user;
     }
 }

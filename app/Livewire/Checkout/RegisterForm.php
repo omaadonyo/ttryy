@@ -31,6 +31,14 @@ class RegisterForm extends Component
             'password' => $validated['password'],
         ]);
 
+        $user->forceFill(['token_balance' => 20])->save();
+        $user->tokenTransactions()->create([
+            'type' => 'credit',
+            'amount' => 20,
+            'balance_after' => 20,
+            'description' => 'Welcome bonus',
+        ]);
+
         Auth::login($user);
         session()->regenerate();
 

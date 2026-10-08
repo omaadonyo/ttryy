@@ -104,7 +104,15 @@ FLW_PUBLIC_KEY=FLWPUBK-...     # Flutterwave inline checkout (omit to use manual
 FLW_SECRET_KEY=FLWSECK-...     # server-side transaction verification
 MOMO_MERCHANT_CODE=236512      # MTN MoMo merchant code shown to customers
 ADMIN_EMAIL=pay@ttryy.com      # admin copy of every order email
+OPENAI_API_KEY=                # optional: live AI sales messages (falls back to built-in library)
+OPENAI_MODEL=gpt-4o-mini
 ```
+
+**Wallet & tokens.** Customers top up token packs (100 / UGX 5,000 ·
+500 / UGX 20,000 · 2,000 / UGX 60,000, paid via Flutterwave, verified like
+orders) and spend them across the platform: AI sales messages (10 tokens),
+WhatsApp group access (10 tokens per group). New accounts start with a 20
+token welcome bonus. Every movement is recorded in `token_transactions`.
 
 **Mail.** Order emails send via the configured SMTP mailer. Note that
 Mailtrap *sandbox* credentials only capture mail into the Mailtrap inbox —

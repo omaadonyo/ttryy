@@ -38,6 +38,9 @@
                     <flux:sidebar.item icon="banknotes" :href="route('payments.index')" :current="request()->routeIs('payments.*')" wire:navigate>
                         {{ __('Payments') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="wallet" :href="route('wallet.index')" :current="request()->routeIs('wallet.*')" wire:navigate>
+                        {{ __('Wallet') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
                 @if(auth()->user()?->is_admin)
                 <flux:sidebar.group :heading="__('Administration')" class="grid">

@@ -90,25 +90,6 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function marketing(Request $request)
-    {
-        $contacts = $request->user()->savedContacts()->latest()->take(200)->get();
-
-        return view('marketing', [
-            'contacts' => $contacts,
-            'contactsJson' => $contacts->map(fn ($c) => [
-                'name' => $c->contact,
-                'business' => $c->name,
-                'phone' => $c->phone,
-                'wa' => $c->waNumber(),
-                'type' => $c->type,
-                'need' => $c->need,
-                'niche' => $c->niche,
-                'district' => $c->district,
-            ])->values(),
-        ]);
-    }
-
     public function payments(Request $request)
     {
         $orders = $request->user()->packageOrders()->latest()->get();

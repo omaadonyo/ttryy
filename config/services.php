@@ -23,6 +23,12 @@ return [
         'secret_key' => env('FLW_SECRET_KEY'),
     ],
 
+    'openai' => [
+        'key' => env('OPENAI_API_KEY'),
+        'base_url' => env('OPENAI_BASE_URL', 'https://api.openai.com/v1'),
+        'model' => env('OPENAI_MODEL', 'gpt-4o-mini'),
+    ],
+
     'momo' => [
         // MTN Mobile Money merchant code shown to customers for manual payments.
         'merchant_code' => env('MOMO_MERCHANT_CODE', '236512'),

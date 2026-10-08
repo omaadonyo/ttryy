@@ -71,6 +71,38 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     }
 
     /**
+     * @return HasMany<TokenTopup, $this>
+     */
+    public function tokenTopups(): HasMany
+    {
+        return $this->hasMany(TokenTopup::class);
+    }
+
+    /**
+     * @return HasMany<TokenTransaction, $this>
+     */
+    public function tokenTransactions(): HasMany
+    {
+        return $this->hasMany(TokenTransaction::class);
+    }
+
+    /**
+     * @return HasMany<MessageTemplate, $this>
+     */
+    public function messageTemplates(): HasMany
+    {
+        return $this->hasMany(MessageTemplate::class);
+    }
+
+    /**
+     * @return HasMany<GroupUnlock, $this>
+     */
+    public function groupUnlocks(): HasMany
+    {
+        return $this->hasMany(GroupUnlock::class);
+    }
+
+    /**
      * Get the user's initials
      */
     public function initials(): string
