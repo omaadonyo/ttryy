@@ -61,6 +61,16 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     }
 
     /**
+     * Saved prospect contacts scraped by the user.
+     *
+     * @return HasMany<SavedContact, $this>
+     */
+    public function savedContacts(): HasMany
+    {
+        return $this->hasMany(SavedContact::class);
+    }
+
+    /**
      * Get the user's initials
      */
     public function initials(): string

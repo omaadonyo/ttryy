@@ -26,8 +26,17 @@
                     <flux:sidebar.item icon="magnifying-glass" :href="route('scraper.index')" :current="request()->routeIs('scraper.*')" wire:navigate>
                         {{ __('Prospect scraper') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="plus" :href="route('checkout')" :current="request()->routeIs('checkout*')" wire:navigate>
+                    <flux:sidebar.item icon="bookmark" :href="route('contacts.index')" :current="request()->routeIs('contacts.*')" wire:navigate>
+                        {{ __('Saved contacts') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="megaphone" :href="route('marketing.index')" :current="request()->routeIs('marketing.*')" wire:navigate>
+                        {{ __('Marketing tool') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="plus" :href="route('orders.new')" :current="request()->routeIs('orders.new') || request()->routeIs('checkout*')" wire:navigate>
                         {{ __('New order') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="banknotes" :href="route('payments.index')" :current="request()->routeIs('payments.*')" wire:navigate>
+                        {{ __('Payments') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
                 @if(auth()->user()?->is_admin)

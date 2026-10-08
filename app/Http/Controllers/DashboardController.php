@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SavedContact;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DashboardController extends Controller
 {
@@ -22,5 +24,99 @@ class DashboardController extends Controller
     public function scraper()
     {
         return view('scraper');
+    }
+
+    public function contacts(Request $request)
+    {
+        $contacts = $request->user()->savedContacts()->latest()->paginate(20);
+
+        return view('saved-contacts', ['contacts' => $contacts]);
+    }
+
+    public function storeContacts(Request $request)
+    {
+        $validated = $request->validate([
+            'niche' => ['required', 'string', 'max:255'],
+            'contacts' => ['required', 'array', 'max:50'],
+            'contacts.*.name' => ['required', 'string', 'max:255'],
+            'contacts.*.type' => ['nullable', 'string', 'max:255'],
+            'contacts.*.district' => ['nullable', 'string', 'max:255'],
+            'contacts.*.contact' => ['nullable', 'string', 'max:255'],
+            'contacts.*.phone' => ['nullable', 'string', 'max:50'],
+            'contacts.*.need' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $rows = collect($validated['contacts'])->map(fn ($c) => [
+            'user_id' => $request->user()->id,
+            'niche' => $validated['niche'],
+            'name' => $c['name'],
+            'type' => $c['type'] ?? null,
+            'district' => $c['district'] ?? null,
+            'contact' => $c['contact'] ?? null,
+            'phone' => $c['phone'] ?? null,
+            'need' => $c['need'] ?? null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ])->all();
+
+        SavedContact::insert($rows);
+
+        return response()->json(['saved' => count($rows)]);
+    }
+
+    public function destroyContact(SavedContact $contact)
+    {
+        abort_if($contact->user_id !== request()->user()->id, 403);
+        $contact->delete();
+
+        return back()->with('status', 'Contact removed.');
+    }
+
+    public function exportContacts(Request $request)
+    {
+        $contacts = $request->user()->savedContacts()->latest()->get(['name', 'type', 'district', 'contact', 'phone', 'need', 'niche', 'created_at']);
+
+        $csv = "Name,Type,District,Contact,Phone,Need,Niche,Saved\n";
+        foreach ($contacts as $c) {
+            $csv .= implode(',', array_map(
+                fn ($v) => '"'.str_replace('"', '""', (string) $v).'"',
+                [$c->name, $c->type, $c->district, $c->contact, $c->phone, $c->need, $c->niche, $c->created_at?->format('Y-m-d')]
+            ))."\n";
+        }
+
+        return response($csv, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="ttryy-contacts.csv"',
+        ]);
+    }
+
+    public function marketing(Request $request)
+    {
+        $contacts = $request->user()->savedContacts()->latest()->take(200)->get();
+
+        return view('marketing', [
+            'contacts' => $contacts,
+            'contactsJson' => $contacts->map(fn ($c) => [
+                'name' => $c->contact,
+                'business' => $c->name,
+                'phone' => $c->phone,
+                'wa' => $c->waNumber(),
+                'type' => $c->type,
+                'need' => $c->need,
+                'niche' => $c->niche,
+                'district' => $c->district,
+            ])->values(),
+        ]);
+    }
+
+    public function payments(Request $request)
+    {
+        $orders = $request->user()->packageOrders()->latest()->get();
+
+        return view('payments', [
+            'orders' => $orders,
+            'paidTotal' => $orders->where('status', 'paid')->sum('paid_amount'),
+            'outstanding' => $orders->whereIn('status', ['pending', 'submitted'])->sum(fn ($o) => $o->total_amount - $o->paid_amount),
+        ]);
     }
 }

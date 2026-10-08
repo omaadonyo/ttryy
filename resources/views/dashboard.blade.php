@@ -5,7 +5,7 @@
                 <flux:heading size="xl">Welcome back, {{ auth()->user()->name }}</flux:heading>
                 <flux:text class="mt-1">Your websites, prospect lists and payments — all in one place.</flux:text>
             </div>
-            <flux:button :href="route('checkout')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" wire:navigate>New order</flux:button>
+            <flux:button :href="route('orders.new')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" wire:navigate>New order</flux:button>
         </div>
 
         <div class="grid auto-rows-min gap-4 md:grid-cols-3">
@@ -80,7 +80,7 @@
                 <flux:button :href="route('packages.index')" variant="ghost" size="sm" wire:navigate>View all</flux:button>
             </div>
             @if($recentOrders->isEmpty())
-                <x-empty-state icon="orders" title="No orders yet" message="Choose a package to get your website and prospect list started." :actionUrl="route('checkout')" actionLabel="Choose a package" />
+                <x-empty-state icon="orders" title="No orders yet" message="Choose a package to get your website and prospect list started." :actionUrl="route('orders.new')" actionLabel="Choose a package" />
             @else
                 <div class="mt-3 overflow-x-auto">
                     <table class="w-full text-sm min-w-[520px]">

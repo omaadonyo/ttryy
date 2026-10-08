@@ -14,13 +14,13 @@
                         <option value="paid">Paid</option>
                     </select>
                 </div>
-                <flux:button :href="route('checkout')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" wire:navigate>New order</flux:button>
+                <flux:button :href="route('orders.new')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" wire:navigate>New order</flux:button>
             </div>
         </div>
 
         @if($orders->isEmpty())
         <div class="rounded-xl bg-white dark:bg-white/[.04] p-6 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
-            <x-empty-state icon="orders" title="No orders yet" message="Choose a package to get your website and prospect list started." :actionUrl="route('checkout')" actionLabel="Choose a package" />
+            <x-empty-state icon="orders" title="No orders yet" message="Choose a package to get your website and prospect list started." :actionUrl="route('orders.new')" actionLabel="Choose a package" />
         </div>
         @else
         <div class="grid sm:grid-cols-2 gap-4" id="order-grid">
@@ -42,6 +42,13 @@
                 <p class="text-sm text-zinc-500">{{ $order->business_name }}@if($order->niche) · {{ $order->niche }}@endif</p>
                 <p class="text-xl font-extrabold mt-3">UGX {{ number_format($order->total_amount) }}</p>
                 <p class="text-xs text-zinc-500 mt-1">Due today was UGX {{ number_format($order->due_today) }} · Ordered {{ $order->created_at->format('d M Y') }}</p>
+                <div class="mt-3 rounded-lg bg-zinc-50 dark:bg-white/5 p-3">
+                    <div class="flex justify-between text-xs"><span class="text-zinc-500">Paid UGX {{ number_format($order->paid_amount) }}</span><span class="font-bold">UGX {{ number_format($order->amountRemaining()) }} left</span></div>
+                    <div class="mt-1.5 h-1.5 rounded-full bg-zinc-200 dark:bg-white/10 overflow-hidden">
+                        <div class="h-1.5 rounded-full bg-emerald-600" style="width:{{ $order->paymentProgressPercent() }}%"></div>
+                    </div>
+                    <p class="mt-1 text-[11px] text-zinc-500">{{ $order->paymentProgressPercent() }}% of the service paid for</p>
+                </div>
                 @if($order->isActive())
                 <div class="mt-3 h-1.5 rounded-full bg-zinc-100 dark:bg-white/10 overflow-hidden">
                     <div class="h-1.5 rounded-full bg-[#9e005d]" style="width:{{ $order->progressPercent() }}%"></div>

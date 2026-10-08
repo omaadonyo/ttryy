@@ -99,4 +99,22 @@ class PackageOrder extends Model
     {
         return $this->expiresAt() !== null && now()->gte($this->expiresAt());
     }
+
+    /**
+     * Payment progress: how much of the order total is already paid,
+     * and how much is left to complete the service payment.
+     */
+    public function amountRemaining(): int
+    {
+        return max(0, $this->total_amount - $this->paid_amount);
+    }
+
+    public function paymentProgressPercent(): int
+    {
+        if ($this->total_amount <= 0) {
+            return 0;
+        }
+
+        return (int) min(100, max(0, round($this->paid_amount / $this->total_amount * 100)));
+    }
 }

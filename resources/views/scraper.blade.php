@@ -21,6 +21,7 @@
             <div class="flex items-center gap-2.5 bg-zinc-50 dark:bg-white/5 border-b border-neutral-200 dark:border-neutral-700 px-4 py-3">
                 <span class="text-[13px] font-semibold" id="dsc-file">prospects.pdf</span>
                 <span id="dsc-count" class="ml-auto text-[11px] font-semibold text-zinc-500">0 records</span>
+                <button id="dsc-save" class="hidden ml-2 shrink-0 text-[11px] font-bold text-white bg-[#9e005d] hover:bg-[#7e0049] rounded-full px-3 py-1 transition">Save contacts</button>
             </div>
             <div id="dsc-rows" class="divide-y divide-neutral-200 dark:divide-neutral-700">
                 <p class="px-4 py-8 text-center text-sm text-zinc-400">Choose your niche and hit <strong>Scrape</strong> for a partially-visible sample.</p>
@@ -109,7 +110,7 @@ D_NICHES.forEach(n=>{const o=document.createElement('option');o.value=n.code;o.t
   wrap.appendChild(btn); wrap.appendChild(list);
   syncDsc();
 })();
-let dscBusy=false, dscTimers=[], dscNiche=null, dscTotal=0;
+let dscBusy=false, dscTimers=[], dscNiche=null, dscTotal=0, dscRecords=[];
 function dscRun(){
   if(dscBusy) return; dscBusy=true;
   dscTimers.forEach(clearTimeout); dscTimers=[];
@@ -118,7 +119,8 @@ function dscRun(){
         bar=document.getElementById('dsc-bar'), label=document.getElementById('dsc-label'),
         pct=document.getElementById('dsc-pct'), locked=document.getElementById('dsc-locked'),
         btn=document.getElementById('dsc-btn');
-  rows.innerHTML=''; locked.classList.add('hidden'); status.classList.remove('hidden');
+  rows.innerHTML=''; locked.classList.add('hidden'); status.classList.remove('hidden'); dscRecords=[];
+  document.getElementById('dsc-save').classList.add('hidden');
   btn.disabled=true; btn.classList.add('opacity-50');
   document.getElementById('dsc-file').textContent='prospects-'+dscNiche.code.toLowerCase()+'.pdf';
   document.getElementById('dsc-count').textContent='scanning…';
@@ -127,7 +129,7 @@ function dscRun(){
   });
   for(let i=0;i<3;i++){
     dscTimers.push(setTimeout(()=>{
-      const r=dRec(dscNiche);
+      const r=dRec(dscNiche); dscRecords.push(r);
       const div=document.createElement('div');
       div.className='flex items-center justify-between gap-3 px-4 py-2.5';
       div.innerHTML=`<div class="min-w-0"><p class="text-[13px] font-bold truncate">${i+1}. ${r.name}</p>`
@@ -147,11 +149,27 @@ function dscRun(){
       blur.appendChild(row);}
     document.getElementById('dsc-locked-text').textContent=dscTotal+' full contacts locked in this PDF';
     locked.classList.remove('hidden');
+    document.getElementById('dsc-save').classList.remove('hidden');
     label.textContent='Done — 3 free previews ready.';bar.style.width='100%';pct.textContent='100%';
     btn.disabled=false;btn.classList.remove('opacity-50');dscBusy=false;
   },500+3*450+500));
 }
 document.getElementById('dsc-btn').addEventListener('click',dscRun);
+document.getElementById('dsc-save').addEventListener('click',async()=>{
+  const btn=document.getElementById('dsc-save');
+  if(!dscRecords.length||!dscNiche) return;
+  btn.disabled=true; btn.textContent='Saving…';
+  try{
+    const token=document.querySelector('meta[name="csrf-token"]')?.content||'';
+    const res=await fetch("{{ route('scraper.save') }}",{method:'POST',
+      headers:{'Accept':'application/json','Content-Type':'application/json','X-CSRF-TOKEN':token,'X-Requested-With':'XMLHttpRequest'},
+      body:JSON.stringify({niche:dscNiche.name,contacts:dscRecords})});
+    if(!res.ok) throw new Error('save failed');
+    const j=await res.json();
+    btn.textContent='Saved '+j.saved+' ✓';
+    setTimeout(()=>{window.location.href="{{ route('contacts.index') }}";},700);
+  }catch(e){ btn.disabled=false; btn.textContent='Save contacts'; alert('Could not save. Please try again.'); }
+});
 document.getElementById('dsc-unlock').addEventListener('click',()=>{
   const msg='Hi Ttryy! I want to unlock the full prospect list (UGX 10,000) for '+(dscNiche?dscNiche.name:'my niche')+(dscTotal?' — sampled '+dscTotal+' locked contacts.':'');
   window.open('https://wa.me/256700000000?text='+encodeURIComponent(msg),'_blank');

@@ -69,10 +69,14 @@ recomputed server-side (`CheckoutController::quote()`), stored as
 `package_orders` (`pending` status), and confirmed with an order reference
 plus a WhatsApp follow-up link. Every order can download a branded **PDF
 invoice**. All account pages live under `/dashboard`
-in the app sidebar layout: overview, `packages`, `checkout`, and a
+in the app sidebar layout: overview, `packages`, `checkout`, a
 **prospect scraper** (masked 3-record preview, full contacts locked behind
-the UGX 10,000 unlock). Paid orders also track subscription
-**expiry, days left, and progress** on the dashboard and My packages.
+the UGX 10,000 unlock), **saved contacts** (save scrapes, manage, export
+CSV), and a **marketing tool** (personalized WhatsApp outreach composer
+with `{name}`, `{business}`, `{need}` placeholders). Paid orders also track
+subscription **expiry, days left, and progress** on the dashboard and My
+packages, plus **payment history** and per-order **payment progress** (paid
+vs left to complete).
 
 **Admin.** `/admin` (restricted by the `admin` middleware to users with
 `is_admin`) covers an overview (orders, collected vs outstanding revenue,

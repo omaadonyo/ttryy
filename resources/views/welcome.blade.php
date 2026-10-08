@@ -99,7 +99,9 @@
       </a>
       <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white text-sm font-bold px-6 py-2 rounded-full transition shadow-lg shadow-[#9e005d]/25">Get Started</a>
       @auth
-      <a href="/dashboard/packages" class="hidden md:inline-flex text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">My packages</a>
+      <a href="/dashboard" class="hidden md:inline-flex text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">Dashboard</a>
+      @else
+      <a href="/login" class="hidden md:inline-flex text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">Log in</a>
       @endauth
       <button id="menuBtn" class="lg:hidden p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/10" aria-label="Menu">
         <svg id="menuOpen" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -117,7 +119,9 @@
     <a href="#faq" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">FAQ</a>
     <a href="/dashboard/checkout" class="block text-center w-full mt-2 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full">Get Started</a>
     @auth
-    <a href="/dashboard/packages" class="block text-center w-full mt-2 border border-zinc-300 dark:border-white/20 font-bold py-3 rounded-full">My packages</a>
+    <a href="/dashboard" class="block text-center w-full mt-2 border border-zinc-300 dark:border-white/20 font-bold py-3 rounded-full">Dashboard</a>
+    @else
+    <a href="/login" class="block text-center w-full mt-2 border border-zinc-300 dark:border-white/20 font-bold py-3 rounded-full">Log in / Register</a>
     @endauth
   </div>
 </header>
@@ -144,41 +148,41 @@
 
     <!-- SCRAPER DEMO -->
     <div class="reveal visible" id="scraperDemo">
-      <div class="bg-white dark:bg-[#141416]   rounded-xl shadow-2xl shadow-zinc-950/10 dark:shadow-black/50 overflow-hidden">
-        <div class="flex items-center justify-between px-6 pt-5">
-          <p class="font-display font-bold text-zinc-950 dark:text-white">Prospect scraper <span class="scan-pulse inline-block w-2 h-2 rounded-full bg-zinc-400 ml-1 align-middle"></span></p>
-          <span class="text-[11px] font-semibold text-zinc-500 border border-zinc-200 dark:border-white/15 rounded-full px-2.5 py-1">LIVE DEMO &middot; SAMPLE DATA</span>
+      <div class="bg-white dark:bg-[#141416] rounded-xl shadow-2xl shadow-zinc-950/10 dark:shadow-black/50 overflow-hidden">
+        <div class="flex items-center justify-between gap-2 px-5 pt-4">
+          <p class="font-display font-bold text-[15px] text-zinc-950 dark:text-white">Prospect scraper <span class="scan-pulse inline-block w-2 h-2 rounded-full bg-zinc-400 ml-1 align-middle"></span></p>
+          <span class="text-[10px] font-semibold text-zinc-500 border border-zinc-200 dark:border-white/15 rounded-full px-2 py-0.5">LIVE DEMO</span>
         </div>
-        <div class="px-6 pt-4 grid sm:grid-cols-[1fr_1fr_auto] gap-2">
-          <select id="scrapeNiche" class="w-full bg-zinc-50 dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-4 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white" aria-label="Choose your niche"></select>
-          <input id="scrapeBiz" type="text" placeholder="What does your business sell?" class="w-full bg-zinc-50 dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-4 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white placeholder:text-zinc-400" aria-label="What does your business sell">
+        <div class="px-5 pt-3 grid sm:grid-cols-[1fr_1fr_auto] gap-2">
+          <select id="scrapeNiche" class="w-full bg-zinc-50 dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white" aria-label="Choose your niche"></select>
+          <input id="scrapeBiz" type="text" placeholder="What does your business sell?" class="w-full bg-zinc-50 dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white placeholder:text-zinc-400" aria-label="What does your business sell">
           <button id="scrapeBtn" onclick="runScrape()" class="bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold px-5 py-2 rounded-full text-sm transition whitespace-nowrap">Scrape</button>
         </div>
-        <div id="scrapeStatus" class="hidden px-6 pt-4">
+        <div id="scrapeStatus" class="hidden px-5 pt-3">
           <div class="flex justify-between text-xs font-semibold text-zinc-500"><span id="scrapeLabel">Starting&hellip;</span><span id="scrapePct">0%</span></div>
-          <div class="mt-1.5 h-2 bg-zinc-100 dark:bg-white/10 rounded-full overflow-hidden"><div id="scrapeBar" class="h-2 bg-zinc-900 dark:bg-white rounded-full transition-all duration-300" style="width:0%"></div></div>
+          <div class="mt-1.5 h-1.5 bg-zinc-100 dark:bg-white/10 rounded-full overflow-hidden"><div id="scrapeBar" class="h-1.5 bg-zinc-900 dark:bg-white rounded-full transition-all duration-300" style="width:0%"></div></div>
         </div>
-        <div class="px-6 py-5">
+        <div class="px-5 py-4">
           <div class="rounded-xl bg-zinc-50 dark:bg-[#17171A] overflow-hidden">
-            <div class="flex items-center gap-2.5 bg-zinc-50 dark:bg-[#17171A] border-b border-zinc-200 dark:border-white/10 px-4 py-3">
-              <svg class="w-5 h-5 text-zinc-400"><use href="#i-doc"/></svg>
-              <span id="pdfName" class="text-[13px] font-semibold text-zinc-800 dark:text-zinc-200">prospects.pdf</span>
-              <span id="pdfCount" class="ml-auto text-[11px] font-semibold text-zinc-500">0 records</span>
+            <div class="flex items-center gap-2 bg-zinc-50 dark:bg-[#17171A] border-b border-zinc-200 dark:border-white/10 px-4 py-2.5">
+              <svg class="w-4 h-4 text-zinc-400"><use href="#i-doc"/></svg>
+              <span id="pdfName" class="text-xs font-semibold text-zinc-800 dark:text-zinc-200 truncate">prospects.pdf</span>
+              <span id="pdfCount" class="ml-auto text-[11px] font-semibold text-zinc-500 shrink-0">0 records</span>
               <button id="pdfDl" onclick="downloadSamplePdf()" class="hidden ml-2 shrink-0 text-[11px] font-bold text-zinc-950 bg-white border border-zinc-200 shadow-sm hover:bg-zinc-950 hover:text-white hover:border-zinc-950 rounded-full px-3 py-1 transition">Download PDF</button>
             </div>
-            <div id="scrapeRows" class="divide-y divide-zinc-100 dark:divide-white/5 max-h-72 overflow-y-auto">
-              <p id="scrapeEmpty" class="px-4 py-8 text-center text-sm text-zinc-400">Choose your niche and hit <strong>Scrape</strong> to pull 10 sample records.</p>
+            <div id="scrapeRows" class="divide-y divide-zinc-100 dark:divide-white/5 max-h-56 overflow-y-auto">
+              <p id="scrapeEmpty" class="px-4 py-6 text-center text-[13px] text-zinc-400">Choose your niche and hit <strong>Scrape</strong> to pull 10 sample records.</p>
             </div>
             <div id="lockedZone" class="hidden relative border-t border-zinc-200 dark:border-white/10">
               <div id="blurRows" class="select-none blur-[3px] pointer-events-none px-4 py-3 space-y-2" aria-hidden="true"></div>
-              <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-white/60 dark:bg-[#0A0A0B]/60 px-6 text-center">
-                <span class="w-11 h-11 grid place-items-center rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950"><svg class="w-5 h-5"><use href="#i-lock"/></svg></span>
-                <p id="lockedText" class="text-sm font-bold text-zinc-900 dark:text-white">600+ more records locked</p>
-                <button id="unlockBtn" onclick="unlockPdf()" class="bg-[#9e005d] hover:bg-[#7e0049] text-white text-sm font-bold px-6 py-2 rounded-full transition shadow-lg shadow-[#9e005d]/25">Unlock Full PDF &middot; UGX 10,000</button>
+              <div class="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-white/60 dark:bg-[#0A0A0B]/60 px-6 text-center">
+                <span class="w-9 h-9 grid place-items-center rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950"><svg class="w-4 h-4"><use href="#i-lock"/></svg></span>
+                <p id="lockedText" class="text-[13px] font-bold text-zinc-900 dark:text-white">600+ more records locked</p>
+                <button id="unlockBtn" onclick="unlockPdf()" class="bg-[#9e005d] hover:bg-[#7e0049] text-white text-[13px] font-bold px-5 py-2 rounded-full transition shadow-lg shadow-[#9e005d]/25">Unlock Full PDF &middot; UGX 10,000</button>
               </div>
             </div>
           </div>
-          <p class="mt-3 text-[11px] text-zinc-400">Demo uses sample data. Paid unlocks deliver real, niche-specific prospect lists.</p>
+          <p class="mt-2 text-[11px] text-zinc-400">Sample data — paid unlocks deliver the real list.</p>
         </div>
       </div>
     </div>
@@ -771,7 +775,7 @@ function runScrape(){
     scrapeTimers.push(setTimeout(()=>{
       const r=makeRecord(currentNiche); currentRecords.push(r);
       const div=document.createElement('div');
-      div.className='record-in flex items-center justify-between gap-3 px-4 py-2.5';
+      div.className='record-in flex items-center justify-between gap-3 px-4 py-2';
       div.innerHTML=`<div class="min-w-0"><p class="text-[13px] font-bold text-zinc-900 dark:text-white truncate">${i+1}. ${r.name}</p>`
         +`<p class="text-[11px] text-zinc-500 truncate">${r.type} &middot; ${r.district} &middot; needs: ${r.need}</p></div>`
         +`<div class="text-right shrink-0"><p class="text-[12px] font-semibold text-zinc-800 dark:text-zinc-200">${r.contact}</p><p class="text-[11px] text-zinc-500">${r.phone}</p></div>`;
@@ -783,7 +787,7 @@ function runScrape(){
     currentTotal=ri(500,1000);
     document.getElementById('pdfCount').textContent='10 free + '+currentTotal+' locked';
     const blur=document.getElementById('blurRows'); blur.innerHTML='';
-    for(let i=0;i<16;i++){ const w1=ri(30,70), w2=ri(45,90);
+    for(let i=0;i<10;i++){ const w1=ri(30,70), w2=ri(45,90);
       const row=document.createElement('div'); row.className='space-y-1.5';
       row.innerHTML=`<div class="h-2.5 rounded-full bg-zinc-200 dark:bg-white/15" style="width:${w1}%"></div><div class="h-2 rounded-full bg-zinc-100 dark:bg-white/10" style="width:${w2}%"></div>`;
       blur.appendChild(row); }

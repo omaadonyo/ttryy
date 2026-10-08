@@ -19,12 +19,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('orders/new', [CheckoutController::class, 'index'])->name('orders.new');
+    Route::get('payments', [DashboardController::class, 'payments'])->name('payments.index');
     Route::post('checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::post('checkout/verify', [CheckoutController::class, 'verify'])->name('checkout.verify');
     Route::get('orders/{order}/invoice', [CheckoutController::class, 'invoice'])->name('orders.invoice');
     Route::get('checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('packages', [CheckoutController::class, 'orders'])->name('packages.index');
     Route::get('scraper', [DashboardController::class, 'scraper'])->name('scraper.index');
+    Route::post('scraper/save', [DashboardController::class, 'storeContacts'])->name('scraper.save');
+    Route::get('contacts', [DashboardController::class, 'contacts'])->name('contacts.index');
+    Route::delete('contacts/{contact}', [DashboardController::class, 'destroyContact'])->name('contacts.destroy');
+    Route::get('contacts/export', [DashboardController::class, 'exportContacts'])->name('contacts.export');
+    Route::get('marketing', [DashboardController::class, 'marketing'])->name('marketing.index');
 });
 
 // Guests may browse checkout and sign in inline; placing an order needs an account.
