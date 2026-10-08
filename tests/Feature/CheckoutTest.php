@@ -295,6 +295,23 @@ test('verified flutterwave payments mark the order paid', function () {
         ->and($order->payment_method)->toBe('flutterwave');
 });
 
+test('placing an order emails the customer and the admin inbox', function () {
+    Illuminate\Support\Facades\Mail::fake();
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->post('/dashboard/checkout', [
+        'package' => 'START',
+        'billing_frequency' => 'full',
+        'domain' => 'none',
+        'business_name' => 'Test Biz',
+        'phone' => '+256 700 000030',
+    ]);
+
+    Illuminate\Support\Facades\Mail::assertSent(App\Mail\OrderPlaced::class, 2);
+    Illuminate\Support\Facades\Mail::assertSent(App\Mail\OrderPlaced::class, fn ($mail) => $mail->hasTo($user->email));
+    Illuminate\Support\Facades\Mail::assertSent(App\Mail\OrderPlaced::class, fn ($mail) => $mail->hasTo(config('packages.admin_email')));
+});
+
 test('owners can download their invoice, strangers cannot', function () {
     $owner = User::factory()->create();
     $intruder = User::factory()->create();

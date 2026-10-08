@@ -20,18 +20,19 @@
   html.dark{ color-scheme:dark; }
   body{ font-family:'Inter',system-ui,sans-serif; }
   h1,h2,h3,.font-display{ font-family:'Sora',sans-serif; }
+  .opt > div{ box-shadow:0 2px 12px -6px rgba(10,10,12,.14); }
+  .dark .opt > div{ box-shadow:0 8px 24px -10px rgba(0,0,0,.75); }
   .opt .tick{ opacity:0; transform:scale(.4); transition:opacity .25s ease, transform .25s ease, background-color .25s ease; }
-  .opt input:checked + div{ border-color:var(--ac); box-shadow:0 14px 30px -14px var(--ac); background:color-mix(in srgb, var(--ac) 7%, transparent); }
+  .opt input:checked + div{ box-shadow:0 0 0 2px var(--ac), 0 14px 30px -14px var(--ac); background:color-mix(in srgb, var(--ac) 7%, transparent); }
   .opt input:checked + div .tick{ opacity:1; transform:scale(1); background:var(--ac); border-color:var(--ac); color:#fff; }
   .opt input:focus-visible + div{ outline:2px solid var(--ac); outline-offset:2px; }
   .opt[data-accent="zinc"]{ --ac:#52525b; }
   .opt[data-accent="brand"]{ --ac:#9e005d; }
-  .opt[data-accent="blue"]{ --ac:#1d4ed8; }
-  .opt[data-accent="amber"]{ --ac:#b45309; }
-  .opt[data-accent="teal"]{ --ac:#0d9488; }
-  .opt[data-accent="green"]{ --ac:#059669; }
   .opt[data-accent="black"]{ --ac:#18181b; }
   .dark .opt[data-accent="black"]{ --ac:#e4e4e7; }
+  .cs-wrap:focus-within .cs-btn{ border-color:#9e005d; }
+  .cs-btn svg{ transition:transform .25s ease; }
+  .cs-btn[aria-expanded="true"] svg{ transform:rotate(180deg); }
 </style>
 </head>
 <body class="bg-zinc-50 text-zinc-900 dark:bg-[#0A0A0B] dark:text-zinc-300 min-h-screen">
@@ -115,12 +116,12 @@
     <div class="space-y-8">
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">1. Your package</h2>
-        @php $accents = ['START' => 'green', 'GROW' => 'brand', 'BUSINESS' => 'blue', 'CORPORATE' => 'amber']; @endphp
+        @php $accents = ['START' => 'black', 'GROW' => 'brand', 'BUSINESS' => 'black', 'CORPORATE' => 'black']; @endphp
         <div class="mt-3 grid sm:grid-cols-2 gap-3">
           @foreach($packages as $name => $p)
           <label class="opt cursor-pointer" data-accent="{{ $accents[$name] ?? 'zinc' }}">
             <input type="radio" name="package" value="{{ $name }}" class="sr-only" {{ $selectedPackage === $name ? 'checked' : '' }}>
-            <div class="h-full rounded-xl bg-white dark:bg-[#141416] border-2 border-zinc-200 dark:border-white/10 p-5 transition">
+            <div class="h-full rounded-xl bg-white dark:bg-[#141416] p-5 transition">
               <div class="flex items-center justify-between gap-2">
                 <p class="font-display font-bold text-sm tracking-wide text-zinc-500">{{ $name }}</p>
                 <span class="tick w-6 h-6 grid place-items-center rounded-full border-2 border-zinc-300 dark:border-zinc-600 text-transparent">
@@ -137,12 +138,12 @@
 
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">2. Your domain <span class="text-xs font-semibold text-zinc-500">— one-time fee, never billed again</span></h2>
-        @php $domAccents = ['none' => 'zinc', 'budget' => 'brand', 'premium' => 'amber']; @endphp
+        @php $domAccents = ['none' => 'black', 'budget' => 'brand', 'premium' => 'black']; @endphp
         <div class="mt-3 grid sm:grid-cols-3 gap-3">
           @foreach($domains as $key => $d)
           <label class="opt cursor-pointer" data-accent="{{ $domAccents[$key] ?? 'zinc' }}">
             <input type="radio" name="domain" value="{{ $key }}" class="sr-only" {{ $selectedDomain === $key ? 'checked' : '' }}>
-            <div class="h-full rounded-xl bg-white dark:bg-[#141416] border-2 border-zinc-200 dark:border-white/10 p-5 transition">
+            <div class="h-full rounded-xl bg-white dark:bg-[#141416] p-5 transition">
               <div class="flex items-center justify-between gap-2">
                 <p class="font-bold text-sm text-zinc-950 dark:text-white">{{ $d['label'] }}</p>
                 <span class="tick w-6 h-6 grid place-items-center rounded-full border-2 border-zinc-300 dark:border-zinc-600 text-transparent shrink-0">
@@ -158,12 +159,12 @@
 
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">3. How you pay</h2>
-        @php $freqAccents = ['full' => 'black', 'monthly' => 'brand', 'weekly' => 'blue', 'daily' => 'teal']; @endphp
+        @php $freqAccents = ['full' => 'black', 'monthly' => 'brand', 'weekly' => 'black', 'daily' => 'black']; @endphp
         <div class="mt-3 grid sm:grid-cols-2 gap-3">
           @foreach([['full','Pay in full','fullLabel'],['monthly','Monthly','monthlyLabel'],['weekly','Weekly','weeklyLabel'],['daily','Daily','dailyLabel']] as [$val,$title,$lid])
           <label class="opt cursor-pointer" data-accent="{{ $freqAccents[$val] }}">
             <input type="radio" name="billing_frequency" value="{{ $val }}" class="sr-only" {{ $selectedBilling === $val ? 'checked' : '' }}>
-            <div class="rounded-xl bg-white dark:bg-[#141416] border-2 border-zinc-200 dark:border-white/10 px-5 py-4 transition flex items-center justify-between gap-2">
+            <div class="rounded-xl bg-white dark:bg-[#141416] px-5 py-4 transition flex items-center justify-between gap-2">
               <div><p class="font-bold text-zinc-950 dark:text-white">{{ $title }}</p>
               <p class="text-sm text-zinc-500" id="{{ $lid }}">{{ $title }}</p></div>
               <span class="tick w-6 h-6 grid place-items-center rounded-full border-2 border-zinc-300 dark:border-zinc-600 text-transparent shrink-0">
@@ -297,6 +298,7 @@ function restore(){
   if(s.phone) document.getElementById('f-phone').value = s.phone;
   if(s.niche) document.getElementById('f-niche').value = s.niche;
   if(s.notes) document.getElementById('f-notes').value = s.notes;
+  syncCo(durationSel); syncCo(document.getElementById('f-niche'));
   return true;
 }
 function refresh(){
@@ -339,7 +341,43 @@ async function createOrder(method){
   if(!res.ok) throw new Error('Something went wrong. Please try again.');
   return res.json();
 }
+function closeAllCo(){ document.querySelectorAll('.cs-list').forEach(l=>l.classList.add('hidden')); document.querySelectorAll('.cs-btn').forEach(b=>b.setAttribute('aria-expanded','false')); }
+function syncCo(sel){
+  const wrap=sel.closest('.cs-wrap'); if(!wrap) return;
+  const label=wrap.querySelector('.cs-label'), opt=sel.options[sel.selectedIndex];
+  label.textContent=opt?opt.textContent:'Select…';
+  wrap.querySelectorAll('.cs-list button').forEach(b=>{ const tick=b.querySelector('.cs-tick'); if(tick) tick.classList.toggle('hidden', b.dataset.value!==sel.value); });
+}
+function enhanceCoSelect(sel){
+  if(!sel || sel.closest('.cs-wrap')) return;
+  const wrap=document.createElement('div'); wrap.className='cs-wrap relative';
+  sel.parentNode.insertBefore(wrap, sel); wrap.appendChild(sel);
+  sel.classList.add('sr-only'); sel.tabIndex=-1; sel.setAttribute('aria-hidden','true');
+  const btn=document.createElement('button');
+  btn.type='button';
+  btn.className='cs-btn w-full flex items-center justify-between gap-2 rounded-full border border-zinc-200 dark:border-white/15 bg-white dark:bg-[#17171A] px-5 py-3 text-sm text-zinc-900 dark:text-white outline-none';
+  btn.setAttribute('aria-expanded','false');
+  btn.innerHTML='<span class="cs-label truncate">Select…</span><svg class="w-4 h-4 shrink-0 text-zinc-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
+  const list=document.createElement('div');
+  list.className='cs-list hidden absolute z-30 left-0 right-0 mt-2 rounded-xl border border-zinc-200 dark:border-white/15 bg-white dark:bg-[#141416] shadow-2xl p-1.5 max-h-60 overflow-y-auto';
+  list.setAttribute('role','listbox');
+  [...sel.options].forEach(o=>{
+    const item=document.createElement('button');
+    item.type='button'; item.dataset.value=o.value; item.setAttribute('role','option');
+    item.className='w-full flex items-center justify-between gap-2 text-left px-4 py-2 rounded-lg text-sm transition hover:bg-zinc-100 dark:hover:bg-white/10 '+(o.value===''?'text-zinc-400':'text-zinc-800 dark:text-zinc-200');
+    item.innerHTML='<span class="truncate">'+o.textContent+'</span><svg class="cs-tick w-4 h-4 shrink-0 text-zinc-900 dark:text-white hidden" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>';
+    item.addEventListener('click',()=>{ sel.value=o.value; sel.dispatchEvent(new Event('change',{bubbles:true})); syncCo(sel); closeAllCo(); save(); });
+    list.appendChild(item);
+  });
+  btn.addEventListener('click',()=>{ const willOpen=list.classList.contains('hidden'); closeAllCo(); if(willOpen){ list.classList.remove('hidden'); btn.setAttribute('aria-expanded','true'); } });
+  wrap.appendChild(btn); wrap.appendChild(list);
+  syncCo(sel);
+}
+document.addEventListener('click',e=>{ if(!e.target.closest || !e.target.closest('.cs-wrap')) closeAllCo(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeAllCo(); });
 function initCheckout(){
+  enhanceCoSelect(document.getElementById('duration'));
+  enhanceCoSelect(document.getElementById('f-niche'));
   restore();
   refresh();
   [...pkgInputs, ...freqInputs, ...domInputs].forEach(i => i.addEventListener('change', () => { refresh(); save(); }));

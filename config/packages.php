@@ -3,6 +3,9 @@
 return [
     'currency' => 'UGX',
 
+    // Order copies go to the customer plus this admin inbox.
+    'admin_email' => env('ADMIN_EMAIL', 'pay@ttryy.com'),
+
     // Durations (in months) a customer may spread payment over.
     // Full upfront payment always covers 12 months of the website running.
     'durations' => [3, 6, 12],

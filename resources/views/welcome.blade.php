@@ -420,22 +420,19 @@
         <button data-billing="weekly" role="tab" class="plan-tab rounded-full px-5 py-2 text-sm font-bold transition">Per week</button>
         <button data-billing="monthly" role="tab" class="plan-tab rounded-full px-5 py-2 text-sm font-bold transition">Per month</button>
       </div>
-      <div class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-3">
-        <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Add a domain:</p>
-        <div class="inline-flex self-start rounded-full border border-zinc-200 dark:border-white/15 p-1" id="domainToggle" role="group" aria-label="Domain choice">
-          <button data-domain="none" class="domain-opt rounded-full px-4 py-2 text-[13px] font-bold transition">No domain</button>
-          <button data-domain="budget" class="domain-opt rounded-full px-4 py-2 text-[13px] font-bold transition">.xyz · .online · .shop <span class="font-semibold opacity-70">+29,000</span></button>
-          <button data-domain="premium" class="domain-opt rounded-full px-4 py-2 text-[13px] font-bold transition">.com · .org <span class="font-semibold opacity-70">+80,000</span></button>
-        </div>
-      </div>
-      <p class="mt-3 text-sm text-zinc-500">First payment plus domain deposit gets your website live within 5 days.</p>
+      <p class="mt-4 text-sm text-zinc-500 text-center">Pick a domain on your package — first payment plus the one-time domain fee gets your website live within 5 days.</p>
     </div>
     <div class="mt-10 grid lg:grid-cols-4 gap-5 items-stretch max-w-7xl mx-auto">
       <!-- CORPORATE -->
       <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl p-6 flex flex-col order-1">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">CORPORATE</p>
-        <p class="mt-2 font-display font-extrabold text-3xl xl:text-4xl text-zinc-950 dark:text-white"><span data-plan-price="CORPORATE">UGX 117,000</span><span class="text-lg font-bold text-zinc-500" data-plan-per="CORPORATE">/mo</span></p>
-        <p class="text-xs text-zinc-500 mt-2">Full UGX 1,400,000 · Domain from UGX 29,000</p>
+        <p class="mt-2 font-display font-extrabold text-3xl xl:text-4xl text-zinc-950 dark:text-white"><span data-plan-price="CORPORATE">UGX 146,000</span></p>
+        <p class="text-xs text-zinc-500 mt-2">First payment · then <strong data-plan-then="CORPORATE">UGX 117,000/mo</strong> · Full UGX 1,400,000</p>
+        <div class="mt-3 grid grid-cols-3 gap-1 rounded-full bg-zinc-100 dark:bg-white/10 p-1" data-domain-switch="CORPORATE" role="group" aria-label="Domain for CORPORATE">
+          <button data-domain="none" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">No domain</button>
+          <button data-domain="budget" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">.xyz +29k</button>
+          <button data-domain="premium" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">.com +80k</button>
+        </div>
         <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-3">For established companies that need everything, managed.</p>
         <p class="text-xs font-semibold text-zinc-500 mt-5 uppercase tracking-wider">Everything in Business, plus:</p>
         <ul class="mt-3 space-y-2.5 text-sm flex-1 text-zinc-700 dark:text-zinc-300">
@@ -448,8 +445,13 @@
       <!-- START -->
       <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-4">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">START</p>
-        <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white"><span data-plan-price="START">UGX 21,000</span><span class="text-lg font-bold text-zinc-500" data-plan-per="START">/mo</span></p>
-        <p class="text-xs text-zinc-500 mt-2">Full UGX 250,000 · Domain from UGX 29,000</p>
+        <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white"><span data-plan-price="START">UGX 50,000</span></p>
+        <p class="text-xs text-zinc-500 mt-2">First payment · then <strong data-plan-then="START">UGX 21,000/mo</strong> · Full UGX 250,000</p>
+        <div class="mt-3 grid grid-cols-3 gap-1 rounded-full bg-zinc-100 dark:bg-white/10 p-1" data-domain-switch="START" role="group" aria-label="Domain for START">
+          <button data-domain="none" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">No domain</button>
+          <button data-domain="budget" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">.xyz +29k</button>
+          <button data-domain="premium" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">.com +80k</button>
+        </div>
         <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-3">For businesses getting online and starting prospecting.</p>
         <ul class="mt-6 space-y-2.5 text-sm flex-1 text-zinc-700 dark:text-zinc-300">
           @foreach(['Full professional website','Custom CMS','Mobile responsive','SEO included','5,000 niche-specific potential customers','Lead/resource PDF','100 application/opportunity resources','Contact/lead forms','WhatsApp integration','No WordPress'] as $f)
@@ -462,8 +464,13 @@
       <div class="reveal relative bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 rounded-xl p-6 flex flex-col lg:scale-[1.05] shadow-2xl shadow-zinc-950/30 ring-1 ring-zinc-950/10 dark:ring-white/20 order-3">
         <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#9e005d] text-white text-xs font-extrabold px-5 py-1.5 rounded-full whitespace-nowrap shadow-lg">MOST POPULAR</span>
         <p class="font-display font-bold text-sm tracking-wide text-white/70 dark:text-zinc-500">GROW</p>
-        <p class="mt-2 font-display font-extrabold text-4xl"><span data-plan-price="GROW">UGX 30,000</span><span class="text-lg font-bold opacity-60" data-plan-per="GROW">/mo</span></p>
-        <p class="text-xs text-white/60 dark:text-zinc-500 mt-2">Full UGX 350,000 · Domain from UGX 29,000</p>
+        <p class="mt-2 font-display font-extrabold text-4xl"><span data-plan-price="GROW">UGX 59,000</span></p>
+        <p class="text-xs text-white/60 dark:text-zinc-500 mt-2">First payment · then <strong data-plan-then="GROW">UGX 30,000/mo</strong> · Full UGX 350,000</p>
+        <div class="mt-3 grid grid-cols-3 gap-1 rounded-full bg-white/10 dark:bg-zinc-950/5 p-1" data-domain-switch="GROW" role="group" aria-label="Domain for GROW">
+          <button data-domain="none" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">No domain</button>
+          <button data-domain="budget" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">.xyz +29k</button>
+          <button data-domain="premium" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">.com +80k</button>
+        </div>
         <p class="text-sm text-white/80 dark:text-zinc-600 mt-3">For businesses ready to actively pursue customers and opportunities.</p>
         <p class="text-xs font-semibold text-white/60 dark:text-zinc-500 mt-5 uppercase tracking-wider">Everything in Start, plus:</p>
         <ul class="mt-3 space-y-2.5 text-sm flex-1">
@@ -476,8 +483,13 @@
       <!-- BUSINESS -->
       <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-2">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">BUSINESS</p>
-        <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white"><span data-plan-price="BUSINESS">UGX 55,000</span><span class="text-lg font-bold text-zinc-500" data-plan-per="BUSINESS">/mo</span></p>
-        <p class="text-xs text-zinc-500 mt-2">Full UGX 650,000 · Domain from UGX 29,000</p>
+        <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white"><span data-plan-price="BUSINESS">UGX 84,000</span></p>
+        <p class="text-xs text-zinc-500 mt-2">First payment · then <strong data-plan-then="BUSINESS">UGX 55,000/mo</strong> · Full UGX 650,000</p>
+        <div class="mt-3 grid grid-cols-3 gap-1 rounded-full bg-zinc-100 dark:bg-white/10 p-1" data-domain-switch="BUSINESS" role="group" aria-label="Domain for BUSINESS">
+          <button data-domain="none" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">No domain</button>
+          <button data-domain="budget" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">.xyz +29k</button>
+          <button data-domain="premium" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">.com +80k</button>
+        </div>
         <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-3">For businesses that want a larger business-development database.</p>
         <p class="text-xs font-semibold text-zinc-500 mt-5 uppercase tracking-wider">Everything in Grow, plus:</p>
         <ul class="mt-3 space-y-2.5 text-sm flex-1 text-zinc-700 dark:text-zinc-300">
@@ -920,27 +932,30 @@ function toggleTheme(){ const next=currentTheme()==='dark'?'light':'dark'; docum
   syncWidths(); update();
 })();
 
-/* ---------- PRICING PLAN TABS + DOMAIN TOGGLE ---------- */
+/* ---------- PRICING PLAN TABS + PER-CARD DOMAIN SWITCHES ---------- */
 const PLAN_PRICES={START:{full:250000,monthly:21000,weekly:4800,daily:700},GROW:{full:350000,monthly:30000,weekly:6700,daily:1000},BUSINESS:{full:650000,monthly:55000,weekly:12500,daily:1800},CORPORATE:{full:1400000,monthly:117000,weekly:27000,daily:3800}};
 const PER_SUFFIX={monthly:'/mo',weekly:'/wk',daily:'/day'};
-let planBilling='monthly', planDomain='budget';
+const DOM_FEES={none:0,budget:29000,premium:80000};
+let planBilling='monthly';
+const planDomain={START:'budget',GROW:'budget',BUSINESS:'budget',CORPORATE:'budget'};
 function refreshPlanCards(){
   document.querySelectorAll('#planTabs .plan-tab').forEach(b=>{
     const on=b.dataset.billing===planBilling;
     b.className='plan-tab rounded-full px-5 py-2 text-sm font-bold transition '+(on?'bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow':'text-zinc-500 hover:text-zinc-900 dark:hover:text-white');
   });
-  document.querySelectorAll('#domainToggle .domain-opt').forEach(b=>{
-    const on=b.dataset.domain===planDomain;
-    b.className='domain-opt rounded-full px-4 py-2 text-[13px] font-bold transition '+(on?'bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow':'text-zinc-500 hover:text-zinc-900 dark:hover:text-white');
-  });
   ['START','GROW','BUSINESS','CORPORATE'].forEach(pkg=>{
-    document.querySelectorAll(`[data-plan-price="${pkg}"]`).forEach(el=>{ el.textContent='UGX '+PLAN_PRICES[pkg][planBilling].toLocaleString('en-US'); });
-    document.querySelectorAll(`[data-plan-per="${pkg}"]`).forEach(el=>{ el.textContent=PER_SUFFIX[planBilling]; });
-    document.querySelectorAll(`[data-plan-cta="${pkg}"]`).forEach(el=>{ el.href=`/dashboard/checkout?package=${pkg}&billing=${planBilling}&domain=${planDomain}`; });
+    const rate=PLAN_PRICES[pkg][planBilling], fee=DOM_FEES[planDomain[pkg]]||0;
+    document.querySelectorAll(`[data-plan-price="${pkg}"]`).forEach(el=>{ el.textContent='UGX '+(rate+fee).toLocaleString('en-US'); });
+    document.querySelectorAll(`[data-plan-then="${pkg}"]`).forEach(el=>{ el.textContent='UGX '+rate.toLocaleString('en-US')+PER_SUFFIX[planBilling]; });
+    document.querySelectorAll(`[data-plan-cta="${pkg}"]`).forEach(el=>{ el.href=`/dashboard/checkout?package=${pkg}&billing=${planBilling}&domain=${planDomain[pkg]}`; });
+    document.querySelectorAll(`[data-domain-switch="${pkg}"] button`).forEach(b=>{
+      const on=b.dataset.domain===planDomain[pkg];
+      b.className='rounded-full px-2 py-1.5 text-[11px] font-bold transition '+(on?'bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow':'text-zinc-500 hover:text-zinc-900 dark:hover:text-white');
+    });
   });
 }
 document.querySelectorAll('#planTabs .plan-tab').forEach(b=>b.addEventListener('click',()=>{ planBilling=b.dataset.billing; refreshPlanCards(); }));
-document.querySelectorAll('#domainToggle .domain-opt').forEach(b=>b.addEventListener('click',()=>{ planDomain=b.dataset.domain; refreshPlanCards(); }));
+document.querySelectorAll('[data-domain-switch] button').forEach(b=>b.addEventListener('click',()=>{ planDomain[b.closest('[data-domain-switch]').dataset.domainSwitch]=b.dataset.domain; refreshPlanCards(); }));
 refreshPlanCards();
 
 /* ---------- SMOOTH SCROLL + SCROLLSPY ---------- */

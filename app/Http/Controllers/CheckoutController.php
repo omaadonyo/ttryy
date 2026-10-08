@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderPlaced;
 use App\Models\PackageOrder;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -99,6 +102,8 @@ class CheckoutController extends Controller
             'notes' => $validated['notes'] ?? null,
         ]);
 
+        $this->sendOrderEmails($order);
+
         if ($request->expectsJson()) {
             return response()->json([
                 'reference' => $order->reference,
@@ -188,6 +193,20 @@ class CheckoutController extends Controller
         $orders = request()->user()->packageOrders()->latest()->get();
 
         return view('my-packages', ['orders' => $orders]);
+    }
+
+    /**
+     * Email the customer their copy and the admin inbox its copy.
+     * Mail failures must never break order placement.
+     */
+    protected function sendOrderEmails(PackageOrder $order): void
+    {
+        try {
+            Mail::to($order->user->email)->send(new OrderPlaced($order));
+            Mail::to(config('packages.admin_email'))->send(new OrderPlaced($order, true));
+        } catch (\Throwable $e) {
+            Log::warning('Order email failed', ['order' => $order->reference, 'error' => $e->getMessage()]);
+        }
     }
 
     /**

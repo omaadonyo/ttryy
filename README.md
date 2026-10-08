@@ -88,6 +88,7 @@ Configure payments in `.env` (see `.env.example`):
 FLW_PUBLIC_KEY=FLWPUBK-...     # Flutterwave inline checkout (omit to use manual-only mode)
 FLW_SECRET_KEY=FLWSECK-...     # server-side transaction verification
 MOMO_MERCHANT_CODE=236512      # MTN MoMo merchant code shown to customers
+ADMIN_EMAIL=pay@ttryy.com      # admin copy of every order email
 ```
 
 ## Getting started
