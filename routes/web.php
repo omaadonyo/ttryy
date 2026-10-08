@@ -1,10 +1,21 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('orders', [AdminController::class, 'orders'])->name('orders');
+    Route::patch('orders/{order}/paid', [AdminController::class, 'markPaid'])->name('orders.paid');
+    Route::get('payments', [AdminController::class, 'payments'])->name('payments');
+    Route::get('users', [AdminController::class, 'users'])->name('users');
+    Route::patch('users/{user}/admin', [AdminController::class, 'toggleAdmin'])->name('users.admin');
+    Route::get('packages', [AdminController::class, 'packages'])->name('packages');
+});
 
 Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

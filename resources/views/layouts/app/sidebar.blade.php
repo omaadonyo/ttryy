@@ -26,6 +26,25 @@
                         {{ __('New order') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
+                @if(auth()->user()?->is_admin)
+                <flux:sidebar.group :heading="__('Administration')" class="grid">
+                    <flux:sidebar.item icon="chart-bar" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>
+                        {{ __('Overview') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="shopping-bag" :href="route('admin.orders')" :current="request()->routeIs('admin.orders*')" wire:navigate>
+                        {{ __('Orders') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="banknotes" :href="route('admin.payments')" :current="request()->routeIs('admin.payments')" wire:navigate>
+                        {{ __('Payments') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users*')" wire:navigate>
+                        {{ __('Users') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="squares-2x2" :href="route('admin.packages')" :current="request()->routeIs('admin.packages')" wire:navigate>
+                        {{ __('Packages') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
+                @endif
             </flux:sidebar.nav>
 
             <flux:spacer />

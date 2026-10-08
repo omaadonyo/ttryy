@@ -74,6 +74,14 @@ in the app sidebar layout: overview, `packages`, `checkout`, and a
 the UGX 10,000 unlock). Paid orders also track subscription
 **expiry, days left, and progress** on the dashboard and My packages.
 
+**Admin.** `/admin` (restricted by the `admin` middleware to users with
+`is_admin`) covers an overview (orders, collected vs outstanding revenue,
+users), order management (search/filter, manual Mobile Money confirmation
+via *Mark paid*), payments (verified collections vs claims awaiting
+confirmation), user management (order history, spend, grant/revoke admin —
+never yourself), and package performance per tier. Promote your first admin
+with `php artisan app:make-admin you@example.com`.
+
 **Payments.** Checkout integrates **Flutterwave** (card + Mobile Money
 popup, amount = first payment due today, verified server-side before an
 order is marked `paid`) with a manual fallback: direct MTN Mobile Money to

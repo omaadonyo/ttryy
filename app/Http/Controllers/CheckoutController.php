@@ -170,7 +170,7 @@ class CheckoutController extends Controller
 
     public function invoice(PackageOrder $order)
     {
-        abort_if($order->user_id !== request()->user()->id, 403);
+        abort_if($order->user_id !== request()->user()->id && ! request()->user()->is_admin, 403);
 
         $pdf = Pdf::loadView('invoice-pdf', [
             'order' => $order,
@@ -183,7 +183,7 @@ class CheckoutController extends Controller
 
     public function success(PackageOrder $order)
     {
-        abort_if($order->user_id !== request()->user()->id, 403);
+        abort_if($order->user_id !== request()->user()->id && ! request()->user()->is_admin, 403);
 
         return view('order-confirmation', ['order' => $order]);
     }
