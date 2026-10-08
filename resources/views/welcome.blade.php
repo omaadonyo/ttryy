@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script>(function(){try{var t=localStorage.getItem('ttryy-theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();</script>
+<script>(function(){try{var k='flux.appearance',t=localStorage.getItem(k);if(t!=='light'&&t!=='dark'){t=localStorage.getItem('ttryy-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}localStorage.setItem(k,t);}document.documentElement.classList.toggle('dark',t==='dark');}catch(e){}})();</script>
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 <style>
   html{ -webkit-font-smoothing:antialiased; color-scheme:light; scroll-behavior:smooth; scroll-padding-top:88px; }
@@ -90,8 +90,8 @@
     </div>
     <div class="flex items-center gap-1.5">
       <button id="themeBtn" onclick="toggleTheme()" class="w-10 h-10 grid place-items-center rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-300" aria-label="Toggle dark mode">
-        <svg id="iconMoon" class="w-5 h-5"><use href="#i-moon"/></svg>
-        <svg id="iconSun" class="w-5 h-5 hidden"><use href="#i-sun"/></svg>
+        <svg class="theme-icon-moon w-5 h-5"><use href="#i-moon"/></svg>
+        <svg class="theme-icon-sun w-5 h-5 hidden"><use href="#i-sun"/></svg>
       </button>
       <a href="https://wa.me/256700000000?text=Hi%20Ttryy!%20I%20want%20a%20website%20for%20my%20business." target="_blank" class="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">
         <svg class="w-5 h-5"><use href="#i-chat"/></svg>
@@ -897,9 +897,8 @@ mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{ mob
 const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target);} }),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 window.addEventListener('scroll',()=>{ document.getElementById('nav').style.boxShadow = window.scrollY>10 ? '0 8px 30px -12px rgba(10,10,12,.18)' : 'none'; });
-function currentTheme(){ return document.documentElement.classList.contains('dark') ? 'dark' : 'light'; }
-function paintThemeBtn(){ const dark=currentTheme()==='dark'; document.getElementById('iconMoon').classList.toggle('hidden',dark); document.getElementById('iconSun').classList.toggle('hidden',!dark); }
-function toggleTheme(){ const next=currentTheme()==='dark'?'light':'dark'; document.documentElement.classList.toggle('dark',next==='dark'); try{localStorage.setItem('ttryy-theme',next);}catch(e){} paintThemeBtn(); }
+function paintThemeIcons(){var d=document.documentElement.classList.contains('dark');document.querySelectorAll('.theme-icon-moon').forEach(function(e){e.classList.toggle('hidden',d);});document.querySelectorAll('.theme-icon-sun').forEach(function(e){e.classList.toggle('hidden',!d);});}
+function toggleTheme(){var h=document.documentElement,next=h.classList.contains('dark')?'light':'dark';h.classList.toggle('dark',next==='dark');try{localStorage.setItem('flux.appearance',next);localStorage.setItem('ttryy-theme',next);}catch(e){}paintThemeIcons();}
 /* ---------- SYNCED STICKY TABLE HEADER ---------- */
 (function(){
   const wrap=document.getElementById('featWrap'), table=document.getElementById('featTable'), nav=document.getElementById('nav');
@@ -986,7 +985,7 @@ document.addEventListener('click',e=>{
     secs.forEach(s=>spy.observe(s));
   }
 })();
-paintThemeBtn();
+paintThemeIcons();
 </script>
 </body>
 </html>

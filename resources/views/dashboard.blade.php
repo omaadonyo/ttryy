@@ -10,16 +10,34 @@
 
         <div class="grid auto-rows-min gap-4 md:grid-cols-3">
             <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
-                <flux:text>Orders placed</flux:text>
-                <p class="mt-1 text-3xl font-bold">{{ $totalOrders }}</p>
+                <div class="flex items-center justify-between gap-2">
+                    <flux:text>Orders placed</flux:text>
+                    <span class="grid size-9 place-items-center rounded-lg bg-zinc-950 dark:bg-white text-white dark:text-zinc-950">
+                        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 10V6a3 3 0 016 0v4"/></svg>
+                    </span>
+                </div>
+                <p class="mt-2 text-3xl font-bold">{{ $totalOrders }}</p>
+                <p class="mt-1 text-xs text-zinc-500">Lifetime orders on your account</p>
             </div>
             <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
-                <flux:text>Awaiting payment</flux:text>
-                <p class="mt-1 text-3xl font-bold text-[#9e005d]">{{ $pendingOrders }}</p>
+                <div class="flex items-center justify-between gap-2">
+                    <flux:text>Awaiting payment</flux:text>
+                    <span class="grid size-9 place-items-center rounded-lg bg-[#9e005d] text-white">
+                        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    </span>
+                </div>
+                <p class="mt-2 text-3xl font-bold">{{ $pendingOrders }}</p>
+                <p class="mt-1 text-xs text-zinc-500">Need follow-up to go live</p>
             </div>
             <div class="rounded-xl bg-zinc-950 dark:bg-[#9e005d] text-white p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.35)]">
-                <p class="text-sm opacity-70">Total committed</p>
-                <p class="mt-1 text-3xl font-bold">UGX {{ number_format($totalCommitted) }}</p>
+                <div class="flex items-center justify-between gap-2">
+                    <p class="text-sm opacity-70">Total committed</p>
+                    <span class="grid size-9 place-items-center rounded-lg bg-white/15 dark:bg-white/20 text-white">
+                        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+                    </span>
+                </div>
+                <p class="mt-2 text-3xl font-bold">UGX {{ number_format($totalCommitted) }}</p>
+                <p class="mt-1 text-xs opacity-60">Across all orders</p>
             </div>
         </div>
 

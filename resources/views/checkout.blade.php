@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script>(function(){try{var t=localStorage.getItem('ttryy-theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();</script>
+<script>(function(){try{var k='flux.appearance',t=localStorage.getItem(k);if(t!=='light'&&t!=='dark'){t=localStorage.getItem('ttryy-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}localStorage.setItem(k,t);}document.documentElement.classList.toggle('dark',t==='dark');}catch(e){}})();</script>
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @if($flwKey)
 <script src="https://checkout.flutterwave.com/v3.js"></script>
@@ -23,7 +23,7 @@
   .opt > div{ box-shadow:0 2px 12px -6px rgba(10,10,12,.14); }
   .dark .opt > div{ box-shadow:0 8px 24px -10px rgba(0,0,0,.75); }
   .opt .tick{ opacity:0; transform:scale(.4); transition:opacity .25s ease, transform .25s ease, background-color .25s ease; }
-  .opt input:checked + div{ box-shadow:0 0 0 2px var(--ac), 0 14px 30px -14px var(--ac); background:color-mix(in srgb, var(--ac) 7%, transparent); }
+  .opt input:checked + div{ background:color-mix(in srgb, var(--ac) 8%, transparent); }
   .opt input:checked + div .tick{ opacity:1; transform:scale(1); background:var(--ac); border-color:var(--ac); color:#fff; }
   .opt input:focus-visible + div{ outline:2px solid var(--ac); outline-offset:2px; }
   .opt[data-accent="zinc"]{ --ac:#52525b; }
@@ -44,7 +44,7 @@
       <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">Ttryy</span>
     </a>
     <div class="flex items-center gap-1.5">
-      <button onclick="document.documentElement.classList.toggle('dark');try{localStorage.setItem('ttryy-theme',document.documentElement.classList.contains('dark')?'dark':'light');}catch(e){}" class="w-10 h-10 grid place-items-center rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-300" aria-label="Toggle dark mode">
+      <button onclick="toggleTheme()" class="w-10 h-10 grid place-items-center rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-300" aria-label="Toggle dark mode">
         <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
         <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0110.5 4 8 8 0 1020 13.5z"/></svg>
       </button>
@@ -151,6 +151,7 @@
                 </span>
               </div>
               <p class="mt-1 text-xl font-extrabold text-zinc-950 dark:text-white">{{ $d['fee'] === 0 ? 'Free' : 'UGX '.number_format($d['fee']).' once' }}</p>
+              <p class="text-xs text-zinc-500 mt-1">{{ $key === 'none' ? 'Use a domain you already own' : ($key === 'budget' ? '.xyz, .online or .shop — we register it for you' : '.com or .org — we register it for you') }}</p>
             </div>
           </label>
           @endforeach
@@ -214,13 +215,33 @@
         <p class="text-xs opacity-60 mt-2">Grand total over term: <strong id="sumTotal">—</strong></p>
       </div>
 
-      @if($flwKey)
+      <div class="mt-5">
+        <p class="text-xs font-bold tracking-wide uppercase opacity-60">How do you want to pay?</p>
+        <div class="mt-2 space-y-2" id="pay-choices">
+          @if($flwKey)
+          <label class="opt cursor-pointer block" data-accent="brand">
+            <input type="radio" name="pay_choice" value="online" class="sr-only" checked>
+            <div class="rounded-xl bg-white/10 dark:bg-zinc-950/5 p-4 transition flex items-center gap-3">
+              <span class="tick w-6 h-6 grid place-items-center rounded-full border-2 border-white/40 dark:border-zinc-950/30 text-transparent shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+              </span>
+              <span><span class="block font-bold text-sm">Pay online now</span><span class="block text-xs opacity-60">Card or Mobile Money, processed by Flutterwave</span></span>
+            </div>
+          </label>
+          @endif
+          <label class="opt cursor-pointer block" data-accent="black">
+            <input type="radio" name="pay_choice" value="momo" class="sr-only" @if(!$flwKey) checked @endif>
+            <div class="rounded-xl bg-white/10 dark:bg-zinc-950/5 p-4 transition flex items-center gap-3">
+              <span class="tick w-6 h-6 grid place-items-center rounded-full border-2 border-white/40 dark:border-zinc-950/30 text-transparent shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+              </span>
+              <span><span class="block font-bold text-sm">Mobile Money to {{ $momoCode }}</span><span class="block text-xs opacity-60">Send it yourself, we confirm on WhatsApp</span></span>
+            </div>
+          </label>
+        </div>
+      </div>
+
       <button type="button" id="pay-now" class="mt-5 w-full bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full transition">Pay <span id="pay-now-amount">now</span></button>
-      <button type="button" id="momo-toggle" class="mt-2 w-full border border-white/25 dark:border-zinc-950/20 hover:bg-white/10 dark:hover:bg-zinc-950/5 font-bold py-3 rounded-full transition text-sm">Pay with Mobile Money instead</button>
-      @else
-      <p class="mt-5 text-xs opacity-60">Online payment is being connected. Pay with Mobile Money below.</p>
-      <button type="button" id="momo-toggle" class="mt-2 w-full bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full transition">Pay with Mobile Money</button>
-      @endif
 
       <div id="momo-panel" class="hidden mt-3 rounded-xl bg-white/10 dark:bg-zinc-950/5 p-4 text-sm">
         <p class="font-bold">Send to MTN MoMo merchant code</p>
@@ -245,6 +266,7 @@
 </footer>
 
 <script>
+function toggleTheme(){var h=document.documentElement,next=h.classList.contains('dark')?'light':'dark';h.classList.toggle('dark',next==='dark');try{localStorage.setItem('flux.appearance',next);localStorage.setItem('ttryy-theme',next);}catch(e){}}
 const DATA = @json($packages);
 const DOMAINS = @json($domains);
 const FLW_KEY = @json($flwKey);
@@ -441,8 +463,15 @@ function initCheckout(){
       payNow.disabled = false; payNow.classList.remove('opacity-60');
     });
   }
-  const momoToggle = document.getElementById('momo-toggle'), momoPanel = document.getElementById('momo-panel');
-  if(momoToggle && momoPanel) momoToggle.addEventListener('click', () => momoPanel.classList.toggle('hidden'));
+  const payChoiceInputs = [...document.querySelectorAll('input[name="pay_choice"]')];
+  const momoPanel = document.getElementById('momo-panel');
+  function syncPayChoice(){
+    const choice = (payChoiceInputs.find(i => i.checked) || {}).value || 'momo';
+    if(payNow) payNow.classList.toggle('hidden', choice !== 'online');
+    if(momoPanel) momoPanel.classList.toggle('hidden', choice !== 'momo');
+  }
+  payChoiceInputs.forEach(i => i.addEventListener('change', syncPayChoice));
+  syncPayChoice();
   const momoSent = document.getElementById('momo-sent');
   if(momoSent) momoSent.addEventListener('click', () => {
     const hidden = document.createElement('input');
