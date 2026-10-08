@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        <script>(function(){try{var t=localStorage.getItem('ttryy-theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.classList.toggle('dark',t==='dark');}catch(e){}})();</script>
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">

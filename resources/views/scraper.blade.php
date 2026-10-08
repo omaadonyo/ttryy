@@ -5,7 +5,7 @@
             <flux:text class="mt-1">Pull a sample of potential customers in your niche. Full contact details unlock for <strong>UGX 10,000</strong>.</flux:text>
         </div>
 
-        <div class="rounded-xl border border-neutral-200 dark:border-neutral-700 p-5">
+        <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
             <div class="grid sm:grid-cols-[1fr_1fr_auto] gap-2">
                 <select id="dsc-niche" aria-label="Choose your niche" class="w-full rounded-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]"></select>
                 <input id="dsc-biz" type="text" placeholder="What does your business sell?" aria-label="What does your business sell" class="w-full rounded-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] placeholder:text-zinc-400">
@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <div class="rounded-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden">
+        <div class="rounded-xl bg-white dark:bg-white/[.04] shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)] overflow-hidden">
             <div class="flex items-center gap-2.5 bg-zinc-50 dark:bg-white/5 border-b border-neutral-200 dark:border-neutral-700 px-4 py-3">
                 <span class="text-[13px] font-semibold" id="dsc-file">prospects.pdf</span>
                 <span id="dsc-count" class="ml-auto text-[11px] font-semibold text-zinc-500">0 records</span>
@@ -70,6 +70,45 @@ const dmaskName=n=>{const p=n.split(' ');return p[0]+' '+(p[1]?p[1][0]+'••�
 const dRec=n=>({name:`${drnd(D_A)} ${drnd(n.biz)} ${drnd(D_B)}`,type:drnd(n.prospects),district:drnd(D_DIST),contact:`${drnd(D_FIRST)} ${drnd(D_LAST)}`,phone:dphone()});
 const dSel=document.getElementById('dsc-niche');
 D_NICHES.forEach(n=>{const o=document.createElement('option');o.value=n.code;o.textContent=n.name;dSel.appendChild(o);});
+(function(){
+  const wrap=document.createElement('div'); wrap.className='cs-wrap relative';
+  dSel.parentNode.insertBefore(wrap,dSel); wrap.appendChild(dSel);
+  dSel.classList.add('sr-only'); dSel.tabIndex=-1; dSel.setAttribute('aria-hidden','true');
+  const btn=document.createElement('button');
+  btn.type='button';
+  btn.className='cs-btn w-full flex items-center justify-between gap-2 rounded-full border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none min-h-[46px]';
+  btn.setAttribute('aria-expanded','false');
+  btn.innerHTML='<span class="cs-label truncate">Choose your niche</span><svg class="w-4 h-4 shrink-0 text-zinc-400 transition-transform" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
+  const list=document.createElement('div');
+  list.className='cs-list hidden absolute z-30 left-0 right-0 mt-2 rounded-xl border border-neutral-200 dark:border-white/15 bg-white dark:bg-[#141416] shadow-2xl p-1.5 max-h-60 overflow-y-auto';
+  list.setAttribute('role','listbox');
+  function syncDsc(){
+    const opt=dSel.options[dSel.selectedIndex];
+    const label=wrap.querySelector('.cs-label');
+    if(label&&opt) label.textContent=opt.textContent;
+    wrap.querySelectorAll('.cs-list button').forEach(b=>{
+      const tick=b.querySelector('.cs-tick');
+      if(tick) tick.classList.toggle('hidden',b.dataset.value!==dSel.value);
+    });
+  }
+  [...dSel.options].forEach(o=>{
+    const item=document.createElement('button');
+    item.type='button'; item.dataset.value=o.value; item.setAttribute('role','option');
+    item.className='w-full flex items-center justify-between gap-2 text-left px-4 py-2 rounded-lg text-sm transition hover:bg-zinc-100 dark:hover:bg-white/10 text-zinc-800 dark:text-zinc-200';
+    item.innerHTML='<span class="truncate">'+o.textContent+'</span><svg class="cs-tick w-4 h-4 shrink-0 text-[#9e005d] hidden" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>';
+    item.addEventListener('click',()=>{ dSel.value=o.value; syncDsc(); closeDsc(); });
+    list.appendChild(item);
+  });
+  function closeDsc(){ list.classList.add('hidden'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click',()=>{ const open=list.classList.contains('hidden'); document.querySelectorAll('.cs-list').forEach(l=>l.classList.add('hidden')); if(open){ list.classList.remove('hidden'); btn.setAttribute('aria-expanded','true'); } });
+  document.addEventListener('click',e=>{ if(!wrap.contains(e.target)) closeDsc(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDsc(); });
+  const style=document.createElement('style');
+  style.textContent='.cs-btn svg{transition:transform .25s ease;}.cs-btn[aria-expanded="true"] svg{transform:rotate(180deg);}.cs-wrap:focus-within .cs-btn{border-color:#9e005d;}';
+  document.head.appendChild(style);
+  wrap.appendChild(btn); wrap.appendChild(list);
+  syncDsc();
+})();
 let dscBusy=false, dscTimers=[], dscNiche=null, dscTotal=0;
 function dscRun(){
   if(dscBusy) return; dscBusy=true;
