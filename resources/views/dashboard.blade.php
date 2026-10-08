@@ -80,11 +80,7 @@
                 <flux:button :href="route('packages.index')" variant="ghost" size="sm" wire:navigate>View all</flux:button>
             </div>
             @if($recentOrders->isEmpty())
-                <flux:text class="mt-2">No orders yet. Choose a package to get your website and prospect list started.</flux:text>
-                <div class="mt-4 flex flex-wrap gap-3">
-                    <flux:button :href="route('checkout')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" wire:navigate>Choose a package</flux:button>
-                    <flux:button :href="route('scraper.index')" variant="ghost" wire:navigate>Try the prospect scraper</flux:button>
-                </div>
+                <x-empty-state icon="orders" title="No orders yet" message="Choose a package to get your website and prospect list started." :actionUrl="route('checkout')" actionLabel="Choose a package" />
             @else
                 <div class="mt-3 overflow-x-auto">
                     <table class="w-full text-sm min-w-[520px]">

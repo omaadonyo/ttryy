@@ -48,7 +48,7 @@
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="7" class="py-6 text-center text-zinc-500">No payments yet.</td></tr>
+                        <tr><td colspan="7"><x-empty-state icon="payments" title="No payments yet" message="Verified collections and manual Mobile Money claims will appear here." /></td></tr>
                         @endforelse
                     </tbody>
                 </table>

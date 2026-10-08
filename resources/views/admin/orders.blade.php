@@ -70,7 +70,7 @@
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="7" class="py-6 text-center text-zinc-500">No orders match these filters.</td></tr>
+                        <tr><td colspan="7"><x-empty-state icon="search" title="No orders found" message="Try clearing the search or choosing different filters." /></td></tr>
                         @endforelse
                     </tbody>
                 </table>

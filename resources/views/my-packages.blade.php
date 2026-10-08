@@ -19,10 +19,8 @@
         </div>
 
         @if($orders->isEmpty())
-        <div class="rounded-xl bg-white dark:bg-white/[.04] p-10 text-center shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
-            <flux:heading>No orders yet.</flux:heading>
-            <flux:text class="mt-2">Choose a package to get your website and prospect list started.</flux:text>
-            <div class="mt-5"><flux:button :href="route('checkout')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" wire:navigate>Choose a package</flux:button></div>
+        <div class="rounded-xl bg-white dark:bg-white/[.04] p-6 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
+            <x-empty-state icon="orders" title="No orders yet" message="Choose a package to get your website and prospect list started." :actionUrl="route('checkout')" actionLabel="Choose a package" />
         </div>
         @else
         <div class="grid sm:grid-cols-2 gap-4" id="order-grid">

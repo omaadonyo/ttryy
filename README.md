@@ -102,6 +102,15 @@ MOMO_MERCHANT_CODE=236512      # MTN MoMo merchant code shown to customers
 ADMIN_EMAIL=pay@ttryy.com      # admin copy of every order email
 ```
 
+**Mail.** Order emails send via the configured SMTP mailer. Note that
+Mailtrap *sandbox* credentials only capture mail into the Mailtrap inbox —
+they never reach real inboxes. For real delivery, use Mailtrap live sending
+or any production SMTP credentials, then verify with:
+
+```
+php artisan app:test-mail you@example.com
+```
+
 ## Getting started
 
 Requirements: PHP 8.3+, Composer, Node.js 20+.

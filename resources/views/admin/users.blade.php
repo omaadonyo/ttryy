@@ -54,7 +54,7 @@
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="6" class="py-6 text-center text-zinc-500">No users found.</td></tr>
+                        <tr><td colspan="6"><x-empty-state icon="users" title="No users found" message="Try a different name or email search." /></td></tr>
                         @endforelse
                     </tbody>
                 </table>
