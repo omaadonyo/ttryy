@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\PackageOrder;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -42,6 +44,8 @@ class CheckoutController extends Controller
             'durations' => config('packages.durations'),
             'domains' => config('packages.domains'),
             'currency' => config('packages.currency'),
+            'flwKey' => config('services.flutterwave.public_key'),
+            'momoCode' => config('services.momo.merchant_code'),
         ]);
     }
 
@@ -53,12 +57,15 @@ class CheckoutController extends Controller
             'package' => ['required', Rule::in(array_keys($packages))],
             'billing_frequency' => ['required', Rule::in(config('packages.frequencies'))],
             'domain' => ['required', Rule::in(array_keys(config('packages.domains')))],
+            'payment_method' => ['nullable', Rule::in(['online', 'momo_manual'])],
             'duration_months' => ['nullable', 'integer', Rule::in(config('packages.durations'))],
             'business_name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:50'],
             'niche' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string', 'max:2000'],
         ]);
+
+        $method = $validated['payment_method'] ?? 'online';
 
         $quote = $this->quote(
             $validated['package'],
@@ -84,14 +91,89 @@ class CheckoutController extends Controller
             'total_amount' => $quote['total'],
             'due_today' => $quote['due_today'],
             'currency' => config('packages.currency'),
-            'status' => 'pending',
+            'status' => $method === 'momo_manual' ? 'submitted' : 'pending',
+            'payment_method' => $method === 'momo_manual' ? 'momo_manual' : 'flutterwave',
             'business_name' => $validated['business_name'],
             'phone' => $validated['phone'],
             'niche' => $validated['niche'] ?? null,
             'notes' => $validated['notes'] ?? null,
         ]);
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'reference' => $order->reference,
+                'due_today' => $order->due_today,
+                'currency' => $order->currency,
+                'email' => $request->user()->email,
+                'name' => $request->user()->name,
+                'phone' => $order->phone,
+                'public_key' => config('services.flutterwave.public_key'),
+                'order_url' => route('checkout.success', $order),
+            ]);
+        }
+
         return redirect()->route('checkout.success', $order);
+    }
+
+    public function verify(Request $request)
+    {
+        $data = $request->validate([
+            'transaction_id' => ['required'],
+            'tx_ref' => ['required', 'string'],
+        ]);
+
+        $order = PackageOrder::where('reference', $data['tx_ref'])
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        if ($order->status === 'paid') {
+            return response()->json(['redirect' => route('checkout.success', $order)]);
+        }
+
+        $secret = config('services.flutterwave.secret_key');
+
+        if (! $secret) {
+            return response()->json(['message' => 'Online verification is not configured yet.'], 422);
+        }
+
+        $response = Http::withToken($secret)->acceptJson()->get(
+            'https://api.flutterwave.com/v3/transactions/'.$data['transaction_id'].'/verify'
+        );
+
+        if (! $response->successful()) {
+            return response()->json(['message' => 'Could not reach the payment provider.'], 422);
+        }
+
+        $tx = $response->json('data', []);
+
+        if (($tx['status'] ?? null) === 'successful'
+            && ($tx['currency'] ?? null) === $order->currency
+            && (int) ($tx['amount'] ?? 0) >= $order->due_today) {
+            $order->update([
+                'status' => 'paid',
+                'paid_amount' => (int) $tx['amount'],
+                'paid_at' => now(),
+                'tx_ref' => (string) ($tx['id'] ?? $data['transaction_id']),
+                'payment_method' => 'flutterwave',
+            ]);
+
+            return response()->json(['redirect' => route('checkout.success', $order)]);
+        }
+
+        return response()->json(['message' => 'Payment could not be verified.'], 422);
+    }
+
+    public function invoice(PackageOrder $order)
+    {
+        abort_if($order->user_id !== request()->user()->id, 403);
+
+        $pdf = Pdf::loadView('invoice-pdf', [
+            'order' => $order,
+            'user' => $order->user,
+            'momoCode' => config('services.momo.merchant_code'),
+        ]);
+
+        return $pdf->download($order->reference.'-invoice.pdf');
     }
 
     public function success(PackageOrder $order)
@@ -111,7 +193,7 @@ class CheckoutController extends Controller
     /**
      * Server-side quote. Amounts are never trusted from the client.
      *
-     * The domain fee is an initial deposit, always due upfront together
+     * The domain fee is a one-time payment, always due upfront together
      * with the first installment (or the full price).
      *
      * @return array{duration_months:int, periods:int, amount_per_period:int, domain_fee:int, package_total:int, total:int, due_today:int, remaining:int, period_label:string}

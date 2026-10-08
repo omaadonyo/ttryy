@@ -21,6 +21,10 @@ class PackageOrder extends Model
         'due_today',
         'currency',
         'status',
+        'payment_method',
+        'tx_ref',
+        'paid_amount',
+        'paid_at',
         'business_name',
         'phone',
         'niche',
@@ -33,6 +37,8 @@ class PackageOrder extends Model
             'duration_months' => 'integer',
             'periods' => 'integer',
             'amount_per_period' => 'integer',
+            'paid_amount' => 'integer',
+            'paid_at' => 'datetime',
             'total_amount' => 'integer',
         ];
     }

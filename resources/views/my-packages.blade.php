@@ -25,6 +25,7 @@
                 <p class="text-sm text-zinc-500">{{ $order->business_name }}@if($order->niche) · {{ $order->niche }}@endif</p>
                 <p class="text-xl font-extrabold mt-3">UGX {{ number_format($order->total_amount) }}</p>
                 <p class="text-xs text-zinc-500 mt-1">Due today was UGX {{ number_format($order->due_today) }} · Ordered {{ $order->created_at->format('d M Y') }}</p>
+                <a href="{{ route('orders.invoice', $order) }}" class="inline-block mt-3 text-sm font-bold text-[#9e005d] hover:underline">Download invoice PDF →</a>
             </div>
             @endforeach
         </div>

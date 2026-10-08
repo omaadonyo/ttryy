@@ -6,6 +6,9 @@
             </div>
             <flux:heading size="xl" class="mt-4">Order received.</flux:heading>
             <flux:text class="mt-2">Reference <strong class="font-mono">{{ $order->reference }}</strong>. A Ttryy representative will contact <strong>{{ $order->phone }}</strong> to confirm and collect payment.</flux:text>
+            @if($order->status === 'paid')
+            <p class="mt-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 px-4 py-1.5 text-sm font-bold">Paid UGX {{ number_format($order->paid_amount) }} — thank you!</p>
+            @endif
         </div>
 
         <div class="rounded-xl border border-neutral-200 dark:border-neutral-700 p-8">
@@ -23,6 +26,7 @@
                 <div class="flex justify-between py-2.5"><dt class="text-zinc-500">Total over term</dt><dd class="font-bold">UGX {{ number_format($order->total_amount) }}</dd></div>
             </dl>
             <flux:button :href="'https://wa.me/256700000000?text='.urlencode('Hi Ttryy! I just placed order '.$order->reference.' ('.$order->package.', '.ucfirst($order->billing_frequency).', due today UGX '.number_format($order->due_today).'). How do I pay?')" target="_blank" variant="primary" class="mt-6 w-full !bg-[#9e005d] hover:!bg-[#7e0049]">Confirm on WhatsApp</flux:button>
+            <flux:button :href="route('orders.invoice', $order)" variant="ghost" class="mt-3 w-full">Download invoice PDF</flux:button>
             <div class="mt-3 flex flex-col sm:flex-row gap-3">
                 <flux:button :href="route('packages.index')" variant="ghost" class="flex-1" wire:navigate>My packages</flux:button>
                 <flux:button :href="route('dashboard')" variant="ghost" class="flex-1" wire:navigate>Dashboard</flux:button>

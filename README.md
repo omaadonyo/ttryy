@@ -67,12 +67,27 @@ the summary shows the full breakdown: package total, domain fee, first
 payment due today, remaining schedule, and grand total. Totals are always
 recomputed server-side (`CheckoutController::quote()`), stored as
 `package_orders` (`pending` status), and confirmed with an order reference
-plus a WhatsApp follow-up link. All account pages live under `/dashboard`
+plus a WhatsApp follow-up link. Every order can download a branded **PDF
+invoice**. All account pages live under `/dashboard`
 in the app sidebar layout: overview, `packages`, and `checkout`.
+
+**Payments.** Checkout integrates **Flutterwave** (card + Mobile Money
+popup, amount = first payment due today, verified server-side before an
+order is marked `paid`) with a manual fallback: direct MTN Mobile Money to
+merchant code **236512** (order reference as narration), after which the
+customer marks the order `submitted` for Ttryy to confirm.
 
 ```bash
 php artisan migrate                 # creates package_orders (use XAMPP's PHP on Windows: C:\xampp\php\php.exe)
 php artisan test --filter=CheckoutTest
+```
+
+Configure payments in `.env` (see `.env.example`):
+
+```
+FLW_PUBLIC_KEY=FLWPUBK-...     # Flutterwave inline checkout (omit to use manual-only mode)
+FLW_SECRET_KEY=FLWSECK-...     # server-side transaction verification
+MOMO_MERCHANT_CODE=236512      # MTN MoMo merchant code shown to customers
 ```
 
 ## Getting started

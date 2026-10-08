@@ -176,3 +176,148 @@ test('my packages page lists the users orders', function () {
         ->assertSee('START')
         ->assertSee('Test Biz');
 });
+
+test('manual mobile money orders are marked submitted', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->post('/dashboard/checkout', [
+        'package' => 'START',
+        'billing_frequency' => 'monthly',
+        'domain' => 'none',
+        'duration_months' => 3,
+        'payment_method' => 'momo_manual',
+        'business_name' => 'Test Biz',
+        'phone' => '+256 700 000020',
+    ]);
+
+    $order = PackageOrder::first();
+    expect($order->status)->toBe('submitted')
+        ->and($order->payment_method)->toBe('momo_manual')
+        ->and($order->total_amount)->toBe(21000 * 3);
+});
+
+test('payment verification fails gracefully without keys', function () {
+    config()->set('services.flutterwave.secret_key', null);
+    $user = User::factory()->create();
+
+    $order = PackageOrder::create([
+        'user_id' => $user->id,
+        'reference' => 'TTRYY-VERIFY',
+        'package' => 'START',
+        'billing_frequency' => 'monthly',
+        'domain' => 'none',
+        'duration_months' => 3,
+        'periods' => 3,
+        'amount_per_period' => 21000,
+        'domain_fee' => 0,
+        'total_amount' => 63000,
+        'due_today' => 21000,
+        'business_name' => 'Test Biz',
+        'phone' => '+256 700 000021',
+    ]);
+
+    $this->actingAs($user)->postJson('/dashboard/checkout/verify', [
+        'transaction_id' => '123456',
+        'tx_ref' => 'TTRYY-VERIFY',
+    ])->assertUnprocessable();
+
+    expect($order->fresh()->status)->toBe('pending');
+});
+
+test('underpaid flutterwave callbacks do not mark the order paid', function () {
+    config()->set('services.flutterwave.secret_key', 'test-secret');
+    Illuminate\Support\Facades\Http::fake([
+        'https://api.flutterwave.com/*' => Illuminate\Support\Facades\Http::response([
+            'data' => ['id' => 987654, 'status' => 'successful', 'currency' => 'UGX', 'amount' => 1000],
+        ], 200),
+    ]);
+
+    $user = User::factory()->create();
+
+    $order = PackageOrder::create([
+        'user_id' => $user->id,
+        'reference' => 'TTRYY-UNDERPD',
+        'package' => 'GROW',
+        'billing_frequency' => 'monthly',
+        'domain' => 'budget',
+        'duration_months' => 12,
+        'periods' => 12,
+        'amount_per_period' => 30000,
+        'domain_fee' => 29000,
+        'total_amount' => 389000,
+        'due_today' => 59000,
+        'business_name' => 'Test Biz',
+        'phone' => '+256 700 000022',
+    ]);
+
+    $this->actingAs($user)->postJson('/dashboard/checkout/verify', [
+        'transaction_id' => '987654',
+        'tx_ref' => 'TTRYY-UNDERPD',
+    ])->assertUnprocessable();
+
+    expect($order->fresh()->status)->toBe('pending');
+});
+
+test('verified flutterwave payments mark the order paid', function () {
+    config()->set('services.flutterwave.secret_key', 'test-secret');
+    Illuminate\Support\Facades\Http::fake([
+        'https://api.flutterwave.com/*' => Illuminate\Support\Facades\Http::response([
+            'data' => ['id' => 987655, 'status' => 'successful', 'currency' => 'UGX', 'amount' => 59000],
+        ], 200),
+    ]);
+
+    $user = User::factory()->create();
+
+    $order = PackageOrder::create([
+        'user_id' => $user->id,
+        'reference' => 'TTRYY-PAIDOK1',
+        'package' => 'GROW',
+        'billing_frequency' => 'monthly',
+        'domain' => 'budget',
+        'duration_months' => 12,
+        'periods' => 12,
+        'amount_per_period' => 30000,
+        'domain_fee' => 29000,
+        'total_amount' => 389000,
+        'due_today' => 59000,
+        'business_name' => 'Test Biz',
+        'phone' => '+256 700 000023',
+    ]);
+
+    $this->actingAs($user)->postJson('/dashboard/checkout/verify', [
+        'transaction_id' => '987655',
+        'tx_ref' => 'TTRYY-PAIDOK1',
+    ])->assertOk()->assertJsonPath('redirect', route('checkout.success', $order));
+
+    $order = $order->fresh();
+    expect($order->status)->toBe('paid')
+        ->and($order->paid_amount)->toBe(59000)
+        ->and($order->payment_method)->toBe('flutterwave');
+});
+
+test('owners can download their invoice, strangers cannot', function () {
+    $owner = User::factory()->create();
+    $intruder = User::factory()->create();
+
+    $order = PackageOrder::create([
+        'user_id' => $owner->id,
+        'reference' => 'TTRYY-INV001',
+        'package' => 'START',
+        'billing_frequency' => 'full',
+        'domain' => 'none',
+        'duration_months' => 12,
+        'periods' => 1,
+        'amount_per_period' => 250000,
+        'domain_fee' => 0,
+        'total_amount' => 250000,
+        'due_today' => 250000,
+        'business_name' => 'Owner Biz',
+        'phone' => '+256 700 000024',
+    ]);
+
+    $this->actingAs($intruder)->get(route('orders.invoice', $order))->assertForbidden();
+
+    $response = $this->actingAs($owner)->get(route('orders.invoice', $order));
+    $response->assertOk();
+    expect($response->headers->get('content-type'))->toContain('application/pdf');
+});

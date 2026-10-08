@@ -40,7 +40,9 @@ class LoginForm extends Component
         RateLimiter::clear('checkout-login:'.$throttleKey);
         session()->regenerate();
 
-        return $this->redirect(route('checkout'), navigate: true);
+        // Full redirect (not navigate) so checkout re-renders from the
+        // current URL query, which the page keeps in sync with selections.
+        return $this->redirect(request()->header('Referer', route('checkout')));
     }
 
     public function render()

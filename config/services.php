@@ -18,6 +18,16 @@ return [
         'key' => env('POSTMARK_API_KEY'),
     ],
 
+    'flutterwave' => [
+        'public_key' => env('FLW_PUBLIC_KEY'),
+        'secret_key' => env('FLW_SECRET_KEY'),
+    ],
+
+    'momo' => [
+        // MTN Mobile Money merchant code shown to customers for manual payments.
+        'merchant_code' => env('MOMO_MERCHANT_CODE', '236512'),
+    ],
+
     'resend' => [
         'key' => env('RESEND_API_KEY'),
     ],
