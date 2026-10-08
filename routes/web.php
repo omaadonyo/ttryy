@@ -8,10 +8,12 @@ Route::view('/', 'welcome')->name('home');
 
 Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('packages', [CheckoutController::class, 'orders'])->name('packages.index');
 });
+
+// Guests may browse checkout and sign in inline; placing an order needs an account.
+Route::get('dashboard/checkout', [CheckoutController::class, 'index'])->name('checkout');
 
 require __DIR__.'/settings.php';

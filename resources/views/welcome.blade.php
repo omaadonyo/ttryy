@@ -414,13 +414,13 @@
       <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Every package includes a professional website, custom CMS, SEO and a niche-specific business development resource.</p>
       <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pay in full, or spread it with Ttryy payment plans — monthly, daily, or weekly. From <strong class="text-zinc-950 dark:text-white">UGX 700/day</strong>.</p>
     </div>
-    <div class="mt-8 reveal">
+    <div class="mt-8 reveal flex flex-col items-center text-center">
       <div class="inline-flex rounded-full bg-zinc-100 dark:bg-white/10 p-1" id="planTabs" role="tablist" aria-label="Billing period">
         <button data-billing="daily" role="tab" class="plan-tab rounded-full px-5 py-2 text-sm font-bold transition">Per day</button>
         <button data-billing="weekly" role="tab" class="plan-tab rounded-full px-5 py-2 text-sm font-bold transition">Per week</button>
         <button data-billing="monthly" role="tab" class="plan-tab rounded-full px-5 py-2 text-sm font-bold transition">Per month</button>
       </div>
-      <div class="mt-4 flex flex-col sm:flex-row sm:items-center gap-3">
+      <div class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-3">
         <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Add a domain:</p>
         <div class="inline-flex self-start rounded-full border border-zinc-200 dark:border-white/15 p-1" id="domainToggle" role="group" aria-label="Domain choice">
           <button data-domain="none" class="domain-opt rounded-full px-4 py-2 text-[13px] font-bold transition">No domain</button>
@@ -430,9 +430,23 @@
       </div>
       <p class="mt-3 text-sm text-zinc-500">First payment plus domain deposit gets your website live within 5 days.</p>
     </div>
-    <div class="mt-10 grid lg:grid-cols-3 gap-6 items-stretch max-w-6xl mx-auto">
+    <div class="mt-10 grid lg:grid-cols-4 gap-5 items-stretch max-w-7xl mx-auto">
+      <!-- CORPORATE -->
+      <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl p-6 flex flex-col order-1">
+        <p class="font-display font-bold text-sm tracking-wide text-zinc-500">CORPORATE</p>
+        <p class="mt-2 font-display font-extrabold text-3xl xl:text-4xl text-zinc-950 dark:text-white"><span data-plan-price="CORPORATE">UGX 117,000</span><span class="text-lg font-bold text-zinc-500" data-plan-per="CORPORATE">/mo</span></p>
+        <p class="text-xs text-zinc-500 mt-2">Full UGX 1,400,000 · Domain from UGX 29,000</p>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-3">For established companies that need everything, managed.</p>
+        <p class="text-xs font-semibold text-zinc-500 mt-5 uppercase tracking-wider">Everything in Business, plus:</p>
+        <ul class="mt-3 space-y-2.5 text-sm flex-1 text-zinc-700 dark:text-zinc-300">
+          @foreach(['10,000 niche-specific potential customers','5,000 business directory contacts','5,000 applications/opportunities','Dedicated account manager','Custom integrations','Team training'] as $f)
+          <li class="flex gap-2"><svg class="w-5 h-5 shrink-0 text-zinc-400 dark:text-zinc-500"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
+          @endforeach
+        </ul>
+        <a href="/dashboard/checkout?package=CORPORATE" data-plan-cta="CORPORATE" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Choose Corporate</a>
+      </div>
       <!-- START -->
-      <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-3">
+      <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-4">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">START</p>
         <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white"><span data-plan-price="START">UGX 21,000</span><span class="text-lg font-bold text-zinc-500" data-plan-per="START">/mo</span></p>
         <p class="text-xs text-zinc-500 mt-2">Full UGX 250,000 · Domain from UGX 29,000</p>
@@ -445,7 +459,7 @@
         <a href="/dashboard/checkout?package=START" data-plan-cta="START" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Get Started</a>
       </div>
       <!-- GROW -->
-      <div class="reveal relative bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 rounded-xl p-6 flex flex-col lg:scale-[1.05] shadow-2xl shadow-zinc-950/30 ring-1 ring-zinc-950/10 dark:ring-white/20 order-2">
+      <div class="reveal relative bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 rounded-xl p-6 flex flex-col lg:scale-[1.05] shadow-2xl shadow-zinc-950/30 ring-1 ring-zinc-950/10 dark:ring-white/20 order-3">
         <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#9e005d] text-white text-xs font-extrabold px-5 py-1.5 rounded-full whitespace-nowrap shadow-lg">MOST POPULAR</span>
         <p class="font-display font-bold text-sm tracking-wide text-white/70 dark:text-zinc-500">GROW</p>
         <p class="mt-2 font-display font-extrabold text-4xl"><span data-plan-price="GROW">UGX 30,000</span><span class="text-lg font-bold opacity-60" data-plan-per="GROW">/mo</span></p>
@@ -460,7 +474,7 @@
         <a href="/dashboard/checkout?package=GROW" data-plan-cta="GROW" class="mt-7 w-full text-center bg-white dark:bg-zinc-950 text-zinc-950 dark:text-white font-bold py-3 rounded-full transition hover:bg-zinc-100 dark:hover:bg-zinc-800">Choose Grow</a>
       </div>
       <!-- BUSINESS -->
-      <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-1">
+      <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-2">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">BUSINESS</p>
         <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white"><span data-plan-price="BUSINESS">UGX 55,000</span><span class="text-lg font-bold text-zinc-500" data-plan-per="BUSINESS">/mo</span></p>
         <p class="text-xs text-zinc-500 mt-2">Full UGX 650,000 · Domain from UGX 29,000</p>
@@ -477,12 +491,12 @@
     <!-- comparison table -->
     <div class="reveal mt-10 bg-white dark:bg-[#141416] rounded-xl max-w-6xl mx-auto">
       <div id="featWrap" class="overflow-x-auto md:overflow-visible">
-      <table id="featTable" class="tbl w-full text-sm min-w-[640px]">
-        <thead class="tbl-head"><tr class="text-white text-left"><th class="px-6 py-4 font-bold whitespace-nowrap rounded-tl-xl">Feature</th><th class="px-6 py-4 font-bold whitespace-nowrap">Start</th><th class="px-6 py-4 font-bold whitespace-nowrap">Grow</th><th class="px-6 py-4 font-bold whitespace-nowrap rounded-tr-xl">Business</th></tr></thead>
+      <table id="featTable" class="tbl w-full text-sm min-w-[760px]">
+        <thead class="tbl-head"><tr class="text-white text-left"><th class="px-6 py-4 font-bold whitespace-nowrap rounded-tl-xl">Feature</th><th class="px-6 py-4 font-bold whitespace-nowrap">Start</th><th class="px-6 py-4 font-bold whitespace-nowrap">Grow</th><th class="px-6 py-4 font-bold whitespace-nowrap">Business</th><th class="px-6 py-4 font-bold whitespace-nowrap rounded-tr-xl">Corporate</th></tr></thead>
         <tbody class="tbl-body divide-y divide-zinc-100 dark:divide-white/10 text-zinc-700 dark:text-zinc-300">
-          @php $rows=[['Price','UGX 250K','UGX 350K','UGX 650K'],['12-month plan','UGX 21,000/mo','UGX 30,000/mo','UGX 55,000/mo'],['365-day plan','UGX 700/day','UGX 1,000/day','UGX 1,800/day'],['Approx. weekly','UGX 4,800/wk','UGX 6,700/wk','UGX 12,500/wk'],['Deposit','100%','60%','70%'],['Professional website','Yes','Yes','Yes'],['Custom CMS','Yes','Yes','Yes'],['WordPress','No','No','No'],['SEO','Yes','Yes','Yes'],['Mobile responsive','Yes','Yes','Yes'],['Domain + hosting setup','Yes','Yes','Yes'],['SSL certificate','Yes','Yes','Yes'],['Business email setup','No','Yes','Yes'],['Gallery / portfolio pages','No','Yes','Yes'],['Blog / news section','No','No','Yes'],['Google Analytics + Maps setup','No','Yes','Yes'],['Social media integration','Yes','Yes','Yes'],['Social media pages setup','No','Yes','Yes'],['Social profile branding','No','Yes','Yes'],['Social marketing starter plan','No','No','Yes'],['Google Ads setup','No','No','Yes'],['Facebook + Instagram ads','No','No','Yes'],['YouTube ads setup','No','No','Yes'],['Niche potential customers','5,000','5,000','5,000'],['Application/opportunity resources','100','200','2,000'],['Business directory contacts','—','—','2,000'],['Lead/resource PDF','Yes','Yes','Yes'],['Contact forms','Yes','Yes','Yes'],['WhatsApp integration','Yes','Yes','Yes'],['Proposal resources','Yes','Yes','Yes'],['Quotation resources','Yes','Yes','Yes'],['Maintenance + support','3 months','6 months','12 months'],['Domain name (optional)','From UGX 29,000','From UGX 29,000','From UGX 29,000']]; @endphp
+          @php $rows=[['Price','UGX 250K','UGX 350K','UGX 650K','UGX 1.4M'],['12-month plan','UGX 21,000/mo','UGX 30,000/mo','UGX 55,000/mo','UGX 117,000/mo'],['365-day plan','UGX 700/day','UGX 1,000/day','UGX 1,800/day','UGX 3,800/day'],['Approx. weekly','UGX 4,800/wk','UGX 6,700/wk','UGX 12,500/wk','UGX 27,000/wk'],['Deposit','100%','60%','70%','50%'],['Professional website','Yes','Yes','Yes','Yes'],['Custom CMS','Yes','Yes','Yes','Yes'],['WordPress','No','No','No','No'],['SEO','Yes','Yes','Yes','Yes'],['Mobile responsive','Yes','Yes','Yes','Yes'],['Domain + hosting setup','Yes','Yes','Yes','Yes'],['SSL certificate','Yes','Yes','Yes','Yes'],['Business email setup','No','Yes','Yes','Yes'],['Gallery / portfolio pages','No','Yes','Yes','Yes'],['Blog / news section','No','No','Yes','Yes'],['Google Analytics + Maps setup','No','Yes','Yes','Yes'],['Social media integration','Yes','Yes','Yes','Yes'],['Social media pages setup','No','Yes','Yes','Yes'],['Social profile branding','No','Yes','Yes','Yes'],['Social marketing starter plan','No','No','Yes','Yes'],['Google Ads setup','No','No','Yes','Yes'],['Facebook + Instagram ads','No','No','Yes','Yes'],['YouTube ads setup','No','No','Yes','Yes'],['Niche potential customers','5,000','5,000','5,000','10,000'],['Application/opportunity resources','100','200','2,000','5,000'],['Business directory contacts','—','—','2,000','5,000'],['Lead/resource PDF','Yes','Yes','Yes','Yes'],['Contact forms','Yes','Yes','Yes','Yes'],['WhatsApp integration','Yes','Yes','Yes','Yes'],['Proposal resources','Yes','Yes','Yes','Yes'],['Quotation resources','Yes','Yes','Yes','Yes'],['Maintenance + support','3 months','6 months','12 months','12 months'],['Domain name (optional)','From UGX 29,000','From UGX 29,000','From UGX 29,000','From UGX 29,000']]; @endphp
           @foreach($rows as $r)
-          <tr class="hover:bg-zinc-50 dark:hover:bg-white/5"><td class="px-6 py-3 font-medium">{{ $r[0] }}</td>@foreach([$r[1],$r[2],$r[3]] as $c)<td class="px-6 py-3">@if($c==='Yes')<svg class="w-5 h-5 text-zinc-700 dark:text-zinc-200"><use href="#i-check"/></svg>@elseif($c==='No'||$c==='—')<svg class="w-5 h-5 text-zinc-300 dark:text-zinc-600"><use href="#i-x"/></svg>@else{{ $c }}@endif</td>@endforeach</tr>
+          <tr class="hover:bg-zinc-50 dark:hover:bg-white/5"><td class="px-6 py-3 font-medium">{{ $r[0] }}</td>@foreach([$r[1],$r[2],$r[3],$r[4] ?? '—'] as $c)<td class="px-6 py-3">@if($c==='Yes')<svg class="w-5 h-5 text-zinc-700 dark:text-zinc-200"><use href="#i-check"/></svg>@elseif($c==='No'||$c==='—')<svg class="w-5 h-5 text-zinc-300 dark:text-zinc-600"><use href="#i-x"/></svg>@else{{ $c }}@endif</td>@endforeach</tr>
           @endforeach
         </tbody>
       </table>
@@ -907,7 +921,7 @@ function toggleTheme(){ const next=currentTheme()==='dark'?'light':'dark'; docum
 })();
 
 /* ---------- PRICING PLAN TABS + DOMAIN TOGGLE ---------- */
-const PLAN_PRICES={START:{full:250000,monthly:21000,weekly:4800,daily:700},GROW:{full:350000,monthly:30000,weekly:6700,daily:1000},BUSINESS:{full:650000,monthly:55000,weekly:12500,daily:1800}};
+const PLAN_PRICES={START:{full:250000,monthly:21000,weekly:4800,daily:700},GROW:{full:350000,monthly:30000,weekly:6700,daily:1000},BUSINESS:{full:650000,monthly:55000,weekly:12500,daily:1800},CORPORATE:{full:1400000,monthly:117000,weekly:27000,daily:3800}};
 const PER_SUFFIX={monthly:'/mo',weekly:'/wk',daily:'/day'};
 let planBilling='monthly', planDomain='budget';
 function refreshPlanCards(){
@@ -919,7 +933,7 @@ function refreshPlanCards(){
     const on=b.dataset.domain===planDomain;
     b.className='domain-opt rounded-full px-4 py-2 text-[13px] font-bold transition '+(on?'bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow':'text-zinc-500 hover:text-zinc-900 dark:hover:text-white');
   });
-  ['START','GROW','BUSINESS'].forEach(pkg=>{
+  ['START','GROW','BUSINESS','CORPORATE'].forEach(pkg=>{
     document.querySelectorAll(`[data-plan-price="${pkg}"]`).forEach(el=>{ el.textContent='UGX '+PLAN_PRICES[pkg][planBilling].toLocaleString('en-US'); });
     document.querySelectorAll(`[data-plan-per="${pkg}"]`).forEach(el=>{ el.textContent=PER_SUFFIX[planBilling]; });
     document.querySelectorAll(`[data-plan-cta="${pkg}"]`).forEach(el=>{ el.href=`/dashboard/checkout?package=${pkg}&billing=${planBilling}&domain=${planDomain}`; });

@@ -2,9 +2,55 @@
 
 use App\Models\PackageOrder;
 use App\Models\User;
+use Livewire\Livewire;
 
-test('guests are redirected to login when visiting checkout', function () {
-    $this->get('/dashboard/checkout?package=GROW')->assertRedirect('/login');
+test('guests can browse checkout but must sign in to order', function () {
+    $this->get('/dashboard/checkout?package=GROW')
+        ->assertOk()
+        ->assertSee('Create an account or log in', false);
+
+    $this->post('/dashboard/checkout', [])->assertRedirect('/login');
+});
+
+test('guests can register through the checkout Livewire form', function () {
+    Livewire::test(App\Livewire\Checkout\RegisterForm::class)
+        ->set('name', 'Jane Nakato')
+        ->set('email', 'jane@example.com')
+        ->set('password', 'password123')
+        ->set('password_confirmation', 'password123')
+        ->call('register')
+        ->assertRedirect(route('checkout'));
+
+    expect(App\Models\User::where('email', 'jane@example.com')->exists())->toBeTrue();
+});
+
+test('guests can log in through the checkout Livewire form', function () {
+    $user = User::factory()->create();
+
+    Livewire::test(App\Livewire\Checkout\LoginForm::class)
+        ->set('email', $user->email)
+        ->set('password', 'password')
+        ->call('login')
+        ->assertRedirect(route('checkout'));
+
+    $this->assertAuthenticatedAs($user);
+});
+
+test('corporate monthly orders include the domain one-time fee', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->post('/dashboard/checkout', [
+        'package' => 'CORPORATE',
+        'billing_frequency' => 'monthly',
+        'domain' => 'budget',
+        'duration_months' => 6,
+        'business_name' => 'Corp Ltd',
+        'phone' => '+256 700 000010',
+    ]);
+
+    $order = PackageOrder::first();
+    expect($order->total_amount)->toBe(117000 * 6 + 29000)
+        ->and($order->due_today)->toBe(117000 + 29000);
 });
 
 test('checkout page shows the preselected package', function () {

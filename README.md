@@ -55,19 +55,20 @@ resources/css/app.css               # Tailwind entry
 
 ## Accounts, dashboard & checkout
 
-Choosing a package sends the visitor through login/register (Fortify, with
-`intended()` redirects back to checkout), then to a checkout page where they
-pick a package, a domain (.xyz/.online/.shop from UGX 29,000 or .com/.org
-from UGX 80,000), a billing rhythm (full / monthly / weekly / daily), and
-**how long they want to pay to keep their website running** (3, 6 or
-12 months; full payment covers 12 months). The domain fee is an initial
-deposit always due upfront with the first payment, and the summary shows the
-full breakdown: package total, domain fee, due today, remaining schedule,
-and grand total. Totals are always recomputed server-side
-(`CheckoutController::quote()`), stored as `package_orders` (`pending`
-status), and confirmed with an order reference plus a WhatsApp follow-up
-link. All account pages live under `/dashboard` in the app sidebar layout:
-overview, `packages`, and `checkout`.
+Choosing a package sends the visitor to checkout, where guests can **create
+an account or log in inline via Livewire** without losing their selections
+(choices persist in `localStorage` across sign-in). There they pick a
+package (START / GROW / BUSINESS / CORPORATE), a domain (.xyz/.online/.shop
+UGX 29,000 one-time or .com/.org UGX 80,000 one-time), a billing rhythm
+(full / monthly / weekly / daily), and **how long they want to pay to keep
+their website running** (3, 6 or 12 months; full payment covers 12 months).
+The domain fee is one-time, always due upfront with the first payment, and
+the summary shows the full breakdown: package total, domain fee, first
+payment due today, remaining schedule, and grand total. Totals are always
+recomputed server-side (`CheckoutController::quote()`), stored as
+`package_orders` (`pending` status), and confirmed with an order reference
+plus a WhatsApp follow-up link. All account pages live under `/dashboard`
+in the app sidebar layout: overview, `packages`, and `checkout`.
 
 ```bash
 php artisan migrate                 # creates package_orders (use XAMPP's PHP on Windows: C:\xampp\php\php.exe)

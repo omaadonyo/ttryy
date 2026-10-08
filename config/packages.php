@@ -7,12 +7,12 @@ return [
     // Full upfront payment always covers 12 months of the website running.
     'durations' => [3, 6, 12],
 
-    // Domain options. The fee is an initial deposit added to the order,
-    // always due upfront with the first payment.
+    // Domain options. The fee is a one-time payment, always due upfront
+    // together with the first installment.
     'domains' => [
         'none' => ['label' => 'No domain — I already have one', 'fee' => 0],
-        'budget' => ['label' => '.xyz / .online / .shop', 'fee' => 29000],
-        'premium' => ['label' => '.com / .org', 'fee' => 80000],
+        'budget' => ['label' => '.xyz / .online / .shop (one-time)', 'fee' => 29000],
+        'premium' => ['label' => '.com / .org (one-time)', 'fee' => 80000],
     ],
 
     'frequencies' => ['full', 'monthly', 'weekly', 'daily'],
@@ -41,6 +41,14 @@ return [
             'daily' => 1800,
             'weekly' => 12500,
             'blurb' => 'For businesses that want a larger business-development database.',
+        ],
+        'CORPORATE' => [
+            'price' => 1400000,
+            'deposit' => '50%',
+            'monthly' => 117000,
+            'daily' => 3800,
+            'weekly' => 27000,
+            'blurb' => 'For established companies that need everything, managed.',
         ],
     ],
 

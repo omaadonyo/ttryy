@@ -36,7 +36,11 @@
                 </flux:sidebar.item>
             </flux:sidebar.nav>
 
+            @auth
             <x-desktop-user-menu class="hidden lg:block" :name="auth()->user()->name" />
+            @else
+            <flux:button :href="route('login')" variant="ghost" class="hidden lg:block">Sign in</flux:button>
+            @endauth
         </flux:sidebar>
 
         <!-- Mobile User Menu -->
@@ -45,6 +49,7 @@
 
             <flux:spacer />
 
+            @auth
             <flux:dropdown position="top" align="end">
                 <flux:profile
                     :initials="auth()->user()->initials()"
@@ -92,6 +97,9 @@
                     </form>
                 </flux:menu>
             </flux:dropdown>
+            @else
+            <flux:button :href="route('login')" variant="primary">Sign in</flux:button>
+            @endauth
         </flux:header>
 
         {{ $slot }}
