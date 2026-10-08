@@ -1,69 +1,28 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Checkout — Ttryy</title>
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0B">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%239e005d'/><text x='50' y='70' font-size='54' font-family='Arial Black' font-weight='900' fill='white' text-anchor='middle'>T</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script>(function(){try{var k='flux.appearance',t=localStorage.getItem(k);if(t!=='light'&&t!=='dark'){t=localStorage.getItem('ttryy-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}localStorage.setItem(k,t);}document.documentElement.classList.toggle('dark',t==='dark');}catch(e){}})();</script>
-@vite(['resources/css/app.css', 'resources/js/app.js'])
-@if($flwKey)
-<script src="https://checkout.flutterwave.com/v3.js"></script>
-@endif
-<style>
-  html{ -webkit-font-smoothing:antialiased; color-scheme:light; }
-  html.dark{ color-scheme:dark; }
-  body{ font-family:'Inter',system-ui,sans-serif; }
-  h1,h2,h3,.font-display{ font-family:'Sora',sans-serif; }
-  .opt > div{ box-shadow:0 2px 12px -6px rgba(10,10,12,.14); }
-  .dark .opt > div{ box-shadow:0 8px 24px -10px rgba(0,0,0,.75); }
-  .opt .tick{ opacity:0; transform:scale(.4); transition:opacity .25s ease, transform .25s ease, background-color .25s ease; }
-  .opt input:checked + div{ background:color-mix(in srgb, var(--ac) 8%, transparent); }
-  .opt input:checked + div .tick{ opacity:1; transform:scale(1); background:var(--ac); border-color:var(--ac); color:#fff; }
-  .opt input:focus-visible + div{ outline:2px solid var(--ac); outline-offset:2px; }
-  .opt[data-accent="zinc"]{ --ac:#52525b; }
-  .opt[data-accent="brand"]{ --ac:#9e005d; }
-  .opt[data-accent="black"]{ --ac:#18181b; }
-  .dark .opt[data-accent="black"]{ --ac:#e4e4e7; }
-  .cs-wrap:focus-within .cs-btn{ border-color:#9e005d; }
-  .cs-btn svg{ transition:transform .25s ease; }
-  .cs-btn[aria-expanded="true"] svg{ transform:rotate(180deg); }
-</style>
-</head>
-<body class="bg-zinc-50 text-zinc-900 dark:bg-[#0A0A0B] dark:text-zinc-300 min-h-screen">
-
-<header class="sticky top-0 z-50 bg-white/90 dark:bg-[#0A0A0B]/85 backdrop-blur-xl border-b border-zinc-200 dark:border-white/10">
-  <nav class="max-w-5xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-    <a href="{{ route('home') }}" class="flex items-center gap-2">
-      <span class="w-9 h-9 rounded-full bg-[#9e005d] text-white grid place-items-center font-black text-xl font-display">T</span>
-      <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">Ttryy</span>
-    </a>
-    <div class="flex items-center gap-1.5">
-      <button onclick="toggleTheme()" class="w-10 h-10 grid place-items-center rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-300" aria-label="Toggle dark mode">
-        <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-        <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0110.5 4 8 8 0 1020 13.5z"/></svg>
-      </button>
-      @auth
-      <a href="{{ route('packages.index') }}" class="text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">My packages</a>
-      @else
-      <a href="{{ route('login') }}" class="text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">Sign in</a>
-      @endauth
-      <a href="{{ route('home') }}" class="text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">← Home</a>
-    </div>
-  </nav>
-</header>
-
-<main class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+<x-layouts::app :title="__('Checkout')">
+    @if($flwKey)
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
+    @endif
+    <style>
+      .opt > div{ box-shadow:0 2px 12px -6px rgba(10,10,12,.14); }
+      .dark .opt > div{ box-shadow:0 8px 24px -10px rgba(0,0,0,.75); }
+      .opt .tick{ opacity:0; transform:scale(.4); transition:opacity .25s ease, transform .25s ease, background-color .25s ease; }
+      .opt input:checked + div{ background:color-mix(in srgb, var(--ac) 8%, transparent); }
+      .opt input:checked + div .tick{ opacity:1; transform:scale(1); background:var(--ac); border-color:var(--ac); color:#fff; }
+      .opt input:focus-visible + div{ outline:2px solid var(--ac); outline-offset:2px; }
+      .opt[data-accent="zinc"]{ --ac:#52525b; }
+      .opt[data-accent="brand"]{ --ac:#9e005d; }
+      .opt[data-accent="black"]{ --ac:#18181b; }
+      .dark .opt[data-accent="black"]{ --ac:#e4e4e7; }
+      .cs-wrap:focus-within .cs-btn{ border-color:#9e005d; }
+      .cs-btn svg{ transition:transform .25s ease; }
+      .cs-btn[aria-expanded="true"] svg{ transform:rotate(180deg); }
+    </style>
+    <div class="flex h-full w-full flex-1 flex-col gap-5">
   <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Secure checkout</p>
-  <h1 class="font-display font-extrabold text-3xl sm:text-4xl mt-2 text-zinc-950 dark:text-white">Choose how you pay</h1>
+  <h1 class="font-display font-extrabold text-3xl mt-1 text-zinc-950 dark:text-white">Choose how you pay</h1>
   <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pick a package, a domain, a billing rhythm, and how long you want your website kept running. You pay exactly what is shown — no hidden fees.</p>
 
-  <div class="mt-6 flex items-center gap-2 text-sm flex-wrap">
+  <div class="mt-5 flex items-center gap-2 text-sm flex-wrap">
     @auth
     <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 px-3 py-1 text-xs font-semibold">Signed in as {{ auth()->user()->name }}</span>
     @else
@@ -75,7 +34,7 @@
   </div>
 
   @guest
-  <div id="checkout-auth" class="mt-6 rounded-xl bg-white dark:bg-[#141416] shadow-[0_12px_32px_-12px_rgba(10,10,12,.28)] p-6 sm:p-8">
+  <div id="checkout-auth" class="mt-5 rounded-xl bg-white dark:bg-[#141416] shadow-[0_12px_32px_-12px_rgba(10,10,12,.28)] p-5 sm:p-6">
     <h2 class="font-display font-bold text-xl text-zinc-950 dark:text-white">Create an account or log in</h2>
     <p class="mt-1 text-sm text-zinc-500">Your package choices below are saved automatically — nothing is lost when you sign in.</p>
     <div class="mt-4 inline-flex rounded-full bg-zinc-100 dark:bg-white/10 p-1" role="tablist" aria-label="Account">
@@ -110,10 +69,10 @@
   @endif
   <div id="pay-error" class="hidden mt-6 rounded-xl border border-red-300 bg-red-50 dark:bg-red-500/10 px-5 py-4 text-sm text-red-700 dark:text-red-300"></div>
 
-  <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form" class="mt-8 grid lg:grid-cols-[1fr_330px] gap-6 items-start" data-guest="{{ auth()->check() ? '0' : '1' }}">
+  <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form" class="mt-6 grid lg:grid-cols-[1fr_320px] gap-5 items-start" data-guest="{{ auth()->check() ? '0' : '1' }}">
     @csrf
     <input type="hidden" name="payment_method" id="pay-method" value="online">
-    <div class="space-y-8">
+    <div class="space-y-6">
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">1. Your package</h2>
         @php $accents = ['START' => 'black', 'GROW' => 'brand', 'BUSINESS' => 'black', 'CORPORATE' => 'black']; @endphp
@@ -258,15 +217,9 @@
       <p class="mt-3 text-[11px] opacity-60">You pay exactly what is shown here — no hidden fees. Secured by Flutterwave.</p>
     </aside>
   </form>
-</main>
-
-<footer class="max-w-5xl mx-auto px-4 sm:px-6 pb-10 text-xs text-zinc-500 flex flex-col sm:flex-row justify-between gap-2">
-  <p>© 2026 Ttryy. All rights reserved.</p>
-  <a href="{{ route('home') }}" class="hover:text-zinc-900 dark:hover:text-white">← Back to site</a>
-</footer>
+</div>
 
 <script>
-function toggleTheme(){var h=document.documentElement,next=h.classList.contains('dark')?'light':'dark';h.classList.toggle('dark',next==='dark');try{localStorage.setItem('flux.appearance',next);localStorage.setItem('ttryy-theme',next);}catch(e){}}
 const DATA = @json($packages);
 const DOMAINS = @json($domains);
 const FLW_KEY = @json($flwKey);
@@ -484,5 +437,5 @@ if(document.readyState === 'loading') document.addEventListener('DOMContentLoade
 else initCheckout();
 if(window.Livewire) document.addEventListener('livewire:navigated', initCheckout);
 </script>
-</body>
-</html>
+    </div>
+</x-layouts::app>
