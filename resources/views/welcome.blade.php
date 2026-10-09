@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ttryy — We Build Your Website. We Find the Customers. You Close Them.</title>
+<title>Ttryy — Get Your Website for UGX 800/Day. We Find Customers. You Close Them.</title>
 <meta name="description" content="Get a professional, SEO-ready business website plus targeted potential customers and business opportunities specific to your niche. Run your website for as low as UGX 800/day.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0B">
@@ -132,9 +132,9 @@
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-12 lg:pt-20 lg:pb-16 grid lg:grid-cols-2 gap-12 items-center">
     <div class="reveal visible">
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Website, prospects and opportunities, in one package</p>
-      <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.08] tracking-tight mt-4 text-zinc-950 dark:text-white">
-        We Build Your Website.<br>
-        We Find the Customers. <span class="text-[#9e005d]">You Close them.</span>
+        <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.08] tracking-tight mt-4 text-zinc-950 dark:text-white">
+        Get Your Website for UGX 800/Day.<br>
+        We Find Customers. <span class="text-[#9e005d]">You Close Them.</span>
       </h1>
       <p class="mt-5 text-zinc-600 dark:text-zinc-400 text-base sm:text-lg leading-relaxed max-w-xl">
         Get a professional, SEO-ready business website plus targeted potential customers and business opportunities specific to your niche. Just like M-Kopa phones: pay a small initial deposit, then pay daily, weekly, or monthly until you complete. <strong class="text-zinc-900 dark:text-white">Your job is to close the client.</strong>
