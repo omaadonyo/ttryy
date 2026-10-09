@@ -63,6 +63,16 @@ class AdminController extends Controller
         return back()->with('status', "Order {$order->reference} marked as paid.");
     }
 
+    public function markHandedOver(PackageOrder $order)
+    {
+        $order->update([
+            'credentials_handed_over' => true,
+            'handed_over_at' => now(),
+        ]);
+
+        return back()->with('status', "cPanel and credentials for {$order->reference} marked as handed over.");
+    }
+
     public function payments()
     {
         $query = PackageOrder::with('user')->whereIn('status', ['paid', 'submitted'])->latest();

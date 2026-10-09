@@ -123,6 +123,16 @@ or any production SMTP credentials, then verify with:
 php artisan app:test-mail you@example.com
 ```
 
+## Pricing model: own it like M-Kopa
+
+Packages sell from **UGX 800/day**: the customer pays a small initial
+deposit (domain from UGX 29,000), then pays daily, weekly, or monthly over
+3, 6, or 12 months. Completing payment within the selected term triggers a
+credentials handover (admin marks it on the order) — cPanel and all
+credentials go to the customer, who owns the website outright. Meanwhile
+every package keeps delivering prospects and opportunities, because the
+client's job is closing deals.
+
 ## Getting started
 
 Requirements: PHP 8.3+, Composer, Node.js 20+.

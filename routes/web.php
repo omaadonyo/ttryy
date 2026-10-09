@@ -13,6 +13,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
     Route::get('orders', [AdminController::class, 'orders'])->name('orders');
     Route::patch('orders/{order}/paid', [AdminController::class, 'markPaid'])->name('orders.paid');
+    Route::patch('orders/{order}/handover', [AdminController::class, 'markHandedOver'])->name('orders.handover');
     Route::get('payments', [AdminController::class, 'payments'])->name('payments');
     Route::get('users', [AdminController::class, 'users'])->name('users');
     Route::patch('users/{user}/admin', [AdminController::class, 'toggleAdmin'])->name('users.admin');

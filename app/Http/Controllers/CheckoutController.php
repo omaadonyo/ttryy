@@ -23,12 +23,12 @@ class CheckoutController extends Controller
             $package = 'GROW';
         }
 
-        $billing = (string) $request->query('billing', 'monthly');
+        $billing = (string) $request->query('billing', 'daily');
         if (! in_array($billing, config('packages.frequencies'), true)) {
-            $billing = 'monthly';
+            $billing = 'daily';
         }
 
-        $domain = (string) $request->query('domain', 'budget');
+        $domain = (string) $request->query('domain', 'none');
         if (! array_key_exists($domain, config('packages.domains'))) {
             $domain = 'budget';
         }

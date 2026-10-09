@@ -51,6 +51,36 @@ test('admins can mark an order paid', function () {
         ->and($order->fresh()->paid_amount)->toBe(30000);
 });
 
+test('admins can mark credentials handed over', function () {
+    $admin = adminUser();
+    $order = PackageOrder::create([
+        'user_id' => User::factory()->create()->id,
+        'reference' => 'TTRYY-HO1001',
+        'package' => 'GROW',
+        'billing_frequency' => 'monthly',
+        'domain' => 'none',
+        'duration_months' => 12,
+        'periods' => 12,
+        'amount_per_period' => 30000,
+        'domain_fee' => 0,
+        'total_amount' => 360000,
+        'due_today' => 30000,
+        'status' => 'paid',
+        'business_name' => 'Test Biz',
+        'phone' => '+256 700 000050',
+    ]);
+
+    $this->actingAs($admin)->patch(route('admin.orders.handover', $order))->assertRedirect();
+
+    $order = $order->fresh();
+    expect($order->credentials_handed_over)->toBeTrue()
+        ->and($order->handed_over_at)->not->toBeNull();
+
+    $this->actingAs(User::factory()->create())
+        ->patch(route('admin.orders.handover', $order))
+        ->assertForbidden();
+});
+
 test('non-admins cannot mark orders paid', function () {
     $order = PackageOrder::create([
         'user_id' => User::factory()->create()->id,

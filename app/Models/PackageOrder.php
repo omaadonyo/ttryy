@@ -25,6 +25,8 @@ class PackageOrder extends Model
         'tx_ref',
         'paid_amount',
         'paid_at',
+        'credentials_handed_over',
+        'handed_over_at',
         'business_name',
         'phone',
         'niche',
@@ -39,6 +41,8 @@ class PackageOrder extends Model
             'amount_per_period' => 'integer',
             'paid_amount' => 'integer',
             'paid_at' => 'datetime',
+            'credentials_handed_over' => 'boolean',
+            'handed_over_at' => 'datetime',
             'total_amount' => 'integer',
         ];
     }

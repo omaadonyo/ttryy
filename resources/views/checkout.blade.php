@@ -231,8 +231,8 @@ const durationSel = document.getElementById('duration');
 const LS_KEY = 'ttryy-checkout-v1';
 const cur = () => ({
   pkg: (pkgInputs.find(i => i.checked) || {}).value || 'GROW',
-  freq: (freqInputs.find(i => i.checked) || {}).value || 'monthly',
-  dom: (domInputs.find(i => i.checked) || {}).value || 'budget',
+  freq: (freqInputs.find(i => i.checked) || {}).value || 'daily',
+  dom: (domInputs.find(i => i.checked) || {}).value || 'none',
   months: parseInt(durationSel.value, 10) || 12,
 });
 function calc(){

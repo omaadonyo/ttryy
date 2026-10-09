@@ -58,6 +58,9 @@
                                 @endif
                             </td>
                             <td class="py-2.5 text-right whitespace-nowrap">
+                                @if($order->credentials_handed_over)
+                                <span class="text-xs font-semibold text-emerald-700 dark:text-emerald-400">Handed over ✓</span>
+                                @else
                                 @if($order->status !== 'paid')
                                 <form method="POST" action="{{ route('admin.orders.paid', $order) }}" class="inline">
                                     @csrf
@@ -66,6 +69,12 @@
                                 </form>
                                 @else
                                 <span class="text-xs text-zinc-400">UGX {{ number_format($order->paid_amount) }} ✓</span>
+                                @endif
+                                <form method="POST" action="{{ route('admin.orders.handover', $order) }}" class="inline ml-2">
+                                    @csrf
+                                    @method('PATCH')
+                                    <flux:button type="submit" size="sm" variant="ghost">Hand over</flux:button>
+                                </form>
                                 @endif
                             </td>
                         </tr>

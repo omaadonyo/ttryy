@@ -49,7 +49,9 @@
                     </div>
                     <p class="mt-1 text-[11px] text-zinc-500">{{ $order->paymentProgressPercent() }}% of the service paid for</p>
                 </div>
-                @if($order->isActive())
+                @if($order->credentials_handed_over)
+                <p class="mt-3 text-xs font-semibold text-emerald-700 dark:text-emerald-400">cPanel + credentials handed over{{ $order->handed_over_at ? ' · '.$order->handed_over_at->format('d M Y') : '' }} — the website is fully yours.</p>
+                @elseif($order->isActive())
                 <div class="mt-3 h-1.5 rounded-full bg-zinc-100 dark:bg-white/10 overflow-hidden">
                     <div class="h-1.5 rounded-full bg-[#9e005d]" style="width:{{ $order->progressPercent() }}%"></div>
                 </div>

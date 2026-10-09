@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ttryy — We Build Your Website. We Find the Customers. You Close Them.</title>
-<meta name="description" content="Get a professional, SEO-ready business website plus targeted potential customers and business opportunities specific to your niche. Starting from UGX 250,000.">
+<meta name="description" content="Get a professional, SEO-ready business website plus targeted potential customers and business opportunities specific to your niche. Run your website for as low as UGX 800/day.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0B">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%239e005d'/><text x='50' y='70' font-size='54' font-family='Arial Black' font-weight='900' fill='white' text-anchor='middle'>T</text></svg>">
@@ -137,13 +137,13 @@
         We Find the Customers. <span class="text-[#9e005d]">You Close them.</span>
       </h1>
       <p class="mt-5 text-zinc-600 dark:text-zinc-400 text-base sm:text-lg leading-relaxed max-w-xl">
-        Get a professional, SEO-ready business website plus targeted potential customers and business opportunities specific to your niche. We help you get online and find where the business is. <strong class="text-zinc-900 dark:text-white">Your job is to close the client.</strong>
+        Get a professional, SEO-ready business website plus targeted potential customers and business opportunities specific to your niche. Just like M-Kopa phones: pay a small initial deposit, then pay daily, weekly, or monthly until you complete. <strong class="text-zinc-900 dark:text-white">Your job is to close the client.</strong>
       </p>
       <div class="mt-8 flex flex-col sm:flex-row gap-3">
         <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/25 text-center">Get Your Website</a>
         <a href="#pricing" class="inline-flex justify-center items-center border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold px-7 py-3 rounded-full text-base transition">View Packages</a>
       </div>
-      <p class="mt-5 text-sm text-zinc-500">Starting from <strong class="text-zinc-900 dark:text-white">UGX 250,000</strong>. No WordPress. Full CMS. SEO included.</p>
+      <p class="mt-5 text-sm text-zinc-500">Run your website for as low as <strong class="text-zinc-900 dark:text-white">UGX 800/day</strong>. No WordPress. Full CMS. SEO included.</p>
     </div>
 
     <!-- SCRAPER DEMO -->
@@ -408,6 +408,38 @@
   </div>
 </section>
 
+<!-- OWNERSHIP: M-KOPA MODEL -->
+<section id="ownership" class="py-16 lg:py-24 bg-white dark:bg-[#0A0A0B]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="max-w-2xl reveal">
+      <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Own it like M-Kopa</p>
+      <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Pay Small-Small. Own It Outright.</h2>
+      <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">No big upfront bill. Run your website for as low as <strong class="text-zinc-900 dark:text-white">UGX 800/day</strong> while you pay it off — and we keep bringing you potential customers the whole time.</p>
+    </div>
+    <div class="mt-10 grid md:grid-cols-3 gap-4">
+      <div class="reveal rounded-xl bg-zinc-50 dark:bg-[#141416] p-6 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
+        <p class="font-display font-extrabold text-5xl text-zinc-200 dark:text-zinc-700">01</p>
+        <h3 class="font-display font-bold text-xl mt-4 text-zinc-950 dark:text-white">Pay the initial deposit</h3>
+        <p class="text-zinc-600 dark:text-zinc-400 text-[15px] mt-2">Secure your domain from UGX 29,000 and your website goes live within 5 days — with your first prospects included.</p>
+      </div>
+      <div class="reveal rounded-xl bg-zinc-50 dark:bg-[#141416] p-6 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
+        <p class="font-display font-extrabold text-5xl text-zinc-200 dark:text-zinc-700">02</p>
+        <h3 class="font-display font-bold text-xl mt-4 text-zinc-950 dark:text-white">Pay as you earn</h3>
+        <p class="text-zinc-600 dark:text-zinc-400 text-[15px] mt-2">Pay daily, weekly, or monthly over 3, 6, or 12 months. Miss nothing: your site stays running while your plan is active.</p>
+      </div>
+      <div class="reveal rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 p-6 shadow-xl shadow-zinc-950/20">
+        <p class="font-display font-extrabold text-5xl opacity-25">03</p>
+        <h3 class="font-display font-bold text-xl mt-4">Complete it, own it</h3>
+        <p class="text-[15px] mt-2 opacity-70">Finish within your selected timeframe and we hand over the cPanel and all credentials. The website is 100% yours.</p>
+      </div>
+    </div>
+    <div class="mt-8 reveal flex flex-col sm:flex-row gap-3">
+      <a href="#pricing" class="inline-flex justify-center items-center bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">See the plans</a>
+      <a href="#niches" class="inline-flex justify-center items-center font-bold px-8 py-3 rounded-full border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white transition">Find your customers first</a>
+    </div>
+  </div>
+</section>
+
 <!-- PRICING -->
 <section id="pricing" class="relative overflow-hidden py-16 lg:py-24 bg-white dark:bg-[#0A0A0B]">
   <div class="absolute inset-0 sqgrid pointer-events-none" aria-hidden="true"></div>
@@ -416,7 +448,7 @@
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">How we can help &middot; Pricing</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Choose Your Growth Package</h2>
       <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Every package includes a professional website, custom CMS, SEO and a niche-specific business development resource.</p>
-      <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pay in full, or spread it with Ttryy payment plans — monthly, daily, or weekly. From <strong class="text-zinc-950 dark:text-white">UGX 700/day</strong>.</p>
+      <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pay in full, or spread it — daily, weekly, or monthly. Run your website for as low as <strong class="text-zinc-950 dark:text-white">UGX 800/day</strong>.</p>
     </div>
     <div class="mt-8 reveal flex flex-col items-center text-center">
       <div class="inline-flex rounded-full bg-zinc-100 dark:bg-white/10 p-1" id="planTabs" role="tablist" aria-label="Billing period">
@@ -430,8 +462,8 @@
       <!-- CORPORATE -->
       <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl p-6 flex flex-col order-1">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">CORPORATE</p>
-        <p class="mt-2 font-display font-extrabold text-3xl xl:text-4xl text-zinc-950 dark:text-white"><span data-plan-price="CORPORATE">UGX 146,000</span></p>
-        <p class="text-xs text-zinc-500 mt-2">First payment · then <strong data-plan-then="CORPORATE">UGX 117,000/mo</strong> · Full UGX 1,400,000</p>
+        <p class="mt-2 font-display font-extrabold text-3xl xl:text-4xl text-zinc-950 dark:text-white"><span data-plan-price="CORPORATE">UGX 3,800</span></p>
+        <p class="text-xs text-zinc-500 mt-2">First payment · then <strong data-plan-then="CORPORATE">UGX 3,800/day</strong> · Full UGX 1,400,000</p>
         <div class="mt-3 grid grid-cols-3 gap-1 rounded-full bg-zinc-100 dark:bg-white/10 p-1" data-domain-switch="CORPORATE" role="group" aria-label="Domain for CORPORATE">
           <button data-domain="none" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">No domain</button>
           <button data-domain="budget" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">.xyz +29k</button>
@@ -449,8 +481,8 @@
       <!-- START -->
       <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-4">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">START</p>
-        <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white"><span data-plan-price="START">UGX 50,000</span></p>
-        <p class="text-xs text-zinc-500 mt-2">First payment · then <strong data-plan-then="START">UGX 21,000/mo</strong> · Full UGX 250,000</p>
+        <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white"><span data-plan-price="START">UGX 700</span></p>
+        <p class="text-xs text-zinc-500 mt-2">First payment · then <strong data-plan-then="START">UGX 700/day</strong> · Full UGX 250,000</p>
         <div class="mt-3 grid grid-cols-3 gap-1 rounded-full bg-zinc-100 dark:bg-white/10 p-1" data-domain-switch="START" role="group" aria-label="Domain for START">
           <button data-domain="none" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">No domain</button>
           <button data-domain="budget" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">.xyz +29k</button>
@@ -468,8 +500,8 @@
       <div class="reveal relative bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 rounded-xl p-6 flex flex-col lg:scale-[1.05] shadow-2xl shadow-zinc-950/30 ring-1 ring-zinc-950/10 dark:ring-white/20 order-3">
         <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#9e005d] text-white text-xs font-extrabold px-5 py-1.5 rounded-full whitespace-nowrap shadow-lg">MOST POPULAR</span>
         <p class="font-display font-bold text-sm tracking-wide text-white/70 dark:text-zinc-500">GROW</p>
-        <p class="mt-2 font-display font-extrabold text-4xl"><span data-plan-price="GROW">UGX 59,000</span></p>
-        <p class="text-xs text-white/60 dark:text-zinc-500 mt-2">First payment · then <strong data-plan-then="GROW">UGX 30,000/mo</strong> · Full UGX 350,000</p>
+        <p class="mt-2 font-display font-extrabold text-4xl"><span data-plan-price="GROW">UGX 1,000</span></p>
+        <p class="text-xs text-white/60 dark:text-zinc-500 mt-2">First payment · then <strong data-plan-then="GROW">UGX 1,000/day</strong> · Full UGX 350,000</p>
         <div class="mt-3 grid grid-cols-3 gap-1 rounded-full bg-white/10 dark:bg-zinc-950/5 p-1" data-domain-switch="GROW" role="group" aria-label="Domain for GROW">
           <button data-domain="none" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">No domain</button>
           <button data-domain="budget" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">.xyz +29k</button>
@@ -487,8 +519,8 @@
       <!-- BUSINESS -->
       <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-2">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">BUSINESS</p>
-        <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white"><span data-plan-price="BUSINESS">UGX 84,000</span></p>
-        <p class="text-xs text-zinc-500 mt-2">First payment · then <strong data-plan-then="BUSINESS">UGX 55,000/mo</strong> · Full UGX 650,000</p>
+        <p class="mt-2 font-display font-extrabold text-4xl text-zinc-950 dark:text-white"><span data-plan-price="BUSINESS">UGX 1,800</span></p>
+        <p class="text-xs text-zinc-500 mt-2">First payment · then <strong data-plan-then="BUSINESS">UGX 1,800/day</strong> · Full UGX 650,000</p>
         <div class="mt-3 grid grid-cols-3 gap-1 rounded-full bg-zinc-100 dark:bg-white/10 p-1" data-domain-switch="BUSINESS" role="group" aria-label="Domain for BUSINESS">
           <button data-domain="none" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">No domain</button>
           <button data-domain="budget" class="rounded-full px-2 py-1.5 text-[11px] font-bold transition">.xyz +29k</button>
@@ -939,8 +971,8 @@ function toggleTheme(){var h=document.documentElement,next=h.classList.contains(
 const PLAN_PRICES={START:{full:250000,monthly:21000,weekly:4800,daily:700},GROW:{full:350000,monthly:30000,weekly:6700,daily:1000},BUSINESS:{full:650000,monthly:55000,weekly:12500,daily:1800},CORPORATE:{full:1400000,monthly:117000,weekly:27000,daily:3800}};
 const PER_SUFFIX={monthly:'/mo',weekly:'/wk',daily:'/day'};
 const DOM_FEES={none:0,budget:29000,premium:80000};
-let planBilling='monthly';
-const planDomain={START:'budget',GROW:'budget',BUSINESS:'budget',CORPORATE:'budget'};
+let planBilling='daily';
+const planDomain={START:'none',GROW:'none',BUSINESS:'none',CORPORATE:'none'};
 function refreshPlanCards(){
   document.querySelectorAll('#planTabs .plan-tab').forEach(b=>{
     const on=b.dataset.billing===planBilling;
