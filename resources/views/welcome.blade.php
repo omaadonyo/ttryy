@@ -34,6 +34,8 @@
   .niche-card{ transition:transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s, border-color .3s; }
   .niche-card:hover{ transform:translateY(-5px); box-shadow:0 24px 48px -20px rgba(10,10,12,.18); }
   .spy-link.spy-active{ background:#9e005d; border-color:#9e005d; color:#fff; }
+  a[data-navspy].nav-active{ color:#9e005d; }
+  .dark a[data-navspy].nav-active{ color:#fff; text-decoration:underline; text-underline-offset:6px; }
   table.tbl{ border-collapse:separate; border-spacing:0; }
   thead.tbl-head th{ background:#9e005d; }
   @media(max-width:767px){
@@ -80,13 +82,13 @@
       <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">Ttryy</span>
     </a>
     <div class="hidden lg:flex items-center gap-6 text-[15px] font-medium text-zinc-600 dark:text-zinc-400">
-      <a href="#home" class="hover:text-zinc-950 dark:hover:text-white">Home</a>
+      <a href="#home" data-navspy="home" class="hover:text-zinc-950 dark:hover:text-white">Home</a>
       <a href="#how" class="hover:text-zinc-950 dark:hover:text-white">How It Works</a>
       <a href="#niches" class="hover:text-zinc-950 dark:hover:text-white">Niches</a>
-      <a href="#work" class="hover:text-zinc-950 dark:hover:text-white">Our Work</a>
-      <a href="#pricing" class="hover:text-zinc-950 dark:hover:text-white">Pricing</a>
-      <a href="#tools" class="hover:text-zinc-950 dark:hover:text-white">Business Tools</a>
-      <a href="#faq" class="hover:text-zinc-950 dark:hover:text-white">FAQ</a>
+      <a href="#work" data-navspy="work" class="hover:text-zinc-950 dark:hover:text-white">Our Work</a>
+      <a href="#pricing" data-navspy="pricing" class="hover:text-zinc-950 dark:hover:text-white">Pricing</a>
+      <a href="#tools" data-navspy="tools" class="hover:text-zinc-950 dark:hover:text-white">Business Tools</a>
+      <a href="#faq" data-navspy="faq" class="hover:text-zinc-950 dark:hover:text-white">FAQ</a>
     </div>
     <div class="flex items-center gap-1.5">
       <button id="themeBtn" onclick="toggleTheme()" class="w-10 h-10 grid place-items-center rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-300" aria-label="Toggle dark mode">
@@ -110,13 +112,13 @@
     </div>
   </nav>
   <div id="mobileMenu" class="lg:hidden hidden border-t border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0A0A0B] px-4 py-4 space-y-1 text-[15px] font-medium">
-    <a href="#home" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Home</a>
-    <a href="#how" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">How It Works</a>
-    <a href="#niches" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Niches</a>
-    <a href="#work" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Our Work</a>
-    <a href="#pricing" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Pricing</a>
-    <a href="#tools" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Business Tools</a>
-    <a href="#faq" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">FAQ</a>
+    <a href="#home" data-navspy="home" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Home</a>
+    <a href="#how" data-navspy="how" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">How It Works</a>
+    <a href="#niches" data-navspy="niches" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Niches</a>
+    <a href="#work" data-navspy="work" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Our Work</a>
+    <a href="#pricing" data-navspy="pricing" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Pricing</a>
+    <a href="#tools" data-navspy="tools" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Business Tools</a>
+    <a href="#faq" data-navspy="faq" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">FAQ</a>
     <a href="/dashboard/checkout" class="block text-center w-full mt-2 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full">Get Started</a>
     @auth
     <a href="/dashboard" class="block text-center w-full mt-2 border border-zinc-300 dark:border-white/20 font-bold py-3 rounded-full">Dashboard</a>
@@ -1019,6 +1021,15 @@ document.addEventListener('click',e=>{
     const secs=spyLinks.map(l=>document.getElementById(l.dataset.spy)).filter(Boolean);
     const spy=new IntersectionObserver(es=>{ es.forEach(en=>{ if(en.isIntersecting){ spyLinks.forEach(l=>l.classList.toggle('spy-active',l.dataset.spy===en.target.id)); } }); },{rootMargin:'-40% 0px -55% 0px'});
     secs.forEach(s=>spy.observe(s));
+  }
+})();
+(function(){
+  const navLinks=[...document.querySelectorAll('[data-navspy]')];
+  if(navLinks.length&&'IntersectionObserver' in window){
+    const seen={};
+    navLinks.forEach(l=>{ const s=document.getElementById(l.dataset.navspy); if(s&&!seen[l.dataset.navspy]) seen[l.dataset.navspy]=s; });
+    const navSpy=new IntersectionObserver(es=>{ es.forEach(en=>{ if(en.isIntersecting){ navLinks.forEach(l=>l.classList.toggle('nav-active',l.dataset.navspy===en.target.id)); } }); },{rootMargin:'-45% 0px -50% 0px'});
+    Object.values(seen).forEach(s=>navSpy.observe(s));
   }
 })();
 paintThemeIcons();
