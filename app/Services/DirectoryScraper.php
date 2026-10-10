@@ -10,9 +10,25 @@ class DirectoryScraper
 {
     public const BASE_URL = 'https://www.yellowpages.co.ug';
 
-    public const MAX_PAGES = 3;
-
     public const MAX_RECORDS = 30;
+
+    /** Extra Yellow Pages search terms per niche for broader real coverage. */
+    public const NICHE_TERMS = [
+        'NGOs & Charities' => ['non-governmental organizations', 'foundations'],
+        'Construction' => ['construction', 'contractors', 'building materials'],
+        'IT & Software' => ['software', 'computers', 'technology'],
+        'Marketing & Advertising' => ['advertising', 'marketing', 'media agencies'],
+        'Cleaning & Facility Management' => ['cleaning', 'cleaning services'],
+        'Security' => ['security', 'security guard'],
+        'Catering & Food Services' => ['catering', 'restaurants'],
+        'Printing & Branding' => ['printing', 'printers'],
+        'Office Furniture' => ['furniture', 'office furniture'],
+        'Accounting & Professional Services' => ['accountants', 'auditors', 'tax consultants'],
+        'Logistics & Transport' => ['transport', 'logistics', 'clearing'],
+        'Agriculture & Agribusiness' => ['agriculture', 'agro', 'farms'],
+        'Solar & Renewable Energy' => ['solar', 'energy'],
+        'Medical Suppliers' => ['pharmacies', 'medical', 'hospitals'],
+    ];
 
     /** Serve cached index when it is this fresh (days). */
     public const CACHE_DAYS = 30;
@@ -67,44 +83,35 @@ class DirectoryScraper
     }
 
     /**
-     * Fetch + parse up to MAX_PAGES of Yellow Pages search results,
-     * persisting every record into the local index (deduplicated).
+     * Fetch + parse Yellow Pages search results across several niche
+     * terms, persisting every record into the local index (deduplicated).
      *
      * @return array<int, array>
      */
     public static function scrapeLive(string $niche, string $keyword): array
     {
-        $records = [];
-        $seenPage = null;
+        $terms = array_unique(array_filter(array_merge(
+            [$keyword],
+            self::NICHE_TERMS[$niche] ?? []
+        )));
 
-        for ($page = 1; $page <= self::MAX_PAGES; $page++) {
-            $url = self::BASE_URL.'/search-results/'.urlencode(strtolower($keyword)).($page > 1 ? '?page='.$page : '');
+        $records = [];
+
+        foreach (array_slice($terms, 0, 3) as $term) {
+            $url = self::BASE_URL.'/search-results/'.urlencode(strtolower($term));
 
             try {
                 $html = Http::withHeaders(['User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) TtryyBot/1.0'])
-                    ->timeout(15)
+                    ->timeout(30)
                     ->get($url)
                     ->throw()
                     ->body();
             } catch (\Throwable $e) {
                 Log::warning('Directory scrape fetch failed', ['url' => $url, 'error' => $e->getMessage()]);
-                break;
+                continue;
             }
 
-            // Stop when pagination loops back to identical content.
-            $fingerprint = md5($html);
-            if ($fingerprint === $seenPage) {
-                break;
-            }
-            $seenPage = $fingerprint;
-
-            $parsed = self::parseListings($html, $niche, $url);
-
-            if ($parsed === []) {
-                break;
-            }
-
-            foreach ($parsed as $row) {
+            foreach (self::parseListings($html, $niche, $url) as $row) {
                 $records[] = self::persist($row);
             }
 
@@ -112,7 +119,7 @@ class DirectoryScraper
                 break;
             }
 
-            usleep(800000); // stay polite between pages
+            usleep(800000); // stay polite between requests
         }
 
         return $records;
