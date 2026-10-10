@@ -1,4 +1,10 @@
 <x-layouts::app :title="__('Marketing tool')">
+    @include('partials.custom-select')
+    <style>
+      .cs-btn svg{ transition:transform .25s ease; }
+      .cs-btn[aria-expanded="true"] svg{ transform:rotate(180deg); }
+      .cs-wrap:focus-within .cs-btn{ border-color:#9e005d; }
+    </style>
     <div class="flex h-full w-full flex-1 flex-col gap-4">
         <div class="flex items-end justify-between gap-3 flex-wrap">
             <div>
@@ -26,18 +32,18 @@
                     <span id="ai-status" class="text-xs font-semibold text-zinc-500"></span>
                 </div>
                 <div class="mt-3 grid sm:grid-cols-[1fr_160px_160px_auto] gap-2">
-                    <select id="ai-contact" class="rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
+                    <select id="ai-contact" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
                         <option value="">General message (no contact)</option>
                         @foreach($contacts as $c)
                         <option value="{{ $c->id }}">{{ $c->name }} — {{ $c->contact }}</option>
                         @endforeach
                     </select>
-                    <select id="ai-tone" class="rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
+                    <select id="ai-tone" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
                         <option value="professional">Professional</option>
                         <option value="friendly">Friendly</option>
                         <option value="urgent">Urgent</option>
                     </select>
-                    <select id="ai-goal" class="rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
+                    <select id="ai-goal" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
                         <option value="first_outreach">First outreach</option>
                         <option value="follow_up">Follow-up</option>
                         <option value="closing">Closing</option>
@@ -56,16 +62,16 @@
             <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
                 <flux:heading>Message composer</flux:heading>
                 <flux:text class="mt-1 text-sm">Use <span class="font-mono text-xs">{name}</span>, <span class="font-mono text-xs">{business}</span>, <span class="font-mono text-xs">{need}</span> — they personalize per contact.</flux:text>
-                <textarea id="mkt-template" rows="4" class="mt-3 w-full rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-3 text-sm outline-none focus:border-[#9e005d]" placeholder="Hi {name}, ...">Hi {name}, this is {{ auth()->user()->name }}. We help businesses like {business} grow. Are you open to a quick chat about {need}?</textarea>
+                <textarea id="mkt-template" rows="4" class="mt-3 w-full rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-3 text-sm outline-none focus:border-[#9e005d]" placeholder="Hi {name}, ...">Hi {name}, this is {{ auth()->user()->name }}. We help businesses like {business} grow. Are you open to a quick chat about {need}?</textarea>
                 <div class="mt-3 flex items-center gap-3 flex-wrap">
-                    <select id="mkt-template-pick" class="rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2 text-sm outline-none focus:border-[#9e005d] max-w-full">
+                    <select id="mkt-template-pick" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2 text-sm outline-none focus:border-[#9e005d] max-w-full">
                         <option value="">Load a template…</option>
                         @foreach($templates as $t)
                         <option value="{{ $t->id }}" data-body="{{ e($t->body) }}">{{ $t->name }}{{ $t->user_id ? '' : ' · built-in' }}</option>
                         @endforeach
                     </select>
                     <button id="mkt-save-tpl" class="text-xs font-bold text-[#9e005d] hover:underline">Save current as template</button>
-                    <select id="mkt-filter" class="rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2 text-sm outline-none focus:border-[#9e005d]">
+                    <select id="mkt-filter" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2 text-sm outline-none focus:border-[#9e005d]">
                         <option value="">All saved contacts ({{ $contacts->count() }})</option>
                         @foreach($contacts->unique('niche') as $c)
                         <option value="{{ $c->niche }}">{{ $c->niche }}</option>
@@ -96,8 +102,8 @@
                 <flux:heading>New email campaign</flux:heading>
                 <flux:text class="mt-1 text-sm">Sends from your configured mail account. Opens are tracked per recipient — max 50 recipients per send.</flux:text>
                 <div class="mt-3 grid gap-3">
-                    <div><label class="text-xs font-semibold">Subject *</label><input id="em-subject" type="text" placeholder="Quick idea for {business}" class="mt-1 w-full rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]"></div>
-                    <div><label class="text-xs font-semibold">Message * <span class="font-normal text-zinc-500">({name} personalizes per recipient)</span></label><textarea id="em-body" rows="5" class="mt-1 w-full rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-3 text-sm outline-none focus:border-[#9e005d]" placeholder="Hi {name}, ..."></textarea></div>
+                    <div><label class="text-xs font-semibold">Subject *</label><input id="em-subject" type="text" placeholder="Quick idea for {business}" class="mt-1 w-full rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]"></div>
+                    <div><label class="text-xs font-semibold">Message * <span class="font-normal text-zinc-500">({name} personalizes per recipient)</span></label><textarea id="em-body" rows="5" class="mt-1 w-full rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-3 text-sm outline-none focus:border-[#9e005d]" placeholder="Hi {name}, ..."></textarea></div>
                     <div class="grid sm:grid-cols-2 gap-3">
                         <div><label class="text-xs font-semibold">To saved contacts with email</label><div id="em-contacts" class="mt-1 max-h-44 overflow-y-auto rounded-xl border border-neutral-200 dark:border-white/10 divide-y divide-neutral-100 dark:divide-white/5">
                             @forelse($contacts->whereNotNull('email') as $c)
@@ -106,7 +112,7 @@
                             <p class="px-4 py-4 text-xs text-zinc-500">No saved contacts have emails yet — add them below or type addresses manually.</p>
                             @endforelse
                         </div></div>
-                        <div><label class="text-xs font-semibold">Or type addresses (comma separated)</label><textarea id="em-manual" rows="4" placeholder="jane@company.com, brian@business.co.ug" class="mt-1 w-full rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-3 text-sm outline-none focus:border-[#9e005d]"></textarea></div>
+                        <div><label class="text-xs font-semibold">Or type addresses (comma separated)</label><textarea id="em-manual" rows="4" placeholder="jane@company.com, brian@business.co.ug" class="mt-1 w-full rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-3 text-sm outline-none focus:border-[#9e005d]"></textarea></div>
                     </div>
                     <div class="flex items-center gap-3">
                         <flux:button id="em-send" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]">Send campaign</flux:button>
@@ -132,12 +138,25 @@
         <!-- TAB: Communities -->
         <div data-mtab-panel="community" class="hidden flex-col gap-4">
             <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
-                <flux:heading>WhatsApp growth communities</flux:heading>
-                <flux:text class="mt-1 text-sm">Active Ugandan business groups by niche. Unlock a join link once with tokens — it is yours forever.</flux:text>
+            <flux:heading>WhatsApp growth communities</flux:heading>
+            <flux:text class="mt-1 text-sm">Active Ugandan business groups by niche. Unlock a join link once with tokens — it is yours forever.</flux:text>
+            <div class="mt-3 grid sm:grid-cols-[1fr_200px_160px] gap-2">
+                <input id="grp-search" type="text" placeholder="Search groups…" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
+                <select id="grp-niche" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
+                    <option value="">All niches</option>
+                    @foreach($groups->unique('niche') as $g)
+                    <option value="{{ $g->niche }}">{{ $g->niche }}</option>
+                    @endforeach
+                </select>
+                <select id="grp-sort" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
+                    <option value="members">Most members</option>
+                    <option value="name">Name A–Z</option>
+                </select>
+            </div>
                 <div class="mt-4 grid sm:grid-cols-2 gap-3" id="group-grid">
                     @forelse($groups as $g)
                     @php $unlocked = in_array($g->id, $unlockedGroupIds); @endphp
-                    <div class="rounded-xl bg-zinc-50 dark:bg-white/5 p-4" data-group="{{ $g->id }}">
+                    <div class="rounded-xl bg-zinc-50 dark:bg-white/5 p-4" data-group="{{ $g->id }}" data-members="{{ $g->member_count }}" data-search="{{ strtolower($g->name.' '.$g->niche.' '.($g->description ?? '')) }}" data-niche="{{ $g->niche }}">
                         <div class="flex items-center justify-between gap-2">
                             <p class="font-bold text-sm">{{ $g->name }}</p>
                             <span class="text-[11px] font-semibold text-zinc-500 shrink-0">{{ number_format($g->member_count) }} members</span>
@@ -161,10 +180,10 @@
                 <flux:heading>Suggest a group</flux:heading>
                 <flux:text class="mt-1 text-sm">Know an active Ugandan business group? Send it in — we review and list the good ones.</flux:text>
                 <div class="mt-3 grid sm:grid-cols-2 gap-3">
-                    <input id="sg-name" type="text" placeholder="Group name *" class="rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
-                    <input id="sg-niche" type="text" placeholder="Niche / category" class="rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
-                    <input id="sg-link" type="url" placeholder="Invite link (https://…) *" class="rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] sm:col-span-2">
-                    <textarea id="sg-desc" rows="2" placeholder="What is shared in this group?" class="rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] sm:col-span-2"></textarea>
+                    <input id="sg-name" type="text" placeholder="Group name *" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
+                    <input id="sg-niche" type="text" placeholder="Niche / category" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
+                    <input id="sg-link" type="url" placeholder="Invite link (https://…) *" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] sm:col-span-2">
+                    <textarea id="sg-desc" rows="2" placeholder="What is shared in this group?" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] sm:col-span-2"></textarea>
                 </div>
                 <div class="mt-3 flex items-center gap-3">
                     <flux:button id="sg-send" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]">Suggest group</flux:button>
@@ -201,6 +220,47 @@
 <script>
 const MKT_CONTACTS = @json($contactsJson);
 const MKT_TOKEN = document.querySelector('meta[name="csrf-token"]')?.content || '';
+/* Universal custom dropdowns (copies data-* attributes, syncs native select) */
+function enhanceSelect(sel){
+  if(!sel || sel.closest('.cs-wrap')) return;
+  const wrap=document.createElement('div'); wrap.className='cs-wrap relative';
+  sel.parentNode.insertBefore(wrap, sel); wrap.appendChild(sel);
+  sel.classList.add('sr-only'); sel.tabIndex=-1; sel.setAttribute('aria-hidden','true');
+  const btn=document.createElement('button');
+  btn.type='button';
+  btn.className='cs-btn w-full flex items-center justify-between gap-2 rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none';
+  btn.setAttribute('aria-expanded','false');
+  btn.innerHTML='<span class="cs-label truncate text-zinc-500">Select…</span><svg class="w-4 h-4 shrink-0 text-zinc-400 transition-transform" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
+  const list=document.createElement('div');
+  list.className='cs-list hidden absolute z-30 left-0 right-0 mt-2 rounded-xl border border-neutral-200 dark:border-white/15 bg-white dark:bg-[#141416] shadow-2xl p-1.5 max-h-60 overflow-y-auto';
+  list.setAttribute('role','listbox');
+  function sync(){
+    const opt=sel.options[sel.selectedIndex];
+    const label=wrap.querySelector('.cs-label');
+    if(label && opt){ label.textContent=opt.textContent; label.classList.toggle('text-zinc-500', opt.value===''); }
+    wrap.querySelectorAll('.cs-list button').forEach(b=>{
+      const tick=b.querySelector('.cs-tick');
+      if(tick) tick.classList.toggle('hidden', b.dataset.value!==sel.value);
+    });
+  }
+  [...sel.options].forEach(o=>{
+    const item=document.createElement('button');
+    item.type='button'; item.dataset.value=o.value; item.setAttribute('role','option');
+    [...o.attributes].forEach(a=>{ if(a.name.indexOf('data-')===0) item.dataset[a.name.slice(5)]=a.value; });
+    item.className='w-full flex items-center justify-between gap-2 text-left px-4 py-2 rounded-lg text-sm transition hover:bg-zinc-100 dark:hover:bg-white/10 '+(o.value===''?'text-zinc-400':'text-zinc-800 dark:text-zinc-200');
+    const esc=o.textContent.replaceAll('&','&amp;').replaceAll('<','&lt;');
+    item.innerHTML='<span class="truncate">'+esc+'</span><svg class="cs-tick w-4 h-4 shrink-0 text-zinc-900 dark:text-white hidden" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>';
+    item.addEventListener('click',()=>{ sel.value=o.value; sel.dispatchEvent(new Event('change',{bubbles:true})); sync(); closeAllCs(); });
+    list.appendChild(item);
+  });
+  function closeAllCs(){ document.querySelectorAll('.cs-list').forEach(l=>l.classList.add('hidden')); document.querySelectorAll('.cs-btn').forEach(b=>b.setAttribute('aria-expanded','false')); }
+  btn.addEventListener('click',()=>{ const open=list.classList.contains('hidden'); closeAllCs(); if(open){ list.classList.remove('hidden'); btn.setAttribute('aria-expanded','true'); } });
+  wrap.appendChild(btn); wrap.appendChild(list);
+  sync();
+}
+document.addEventListener('click',e=>{ if(!e.target.closest || !e.target.closest('.cs-wrap')) document.querySelectorAll('.cs-list').forEach(l=>l.classList.add('hidden')); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.cs-list').forEach(l=>l.classList.add('hidden')); });
+['ai-contact','ai-tone','ai-goal','mkt-template-pick','mkt-filter'].forEach(id=>enhanceSelect(document.getElementById(id)));
 function mktFill(tpl, c){
   return (tpl || '').replaceAll('{name}', (c.name || '').split(' ')[0] || 'there')
     .replaceAll('{business}', c.business || 'your business')
@@ -315,6 +375,38 @@ document.querySelectorAll('[data-unlock-group]').forEach(b => b.addEventListener
     if(bal && typeof j.balance !== 'undefined') bal.textContent = Number(j.balance).toLocaleString('en-US');
   }catch(e){ b.disabled = false; b.textContent = 'Unlock link'; alert(e.message || 'Unlock failed.'); }
 }));
+/* groups search + filter + sort */
+function filterGroups(){
+  const q = (document.getElementById('grp-search').value || '').toLowerCase().trim();
+  const niche = document.getElementById('grp-niche').value;
+  const sort = document.getElementById('grp-sort').value;
+  const grid = document.getElementById('group-grid');
+  const cards = [...grid.querySelectorAll('[data-group]')];
+  let visible = 0;
+  cards.forEach(c => {
+    const ok = (!q || c.dataset.search.includes(q)) && (!niche || c.dataset.niche === niche);
+    c.classList.toggle('hidden', !ok);
+    if(ok) visible++;
+  });
+  cards.filter(c => !c.classList.contains('hidden'))
+    .sort((a, b) => sort === 'name'
+      ? a.querySelector('p.font-bold').textContent.localeCompare(b.querySelector('p.font-bold').textContent)
+      : (parseInt(b.dataset.members, 10) || 0) - (parseInt(a.dataset.members, 10) || 0))
+    .forEach(c => grid.appendChild(c));
+  let empty = document.getElementById('grp-empty');
+  if(visible === 0 && !empty){
+    empty = document.createElement('p');
+    empty.id = 'grp-empty';
+    empty.className = 'text-sm text-zinc-500 col-span-2 py-4 text-center';
+    empty.textContent = 'No groups match — try a different search or suggest one below.';
+    grid.appendChild(empty);
+  } else if(empty && visible > 0){ empty.remove(); }
+}
+['grp-search'].forEach(id => document.getElementById(id)?.addEventListener('input', filterGroups));
+['grp-niche','grp-sort'].forEach(id => {
+  const el = document.getElementById(id);
+  if(el){ enhanceSelect(el); el.addEventListener('change', filterGroups); }
+});
 /* suggest group */
 document.getElementById('sg-send')?.addEventListener('click', async () => {
   const status = document.getElementById('sg-status');

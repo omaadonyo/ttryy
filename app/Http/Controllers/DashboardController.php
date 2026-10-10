@@ -26,6 +26,33 @@ class DashboardController extends Controller
         return view('scraper');
     }
 
+    public function prospects(Request $request)
+    {
+        $query = \App\Models\ScrapedProspect::query()->latest('fetched_at');
+
+        if ($request->filled('q')) {
+            $q = '%'.$request->string('q').'%';
+            $query->where(fn ($w) => $w
+                ->where('name', 'like', $q)
+                ->orWhere('category', 'like', $q)
+                ->orWhere('phone', 'like', $q));
+        }
+
+        if ($request->filled('niche')) {
+            $query->where('niche', $request->string('niche'));
+        }
+
+        if ($request->boolean('verified')) {
+            $query->where('verified', true);
+        }
+
+        return view('prospects', [
+            'prospects' => $query->paginate(20)->withQueryString(),
+            'niches' => \App\Models\ScrapedProspect::select('niche')->distinct()->orderBy('niche')->pluck('niche'),
+            'filters' => $request->only(['q', 'niche', 'verified']),
+        ]);
+    }
+
     public function contacts(Request $request)
     {
         $contacts = $request->user()->savedContacts()->latest()->paginate(20);

@@ -10,7 +10,7 @@
         @endif
 
         <form method="GET" action="{{ route('admin.users') }}" class="rounded-xl bg-white dark:bg-white/[.04] p-4 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)] flex flex-col sm:flex-row gap-3">
-            <input type="text" name="search" value="{{ $search }}" placeholder="Search name or email…" class="flex-1 rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
+            <input type="text" name="search" value="{{ $search }}" placeholder="Search name or email…" class="flex-1 rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
             <flux:button type="submit" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]">Search</flux:button>
         </form>
 

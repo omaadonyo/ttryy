@@ -115,8 +115,7 @@ test('live scrape results are persisted and deduplicated', function () {
         ->and($first->json('cached'))->toBeFalse();
 });
 
-test('email campaigns send, track opens and report', function () {
-    Illuminate\Support\Facades\Mail::fake();
+test('email campaigns send, track opens and report', function () {    Illuminate\Support\Facades\Mail::fake();
     $user = App\Models\User::factory()->create();
 
     $send = $this->actingAs($user)->postJson(route('marketing.campaigns.send'), [
@@ -139,4 +138,69 @@ test('email campaigns send, track opens and report', function () {
     $this->actingAs($user)->get(route('marketing.campaigns.show', $campaign))
         ->assertOk()
         ->assertSee('Open rate', false);
+});
+
+test('prospects catalogue filters by search, niche and verified', function () {
+    App\Models\ScrapedProspect::create([
+        'niche' => 'Construction', 'name' => 'Alpha Builders Ltd', 'category' => 'Contractors',
+        'phone' => '+256700000001', 'district' => 'Kampala', 'verified' => true,
+        'source' => 'web', 'hash' => md5('alpha'), 'fetched_at' => now(),
+    ]);
+    App\Models\ScrapedProspect::create([
+        'niche' => 'Medical Suppliers', 'name' => 'Beta Pharma Ltd', 'category' => 'Pharmacies',
+        'phone' => '+256700000002', 'district' => 'Entebbe', 'verified' => false,
+        'source' => 'web', 'hash' => md5('beta'), 'fetched_at' => now(),
+    ]);
+
+    $user = App\Models\User::factory()->create();
+
+    $this->actingAs($user)->get(route('prospects.index'))
+        ->assertOk()
+        ->assertSee('Alpha Builders Ltd', false)
+        ->assertSee('Beta Pharma Ltd', false);
+
+    $this->actingAs($user)->get(route('prospects.index', ['q' => 'Alpha']))
+        ->assertOk()
+        ->assertSee('Alpha Builders Ltd', false)
+        ->assertDontSee('Beta Pharma Ltd', false);
+
+    $this->actingAs($user)->get(route('prospects.index', ['niche' => 'Medical Suppliers']))
+        ->assertOk()
+        ->assertSee('Beta Pharma Ltd', false)
+        ->assertDontSee('Alpha Builders Ltd', false);
+
+    $this->actingAs($user)->get(route('prospects.index', ['verified' => 1]))
+        ->assertOk()
+        ->assertSee('Alpha Builders Ltd', false)
+        ->assertDontSee('Beta Pharma Ltd', false);
+});
+
+test('prospects catalogue requires login', function () {
+    $this->get(route('prospects.index'))->assertRedirect(route('login'));
+});
+
+test('marketing page lists whatsapp groups with search and filter', function () {
+    $this->seed(Database\Seeders\MarketingSeeder::class);
+    $user = App\Models\User::factory()->create();
+
+    $this->actingAs($user)->get(route('marketing.index'))
+        ->assertOk()
+        ->assertSee('WhatsApp growth communities', false)
+        ->assertSee('Uganda SME Network', false);
+});
+
+test('group suggestions validate input and accept valid ones', function () {
+    $user = App\Models\User::factory()->create();
+
+    $this->actingAs($user)->postJson(route('marketing.groups.suggest'), [
+        'name' => 'Test',
+        'invite_link' => 'not-a-url',
+    ])->assertUnprocessable();
+
+    $this->actingAs($user)->postJson(route('marketing.groups.suggest'), [
+        'name' => 'Kampala Traders',
+        'niche' => 'Retail',
+        'invite_link' => 'https://chat.whatsapp.com/AbCdEfGhIjKlMnOpQrSt',
+        'description' => 'Buy and sell group.',
+    ])->assertOk();
 });

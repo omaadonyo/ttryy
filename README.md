@@ -70,14 +70,15 @@ recomputed server-side (`CheckoutController::quote()`), stored as
 plus a WhatsApp follow-up link. Every order can download a branded **PDF
 invoice**. All account pages live under `/dashboard`
 in the app sidebar layout: overview, `packages`, `checkout`, a **real
-prospect scraper** (live Yellow Pages Uganda extraction with a persistent
-deduplicated local index — DB first, polite live fetch; masked previews
-plus the UGX 10,000 unlock), **saved contacts** (save scrapes, manage,
-export CSV), and a tabbed **marketing suite**: WhatsApp outreach (AI sales
-writer + template library + per-contact composer), **email campaigns**
-(compose, send, sent/delivered/read tracking with open-pixel analytics and
-charts), **templates** (built-in closers + your own), and **WhatsApp growth
-communities** (token-gated join links plus suggest-a-group inbox). Paid
+prospect scraper** (live business-directory extraction with a persistent
+deduplicated local index — DB first, polite live fetch), a filterable
+**prospect catalogue** of everything ever indexed, **saved contacts** (save
+scrapes, manage, export CSV), and a tabbed **marketing suite**: WhatsApp
+outreach (AI sales writer + template library + per-contact composer),
+**email campaigns** (compose, send, sent/delivered/read tracking with
+open-pixel analytics and charts), **templates** (built-in closers + your
+own), and searchable, filterable **WhatsApp growth communities**
+(token-gated join links plus suggest-a-group inbox). Paid
 orders also track subscription **expiry, days left, and progress** on the
 dashboard and My packages, plus **payment history** and per-order **payment
 progress** (paid vs left to complete).

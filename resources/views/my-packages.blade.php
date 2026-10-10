@@ -77,7 +77,7 @@
   sel.classList.add('sr-only'); sel.tabIndex = -1;
   const btn = document.createElement('button');
   btn.type = 'button';
-  btn.className = 'flex items-center justify-between gap-2 rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2 text-sm font-semibold outline-none min-w-[150px]';
+  btn.className = 'flex items-center justify-between gap-2 rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2 text-sm font-semibold outline-none min-w-[150px]';
   btn.setAttribute('aria-expanded', 'false');
   btn.innerHTML = '<span class="cs-label truncate text-zinc-500">All statuses</span><svg class="w-4 h-4 shrink-0 text-zinc-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
   const list = document.createElement('div');

@@ -32,6 +32,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('packages', [CheckoutController::class, 'orders'])->name('packages.index');
     Route::get('scraper', [DashboardController::class, 'scraper'])->name('scraper.index');
+    Route::get('prospects', [DashboardController::class, 'prospects'])->name('prospects.index');
     Route::post('scraper/save', [DashboardController::class, 'storeContacts'])->name('scraper.save');
     Route::get('contacts', [DashboardController::class, 'contacts'])->name('contacts.index');
     Route::delete('contacts/{contact}', [DashboardController::class, 'destroyContact'])->name('contacts.destroy');

@@ -16,30 +16,37 @@
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('Platform')" class="grid">
+                <flux:sidebar.group :heading="__('Overview')" class="grid">
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="shopping-bag" :href="route('packages.index')" :current="request()->routeIs('packages.*')" wire:navigate>
-                        {{ __('My packages') }}
-                    </flux:sidebar.item>
-                    <flux:sidebar.item icon="magnifying-glass" :href="route('scraper.index')" :current="request()->routeIs('scraper.*')" wire:navigate>
-                        {{ __('Prospect scraper') }}
-                    </flux:sidebar.item>
-                    <flux:sidebar.item icon="bookmark" :href="route('contacts.index')" :current="request()->routeIs('contacts.*')" wire:navigate>
-                        {{ __('Saved contacts') }}
-                    </flux:sidebar.item>
-                    <flux:sidebar.item icon="megaphone" :href="route('marketing.index')" :current="request()->routeIs('marketing.*')" wire:navigate>
-                        {{ __('Marketing tool') }}
-                    </flux:sidebar.item>
+                </flux:sidebar.group>
+                <flux:sidebar.group :heading="__('Business')" class="grid">
                     <flux:sidebar.item icon="plus" :href="route('orders.new')" :current="request()->routeIs('orders.new') || request()->routeIs('checkout*')" wire:navigate>
                         {{ __('New order') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="shopping-bag" :href="route('packages.index')" :current="request()->routeIs('packages.*')" wire:navigate>
+                        {{ __('My packages') }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="banknotes" :href="route('payments.index')" :current="request()->routeIs('payments.*')" wire:navigate>
                         {{ __('Payments') }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="wallet" :href="route('wallet.index')" :current="request()->routeIs('wallet.*')" wire:navigate>
                         {{ __('Wallet') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
+                <flux:sidebar.group :heading="__('Growth')" class="grid">
+                    <flux:sidebar.item icon="magnifying-glass" :href="route('scraper.index')" :current="request()->routeIs('scraper.*')" wire:navigate>
+                        {{ __('Prospect scraper') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="building-office-2" :href="route('prospects.index')" :current="request()->routeIs('prospects.*')" wire:navigate>
+                        {{ __('Prospects') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="bookmark" :href="route('contacts.index')" :current="request()->routeIs('contacts.*')" wire:navigate>
+                        {{ __('Saved contacts') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="megaphone" :href="route('marketing.index')" :current="request()->routeIs('marketing.*')" wire:navigate>
+                        {{ __('Marketing tool') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
                 @if(auth()->user()?->is_admin)

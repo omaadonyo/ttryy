@@ -8,7 +8,7 @@
         <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
             <div class="grid sm:grid-cols-[1fr_1fr_auto] gap-2">
                 <select id="dsc-niche" aria-label="Choose your niche" class="w-full rounded-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]"></select>
-                <input id="dsc-biz" type="text" placeholder="What does your business sell?" aria-label="What does your business sell" class="w-full rounded-xl border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] placeholder:text-zinc-400">
+                <input id="dsc-biz" type="text" placeholder="What does your business sell?" aria-label="What does your business sell" class="w-full rounded-[0.575rem] border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] placeholder:text-zinc-400">
                 <flux:button id="dsc-btn" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]">Scrape</flux:button>
             </div>
             <div id="dsc-status" class="hidden mt-4">
@@ -77,7 +77,7 @@ D_NICHES.forEach(n=>{const o=document.createElement('option');o.value=n.code;o.t
   dSel.classList.add('sr-only'); dSel.tabIndex=-1; dSel.setAttribute('aria-hidden','true');
   const btn=document.createElement('button');
   btn.type='button';
-  btn.className='cs-btn w-full flex items-center justify-between gap-2 rounded-xl border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none min-h-[46px]';
+  btn.className='cs-btn w-full flex items-center justify-between gap-2 rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none min-h-[46px]';
   btn.setAttribute('aria-expanded','false');
   btn.innerHTML='<span class="cs-label truncate">Choose your niche</span><svg class="w-4 h-4 shrink-0 text-zinc-400 transition-transform" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
   const list=document.createElement('div');
@@ -127,7 +127,7 @@ async function dscRun(){
   label.textContent='Checking the local index…'; bar.style.width='20%'; pct.textContent='20%';
   try{
     const token=document.querySelector('meta[name="csrf-token"]')?.content||'';
-    label.textContent='Searching Yellow Pages Uganda…'; bar.style.width='55%'; pct.textContent='55%';
+    label.textContent='Searching business directories across the web…'; bar.style.width='55%'; pct.textContent='55%';
     const res=await fetch("{{ route('scraper.search') }}",{method:'POST',
       headers:{'Accept':'application/json','Content-Type':'application/json','X-CSRF-TOKEN':token,'X-Requested-With':'XMLHttpRequest'},
       body:JSON.stringify({niche:nicheName,keyword})});
@@ -183,7 +183,7 @@ document.getElementById('dsc-save').addEventListener('click',async()=>{
     const contacts=dscRecords.map(r=>({name:r.name,type:r.category||null,district:r.district||null,contact:null,phone:r.phone||null,need:null}));
     const res=await fetch("{{ route('scraper.save') }}",{method:'POST',
       headers:{'Accept':'application/json','Content-Type':'application/json','X-CSRF-TOKEN':token,'X-Requested-With':'XMLHttpRequest'},
-      body:JSON.stringify({niche:dscCurrent.niche,source:'yellow-pages',contacts})});
+      body:JSON.stringify({niche:dscCurrent.niche,source:'web',contacts})});
     if(!res.ok) throw new Error('save failed');
     const j=await res.json();
     btn.textContent='Saved '+j.saved+' ✓';
