@@ -1,4 +1,5 @@
 <x-layouts::app :title="__('Wallet')">
+    @include('partials.toast')
     <div class="flex h-full w-full flex-1 flex-col gap-4">
         <div class="flex items-end justify-between gap-3 flex-wrap">
             <div>
@@ -75,6 +76,7 @@
 <script src="https://checkout.flutterwave.com/v3.js"></script>
 @endif
 <script>
+toastStoredFlash();
 document.querySelectorAll('[data-topup]').forEach(b => b.addEventListener('click', async () => {
   const status = document.getElementById('topup-status');
   const token = document.querySelector('meta[name="csrf-token"]')?.content || '';
@@ -97,16 +99,17 @@ document.querySelectorAll('[data-topup]').forEach(b => b.addEventListener('click
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'X-Requested-With': 'XMLHttpRequest' },
             body: JSON.stringify({ transaction_id: resp.transaction_id || resp.id, tx_ref: j.reference }) });
           const r = await v.json();
-          if(r.redirect) window.location.href = r.redirect;
-          else { status.textContent = r.message || 'Verification failed.'; }
-        }catch(e){ status.textContent = 'Verification failed. Contact support with reference ' + j.reference; }
+          if(r.redirect){ flashToast('Top-up confirmed — tokens added to your wallet.'); window.location.href = r.redirect; }
+          else { status.textContent = r.message || 'Verification failed.'; toast(r.message || 'Verification failed.', 'danger'); }
+        }catch(e){ status.textContent = 'Verification failed. Contact support with reference ' + j.reference; toast('Verification failed. Contact support with reference ' + j.reference + '.', 'danger'); }
       },
       onclose: () => location.reload(),
     });
     @else
     status.textContent = 'Online top-up is not connected yet — contact Ttryy on WhatsApp to top up manually.';
+    toast('Online top-up is not connected yet — contact Ttryy on WhatsApp.', 'warning');
     @endif
-  }catch(e){ status.textContent = e.message || 'Top-up failed.'; }
+  }catch(e){ status.textContent = e.message || 'Top-up failed.'; toast(e.message || 'Top-up failed.', 'danger'); }
   b.disabled = false;
 }));
 </script>

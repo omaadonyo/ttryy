@@ -61,6 +61,21 @@ test('checkout page shows the preselected package', function () {
         ->assertSee('UGX 650,000', false);
 });
 
+test('checkout renders as a five-step wizard with progress bar', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->get('/dashboard/checkout')->assertOk();
+
+    foreach ([1, 2, 3, 4, 5] as $step) {
+        $response->assertSee('data-step="'.$step.'"', false);
+    }
+
+    $response->assertSee('id="wiz-bar"', false)
+        ->assertSee('id="wiz-dots"', false)
+        ->assertSee('data-next', false)
+        ->assertSee('data-back', false);
+});
+
 test('authenticated users can place a monthly package order', function () {
     $user = User::factory()->create();
 

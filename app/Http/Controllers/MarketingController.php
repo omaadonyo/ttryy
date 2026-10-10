@@ -43,7 +43,26 @@ class MarketingController extends Controller
             'balance' => (int) $request->user()->token_balance,
             'aiCost' => config('tokens.costs.ai_message'),
             'flwKey' => config('services.flutterwave.public_key'),
-            'campaigns' => EmailCampaign::where('user_id', $request->user()->id)->latest()->take(10)->get(),
+            'campaigns' => EmailCampaign::where('user_id', $request->user()->id)
+                ->withCount(['recipients as read_count' => fn ($q) => $q->whereNotNull('opened_at')])
+                ->latest()->take(10)->get(),
+            'emailPresets' => [
+                [
+                    'name' => 'First outreach',
+                    'subject' => 'Quick idea for your business, {name}',
+                    'body' => "Hi {name},\n\nI came across your business and had a quick idea that could bring you more customers this month.\n\nWe build affordable websites for Ugandan businesses — starting at just UGX 800 per day — and help you find customers while you focus on your work.\n\nAre you open to a quick 5-minute chat this week?\n\nBest regards,\n".$request->user()->name,
+                ],
+                [
+                    'name' => 'Follow-up',
+                    'subject' => 'Following up, {name}',
+                    'body' => "Hi {name},\n\nJust following up on my last message — I would love to hear what you think.\n\nMany businesses like yours are already getting more customers with a professional website. We can get you started for only UGX 800 per day.\n\nShall we talk this week?\n\nBest regards,\n".$request->user()->name,
+                ],
+                [
+                    'name' => 'Special offer',
+                    'subject' => 'Something special for you, {name}',
+                    'body' => "Hi {name},\n\nFor a limited time, we are helping local businesses get online with a professional website from only UGX 800 per day — deposit first, then small daily payments.\n\nNo big upfront cost. We find customers, you close them.\n\nReply to this email and I will send you the details.\n\nBest regards,\n".$request->user()->name,
+                ],
+            ],
         ]);
     }
 

@@ -1,4 +1,5 @@
 <x-layouts::app :title="__('Admin overview')">
+    @include('partials.toast')
     <div class="flex h-full w-full flex-1 flex-col gap-4">
         <div>
             <flux:heading size="xl">Administration</flux:heading>

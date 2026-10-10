@@ -1,4 +1,5 @@
 <x-layouts::app :title="__('My packages')">
+    @include('partials.toast')
     <div class="flex h-full w-full flex-1 flex-col gap-4">
         <div class="flex items-end justify-between gap-3 flex-wrap">
             <div>

@@ -1,4 +1,5 @@
 <x-layouts::app :title="__('Payments')">
+    @include('partials.toast')
     <div class="flex h-full w-full flex-1 flex-col gap-4">
         <div>
             <flux:heading size="xl">Payments</flux:heading>

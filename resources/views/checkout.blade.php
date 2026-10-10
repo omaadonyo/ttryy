@@ -1,4 +1,5 @@
 <x-layouts::app :title="__('Checkout')">
+    @include('partials.toast')
     @if($flwKey)
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     @endif
@@ -16,6 +17,7 @@
       .cs-wrap:focus-within .cs-btn{ border-color:#9e005d; }
       .cs-btn svg{ transition:transform .25s ease; }
       .cs-btn[aria-expanded="true"] svg{ transform:rotate(180deg); }
+      .wiz-dot .wiz-num{ transition:all .25s ease; }
     </style>
     <div class="flex h-full w-full flex-1 flex-col gap-5">
   <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Secure checkout</p>
@@ -69,10 +71,23 @@
   @endif
   <div id="pay-error" class="hidden mt-6 rounded-xl border border-red-300 bg-red-50 dark:bg-red-500/10 px-5 py-4 text-sm text-red-700 dark:text-red-300"></div>
 
-  <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form" class="mt-6 grid lg:grid-cols-[1fr_320px] gap-5 items-start" data-guest="{{ auth()->check() ? '0' : '1' }}">
+  <div class="mt-6" id="wiz-nav">
+    <div class="flex items-start gap-1 sm:gap-2" id="wiz-dots" role="tablist" aria-label="Checkout steps">
+      @foreach([1 => 'Package', 2 => 'Domain', 3 => 'Details', 4 => 'Billing', 5 => 'Pay'] as $n => $label)
+      <button type="button" data-goto="{{ $n }}" class="wiz-dot flex-1 flex flex-col items-center gap-1.5" role="tab">
+        <span class="wiz-num w-8 h-8 grid place-items-center rounded-full text-xs font-extrabold border-2 border-zinc-300 dark:border-white/15 text-zinc-400">{{ $n }}</span>
+        <span class="text-[11px] font-bold text-zinc-500 dark:text-zinc-400">{{ $label }}</span>
+      </button>
+      @endforeach
+    </div>
+    <div class="mt-3 h-1.5 rounded-full bg-zinc-200 dark:bg-white/10 overflow-hidden"><div id="wiz-bar" class="h-full rounded-full bg-[#9e005d] transition-all duration-300" style="width:20%"></div></div>
+  </div>
+
+  <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form" class="mt-6 grid lg:grid-cols-[1fr_320px] gap-5 items-start" data-guest="{{ auth()->check() ? '0' : '1' }}" data-wiz-start="{{ $errors->any() ? '3' : '1' }}">
     @csrf
     <input type="hidden" name="payment_method" id="pay-method" value="online">
     <div class="space-y-6">
+      <div class="wiz-step" data-step="1">
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">1. Your package</h2>
         @php $accents = ['START' => 'black', 'GROW' => 'brand', 'BUSINESS' => 'black', 'CORPORATE' => 'black']; @endphp
@@ -94,7 +109,9 @@
           @endforeach
         </div>
       </section>
-
+      <div class="mt-6 flex justify-end"><button type="button" data-next class="bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 font-bold text-sm px-6 py-2.5 rounded-full hover:opacity-85 transition">Continue →</button></div>
+      </div>
+      <div class="wiz-step hidden" data-step="2">
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">2. Your domain <span class="text-xs font-semibold text-zinc-500">— one-time fee, never billed again</span></h2>
         @php $domAccents = ['none' => 'black', 'budget' => 'brand', 'premium' => 'black']; @endphp
@@ -116,7 +133,9 @@
           @endforeach
         </div>
       </section>
-
+      <div class="mt-6 flex justify-end"><button type="button" data-next class="bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 font-bold text-sm px-6 py-2.5 rounded-full hover:opacity-85 transition">Continue →</button></div>
+      </div>
+      <div class="wiz-step hidden" data-step="3">
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">3. Your business details</h2>
         <div class="mt-3 grid sm:grid-cols-2 gap-4">
@@ -125,7 +144,11 @@
           <div><label class="text-xs font-semibold">Industry / niche</label><select id="f-niche" name="niche" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"><option value="">Select…</option>@foreach(config('packages.niches') as $n)<option {{ old('niche', $selectedNiche) === $n ? 'selected' : '' }}>{{ $n }}</option>@endforeach</select></div>
           <div><label class="text-xs font-semibold">Notes (optional)</label><input id="f-notes" name="notes" value="{{ old('notes') }}" placeholder="Anything we should know" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"></div>
         </div>
+        <p id="wiz-err-3" class="hidden mt-3 text-sm font-semibold text-red-600 dark:text-red-400">Please add your business name and phone number to continue.</p>
       </section>
+      <div class="mt-6 flex justify-between"><button type="button" data-back class="border border-zinc-300 dark:border-white/20 font-bold text-sm px-6 py-2.5 rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 transition">← Back</button><button type="button" data-next class="bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 font-bold text-sm px-6 py-2.5 rounded-full hover:opacity-85 transition">Continue →</button></div>
+      </div>
+      <div class="wiz-step hidden" data-step="4">
 
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">4. How you pay</h2>
@@ -145,7 +168,9 @@
           @endforeach
         </div>
       </section>
-
+      <div class="mt-6 flex justify-between"><button type="button" data-back class="border border-zinc-300 dark:border-white/20 font-bold text-sm px-6 py-2.5 rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 transition">← Back</button><button type="button" data-next class="bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 font-bold text-sm px-6 py-2.5 rounded-full hover:opacity-85 transition">Continue →</button></div>
+      </div>
+      <div class="wiz-step hidden" data-step="5">
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">5. How long you pay</h2>
         <p class="text-sm text-zinc-500 mt-1">Your website stays running while your plan is active. Full upfront payment covers 12 months.</p>
@@ -155,6 +180,8 @@
           @endforeach
         </select>
       </section>
+      <div class="mt-6 flex justify-start"><button type="button" data-back class="border border-zinc-300 dark:border-white/20 font-bold text-sm px-6 py-2.5 rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 transition">← Back</button></div>
+      </div>
 
     </div>
 
@@ -299,6 +326,7 @@ function showPayError(msg){
   box.textContent = msg;
   box.classList.remove('hidden');
   box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  toast(msg, 'danger');
 }
 async function createOrder(method){
   const form = document.getElementById('checkout-form');
@@ -347,7 +375,69 @@ function enhanceCoSelect(sel){
 }
 document.addEventListener('click',e=>{ if(!e.target.closest || !e.target.closest('.cs-wrap')) closeAllCo(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeAllCo(); });
+function wizDetailsOk(){
+  const b = document.getElementById('f-business'), p = document.getElementById('f-phone'), err = document.getElementById('wiz-err-3');
+  const ok = b && p && b.value.trim() !== '' && p.value.trim() !== '';
+  if(err) err.classList.toggle('hidden', ok);
+  if(!ok) [b, p].forEach(el => {
+    if(!el || el.value.trim() !== '') return;
+    el.style.borderColor = '#ef4444';
+    const clear = () => { el.style.borderColor = ''; };
+    el.addEventListener('input', clear, { once: true });
+  });
+  return ok;
+}
+function paintWiz(scroll){
+  const W = window.__wiz; if(!W) return;
+  document.querySelectorAll('.wiz-step').forEach(p => p.classList.toggle('hidden', +p.dataset.step !== W.step));
+  document.querySelectorAll('#wiz-dots .wiz-dot').forEach(d => {
+    const n = +d.dataset.goto, num = d.querySelector('.wiz-num');
+    const isCur = n === W.step, isPast = n < W.step, seen = !!W.visited[n];
+    const base = 'wiz-num w-8 h-8 grid place-items-center rounded-full text-xs font-extrabold border-2 ';
+    num.className = base + (isCur ? 'bg-[#9e005d] border-[#9e005d] text-white shadow-lg'
+      : isPast ? 'border-[#9e005d] text-[#9e005d]'
+      : seen ? 'border-zinc-400 dark:border-white/30 text-zinc-500 dark:text-zinc-300'
+      : 'border-zinc-300 dark:border-white/15 text-zinc-400');
+    d.classList.toggle('cursor-pointer', seen && !isCur);
+    d.classList.toggle('opacity-60', !seen && !isCur);
+  });
+  const bar = document.getElementById('wiz-bar');
+  if(bar) bar.style.width = (W.step * 20) + '%';
+  if(scroll !== false){
+    const form = document.getElementById('checkout-form');
+    if(form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+function initWizard(){
+  const form = document.getElementById('checkout-form');
+  const dots = [...document.querySelectorAll('#wiz-dots .wiz-dot')];
+  if(!dots.length || !form) return;
+  if(!window.__wiz){
+    const start = Math.min(5, Math.max(1, parseInt(form.dataset.wizStart || '1', 10) || 1));
+    window.__wiz = { step: start, visited: {} };
+    window.__wiz.visited[start] = true;
+    if(start > 1){ for(let s = 1; s < start; s++) window.__wiz.visited[s] = true; }
+  }
+  if(form.dataset.wizInit){ paintWiz(false); return; }
+  form.dataset.wizInit = '1';
+  const W = window.__wiz;
+  const go = n => { W.step = Math.min(5, Math.max(1, n)); W.visited[W.step] = true; paintWiz(true); };
+  document.querySelectorAll('[data-next]').forEach(b => b.addEventListener('click', () => {
+    if(W.step === 3 && !wizDetailsOk()) return;
+    go(W.step + 1);
+  }));
+  document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => go(W.step - 1)));
+  dots.forEach(d => d.addEventListener('click', () => {
+    const n = parseInt(d.dataset.goto, 10);
+    if(W.visited[n]) go(n);
+  }));
+  paintWiz(false);
+}
 function initCheckout(){
+  initWizard();
+  const formEl = document.getElementById('checkout-form');
+  if(formEl.dataset.initDone){ refresh(); return; }
+  formEl.dataset.initDone = '1';
   enhanceCoSelect(document.getElementById('duration'));
   enhanceCoSelect(document.getElementById('f-niche'));
   restore();
@@ -376,6 +466,7 @@ function initCheckout(){
     e.preventDefault();
     const note = document.getElementById('auth-required-note');
     if(note) note.classList.remove('hidden');
+    toast('Please log in or create an account first — your choices are saved.', 'warning');
     const auth = document.getElementById('checkout-auth');
     if(auth) auth.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });

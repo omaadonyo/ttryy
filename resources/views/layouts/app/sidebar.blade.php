@@ -8,6 +8,11 @@
         <style>
             ui-sidebar[data-flux-sidebar] { transition: width .35s cubic-bezier(.22,.61,.36,1); }
             [data-flux-sidebar-item] [data-content] { transition: opacity .2s ease; }
+            /* Keep the collapse toggle usable in the collapsed icon rail: Flux hides it
+               (opacity-0 + absolute), leaving no visible way to expand again. */
+            ui-sidebar[data-flux-sidebar-collapsed-desktop] ui-sidebar-toggle[data-flux-sidebar-collapse] { opacity: 1 !important; position: static !important; }
+            ui-sidebar[data-flux-sidebar-collapsed-desktop] [data-flux-sidebar-brand] { display: none !important; }
+            ui-sidebar[data-flux-sidebar-collapsed-desktop] [data-flux-sidebar-header] { justify-content: center !important; }
         </style>
         <flux:sidebar sticky collapsible class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>

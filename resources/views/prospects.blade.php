@@ -1,5 +1,6 @@
 <x-layouts::app :title="__('Prospect catalogue')">
     @include('partials.custom-select')
+    @include('partials.toast')
     <div class="flex h-full w-full flex-1 flex-col gap-4">
         <div>
             <flux:heading size="xl">Prospect catalogue</flux:heading>
@@ -106,8 +107,10 @@ document.querySelectorAll('[data-save-row]').forEach(btn => btn.addEventListener
         phone: cells[2].textContent.trim() === '—' ? null : cells[2].textContent.trim(),
       }]}) });
     if(!res.ok) throw new Error('save failed');
+    const j = await res.json().catch(() => ({}));
     btn.textContent = 'Saved ✓'; btn.classList.add('text-emerald-600');
-  } catch(e){ btn.disabled = false; btn.textContent = 'Save'; alert('Could not save. Please try again.'); }
+    toast('Contact saved — find it under Saved contacts.');
+  } catch(e){ btn.disabled = false; btn.textContent = 'Save'; toast('Could not save. Please try again.', 'danger'); }
 }));
 </script>
 </x-layouts::app>

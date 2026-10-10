@@ -231,3 +231,29 @@ test('scraper search requires a niche', function () {
         ->postJson(route('scraper.search'), ['keyword' => 'x'])
         ->assertUnprocessable();
 });
+
+test('campaign report always shows funnel and opens charts', function () {
+    $user = App\Models\User::factory()->create();
+    $campaign = App\Models\EmailCampaign::create([
+        'user_id' => $user->id, 'subject' => 'Chart check', 'body' => 'Hi.',
+        'status' => 'sent', 'total' => 2, 'sent' => 2, 'delivered' => 2,
+    ]);
+
+    // No opens at all: both charts must still render (zero state).
+    $this->actingAs($user)->get(route('marketing.campaigns.show', $campaign))
+        ->assertOk()
+        ->assertSee('id="funnel-chart"', false)
+        ->assertSee('id="opens-chart"', false)
+        ->assertSee('Email funnel', false);
+});
+
+test('marketing page offers email presets, campaign table and toast helper', function () {
+    $user = App\Models\User::factory()->create();
+
+    $this->actingAs($user)->get(route('marketing.index'))
+        ->assertOk()
+        ->assertSee('id="em-preset"', false)
+        ->assertSee('First outreach', false)
+        ->assertSee('function toast(', false)
+        ->assertSee('data-use-email', false);
+});

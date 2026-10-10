@@ -1,4 +1,5 @@
 <x-layouts::app :title="__('Prospect scraper')">
+    @include('partials.toast')
     <div class="flex h-full w-full flex-1 flex-col gap-4">
         <div>
             <flux:heading size="xl">Prospect scraper</flux:heading>
@@ -142,6 +143,7 @@ async function dscRun(){
     rows.innerHTML='<p class="px-4 py-8 text-center text-sm text-zinc-400">Directory unreachable right now — please try again in a minute.</p>';
     label.textContent='Search failed.';
     document.getElementById('dsc-count').textContent='0 records';
+    toast('Directory search failed. Please try again in a minute.', 'danger');
   }
   btn.disabled=false; btn.classList.remove('opacity-50'); dscBusy=false;
 }
@@ -187,11 +189,13 @@ document.getElementById('dsc-save').addEventListener('click',async()=>{
     if(!res.ok) throw new Error('save failed');
     const j=await res.json();
     btn.textContent='Saved '+j.saved+' ✓';
+    toast(j.saved+' contact'+(j.saved===1?'':'s')+' saved — opening your contacts…');
     setTimeout(()=>{window.location.href="{{ route('contacts.index') }}";},700);
-  }catch(e){ btn.disabled=false; btn.textContent='Save contacts'; alert('Could not save. Please try again.'); }
+  }catch(e){ btn.disabled=false; btn.textContent='Save contacts'; toast('Could not save. Please try again.', 'danger'); }
 });
 document.getElementById('dsc-unlock').addEventListener('click',()=>{
   const msg='Hi Ttryy! I want to unlock the full prospect list (UGX 10,000) for '+(dscCurrent?dscCurrent.niche:'my niche')+(dscTotal?' — '+dscTotal+' records found.':'');
+  toast('Opening WhatsApp — send the message to unlock your list.');
   window.open('https://wa.me/256700000000?text='+encodeURIComponent(msg),'_blank');
 });
 </script>

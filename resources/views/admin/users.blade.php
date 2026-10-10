@@ -1,13 +1,10 @@
 <x-layouts::app :title="__('Manage users')">
+    @include('partials.toast')
     <div class="flex h-full w-full flex-1 flex-col gap-4">
         <div>
             <flux:heading size="xl">Users</flux:heading>
             <flux:text class="mt-1">Customer accounts, order activity and administrator access.</flux:text>
         </div>
-
-        @if(session('status'))
-        <div class="rounded-xl bg-emerald-500/10 border border-emerald-500/30 px-5 py-3 text-sm text-emerald-700 dark:text-emerald-400">{{ session('status') }}</div>
-        @endif
 
         <form method="GET" action="{{ route('admin.users') }}" class="rounded-xl bg-white dark:bg-white/[.04] p-4 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)] flex flex-col sm:flex-row gap-3">
             <input type="text" name="search" value="{{ $search }}" placeholder="Search name or email…" class="flex-1 rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">

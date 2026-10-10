@@ -1,5 +1,6 @@
 <x-layouts::app :title="__('Marketing tool')">
     @include('partials.custom-select')
+    @include('partials.toast')
     <style>
       .cs-btn svg{ transition:transform .25s ease; }
       .cs-btn[aria-expanded="true"] svg{ transform:rotate(180deg); }
@@ -17,11 +18,11 @@
             </a>
         </div>
 
-        <div class="inline-flex self-start rounded-full bg-zinc-100 dark:bg-white/10 p-1" role="tablist" aria-label="Marketing tools">
-            <button data-mtab="outreach" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition">WhatsApp outreach</button>
-            <button data-mtab="email" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition">Email campaigns</button>
-            <button data-mtab="community" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition">Communities</button>
-            <button data-mtab="templates" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition">Templates</button>
+        <div class="inline-flex self-start rounded-full bg-zinc-100 dark:bg-white/10 p-1 max-w-full overflow-x-auto" role="tablist" aria-label="Marketing tools">
+            <button data-mtab="outreach" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">WhatsApp outreach <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $contacts->count() }}</span></button>
+            <button data-mtab="email" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Email campaigns <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $campaigns->count() }}</span></button>
+            <button data-mtab="community" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Communities <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $groups->count() }}</span></button>
+            <button data-mtab="templates" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Templates <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $templates->count() }}</span></button>
         </div>
 
         <!-- TAB: WhatsApp outreach -->
@@ -102,6 +103,14 @@
                 <flux:heading>New email campaign</flux:heading>
                 <flux:text class="mt-1 text-sm">Sends from your configured mail account. Opens are tracked per recipient — max 50 recipients per send.</flux:text>
                 <div class="mt-3 grid gap-3">
+                    <div><label class="text-xs font-semibold">Start from a template</label>
+                        <select id="em-preset" class="mt-1 w-full rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
+                            <option value="">Write from scratch…</option>
+                            @foreach($emailPresets as $i => $p)
+                            <option value="{{ $i }}" data-subject="{{ e($p['subject']) }}" data-body="{{ e($p['body']) }}">{{ $p['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div><label class="text-xs font-semibold">Subject *</label><input id="em-subject" type="text" placeholder="Quick idea for {business}" class="mt-1 w-full rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]"></div>
                     <div><label class="text-xs font-semibold">Message * <span class="font-normal text-zinc-500">({name} personalizes per recipient)</span></label><textarea id="em-body" rows="5" class="mt-1 w-full rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-3 text-sm outline-none focus:border-[#9e005d]" placeholder="Hi {name}, ..."></textarea></div>
                     <div class="grid sm:grid-cols-2 gap-3">
@@ -121,17 +130,49 @@
                 </div>
             </div>
             <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
-                <flux:heading>Past campaigns</flux:heading>
-                <div class="mt-2 divide-y divide-neutral-200 dark:divide-white/10">
-                    @forelse($campaigns as $cp)
-                    <a href="{{ route('marketing.campaigns.show', $cp) }}" class="flex items-center justify-between gap-3 py-3 hover:bg-zinc-50 dark:hover:bg-white/5 rounded-lg px-2 -mx-2">
-                        <div class="min-w-0"><p class="font-bold text-sm truncate">{{ $cp->subject }}</p><p class="text-xs text-zinc-500">{{ $cp->created_at->format('d M Y') }} · {{ $cp->total }} recipients</p></div>
-                        <span class="text-xs font-bold shrink-0">{{ $cp->sent }} sent · {{ $cp->recipients()->whereNotNull('opened_at')->count() }} read</span>
-                    </a>
-                    @empty
-                    <p class="text-sm text-zinc-500 py-4 text-center">No campaigns yet — your reports will land here.</p>
-                    @endforelse
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <flux:heading>Past campaigns</flux:heading>
+                    <flux:text class="text-sm">{{ $campaigns->count() }} total</flux:text>
                 </div>
+                @if($campaigns->isEmpty())
+                <p class="text-sm text-zinc-500 py-4 text-center">No campaigns yet — your reports will land here.</p>
+                @else
+                <div class="mt-2 overflow-x-auto">
+                    <table class="w-full text-sm min-w-[680px]">
+                        <thead>
+                            <tr class="text-left text-[11px] uppercase tracking-wide text-zinc-400">
+                                <th class="py-2 pr-4 font-semibold">Campaign</th>
+                                <th class="py-2 pr-4 font-semibold">Sent</th>
+                                <th class="py-2 pr-4 font-semibold">Delivered</th>
+                                <th class="py-2 pr-4 font-semibold">Opened</th>
+                                <th class="py-2 pr-4 font-semibold">Open rate</th>
+                                <th class="py-2 font-semibold text-right">Report</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-neutral-200 dark:divide-white/10">
+                            @foreach($campaigns as $cp)
+                            @php $rate = $cp->delivered > 0 ? round($cp->read_count / $cp->delivered * 100) : 0; @endphp
+                            <tr>
+                                <td class="py-3 pr-4 min-w-0">
+                                    <a href="{{ route('marketing.campaigns.show', $cp) }}" class="font-bold hover:text-[#9e005d] truncate block max-w-[280px]">{{ $cp->subject }}</a>
+                                    <p class="text-xs text-zinc-500">{{ $cp->created_at->format('d M Y') }} · {{ $cp->total }} recipients</p>
+                                </td>
+                                <td class="py-3 pr-4 font-semibold">{{ $cp->sent }}</td>
+                                <td class="py-3 pr-4 font-semibold">{{ $cp->delivered }}</td>
+                                <td class="py-3 pr-4 font-semibold text-[#9e005d]">{{ $cp->read_count }}</td>
+                                <td class="py-3 pr-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-20 h-1.5 rounded-full bg-zinc-200 dark:bg-white/10 overflow-hidden"><div class="h-full rounded-full bg-[#9e005d]" style="width:{{ $rate }}%"></div></div>
+                                        <span class="text-xs font-bold">{{ $rate }}%</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 text-right"><a href="{{ route('marketing.campaigns.show', $cp) }}" class="text-xs font-bold text-[#9e005d] hover:underline whitespace-nowrap">View →</a></td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @endif
             </div>
         </div>
 
@@ -196,20 +237,21 @@
         <div data-mtab-panel="templates" class="hidden flex-col gap-4">
             <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
                 <flux:heading>Message templates</flux:heading>
-                <flux:text class="mt-1 text-sm">Built-in closers plus your own. Placeholders: {name}, {business}, {need}, {phone}.</flux:text>
-                <div class="mt-4 space-y-3" id="tpl-list">
+                <flux:text class="mt-1 text-sm">Built-in closers plus your own. Placeholders: {name}, {business}, {need}, {phone}. Load any of them into the WhatsApp composer or an email.</flux:text>
+                <div class="mt-4 grid sm:grid-cols-2 gap-3" id="tpl-list">
                     @foreach($templates as $t)
-                    <div class="rounded-xl bg-zinc-50 dark:bg-white/5 p-4" data-tpl-row="{{ $t->id }}">
+                    <div class="rounded-xl bg-zinc-50 dark:bg-white/5 p-4 flex flex-col" data-tpl-row="{{ $t->id }}">
                         <div class="flex items-center justify-between gap-2">
-                            <p class="font-bold text-sm">{{ $t->name }} @if(!$t->user_id)<span class="text-[11px] font-semibold text-zinc-500">· built-in</span>@endif</p>
-                            <div class="flex gap-2 shrink-0">
-                                <button data-use-tpl="{{ $t->id }}" class="text-xs font-bold text-[#9e005d] hover:underline">Use</button>
-                                @if($t->user_id)
-                                <button data-del-tpl="{{ $t->id }}" class="text-xs font-semibold text-zinc-400 hover:text-red-600">Delete</button>
-                                @endif
-                            </div>
+                            <p class="font-bold text-sm truncate">{{ $t->name }} @if(!$t->user_id)<span class="text-[11px] font-semibold text-zinc-500">· built-in</span>@endif</p>
+                            @if($t->user_id)
+                            <button data-del-tpl="{{ $t->id }}" class="text-xs font-semibold text-zinc-400 hover:text-red-600 shrink-0">Delete</button>
+                            @endif
                         </div>
-                        <p class="mt-1 text-[13px] text-zinc-600 dark:text-zinc-400 whitespace-pre-wrap" data-tpl-body="{{ $t->id }}">{{ $t->body }}</p>
+                        <p class="mt-1 text-[13px] text-zinc-600 dark:text-zinc-400 whitespace-pre-wrap flex-1" data-tpl-body="{{ $t->id }}">{{ $t->body }}</p>
+                        <div class="mt-3 flex gap-2 flex-wrap">
+                            <button data-use-tpl="{{ $t->id }}" class="bg-[#9e005d] hover:bg-[#7e0049] text-white text-xs font-bold px-4 py-2 rounded-full transition">Use in WhatsApp</button>
+                            <button data-use-email="{{ $t->id }}" class="border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white text-xs font-bold px-4 py-2 rounded-full transition">Use in email</button>
+                        </div>
                     </div>
                     @endforeach
                 </div>
@@ -260,7 +302,22 @@ function enhanceSelect(sel){
 }
 document.addEventListener('click',e=>{ if(!e.target.closest || !e.target.closest('.cs-wrap')) document.querySelectorAll('.cs-list').forEach(l=>l.classList.add('hidden')); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.cs-list').forEach(l=>l.classList.add('hidden')); });
-['ai-contact','ai-tone','ai-goal','mkt-template-pick','mkt-filter'].forEach(id=>enhanceSelect(document.getElementById(id)));
+['ai-contact','ai-tone','ai-goal','mkt-template-pick','mkt-filter','em-preset'].forEach(id=>enhanceSelect(document.getElementById(id)));
+toastStoredFlash();
+try{
+  const draft = sessionStorage.getItem('mkt-composer');
+  if(draft !== null){ const ta = document.getElementById('mkt-template'); if(ta) ta.value = draft; sessionStorage.removeItem('mkt-composer'); }
+}catch(e){}
+function csReset(sel){
+  if(!sel) return;
+  sel.value = '';
+  const wrap = sel.closest('.cs-wrap');
+  if(!wrap) return;
+  const label = wrap.querySelector('.cs-label'), first = sel.options[0];
+  if(label && first){ label.textContent = first.textContent; label.classList.add('text-zinc-500'); }
+  wrap.querySelectorAll('.cs-tick').forEach(t => t.classList.add('hidden'));
+  sel.dispatchEvent(new Event('change', { bubbles: true }));
+}
 function mktFill(tpl, c){
   return (tpl || '').replaceAll('{name}', (c.name || '').split(' ')[0] || 'there')
     .replaceAll('{business}', c.business || 'your business')
@@ -312,29 +369,50 @@ document.getElementById('mkt-filter')?.addEventListener('change', mktRender);
 mktRender();
 document.getElementById('mkt-template-pick')?.addEventListener('change', e => {
   const opt = e.target.selectedOptions[0];
-  if(opt && opt.dataset.body){ document.getElementById('mkt-template').value = opt.dataset.body; mktRender(); }
-  e.target.value = '';
+  if(opt && opt.dataset.body){ document.getElementById('mkt-template').value = opt.dataset.body; mktRender(); toast('Template loaded — edit freely.'); csReset(e.target); }
+});
+document.getElementById('em-preset')?.addEventListener('change', e => {
+  const opt = e.target.selectedOptions[0];
+  if(opt && opt.dataset.body){
+    document.getElementById('em-subject').value = opt.dataset.subject || '';
+    document.getElementById('em-body').value = opt.dataset.body;
+    toast('Email template loaded — edit freely.');
+    csReset(e.target);
+  }
 });
 document.getElementById('mkt-save-tpl')?.addEventListener('click', async () => {
   const body = document.getElementById('mkt-template').value.trim();
-  if(!body) return;
+  if(!body){ toast('Write a message first, then save it as a template.', 'warning'); return; }
   const name = prompt('Name this template:');
   if(!name) return;
+  try{ sessionStorage.setItem('mkt-composer', document.getElementById('mkt-template').value); }catch(e){}
   const res = await fetch("{{ route('marketing.templates.store') }}", { method: 'POST',
     headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': MKT_TOKEN, 'X-Requested-With': 'XMLHttpRequest' },
     body: JSON.stringify({ name, body }) });
-  if(res.ok){ location.reload(); } else { alert('Could not save template.'); }
+  const j = await res.json().catch(() => ({}));
+  if(res.ok){ flashToast('Template "' + name + '" saved.'); location.reload(); }
+  else toast(j.message || 'Could not save template.', 'danger');
 });
-async function delTpl(id){
-  if(!confirm('Delete this template?')) return;
-  await fetch(`/dashboard/marketing/templates/${id}`, { method: 'DELETE',
+async function delTpl(id, name){
+  if(!confirm('Delete template "' + (name || 'this template') + '"?')) return;
+  try{ sessionStorage.setItem('mkt-composer', document.getElementById('mkt-template').value); }catch(e){}
+  const res = await fetch(`/dashboard/marketing/templates/${id}`, { method: 'DELETE',
     headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': MKT_TOKEN, 'X-Requested-With': 'XMLHttpRequest' } });
-  location.reload();
+  if(res.ok){ flashToast('Template deleted.'); location.reload(); }
+  else toast('Could not delete template.', 'danger');
 }
-document.querySelectorAll('[data-del-tpl]').forEach(b => b.addEventListener('click', () => delTpl(b.dataset.delTpl)));
+document.querySelectorAll('[data-del-tpl]').forEach(b => b.addEventListener('click', () => {
+  const row = b.closest('[data-tpl-row]');
+  const nm = (row?.querySelector('p.font-bold')?.textContent || '').replace('· built-in', '').trim();
+  delTpl(b.dataset.delTpl, nm);
+}));
 document.querySelectorAll('[data-use-tpl]').forEach(b => b.addEventListener('click', () => {
   const body = document.querySelector(`[data-tpl-body="${b.dataset.useTpl}"]`);
-  if(body){ paintMtabs('outreach'); document.getElementById('mkt-template').value = body.textContent; mktRender(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  if(body){ paintMtabs('outreach'); document.getElementById('mkt-template').value = body.textContent; mktRender(); window.scrollTo({ top: 0, behavior: 'smooth' }); toast('Loaded into the WhatsApp composer.'); }
+}));
+document.querySelectorAll('[data-use-email]').forEach(b => b.addEventListener('click', () => {
+  const body = document.querySelector(`[data-tpl-body="${b.dataset.useEmail}"]`);
+  if(body){ paintMtabs('email'); document.getElementById('em-body').value = body.textContent; window.scrollTo({ top: 0, behavior: 'smooth' }); toast('Loaded into the email composer — add a subject and send.'); }
 }));
 /* AI writer */
 document.getElementById('ai-generate')?.addEventListener('click', async () => {
@@ -351,9 +429,11 @@ document.getElementById('ai-generate')?.addEventListener('click', async () => {
     out.textContent = j.message;
     src.textContent = (j.source === 'ai' ? 'Written by AI' : 'From the Ttryy sales library') + ' · 10 tokens used';
     box.classList.remove('hidden');
+    status.textContent = '';
+    toast('Message ready — 10 tokens used.');
     const bal = document.getElementById('token-balance');
     if(bal && typeof j.balance !== 'undefined') bal.textContent = Number(j.balance).toLocaleString('en-US');
-  }catch(e){ status.textContent = e.message || 'Generation failed.'; setTimeout(() => status.textContent = '', 4000); }
+  }catch(e){ status.textContent = e.message || 'Generation failed.'; toast(e.message || 'Generation failed.', 'danger'); setTimeout(() => status.textContent = '', 4000); }
   btn.disabled = false; btn.classList.remove('opacity-60');
 });
 document.getElementById('ai-use')?.addEventListener('click', () => {
@@ -363,6 +443,7 @@ document.getElementById('ai-use')?.addEventListener('click', () => {
 });
 /* groups */
 document.querySelectorAll('[data-unlock-group]').forEach(b => b.addEventListener('click', async () => {
+  const orig = b.textContent;
   b.disabled = true; b.textContent = 'Unlocking…';
   try{
     const res = await fetch(`/dashboard/groups/${b.dataset.unlockGroup}/unlock`, { method: 'POST',
@@ -371,9 +452,10 @@ document.querySelectorAll('[data-unlock-group]').forEach(b => b.addEventListener
     if(!res.ok) throw new Error(j.message || 'Unlock failed.');
     const box = b.closest('.group-action');
     box.innerHTML = `<a target="_blank" href="${j.invite_link}" class="inline-block bg-[#9e005d] hover:bg-[#7e0049] text-white text-xs font-bold px-4 py-2 rounded-full transition">Join group →</a>`;
+    toast(j.already ? 'Link already unlocked — enjoy.' : 'Link unlocked — it is yours forever.');
     const bal = document.getElementById('token-balance');
     if(bal && typeof j.balance !== 'undefined') bal.textContent = Number(j.balance).toLocaleString('en-US');
-  }catch(e){ b.disabled = false; b.textContent = 'Unlock link'; alert(e.message || 'Unlock failed.'); }
+  }catch(e){ b.disabled = false; b.textContent = orig; toast(e.message || 'Unlock failed.', 'danger'); }
 }));
 /* groups search + filter + sort */
 function filterGroups(){
@@ -412,7 +494,7 @@ document.getElementById('sg-send')?.addEventListener('click', async () => {
   const status = document.getElementById('sg-status');
   const payload = { name: document.getElementById('sg-name').value.trim(), niche: document.getElementById('sg-niche').value.trim(),
     invite_link: document.getElementById('sg-link').value.trim(), description: document.getElementById('sg-desc').value.trim() };
-  if(!payload.name || !payload.invite_link){ status.textContent = 'Name and invite link are required.'; return; }
+  if(!payload.name || !payload.invite_link){ status.textContent = 'Name and invite link are required.'; toast('Group name and invite link are required.', 'warning'); return; }
   status.textContent = 'Sending…';
   try{
     const res = await fetch("{{ route('marketing.groups.suggest') }}", { method: 'POST',
@@ -420,7 +502,9 @@ document.getElementById('sg-send')?.addEventListener('click', async () => {
       body: JSON.stringify(payload) });
     const j = await res.json();
     status.textContent = j.message || (res.ok ? 'Sent!' : 'Failed.');
-  }catch(e){ status.textContent = 'Failed. Try again.'; }
+    toast(j.message || (res.ok ? 'Suggestion sent — thank you!' : 'Could not send suggestion.'), res.ok ? 'success' : 'danger');
+    if(res.ok){ ['sg-name','sg-niche','sg-link','sg-desc'].forEach(id => document.getElementById(id).value = ''); }
+  }catch(e){ status.textContent = 'Failed. Try again.'; toast('Could not send suggestion. Try again.', 'danger'); }
 });
 /* email campaigns */
 document.getElementById('em-send')?.addEventListener('click', async () => {
@@ -428,8 +512,9 @@ document.getElementById('em-send')?.addEventListener('click', async () => {
   const btn = document.getElementById('em-send');
   const subject = document.getElementById('em-subject').value.trim();
   const body = document.getElementById('em-body').value.trim();
-  if(!subject || !body){ status.textContent = 'Subject and message are required.'; return; }
+  if(!subject || !body){ status.textContent = 'Subject and message are required.'; toast('Subject and message are required.', 'warning'); return; }
   const ids = [...document.querySelectorAll('.em-contact:checked')].map(c => parseInt(c.value, 10));
+  if(!ids.length && !document.getElementById('em-manual').value.trim()){ status.textContent = 'Pick at least one recipient.'; toast('Pick at least one recipient — tick a contact or type an address.', 'warning'); return; }
   btn.disabled = true; btn.classList.add('opacity-60'); status.textContent = 'Sending…';
   try{
     const res = await fetch("{{ route('marketing.campaigns.send') }}", { method: 'POST',
@@ -437,8 +522,9 @@ document.getElementById('em-send')?.addEventListener('click', async () => {
       body: JSON.stringify({ subject, body, contact_ids: ids, emails: document.getElementById('em-manual').value }) });
     const j = await res.json();
     if(!res.ok) throw new Error(j.message || 'Send failed.');
+    flashToast('Campaign sent to ' + j.sent + ' recipient' + (j.sent === 1 ? '' : 's') + ' — opening the report…');
     window.location.href = j.redirect;
-  }catch(e){ status.textContent = e.message || 'Send failed.'; }
+  }catch(e){ status.textContent = e.message || 'Send failed.'; toast(e.message || 'Send failed.', 'danger'); }
   btn.disabled = false; btn.classList.remove('opacity-60');
 });
 </script>

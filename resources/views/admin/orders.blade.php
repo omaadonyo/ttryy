@@ -1,4 +1,5 @@
 <x-layouts::app :title="__('Manage orders')">
+    @include('partials.toast')
     <style>
       .cs-btn svg{ transition:transform .25s ease; }
       .cs-btn[aria-expanded="true"] svg{ transform:rotate(180deg); }
@@ -9,10 +10,6 @@
             <flux:heading size="xl">Orders</flux:heading>
             <flux:text class="mt-1">Confirm manual Mobile Money payments and follow up on pending orders.</flux:text>
         </div>
-
-        @if(session('status'))
-        <div class="rounded-xl bg-emerald-500/10 border border-emerald-500/30 px-5 py-3 text-sm text-emerald-700 dark:text-emerald-400">{{ session('status') }}</div>
-        @endif
 
         <form method="GET" action="{{ route('admin.orders') }}" class="rounded-xl bg-white dark:bg-white/[.04] p-4 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)] grid sm:grid-cols-[1fr_160px_160px_auto] gap-3">
             <input type="text" name="search" value="{{ $filters['search'] ?? '' }}" placeholder="Search reference, business, phone…" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
