@@ -66,7 +66,12 @@ class WalletController extends Controller
             'tx_ref' => ['required', 'string'],
         ]);
 
-        $topup = TokenTopup::where('reference', $data['tx_ref'])
+        // tx_ref carries a per-attempt timestamp suffix (TTP-XXXXXX-<ms>).
+        $reference = preg_match('/^(TTP-[A-Z0-9]{6})-\d+$/', $data['tx_ref'], $m)
+            ? $m[1]
+            : $data['tx_ref'];
+
+        $topup = TokenTopup::where('reference', $reference)
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
 

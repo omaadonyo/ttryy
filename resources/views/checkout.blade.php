@@ -6,9 +6,9 @@
       .opt > div{ box-shadow:0 2px 12px -6px rgba(10,10,12,.14); }
       .dark .opt > div{ box-shadow:0 8px 24px -10px rgba(0,0,0,.75); }
       .opt .tick{ opacity:0; transform:scale(.4); transition:opacity .25s ease, transform .25s ease, background-color .25s ease; }
-      .opt input:checked + div{ background:color-mix(in srgb, var(--ac) 8%, transparent); }
-      .opt input:checked + div .tick{ opacity:1; transform:scale(1); background:var(--ac); border-color:var(--ac); color:#fff; }
-      .opt input:focus-visible + div{ outline:2px solid var(--ac); outline-offset:2px; }
+  .opt input:checked + div{ background:color-mix(in srgb, #9e005d 8%, transparent); }
+  .opt input:checked + div .tick{ opacity:1; transform:scale(1); background:#9e005d; border-color:#9e005d; color:#fff; }
+  .opt input:focus-visible + div{ outline:2px solid #9e005d; outline-offset:2px; }
       .opt[data-accent="zinc"]{ --ac:#52525b; }
       .opt[data-accent="brand"]{ --ac:#9e005d; }
       .opt[data-accent="black"]{ --ac:#18181b; }
@@ -118,7 +118,17 @@
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">3. How you pay</h2>
+        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">3. Your business details</h2>
+        <div class="mt-3 grid sm:grid-cols-2 gap-4">
+          <div><label class="text-xs font-semibold">Business name *</label><input required id="f-business" name="business_name" value="{{ old('business_name') }}" placeholder="Savanna Build Ltd" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"></div>
+          <div><label class="text-xs font-semibold">Phone / WhatsApp *</label><input required id="f-phone" name="phone" value="{{ old('phone') }}" placeholder="+256 700 000000" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"></div>
+          <div><label class="text-xs font-semibold">Industry / niche</label><select id="f-niche" name="niche" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"><option value="">Select…</option>@foreach(config('packages.niches') as $n)<option {{ old('niche', $selectedNiche) === $n ? 'selected' : '' }}>{{ $n }}</option>@endforeach</select></div>
+          <div><label class="text-xs font-semibold">Notes (optional)</label><input id="f-notes" name="notes" value="{{ old('notes') }}" placeholder="Anything we should know" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"></div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">4. How you pay</h2>
         @php $freqAccents = ['full' => 'black', 'monthly' => 'brand', 'weekly' => 'black', 'daily' => 'black']; @endphp
         <div class="mt-3 grid sm:grid-cols-2 gap-3">
           @foreach([['full','Pay in full','fullLabel'],['monthly','Monthly','monthlyLabel'],['weekly','Weekly','weeklyLabel'],['daily','Daily','dailyLabel']] as [$val,$title,$lid])
@@ -137,7 +147,7 @@
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">4. How long you pay</h2>
+        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">5. How long you pay</h2>
         <p class="text-sm text-zinc-500 mt-1">Your website stays running while your plan is active. Full upfront payment covers 12 months.</p>
         <select name="duration_months" id="duration" class="mt-3 w-full sm:w-72 bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white">
           @foreach($durations as $d)
@@ -146,15 +156,6 @@
         </select>
       </section>
 
-      <section>
-        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">5. Your business details</h2>
-        <div class="mt-3 grid sm:grid-cols-2 gap-4">
-          <div><label class="text-xs font-semibold">Business name *</label><input required id="f-business" name="business_name" value="{{ old('business_name') }}" placeholder="Savanna Build Ltd" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"></div>
-          <div><label class="text-xs font-semibold">Phone / WhatsApp *</label><input required id="f-phone" name="phone" value="{{ old('phone') }}" placeholder="+256 700 000000" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"></div>
-          <div><label class="text-xs font-semibold">Industry / niche</label><select id="f-niche" name="niche" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"><option value="">Select…</option>@foreach(config('packages.niches') as $n)<option {{ old('niche', $selectedNiche) === $n ? 'selected' : '' }}>{{ $n }}</option>@endforeach</select></div>
-          <div><label class="text-xs font-semibold">Notes (optional)</label><input id="f-notes" name="notes" value="{{ old('notes') }}" placeholder="Anything we should know" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"></div>
-        </div>
-      </section>
     </div>
 
     <aside class="lg:sticky lg:top-24 rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 p-6 shadow-xl h-fit">
@@ -181,20 +182,26 @@
           <label class="opt cursor-pointer block" data-accent="brand">
             <input type="radio" name="pay_choice" value="online" class="sr-only" checked>
             <div class="rounded-xl bg-white/10 dark:bg-zinc-950/5 p-4 transition flex items-center gap-3">
-              <span class="tick w-6 h-6 grid place-items-center rounded-full border-2 border-white/40 dark:border-zinc-950/30 text-transparent shrink-0">
+              <span class="grid size-10 place-items-center rounded-xl bg-white/15 dark:bg-zinc-950/10 shrink-0">
+                <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+              </span>
+              <span class="min-w-0"><span class="block font-bold text-sm">Pay online now</span><span class="block text-xs opacity-60">Card or Mobile Money · instant confirmation</span></span>
+              <span class="tick ml-auto w-6 h-6 grid place-items-center rounded-full border-2 border-white/40 dark:border-zinc-950/30 text-transparent shrink-0">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
               </span>
-              <span><span class="block font-bold text-sm">Pay online now</span><span class="block text-xs opacity-60">Card or Mobile Money, processed by Flutterwave</span></span>
             </div>
           </label>
           @endif
           <label class="opt cursor-pointer block" data-accent="black">
             <input type="radio" name="pay_choice" value="momo" class="sr-only" @if(!$flwKey) checked @endif>
             <div class="rounded-xl bg-white/10 dark:bg-zinc-950/5 p-4 transition flex items-center gap-3">
-              <span class="tick w-6 h-6 grid place-items-center rounded-full border-2 border-white/40 dark:border-zinc-950/30 text-transparent shrink-0">
+              <span class="grid size-10 place-items-center rounded-xl bg-white/15 dark:bg-zinc-950/10 shrink-0">
+                <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>
+              </span>
+              <span class="min-w-0"><span class="block font-bold text-sm">Mobile Money to {{ $momoCode }}</span><span class="block text-xs opacity-60">Send it yourself · we confirm on WhatsApp</span></span>
+              <span class="tick ml-auto w-6 h-6 grid place-items-center rounded-full border-2 border-white/40 dark:border-zinc-950/30 text-transparent shrink-0">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
               </span>
-              <span><span class="block font-bold text-sm">Mobile Money to {{ $momoCode }}</span><span class="block text-xs opacity-60">Send it yourself, we confirm on WhatsApp</span></span>
             </div>
           </label>
         </div>
@@ -202,17 +209,7 @@
 
       <button type="button" id="pay-now" class="mt-5 w-full bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full transition">Pay <span id="pay-now-amount">now</span></button>
 
-      <div id="momo-panel" class="hidden mt-3 rounded-xl bg-white/10 dark:bg-zinc-950/5 p-4 text-sm">
-        <p class="font-bold">Send to MTN MoMo merchant code</p>
-        <p class="font-display font-extrabold text-3xl tracking-widest mt-1">{{ $momoCode }}</p>
-        <ol class="mt-2 space-y-1 text-[13px] opacity-80 list-decimal ml-4">
-          <li>Dial *165# → Payments → Merchant payment</li>
-          <li>Enter merchant code <strong>{{ $momoCode }}</strong> (Ttryy)</li>
-          <li>Amount: <strong id="momo-amount">—</strong> (your first payment)</li>
-          <li>Reference / narration: your order reference (shown after you continue)</li>
-        </ol>
-        <button type="button" id="momo-sent" class="mt-3 w-full bg-white dark:bg-zinc-950 text-zinc-950 dark:text-white font-bold py-2.5 rounded-full text-sm transition">I've sent the Mobile Money</button>
-      </div>
+      <button type="button" id="momo-continue" class="hidden mt-5 w-full bg-white dark:bg-zinc-950 text-zinc-950 dark:text-white font-bold py-3 rounded-full transition">Continue →</button>
 
       <p class="mt-3 text-[11px] opacity-60">You pay exactly what is shown here — no hidden fees. Secured by Flutterwave.</p>
     </aside>
@@ -393,7 +390,7 @@ function initCheckout(){
         if(typeof FlutterwaveCheckout === 'undefined') throw new Error('Payment popup failed to load. Please check your connection and try again.');
         FlutterwaveCheckout({
           public_key: order.public_key || FLW_KEY,
-          tx_ref: order.reference,
+          tx_ref: order.reference + '-' + Date.now(),
           amount: order.due_today,
           currency: order.currency || 'UGX',
           payment_options: 'mobilemoney,card',
@@ -417,16 +414,15 @@ function initCheckout(){
     });
   }
   const payChoiceInputs = [...document.querySelectorAll('input[name="pay_choice"]')];
-  const momoPanel = document.getElementById('momo-panel');
+  const momoContinue = document.getElementById('momo-continue');
   function syncPayChoice(){
     const choice = (payChoiceInputs.find(i => i.checked) || {}).value || 'momo';
     if(payNow) payNow.classList.toggle('hidden', choice !== 'online');
-    if(momoPanel) momoPanel.classList.toggle('hidden', choice !== 'momo');
+    if(momoContinue) momoContinue.classList.toggle('hidden', choice !== 'momo');
   }
   payChoiceInputs.forEach(i => i.addEventListener('change', syncPayChoice));
   syncPayChoice();
-  const momoSent = document.getElementById('momo-sent');
-  if(momoSent) momoSent.addEventListener('click', () => {
+  if(momoContinue) momoContinue.addEventListener('click', () => {
     const hidden = document.createElement('input');
     hidden.type = 'hidden'; hidden.name = 'payment_method'; hidden.value = 'momo_manual';
     form.appendChild(hidden);

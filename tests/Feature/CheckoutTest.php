@@ -258,8 +258,7 @@ test('underpaid flutterwave callbacks do not mark the order paid', function () {
     expect($order->fresh()->status)->toBe('pending');
 });
 
-test('verified flutterwave payments mark the order paid', function () {
-    config()->set('services.flutterwave.secret_key', 'test-secret');
+test('verified flutterwave payments mark the order paid', function () {    config()->set('services.flutterwave.secret_key', 'test-secret');
     Illuminate\Support\Facades\Http::fake([
         'https://api.flutterwave.com/*' => Illuminate\Support\Facades\Http::response([
             'data' => ['id' => 987655, 'status' => 'successful', 'currency' => 'UGX', 'amount' => 59000],
@@ -293,6 +292,50 @@ test('verified flutterwave payments mark the order paid', function () {
     expect($order->status)->toBe('paid')
         ->and($order->paid_amount)->toBe(59000)
         ->and($order->payment_method)->toBe('flutterwave');
+});
+
+test('verification accepts per-attempt suffixed references', function () {
+    config()->set('services.flutterwave.secret_key', 'test-secret');
+    Illuminate\Support\Facades\Http::fake([
+        'https://api.flutterwave.com/*' => Illuminate\Support\Facades\Http::response([
+            'data' => ['id' => 111222, 'status' => 'successful', 'currency' => 'UGX', 'amount' => 30000],
+        ], 200),
+    ]);
+
+    $user = User::factory()->create();
+
+    $order = PackageOrder::create([
+        'user_id' => $user->id,
+        'reference' => 'TTRYY-SUFFIX',
+        'package' => 'START',
+        'billing_frequency' => 'monthly',
+        'domain' => 'none',
+        'duration_months' => 12,
+        'periods' => 12,
+        'amount_per_period' => 21000,
+        'domain_fee' => 0,
+        'total_amount' => 252000,
+        'due_today' => 21000,
+        'business_name' => 'Test Biz',
+        'phone' => '+256 700 000031',
+    ]);
+
+    $this->actingAs($user)->postJson('/dashboard/checkout/verify', [
+        'transaction_id' => '111222',
+        'tx_ref' => 'TTRYY-SUFFIX-1699999999999',
+    ])->assertOk();
+
+    expect($order->fresh()->status)->toBe('paid');
+});
+
+test('checkout offers an explicit mobile money or online choice', function () {
+    config()->set('services.flutterwave.public_key', 'test-pub');
+
+    $this->actingAs(User::factory()->create())->get('/dashboard/checkout')
+        ->assertOk()
+        ->assertSee('How do you want to pay?', false)
+        ->assertSee('Mobile Money to', false)
+        ->assertSee('Pay online now', false);
 });
 
 test('placing an order emails the customer and the admin inbox', function () {

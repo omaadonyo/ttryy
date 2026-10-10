@@ -15,7 +15,10 @@ class SavedContact extends Model
         'district',
         'contact',
         'phone',
+        'email',
         'need',
+        'source',
+        'source_url',
     ];
 
     public function user(): BelongsTo

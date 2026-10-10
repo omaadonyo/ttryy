@@ -14,8 +14,8 @@ return [
     // together with the first installment.
     'domains' => [
         'none' => ['label' => 'No domain — I already have one', 'fee' => 0],
-        'budget' => ['label' => '.xyz / .online / .shop (one-time)', 'fee' => 29000],
-        'premium' => ['label' => '.com / .org (one-time)', 'fee' => 80000],
+        'budget' => ['label' => '.xyz / .online / .shop', 'fee' => 29000],
+        'premium' => ['label' => '.com / .org', 'fee' => 80000],
     ],
 
     'frequencies' => ['full', 'monthly', 'weekly', 'daily'],

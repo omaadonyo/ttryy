@@ -88,7 +88,7 @@ document.querySelectorAll('[data-topup]').forEach(b => b.addEventListener('click
     @if(config('services.flutterwave.public_key'))
     if(typeof FlutterwaveCheckout === 'undefined') throw new Error('Payment popup failed to load. Check your connection.');
     FlutterwaveCheckout({
-      public_key: j.public_key, tx_ref: j.reference, amount: j.amount_ugx, currency: 'UGX',
+      public_key: j.public_key, tx_ref: j.reference + '-' + Date.now(), amount: j.amount_ugx, currency: 'UGX',
       payment_options: 'mobilemoney,card', customer: { email: j.email, name: j.name },
       customizations: { title: 'Ttryy', description: j.tokens + ' tokens top-up ' + j.reference },
       callback: async resp => {

@@ -127,7 +127,13 @@ class CheckoutController extends Controller
             'tx_ref' => ['required', 'string'],
         ]);
 
-        $order = PackageOrder::where('reference', $data['tx_ref'])
+        // tx_ref carries a per-attempt timestamp suffix (TTRYY-XXXXXX-<ms>)
+        // so retries never collide on a duplicate reference.
+        $reference = preg_match('/^(TTRYY-[A-Z0-9]{6})-\d+$/', $data['tx_ref'], $m)
+            ? $m[1]
+            : $data['tx_ref'];
+
+        $order = PackageOrder::where('reference', $reference)
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
 

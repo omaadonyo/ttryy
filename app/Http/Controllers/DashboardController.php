@@ -37,12 +37,14 @@ class DashboardController extends Controller
     {
         $validated = $request->validate([
             'niche' => ['required', 'string', 'max:255'],
+            'source' => ['nullable', 'string', 'max:50'],
             'contacts' => ['required', 'array', 'max:50'],
             'contacts.*.name' => ['required', 'string', 'max:255'],
             'contacts.*.type' => ['nullable', 'string', 'max:255'],
             'contacts.*.district' => ['nullable', 'string', 'max:255'],
             'contacts.*.contact' => ['nullable', 'string', 'max:255'],
             'contacts.*.phone' => ['nullable', 'string', 'max:50'],
+            'contacts.*.email' => ['nullable', 'email', 'max:255'],
             'contacts.*.need' => ['nullable', 'string', 'max:255'],
         ]);
 
@@ -54,7 +56,9 @@ class DashboardController extends Controller
             'district' => $c['district'] ?? null,
             'contact' => $c['contact'] ?? null,
             'phone' => $c['phone'] ?? null,
+            'email' => $c['email'] ?? null,
             'need' => $c['need'] ?? null,
+            'source' => $validated['source'] ?? 'yellow-pages',
             'created_at' => now(),
             'updated_at' => now(),
         ])->all();

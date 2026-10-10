@@ -110,11 +110,11 @@ D_NICHES.forEach(n=>{const o=document.createElement('option');o.value=n.code;o.t
   wrap.appendChild(btn); wrap.appendChild(list);
   syncDsc();
 })();
-let dscBusy=false, dscTimers=[], dscNiche=null, dscTotal=0, dscRecords=[];
-function dscRun(){
+let dscBusy=false, dscCurrent=null, dscRecords=[], dscTotal=0;
+async function dscRun(){
   if(dscBusy) return; dscBusy=true;
-  dscTimers.forEach(clearTimeout); dscTimers=[];
-  dscNiche=D_NICHES.find(n=>n.code===dSel.value)||D_NICHES[0];
+  const nicheName=(dSel.options[dSel.selectedIndex]||{}).textContent||'General';
+  const keyword=document.getElementById('dsc-biz').value.trim()||nicheName;
   const rows=document.getElementById('dsc-rows'), status=document.getElementById('dsc-status'),
         bar=document.getElementById('dsc-bar'), label=document.getElementById('dsc-label'),
         pct=document.getElementById('dsc-pct'), locked=document.getElementById('dsc-locked'),
@@ -122,48 +122,68 @@ function dscRun(){
   rows.innerHTML=''; locked.classList.add('hidden'); status.classList.remove('hidden'); dscRecords=[];
   document.getElementById('dsc-save').classList.add('hidden');
   btn.disabled=true; btn.classList.add('opacity-50');
-  document.getElementById('dsc-file').textContent='prospects-'+dscNiche.code.toLowerCase()+'.pdf';
-  document.getElementById('dsc-count').textContent='scanning…';
-  [['Connecting to business directories…',25],['Scanning '+dscNiche.name.toLowerCase()+' sources…',55],['Masking contacts for preview…',80]].forEach(([t,p],i)=>{
-    dscTimers.push(setTimeout(()=>{label.textContent=t;bar.style.width=p+'%';pct.textContent=p+'%';},i*700));
+  document.getElementById('dsc-file').textContent='prospects-'+keyword.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,24)+'.pdf';
+  document.getElementById('dsc-count').textContent='searching…';
+  label.textContent='Checking the local index…'; bar.style.width='20%'; pct.textContent='20%';
+  try{
+    const token=document.querySelector('meta[name="csrf-token"]')?.content||'';
+    label.textContent='Searching Yellow Pages Uganda…'; bar.style.width='55%'; pct.textContent='55%';
+    const res=await fetch("{{ route('scraper.search') }}",{method:'POST',
+      headers:{'Accept':'application/json','Content-Type':'application/json','X-CSRF-TOKEN':token,'X-Requested-With':'XMLHttpRequest'},
+      body:JSON.stringify({niche:nicheName,keyword})});
+    if(!res.ok) throw new Error('search failed');
+    const j=await res.json();
+    dscCurrent={niche:nicheName,source:j.source||'yellow-pages',cached:!!j.cached,fetched_at:j.fetched_at||null};
+    dscRecords=j.records||[]; dscTotal=j.total_found||dscRecords.length;
+    bar.style.width='100%'; pct.textContent='100%';
+    renderDscResults();
+    label.textContent='Done — Yellow Pages Uganda'+(dscCurrent.cached?' (from local index)':' (fresh pull)')+'.';
+  }catch(e){
+    rows.innerHTML='<p class="px-4 py-8 text-center text-sm text-zinc-400">Directory unreachable right now — please try again in a minute.</p>';
+    label.textContent='Search failed.';
+    document.getElementById('dsc-count').textContent='0 records';
+  }
+  btn.disabled=false; btn.classList.remove('opacity-50'); dscBusy=false;
+}
+function renderDscResults(){
+  const rows=document.getElementById('dsc-rows'), locked=document.getElementById('dsc-locked');
+  rows.innerHTML='';
+  const shown=dscRecords.slice(0,10), rest=dscRecords.slice(10);
+  const rowHtml=(r,i)=>`<div class="min-w-0"><p class="text-[13px] font-bold truncate">${i+1}. ${r.name}</p>`
+    +`<p class="text-[11px] text-zinc-500 truncate">${r.category||''} &middot; ${r.district||''}${r.verified?' &middot; verified':''}</p></div>`
+    +`<div class="text-right shrink-0"><p class="text-[12px] font-semibold font-mono">${r.phone||'—'}</p><p class="text-[11px] text-zinc-500 truncate">${r.address||''}</p></div>`;
+  shown.forEach((r,i)=>{
+    const div=document.createElement('div');
+    div.className='flex items-center justify-between gap-3 px-4 py-2.5';
+    div.innerHTML=rowHtml(r,i);
+    rows.appendChild(div);
   });
-  for(let i=0;i<3;i++){
-    dscTimers.push(setTimeout(()=>{
-      const r=dRec(dscNiche); dscRecords.push(r);
+  document.getElementById('dsc-count').textContent=shown.length+' shown · '+dscTotal+' found';
+  if(shown.length) document.getElementById('dsc-save').classList.remove('hidden');
+  if(rest.length){
+    const blur=document.getElementById('dsc-blur'); blur.innerHTML='';
+    rest.forEach((r,i)=>{
       const div=document.createElement('div');
       div.className='flex items-center justify-between gap-3 px-4 py-2.5';
-      div.innerHTML=`<div class="min-w-0"><p class="text-[13px] font-bold truncate">${i+1}. ${r.name}</p>`
-        +`<p class="text-[11px] text-zinc-500 truncate">${r.type} &middot; ${r.district}</p></div>`
-        +`<div class="text-right shrink-0"><p class="text-[12px] font-semibold">${dmaskName(r.contact)}</p><p class="text-[11px] text-zinc-500 tracking-wider">${dmaskPhone(r.phone)}</p></div>`;
-      rows.appendChild(div);
-      document.getElementById('dsc-count').textContent=(i+1)+' of 3 free previews';
-    },500+i*450));
-  }
-  dscTimers.push(setTimeout(()=>{
-    dscTotal=dri(500,1000);
-    document.getElementById('dsc-count').textContent='3 free + '+dscTotal+' locked';
-    const blur=document.getElementById('dsc-blur'); blur.innerHTML='';
-    for(let i=0;i<10;i++){const w1=dri(30,70),w2=dri(45,90);
-      const row=document.createElement('div');row.className='space-y-1.5';
-      row.innerHTML=`<div class="h-2.5 rounded-full bg-zinc-200 dark:bg-white/15" style="width:${w1}%"></div><div class="h-2 rounded-full bg-zinc-100 dark:bg-white/10" style="width:${w2}%"></div>`;
-      blur.appendChild(row);}
-    document.getElementById('dsc-locked-text').textContent=dscTotal+' full contacts locked in this PDF';
+      div.innerHTML=rowHtml(r,10+i);
+      blur.appendChild(div);
+    });
+    document.getElementById('dsc-locked-text').textContent=rest.length+' more in this pull — unlock the full prospect PDF (UGX 10,000)';
     locked.classList.remove('hidden');
-    document.getElementById('dsc-save').classList.remove('hidden');
-    label.textContent='Done — 3 free previews ready.';bar.style.width='100%';pct.textContent='100%';
-    btn.disabled=false;btn.classList.remove('opacity-50');dscBusy=false;
-  },500+3*450+500));
+  }
 }
+
 document.getElementById('dsc-btn').addEventListener('click',dscRun);
 document.getElementById('dsc-save').addEventListener('click',async()=>{
   const btn=document.getElementById('dsc-save');
-  if(!dscRecords.length||!dscNiche) return;
+  if(!dscRecords.length||!dscCurrent) return;
   btn.disabled=true; btn.textContent='Saving…';
   try{
     const token=document.querySelector('meta[name="csrf-token"]')?.content||'';
+    const contacts=dscRecords.map(r=>({name:r.name,type:r.category||null,district:r.district||null,contact:null,phone:r.phone||null,need:null}));
     const res=await fetch("{{ route('scraper.save') }}",{method:'POST',
       headers:{'Accept':'application/json','Content-Type':'application/json','X-CSRF-TOKEN':token,'X-Requested-With':'XMLHttpRequest'},
-      body:JSON.stringify({niche:dscNiche.name,contacts:dscRecords})});
+      body:JSON.stringify({niche:dscCurrent.niche,source:'yellow-pages',contacts})});
     if(!res.ok) throw new Error('save failed');
     const j=await res.json();
     btn.textContent='Saved '+j.saved+' ✓';
@@ -171,7 +191,7 @@ document.getElementById('dsc-save').addEventListener('click',async()=>{
   }catch(e){ btn.disabled=false; btn.textContent='Save contacts'; alert('Could not save. Please try again.'); }
 });
 document.getElementById('dsc-unlock').addEventListener('click',()=>{
-  const msg='Hi Ttryy! I want to unlock the full prospect list (UGX 10,000) for '+(dscNiche?dscNiche.name:'my niche')+(dscTotal?' — sampled '+dscTotal+' locked contacts.':'');
+  const msg='Hi Ttryy! I want to unlock the full prospect list (UGX 10,000) for '+(dscCurrent?dscCurrent.niche:'my niche')+(dscTotal?' — '+dscTotal+' records found.':'');
   window.open('https://wa.me/256700000000?text='+encodeURIComponent(msg),'_blank');
 });
 </script>

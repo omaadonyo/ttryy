@@ -133,7 +133,7 @@
   <div class="absolute inset-0 sqgrid pointer-events-none" aria-hidden="true"></div>
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-12 lg:pt-20 lg:pb-16 grid lg:grid-cols-2 gap-12 items-center">
     <div class="reveal visible">
-      <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Website, prospects and opportunities, in one package</p>
+      <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Websites from UGX 800/day · plus your potential customers</p>
         <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.08] tracking-tight mt-4 text-zinc-950 dark:text-white">
         Get Your Website for UGX 800/Day.<br>
         We Find Customers. <span class="text-[#9e005d]">You Close Them.</span>
@@ -449,7 +449,7 @@
     <div class="max-w-2xl reveal">
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">How we can help &middot; Pricing</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Choose Your Growth Package</h2>
-      <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Every package includes a professional website, custom CMS, SEO and a niche-specific business development resource.</p>
+      <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Every package pairs a professional website — from <strong class="text-zinc-950 dark:text-white">UGX 800/day</strong> — with the potential customers your business needs to close deals.</p>
       <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pay in full, or spread it — daily, weekly, or monthly. Run your website for as low as <strong class="text-zinc-950 dark:text-white">UGX 800/day</strong>.</p>
     </div>
     <div class="mt-8 reveal flex flex-col items-center text-center">
@@ -646,7 +646,7 @@
       <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-xl shadow-[#9e005d]/30 text-center">Get My Website</a>
       <a href="https://wa.me/256700000000?text=Hi%20Ttryy!%20I%20want%20to%20talk%20about%20growing%20my%20business." target="_blank" class="border border-white/25 hover:bg-white/10 font-bold px-8 py-3 rounded-full transition">Talk to Ttryy</a>
     </div>
-    <p class="reveal mt-5 text-sm text-zinc-500">Starting from <strong class="text-white">UGX 250,000</strong></p>
+    <p class="reveal mt-5 text-sm text-zinc-500">Websites from <strong class="text-white">UGX 800/day</strong> · customers included</p>
   </div>
 </section>
 

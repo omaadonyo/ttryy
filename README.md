@@ -69,14 +69,18 @@ recomputed server-side (`CheckoutController::quote()`), stored as
 `package_orders` (`pending` status), and confirmed with an order reference
 plus a WhatsApp follow-up link. Every order can download a branded **PDF
 invoice**. All account pages live under `/dashboard`
-in the app sidebar layout: overview, `packages`, `checkout`, a
-**prospect scraper** (masked 3-record preview, full contacts locked behind
-the UGX 10,000 unlock), **saved contacts** (save scrapes, manage, export
-CSV), and a **marketing tool** (personalized WhatsApp outreach composer
-with `{name}`, `{business}`, `{need}` placeholders). Paid orders also track
-subscription **expiry, days left, and progress** on the dashboard and My
-packages, plus **payment history** and per-order **payment progress** (paid
-vs left to complete).
+in the app sidebar layout: overview, `packages`, `checkout`, a **real
+prospect scraper** (live Yellow Pages Uganda extraction with a persistent
+deduplicated local index — DB first, polite live fetch; masked previews
+plus the UGX 10,000 unlock), **saved contacts** (save scrapes, manage,
+export CSV), and a tabbed **marketing suite**: WhatsApp outreach (AI sales
+writer + template library + per-contact composer), **email campaigns**
+(compose, send, sent/delivered/read tracking with open-pixel analytics and
+charts), **templates** (built-in closers + your own), and **WhatsApp growth
+communities** (token-gated join links plus suggest-a-group inbox). Paid
+orders also track subscription **expiry, days left, and progress** on the
+dashboard and My packages, plus **payment history** and per-order **payment
+progress** (paid vs left to complete).
 
 **Admin.** `/admin` (restricted by the `admin` middleware to users with
 `is_admin`) covers an overview (orders, collected vs outstanding revenue,

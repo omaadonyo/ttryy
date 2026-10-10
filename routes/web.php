@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
 
+Route::get('t/{token}', [MarketingController::class, 'trackOpen'])->name('tracking.open');
+
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
     Route::get('orders', [AdminController::class, 'orders'])->name('orders');
@@ -38,6 +40,10 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::post('marketing/generate', [MarketingController::class, 'generate'])->name('marketing.generate');
     Route::post('marketing/templates', [MarketingController::class, 'storeTemplate'])->name('marketing.templates.store');
     Route::delete('marketing/templates/{template}', [MarketingController::class, 'destroyTemplate'])->name('marketing.templates.destroy');
+    Route::post('marketing/campaigns', [MarketingController::class, 'sendCampaign'])->name('marketing.campaigns.send');
+    Route::get('marketing/campaigns/{campaign}', [MarketingController::class, 'showCampaign'])->name('marketing.campaigns.show');
+    Route::post('marketing/groups/suggest', [MarketingController::class, 'suggestGroup'])->name('marketing.groups.suggest');
+    Route::post('scraper/search', [MarketingController::class, 'scraperSearch'])->name('scraper.search');
     Route::post('groups/{group}/unlock', [MarketingController::class, 'unlockGroup'])->name('groups.unlock');
     Route::get('wallet', [WalletController::class, 'index'])->name('wallet.index');
     Route::post('wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');
