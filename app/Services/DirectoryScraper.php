@@ -40,7 +40,7 @@ class DirectoryScraper
      *
      * @return array{records: array, total_found: int, source: string, cached: bool, fetched_at: ?string}
      */
-    public static function search(string $niche, string $keyword): array
+    public static function search(string $niche, string $keyword, int $maxTerms = 2): array
     {
         $keyword = trim($keyword) === '' ? $niche : trim($keyword);
 
@@ -61,7 +61,7 @@ class DirectoryScraper
             ];
         }
 
-        $fresh = self::scrapeLive($niche, $keyword);
+        $fresh = self::scrapeLive($niche, $keyword, $maxTerms);
 
         if ($fresh !== []) {
             return [
@@ -83,12 +83,74 @@ class DirectoryScraper
     }
 
     /**
+     * Fetch a directory URL politely. Returns HTML or null on any failure.
+     */
+    public static function fetchUrl(string $url): ?string
+    {
+        try {
+            return Http::withHeaders(['User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) TtryyBot/1.0'])
+                ->timeout(30)
+                ->get($url)
+                ->throw()
+                ->body();
+        } catch (\Throwable $e) {
+            Log::warning('Directory scrape fetch failed', ['url' => $url, 'error' => $e->getMessage()]);
+
+            return null;
+        }
+    }
+
+    /**
+     * Discover business-category slugs (slug => name) from any
+     * directory HTML page.
+     *
+     * @return array<string, string>
+     */
+    public static function discoverCategorySlugs(string $html): array
+    {
+        $slugs = [];
+
+        if (preg_match_all('#/business-category/([a-z0-9-]+)#i', $html, $m)) {
+            foreach ($m[1] as $slug) {
+                $slugs[strtolower($slug)] = ucwords(str_replace('-', ' ', strtolower($slug)));
+            }
+        }
+
+        return $slugs;
+    }
+
+    /**
+     * Scrape one business-category page into the index.
+     *
+     * @return array<int, array>
+     */
+    public static function scrapeCategory(string $slug, ?string $niche = null): array
+    {
+        $url = self::BASE_URL.'/business-category/'.urlencode($slug);
+        $html = self::fetchUrl($url);
+
+        if ($html === null) {
+            return [];
+        }
+
+        $records = [];
+
+        foreach (self::parseListings($html, $niche ?? $slug, $url) as $row) {
+            $records[] = self::persist($row);
+        }
+
+        usleep(800000); // stay polite between requests
+
+        return $records;
+    }
+
+    /**
      * Fetch + parse Yellow Pages search results across several niche
      * terms, persisting every record into the local index (deduplicated).
      *
      * @return array<int, array>
      */
-    public static function scrapeLive(string $niche, string $keyword): array
+    public static function scrapeLive(string $niche, string $keyword, int $maxTerms = 3): array
     {
         $terms = array_unique(array_filter(array_merge(
             [$keyword],
@@ -97,17 +159,11 @@ class DirectoryScraper
 
         $records = [];
 
-        foreach (array_slice($terms, 0, 3) as $term) {
+        foreach (array_slice($terms, 0, max(1, $maxTerms)) as $term) {
             $url = self::BASE_URL.'/search-results/'.urlencode(strtolower($term));
+            $html = self::fetchUrl($url);
 
-            try {
-                $html = Http::withHeaders(['User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) TtryyBot/1.0'])
-                    ->timeout(30)
-                    ->get($url)
-                    ->throw()
-                    ->body();
-            } catch (\Throwable $e) {
-                Log::warning('Directory scrape fetch failed', ['url' => $url, 'error' => $e->getMessage()]);
+            if ($html === null) {
                 continue;
             }
 

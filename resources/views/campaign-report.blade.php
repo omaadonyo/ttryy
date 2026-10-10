@@ -5,7 +5,7 @@
                 <flux:heading size="xl">{{ $campaign->subject }}</flux:heading>
                 <flux:text class="mt-1">Sent {{ $campaign->created_at->format('d M Y H:i') }} · {{ $campaign->total }} recipients</flux:text>
             </div>
-            <flux:button :href="route('marketing.index')" variant="ghost" wire:navigate>Back to marketing</flux:button>
+            <flux:button :href="route('marketing.index')" variant="ghost">Back to marketing</flux:button>
         </div>
 
         <div class="grid auto-rows-min gap-4 md:grid-cols-4">
@@ -79,3 +79,4 @@
         </div>
     </div>
 </x-layouts::app>
+

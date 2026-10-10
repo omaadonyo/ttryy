@@ -42,14 +42,26 @@ class DashboardController extends Controller
             $query->where('niche', $request->string('niche'));
         }
 
+        if ($request->filled('category')) {
+            $query->where('category', $request->string('category'));
+        }
+
         if ($request->boolean('verified')) {
             $query->where('verified', true);
         }
 
+        $categories = \App\Models\ScrapedProspect::selectRaw('category, COUNT(*) as c')
+            ->whereNotNull('category')
+            ->groupBy('category')
+            ->orderBy('category')
+            ->get()
+            ->groupBy(fn ($r) => strtoupper(mb_substr((string) $r->category, 0, 1)));
+
         return view('prospects', [
             'prospects' => $query->paginate(20)->withQueryString(),
             'niches' => \App\Models\ScrapedProspect::select('niche')->distinct()->orderBy('niche')->pluck('niche'),
-            'filters' => $request->only(['q', 'niche', 'verified']),
+            'categories' => $categories,
+            'filters' => $request->only(['q', 'niche', 'category', 'verified']),
         ]);
     }
 

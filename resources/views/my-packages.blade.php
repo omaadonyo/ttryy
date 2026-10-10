@@ -14,7 +14,7 @@
                         <option value="paid">Paid</option>
                     </select>
                 </div>
-                <flux:button :href="route('orders.new')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" wire:navigate>New order</flux:button>
+                <flux:button :href="route('orders.new')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" >New order</flux:button>
             </div>
         </div>
 
@@ -121,3 +121,4 @@
 })();
 </script>
 </x-layouts::app>
+

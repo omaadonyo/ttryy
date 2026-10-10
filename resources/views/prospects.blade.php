@@ -22,6 +22,35 @@
         </form>
 
         <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
+            <flux:heading>Browse by category</flux:heading>
+            <flux:text class="mt-1 text-sm">A–Z of every business category in the index. Pick one to filter the catalogue.</flux:text>
+            @if($categories->isEmpty())
+            <p class="text-sm text-zinc-500 mt-3">Categories appear here once the index has data — run the scraper or the bulk catalogue command.</p>
+            @else
+            <div class="mt-3 flex flex-wrap gap-1.5" id="az-letters">
+                @foreach($categories->keys() as $letter)
+                <a href="#az-{{ $letter }}" class="w-8 h-8 grid place-items-center rounded-lg text-xs font-bold bg-zinc-100 dark:bg-white/10 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 transition">{{ $letter }}</a>
+                @endforeach
+            </div>
+            <div class="mt-4 space-y-5">
+                @foreach($categories as $letter => $cats)
+                <div id="az-{{ $letter }}">
+                    <p class="font-display font-extrabold text-xl text-zinc-300 dark:text-zinc-600">{{ $letter }}</p>
+                    <div class="mt-2 flex flex-wrap gap-2">
+                        @foreach($cats as $cat)
+                        <a href="{{ route('prospects.index', ['category' => $cat->category]) }}" class="inline-flex items-center gap-1.5 text-[13px] bg-zinc-100 dark:bg-white/10 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 rounded-full px-3.5 py-1.5 transition {{ ($filters['category'] ?? '') === $cat->category ? '!bg-[#9e005d] !text-white' : '' }}">{{ $cat->category }} <span class="opacity-60">{{ $cat->c }}</span></a>
+                        @endforeach
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            @if(!empty($filters['category']))
+            <a href="{{ route('prospects.index') }}" class="inline-block mt-4 text-xs font-bold text-[#9e005d] hover:underline">Clear category filter ✕</a>
+            @endif
+            @endif
+        </div>
+
+        <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
             @if($prospects->isEmpty())
                 <x-empty-state icon="search" title="No prospects indexed yet" message="Run the prospect scraper first — everything found lands here permanently." :actionUrl="route('scraper.index')" actionLabel="Open scraper" />
             @else

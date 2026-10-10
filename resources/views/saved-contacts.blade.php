@@ -7,7 +7,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <flux:button :href="route('contacts.export')" variant="ghost">Export CSV</flux:button>
-                <flux:button :href="route('marketing.index')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" wire:navigate>Market to them</flux:button>
+                <flux:button :href="route('marketing.index')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" >Market to them</flux:button>
             </div>
         </div>
 
@@ -59,3 +59,4 @@
         </div>
     </div>
 </x-layouts::app>
+

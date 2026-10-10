@@ -5,7 +5,7 @@
                 <flux:heading size="xl">Welcome back, {{ auth()->user()->name }}</flux:heading>
                 <flux:text class="mt-1">Your websites, prospect lists and payments — all in one place.</flux:text>
             </div>
-            <flux:button :href="route('orders.new')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" wire:navigate>New order</flux:button>
+            <flux:button :href="route('orders.new')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" >New order</flux:button>
         </div>
 
         <div class="grid auto-rows-min gap-4 md:grid-cols-3">
@@ -77,7 +77,7 @@
         <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
             <div class="flex items-center justify-between gap-3">
                 <flux:heading>Recent orders</flux:heading>
-                <flux:button :href="route('packages.index')" variant="ghost" size="sm" wire:navigate>View all</flux:button>
+                <flux:button :href="route('packages.index')" variant="ghost" size="sm">View all</flux:button>
             </div>
             @if($recentOrders->isEmpty())
                 <x-empty-state icon="orders" title="No orders yet" message="Choose a package to get your website and prospect list started." :actionUrl="route('orders.new')" actionLabel="Choose a package" />
@@ -118,3 +118,5 @@
         </div>
     </div>
 </x-layouts::app>
+
+

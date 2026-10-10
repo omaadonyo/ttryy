@@ -23,6 +23,52 @@ Artisan::command('app:make-admin {email}', function (string $email) {
     return 0;
 })->purpose('Grant administrator access to a registered user');
 
+Artisan::command('app:scrape-catalogue {--limit=5000}', function () {
+    $limit = max(1, (int) $this->option('limit'));
+    $service = App\Services\DirectoryScraper::class;
+
+    // Phase 1: seed searches discover real category slugs.
+    $slugs = [];
+    $seeds = [];
+    foreach ($service::NICHE_TERMS as $terms) {
+        foreach ($terms as $term) {
+            $seeds[] = $term;
+        }
+    }
+    $seeds = array_values(array_unique($seeds));
+
+    $this->info('Phase 1: discovering categories from '.count($seeds).' seed searches…');
+    foreach ($seeds as $term) {
+        $html = $service::fetchUrl('https://www.yellowpages.co.ug/search-results/'.urlencode($term));
+        if ($html) {
+            foreach ($service::discoverCategorySlugs($html) as $slug => $name) {
+                $slugs[$slug] = $name;
+            }
+        }
+        if (count($slugs) >= 150) {
+            break;
+        }
+    }
+    $this->info('Found '.count($slugs).' categories.');
+
+    // Phase 2: scrape each category page into the index.
+    $this->info('Phase 2: scraping categories (limit '.$limit.')…');
+    $bar = $this->output->createProgressBar(min($limit, max(1, count($slugs) * 10)));
+    $bar->start();
+    $total = App\Models\ScrapedProspect::count();
+    foreach ($slugs as $slug => $name) {
+        if (App\Models\ScrapedProspect::count() >= $limit) {
+            break;
+        }
+        $before = App\Models\ScrapedProspect::count();
+        $service::scrapeCategory($slug, $name);
+        $bar->advance(App\Models\ScrapedProspect::count() - $before);
+    }
+    $bar->finish();
+    $this->newLine(2);
+    $this->info('Done. Index holds '.App\Models\ScrapedProspect::count().' prospects ('.$total.' before this run).');
+})->purpose('Bulk-scrape directory categories into the prospect index');
+
 Artisan::command('app:test-mail {email}', function (string $email) {
     try {
         Mail::raw('Ttryy mail test — if you read this, sending works.', function ($message) use ($email) {

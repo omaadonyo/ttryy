@@ -11,6 +11,7 @@ use App\Services\DirectoryScraper;
 use App\Services\SalesCopyService;
 use App\Services\Wallet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -144,10 +145,19 @@ class MarketingController extends Controller
             'keyword' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $result = DirectoryScraper::search(
-            $validated['niche'],
-            $validated['keyword'] ?? $validated['niche']
-        );
+        set_time_limit(120);
+
+        try {
+            $result = DirectoryScraper::search(
+                $validated['niche'],
+                $validated['keyword'] ?? $validated['niche'],
+                2
+            );
+        } catch (\Throwable $e) {
+            Log::warning('Directory search failed', ['error' => $e->getMessage()]);
+
+            return response()->json(['message' => 'Directory search failed. Please try again in a minute.'], 422);
+        }
 
         return response()->json($result);
     }

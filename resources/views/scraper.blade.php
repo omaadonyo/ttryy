@@ -33,7 +33,7 @@
                     <p class="text-xs text-zinc-500 max-w-xs">Names are visible above — phone numbers and contacts unlock with the full list.</p>
                     <div class="flex flex-col sm:flex-row gap-2 mt-1">
                         <flux:button id="dsc-unlock" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]">Unlock full list · UGX 10,000</flux:button>
-                        <flux:button :href="route('checkout')" variant="ghost" wire:navigate>Get the full package</flux:button>
+                        <flux:button :href="route('checkout')" variant="ghost">Get the full package</flux:button>
                     </div>
                 </div>
             </div>
@@ -196,3 +196,4 @@ document.getElementById('dsc-unlock').addEventListener('click',()=>{
 });
 </script>
 </x-layouts::app>
+

@@ -78,7 +78,9 @@ outreach (AI sales writer + template library + per-contact composer),
 **email campaigns** (compose, send, sent/delivered/read tracking with
 open-pixel analytics and charts), **templates** (built-in closers + your
 own), and searchable, filterable **WhatsApp growth communities**
-(token-gated join links plus suggest-a-group inbox). Paid
+(token-gated join links plus suggest-a-group inbox). Bulk-fill the prospect
+index (up to 5,000 businesses) any time with
+`php artisan app:scrape-catalogue --limit=5000`. Paid
 orders also track subscription **expiry, days left, and progress** on the
 dashboard and My packages, plus **payment history** and per-order **payment
 progress** (paid vs left to complete).

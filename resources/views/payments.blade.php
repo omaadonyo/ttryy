@@ -5,7 +5,7 @@
                 <flux:heading size="xl">Payment history</flux:heading>
                 <flux:text class="mt-1">Every payment toward your websites, in one place.</flux:text>
             </div>
-            <flux:button :href="route('orders.new')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" wire:navigate>New order</flux:button>
+            <flux:button :href="route('orders.new')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" >New order</flux:button>
         </div>
 
         <div class="grid auto-rows-min gap-4 md:grid-cols-2">
@@ -61,3 +61,4 @@
         </div>
     </div>
 </x-layouts::app>
+

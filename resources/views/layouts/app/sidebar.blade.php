@@ -22,48 +22,48 @@
                     </flux:sidebar.item>
                 </flux:sidebar.group>
                 <flux:sidebar.group :heading="__('Business')" class="grid">
-                    <flux:sidebar.item icon="plus" :href="route('orders.new')" :current="request()->routeIs('orders.new') || request()->routeIs('checkout*')" wire:navigate>
+                    <flux:sidebar.item icon="plus" :href="route('orders.new')" :current="request()->routeIs('orders.new') || request()->routeIs('checkout*')">
                         {{ __('New order') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="shopping-bag" :href="route('packages.index')" :current="request()->routeIs('packages.*')" wire:navigate>
+                    <flux:sidebar.item icon="shopping-bag" :href="route('packages.index')" :current="request()->routeIs('packages.*')">
                         {{ __('My packages') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="banknotes" :href="route('payments.index')" :current="request()->routeIs('payments.*')" wire:navigate>
+                    <flux:sidebar.item icon="banknotes" :href="route('payments.index')" :current="request()->routeIs('payments.*')">
                         {{ __('Payments') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="wallet" :href="route('wallet.index')" :current="request()->routeIs('wallet.*')" wire:navigate>
+                    <flux:sidebar.item icon="wallet" :href="route('wallet.index')" :current="request()->routeIs('wallet.*')">
                         {{ __('Wallet') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
                 <flux:sidebar.group :heading="__('Growth')" class="grid">
-                    <flux:sidebar.item icon="magnifying-glass" :href="route('scraper.index')" :current="request()->routeIs('scraper.*')" wire:navigate>
+                    <flux:sidebar.item icon="magnifying-glass" :href="route('scraper.index')" :current="request()->routeIs('scraper.*')">
                         {{ __('Prospect scraper') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="building-office-2" :href="route('prospects.index')" :current="request()->routeIs('prospects.*')" wire:navigate>
+                    <flux:sidebar.item icon="building-office-2" :href="route('prospects.index')" :current="request()->routeIs('prospects.*')">
                         {{ __('Prospects') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="bookmark" :href="route('contacts.index')" :current="request()->routeIs('contacts.*')" wire:navigate>
+                    <flux:sidebar.item icon="bookmark" :href="route('contacts.index')" :current="request()->routeIs('contacts.*')">
                         {{ __('Saved contacts') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="megaphone" :href="route('marketing.index')" :current="request()->routeIs('marketing.*')" wire:navigate>
+                    <flux:sidebar.item icon="megaphone" :href="route('marketing.index')" :current="request()->routeIs('marketing.*')">
                         {{ __('Marketing tool') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
                 @if(auth()->user()?->is_admin)
                 <flux:sidebar.group :heading="__('Administration')" class="grid">
-                    <flux:sidebar.item icon="chart-bar" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>
+                    <flux:sidebar.item icon="chart-bar" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')">
                         {{ __('Overview') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="shopping-bag" :href="route('admin.orders')" :current="request()->routeIs('admin.orders*')" wire:navigate>
+                    <flux:sidebar.item icon="shopping-bag" :href="route('admin.orders')" :current="request()->routeIs('admin.orders*')">
                         {{ __('Orders') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="banknotes" :href="route('admin.payments')" :current="request()->routeIs('admin.payments')" wire:navigate>
+                    <flux:sidebar.item icon="banknotes" :href="route('admin.payments')" :current="request()->routeIs('admin.payments')">
                         {{ __('Payments') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users*')" wire:navigate>
+                    <flux:sidebar.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users*')">
                         {{ __('Users') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="squares-2x2" :href="route('admin.packages')" :current="request()->routeIs('admin.packages')" wire:navigate>
+                    <flux:sidebar.item icon="squares-2x2" :href="route('admin.packages')" :current="request()->routeIs('admin.packages')">
                         {{ __('Packages') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>

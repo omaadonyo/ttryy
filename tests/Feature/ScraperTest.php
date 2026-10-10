@@ -204,3 +204,30 @@ test('group suggestions validate input and accept valid ones', function () {
         'description' => 'Buy and sell group.',
     ])->assertOk();
 });
+
+test('bulk catalogue command discovers categories and indexes businesses', function () {
+    $search = sampleListingHtml();
+    $category = str_replace(
+        ['Nile Builders Limited', 'Pearl Estates Ltd'],
+        ['Category Builders One', 'Category Builders Two'],
+        $search
+    );
+
+    Http::fake([
+        'https://www.yellowpages.co.ug/search-results/*' => Http::response($search, 200),
+        'https://www.yellowpages.co.ug/business-category/*' => Http::response($category, 200),
+    ]);
+
+    $this->artisan('app:scrape-catalogue', ['--limit' => 50])->assertOk();
+
+    // Both category pages returned the same two businesses, so the
+    // hash dedupe correctly keeps a single copy of each.
+    expect(App\Models\ScrapedProspect::count())->toBe(2)
+        ->and(App\Models\ScrapedProspect::where('name', 'Category Builders One')->exists())->toBeTrue();
+});
+
+test('scraper search requires a niche', function () {
+    $this->actingAs(App\Models\User::factory()->create())
+        ->postJson(route('scraper.search'), ['keyword' => 'x'])
+        ->assertUnprocessable();
+});
