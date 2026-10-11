@@ -10,6 +10,7 @@
 
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
 
     --color-zinc-50: #fafafa;
     --color-zinc-100: #f5f5f5;
@@ -22,6 +23,18 @@
     --color-zinc-800: #262626;
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
+
+    --color-brand-50: #fbf0f6;
+    --color-brand-100: #f6dce9;
+    --color-brand-200: #eeb4d1;
+    --color-brand-300: #e085ae;
+    --color-brand-400: #c94f8b;
+    --color-brand-500: #ad1f6e;
+    --color-brand-600: #9e005d;
+    --color-brand-700: #7e0049;
+    --color-brand-800: #5f0336;
+    --color-brand-900: #430526;
+    --color-brand-950: #2a0318;
 
     --color-accent: var(--color-neutral-800);
     --color-accent-content: var(--color-neutral-800);
@@ -64,3 +77,73 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
+/* ============ Ttryy dashboard design system ============ */
+@layer components {
+    .card {
+        @apply rounded-2xl border border-zinc-200/90 bg-white shadow-[0_1px_2px_rgba(16,16,20,.05)] dark:border-white/10 dark:bg-zinc-900 dark:shadow-none;
+    }
+    .card-pad { @apply p-5 sm:p-6; }
+    .card-hover { @apply transition hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-16px_rgba(16,16,20,.25)] dark:hover:shadow-none dark:hover:border-white/20; }
+
+    .page-title { @apply font-display text-[26px] leading-tight font-extrabold tracking-tight text-zinc-950 dark:text-white; }
+    .page-sub { @apply mt-1 text-sm text-zinc-500 dark:text-zinc-400; }
+    .section-title { @apply font-display text-[17px] font-bold tracking-tight text-zinc-950 dark:text-white; }
+    .eyebrow { @apply text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-400 dark:text-zinc-500; }
+
+    .btn { @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold whitespace-nowrap transition select-none disabled:cursor-default disabled:opacity-60; }
+    .btn-brand { @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-600 px-5 py-2.5 text-sm font-bold whitespace-nowrap text-white shadow-[0_10px_24px_-10px_rgba(158,0,93,.7)] transition select-none hover:bg-brand-700 active:scale-[.98] disabled:cursor-default disabled:opacity-60; }
+    .btn-dark { @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-bold whitespace-nowrap text-white transition select-none hover:bg-zinc-800 active:scale-[.98] disabled:cursor-default disabled:opacity-60 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200; }
+    .btn-ghost { @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-zinc-300 px-5 py-2.5 text-sm font-bold whitespace-nowrap text-zinc-700 transition select-none hover:border-zinc-950 hover:text-zinc-950 active:scale-[.98] disabled:cursor-default disabled:opacity-60 dark:border-white/20 dark:text-zinc-200 dark:hover:border-white dark:hover:text-white; }
+    .btn-danger { @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-red-200 bg-red-50 px-5 py-2.5 text-sm font-bold whitespace-nowrap text-red-700 transition select-none hover:bg-red-100 active:scale-[.98] disabled:cursor-default disabled:opacity-60 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300 dark:hover:bg-red-500/20; }
+    .btn-sm { @apply px-4 py-1.5 text-[13px]; }
+
+    .field { @apply w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20 dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-zinc-500; }
+    select.field { @apply pr-9; }
+    .lbl { @apply mb-1.5 block text-[13px] font-semibold text-zinc-700 dark:text-zinc-300; }
+
+    .pill { @apply inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold whitespace-nowrap; }
+    .pill-brand { @apply inline-flex shrink-0 items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-bold whitespace-nowrap text-brand-700 dark:bg-brand-500/15 dark:text-brand-200; }
+    .pill-green { @apply inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-500/12 px-2.5 py-1 text-[11px] font-bold whitespace-nowrap text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300; }
+    .pill-amber { @apply inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-500/15 px-2.5 py-1 text-[11px] font-bold whitespace-nowrap text-amber-700 dark:bg-amber-500/15 dark:text-amber-300; }
+    .pill-red { @apply inline-flex shrink-0 items-center gap-1 rounded-full bg-red-500/10 px-2.5 py-1 text-[11px] font-bold whitespace-nowrap text-red-700 dark:bg-red-500/15 dark:text-red-300; }
+    .pill-zinc { @apply inline-flex shrink-0 items-center gap-1 rounded-full bg-zinc-500/10 px-2.5 py-1 text-[11px] font-bold whitespace-nowrap text-zinc-600 dark:bg-white/10 dark:text-zinc-300; }
+
+    .tbl-wrap { @apply overflow-x-auto rounded-2xl border border-zinc-200/90 bg-white shadow-[0_1px_2px_rgba(16,16,20,.05)] dark:border-white/10 dark:bg-zinc-900 dark:shadow-none; }
+    .tbl { @apply w-full min-w-[640px] text-sm; }
+    .tbl thead th { @apply border-b border-zinc-200 px-4 py-3 text-left text-[11px] font-bold tracking-wider whitespace-nowrap text-zinc-400 uppercase dark:border-white/10; }
+    .tbl tbody td { @apply px-4 py-3 align-middle; }
+    .tbl tbody tr { @apply border-b border-zinc-100 transition last:border-0 hover:bg-zinc-50/80 dark:border-white/5 dark:hover:bg-white/5; }
+
+    .seg { @apply inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-full border border-zinc-200/90 bg-zinc-100 p-1 dark:border-white/10 dark:bg-white/5; }
+    .stat-num { @apply font-display text-[28px] leading-none font-extrabold tracking-tight text-zinc-950 dark:text-white; }
+
+    .nav-link { @apply flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-zinc-600 transition hover:bg-zinc-950/5 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-white; }
+    .nav-link-active { @apply bg-brand-50 text-brand-700 hover:bg-brand-50 hover:text-brand-700 dark:bg-brand-500/15 dark:text-brand-100 dark:hover:bg-brand-500/15 dark:hover:text-brand-100; }
+}
+
+/* Dashboard shell layout (pure CSS so collapse is bulletproof) */
+#dash-sidebar {
+    position: fixed; inset: 0 auto 0 0; width: 16.75rem; z-index: 40;
+    transform: translateX(-105%);
+    transition: width .3s cubic-bezier(.22,.61,.36,1), transform .3s cubic-bezier(.22,.61,.36,1);
+}
+#dash-sidebar.open { transform: none; }
+#dash-main { min-height: 100dvh; transition: padding .3s cubic-bezier(.22,.61,.36,1); }
+#nav-overlay { transition: opacity .25s ease; }
+@media (min-width: 1024px) {
+    #dash-sidebar { transform: none; }
+    #dash-main { padding-left: 16.75rem; }
+    html[data-nav="mini"] #dash-sidebar { width: 5.25rem; }
+    html[data-nav="mini"] #dash-main { padding-left: 5.25rem; }
+    html[data-nav="mini"] .nav-label,
+    html[data-nav="mini"] .nav-section,
+    html[data-nav="mini"] .nav-caret,
+    html[data-nav="mini"] #nav-brand-text,
+    html[data-nav="mini"] #nav-foot-note { display: none; }
+    html[data-nav="mini"] .nav-link { justify-content: center; padding-left: 0; padding-right: 0; }
+    html[data-nav="mini"] #nav-collapse svg { transform: rotate(180deg); }
+}
+#nav-collapse svg { transition: transform .3s ease; }
+.dash-scroll::-webkit-scrollbar { width: 6px; }
+.dash-scroll::-webkit-scrollbar-thumb { background: rgb(161 161 170 / .4); border-radius: 999px; }

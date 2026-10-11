@@ -1,68 +1,66 @@
 <x-layouts::app :title="__('Wallet')">
     @include('partials.toast')
-    <div class="flex h-full w-full flex-1 flex-col gap-4">
-        <div class="flex items-end justify-between gap-3 flex-wrap">
-            <div>
-                <flux:heading size="xl">Wallet</flux:heading>
-                <flux:text class="mt-1">Top up tokens and spend them on AI messages, group access and more.</flux:text>
-            </div>
-            <div class="inline-flex items-center gap-2 rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-sm font-bold px-5 py-2.5">
-                <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
-                <span id="wallet-balance">{{ number_format($balance) }}</span>&nbsp;tokens
-            </div>
-        </div>
+    <div class="flex w-full flex-col gap-5">
+        <x-page-head title="Wallet" sub="Top up tokens and spend them on AI messages, group access and more.">
+            <x-slot:actions>
+                <div class="inline-flex items-center gap-2 rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-bold text-white dark:bg-white dark:text-zinc-950">
+                    <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+                    <span id="wallet-balance">{{ number_format($balance) }}</span>&nbsp;tokens
+                </div>
+            </x-slot:actions>
+        </x-page-head>
 
-        <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
-            <flux:heading>Top up with Mobile Money or card</flux:heading>
-            <flux:text class="mt-1 text-sm">Pay securely with Flutterwave. Tokens land instantly after verification.</flux:text>
-            <div class="mt-4 grid sm:grid-cols-3 gap-3" id="pack-grid">
+        <div class="card card-pad">
+            <h2 class="section-title">Top up with Mobile Money or card</h2>
+            <p class="page-sub">Pay securely with Flutterwave. Tokens land instantly after verification.</p>
+            <div class="mt-4 grid gap-3 sm:grid-cols-3" id="pack-grid">
                 @foreach($packs as $key => $pack)
-                <div class="rounded-xl bg-zinc-50 dark:bg-white/5 p-5 text-center">
-                    <p class="font-display font-bold">{{ $pack['label'] }}</p>
-                    <p class="font-display font-extrabold text-2xl mt-1">UGX {{ number_format($pack['price']) }}</p>
-                    <button data-topup="{{ $key }}" data-tokens="{{ $pack['tokens'] }}" data-price="{{ $pack['price'] }}" class="mt-3 w-full bg-[#9e005d] hover:bg-[#7e0049] text-white text-sm font-bold px-4 py-2.5 rounded-full transition">Buy {{ number_format($pack['tokens']) }} tokens</button>
+                <div class="rounded-2xl border border-zinc-200/80 bg-zinc-50 p-5 text-center dark:border-white/10 dark:bg-white/5">
+                    <p class="font-display text-sm font-bold tracking-wide text-zinc-500 uppercase dark:text-zinc-400">{{ $pack['label'] }}</p>
+                    <p class="stat-num mt-1">UGX {{ number_format($pack['price']) }}</p>
+                    <button data-topup="{{ $key }}" data-tokens="{{ $pack['tokens'] }}" data-price="{{ $pack['price'] }}" class="btn-brand btn-sm mt-3 w-full">Buy {{ number_format($pack['tokens']) }} tokens</button>
                 </div>
                 @endforeach
             </div>
-            <p id="topup-status" class="hidden mt-3 text-sm font-semibold"></p>
+            <p id="topup-status" class="mt-3 hidden text-sm font-semibold"></p>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-4">
-            <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
-                <flux:heading>What tokens buy</flux:heading>
+        <div class="grid gap-4 md:grid-cols-2">
+            <div class="card card-pad">
+                <h2 class="section-title">What tokens buy</h2>
                 <ul class="mt-3 space-y-2 text-sm">
-                    <li class="flex justify-between gap-2"><span>AI sales message</span><strong>{{ $costs['ai_message'] }} tokens</strong></li>
-                    <li class="flex justify-between gap-2"><span>WhatsApp group access</span><strong>{{ $costs['group_unlock'] }} tokens each</strong></li>
+                    <li class="flex justify-between gap-2"><span class="text-zinc-500">AI sales message</span><strong>{{ $costs['ai_message'] }} tokens</strong></li>
+                    <li class="flex justify-between gap-2"><span class="text-zinc-500">WhatsApp group access</span><strong>{{ $costs['group_unlock'] }} tokens each</strong></li>
                 </ul>
             </div>
-            <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
-                <flux:heading>Recent top-ups</flux:heading>
+            <div class="card card-pad">
+                <h2 class="section-title">Recent top-ups</h2>
                 @if($topups->isEmpty())
-                <p class="text-sm text-zinc-500 mt-2">No top-ups yet.</p>
+                <p class="mt-2 text-sm text-zinc-500">No top-ups yet.</p>
                 @else
                 <ul class="mt-2 space-y-2 text-sm">
                     @foreach($topups as $t)
-                    <li class="flex justify-between gap-2"><span class="font-mono text-xs">{{ $t->reference }} · {{ $t->pack }}</span><span class="font-bold">+{{ number_format($t->tokens) }} ({{ $t->status }})</span></li>
+                    <li class="flex justify-between gap-2"><span class="font-mono text-xs text-zinc-500">{{ $t->reference }} · {{ $t->pack }}</span><span class="font-bold">+{{ number_format($t->tokens) }} ({{ $t->status }})</span></li>
                     @endforeach
                 </ul>
                 @endif
             </div>
         </div>
 
-        <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
-            <flux:heading>Token history</flux:heading>
+        <div class="card card-pad">
+            <h2 class="section-title">Token history</h2>
             @if($ledger->isEmpty())
-            <p class="text-sm text-zinc-500 mt-2">No token activity yet — top up or earn your welcome bonus.</p>
+            <p class="mt-2 text-sm text-zinc-500">No token activity yet — top up or earn your welcome bonus.</p>
             @else
-            <div class="mt-2 overflow-x-auto">
-                <table class="w-full text-sm min-w-[480px]">
+            <div class="tbl-wrap mt-3 rounded-none! border-0! shadow-none!">
+                <table class="tbl" style="min-width:480px">
                     <tbody class="divide-y divide-neutral-200 dark:divide-white/10">
                         @foreach($ledger as $tx)
                         <tr>
-                            <td class="py-2 pr-4 text-xs text-zinc-500">{{ $tx->created_at->format('d M Y H:i') }}</td>
-                            <td class="py-2 pr-4">{{ $tx->description }}</td>
-                            <td class="py-2 pr-4 font-bold {{ $tx->type === 'credit' ? 'text-emerald-600 dark:text-emerald-400' : '' }}">{{ $tx->type === 'credit' ? '+' : '−' }}{{ number_format($tx->amount) }}</td>
-                            <td class="py-2 text-right text-xs text-zinc-500">bal {{ number_format($tx->balance_after) }}</td>
+                            <td class="text-xs whitespace-nowrap text-zinc-500">{{ $tx->created_at->format('d M Y H:i') }}</td>
+                            <td>{{ $tx->description }}</td>
+                            <td class="font-bold {{ $tx->type === 'credit' ? 'text-emerald-600 dark:text-emerald-400' : '' }}">{{ $tx->type === 'credit' ? '+' : '−' }}{{ number_format($tx->amount) }}</td>
+                            <td class="text-right text-xs whitespace-nowrap text-zinc-500">bal {{ number_format($tx->balance_after) }}</td>
                         </tr>
                         @endforeach
                     </tbody>

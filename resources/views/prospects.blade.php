@@ -1,84 +1,81 @@
 <x-layouts::app :title="__('Prospect catalogue')">
     @include('partials.custom-select')
     @include('partials.toast')
-    <div class="flex h-full w-full flex-1 flex-col gap-4">
-        <div>
-            <flux:heading size="xl">Prospect catalogue</flux:heading>
-            <flux:text class="mt-1">Every business indexed from web directories. Filter, then save what you want to market to.</flux:text>
-        </div>
+    <div class="flex w-full flex-col gap-5">
+        <x-page-head title="Prospect catalogue" sub="Every business indexed from web directories. Filter, then save what you want to market to." />
 
-        <form method="GET" action="{{ route('prospects.index') }}" class="rounded-xl bg-white dark:bg-white/[.04] p-4 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)] grid sm:grid-cols-[1fr_200px_160px_auto] gap-3">
-            <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" placeholder="Search name, category, phone…" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
-            <select name="niche" id="flt-niche" class="rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
+        <form method="GET" action="{{ route('prospects.index') }}" class="card card-pad grid gap-3 sm:grid-cols-[1fr_200px_160px_auto]">
+            <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" placeholder="Search name, category, phone…" class="field">
+            <select name="niche" id="flt-niche" class="field">
                 <option value="">All niches</option>
                 @foreach($niches as $n)
                 <option value="{{ $n }}" {{ ($filters['niche'] ?? '') === $n ? 'selected' : '' }}>{{ $n }}</option>
                 @endforeach
             </select>
-            <label class="inline-flex items-center gap-2 text-sm px-1 cursor-pointer">
-                <input type="checkbox" name="verified" value="1" {{ !empty($filters['verified']) ? 'checked' : '' }} class="size-4 accent-[#9e005d]">
+            <label class="inline-flex cursor-pointer items-center gap-2 px-1 text-sm">
+                <input type="checkbox" name="verified" value="1" {{ !empty($filters['verified']) ? 'checked' : '' }} class="size-4 accent-brand-600">
                 Verified only
             </label>
-            <flux:button type="submit" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]">Filter</flux:button>
+            <button type="submit" class="btn-brand">Filter</button>
         </form>
 
-        <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
-            <flux:heading>Browse by category</flux:heading>
-            <flux:text class="mt-1 text-sm">A–Z of every business category in the index. Pick one to filter the catalogue.</flux:text>
+        <div class="card card-pad">
+            <h2 class="section-title">Browse by category</h2>
+            <p class="page-sub">A–Z of every business category in the index. Pick one to filter the catalogue.</p>
             @if($categories->isEmpty())
             <p class="text-sm text-zinc-500 mt-3">Categories appear here once the index has data — run the scraper or the bulk catalogue command.</p>
             @else
             <div class="mt-3 flex flex-wrap gap-1.5" id="az-letters">
                 @foreach($categories->keys() as $letter)
-                <a href="#az-{{ $letter }}" class="w-8 h-8 grid place-items-center rounded-lg text-xs font-bold bg-zinc-100 dark:bg-white/10 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 transition">{{ $letter }}</a>
+                <a href="#az-{{ $letter }}" class="grid h-8 w-8 place-items-center rounded-lg bg-zinc-100 text-xs font-bold transition hover:bg-zinc-950 hover:text-white dark:bg-white/10 dark:hover:bg-white dark:hover:text-zinc-950">{{ $letter }}</a>
                 @endforeach
             </div>
             <div class="mt-4 space-y-5">
                 @foreach($categories as $letter => $cats)
                 <div id="az-{{ $letter }}">
-                    <p class="font-display font-extrabold text-xl text-zinc-300 dark:text-zinc-600">{{ $letter }}</p>
+                    <p class="font-display text-xl font-extrabold text-zinc-300 dark:text-zinc-600">{{ $letter }}</p>
                     <div class="mt-2 flex flex-wrap gap-2">
                         @foreach($cats as $cat)
-                        <a href="{{ route('prospects.index', ['category' => $cat->category]) }}" class="inline-flex items-center gap-1.5 text-[13px] bg-zinc-100 dark:bg-white/10 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 rounded-full px-3.5 py-1.5 transition {{ ($filters['category'] ?? '') === $cat->category ? '!bg-[#9e005d] !text-white' : '' }}">{{ $cat->category }} <span class="opacity-60">{{ $cat->c }}</span></a>
+                        <a href="{{ route('prospects.index', ['category' => $cat->category]) }}" class="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-3.5 py-1.5 text-[13px] transition hover:bg-zinc-950 hover:text-white dark:bg-white/10 dark:hover:bg-white dark:hover:text-zinc-950 {{ ($filters['category'] ?? '') === $cat->category ? 'bg-brand-600! text-white! hover:bg-brand-700! dark:bg-brand-600! dark:text-white!' : '' }}">{{ $cat->category }} <span class="opacity-60">{{ $cat->c }}</span></a>
                         @endforeach
                     </div>
                 </div>
                 @endforeach
             </div>
             @if(!empty($filters['category']))
-            <a href="{{ route('prospects.index') }}" class="inline-block mt-4 text-xs font-bold text-[#9e005d] hover:underline">Clear category filter ✕</a>
+            <a href="{{ route('prospects.index') }}" class="mt-4 inline-block text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Clear category filter ✕</a>
             @endif
             @endif
         </div>
 
-        <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
+        <div class="card card-pad">
             @if($prospects->isEmpty())
                 <x-empty-state icon="search" title="No prospects indexed yet" message="Run the prospect scraper first — everything found lands here permanently." :actionUrl="route('scraper.index')" actionLabel="Open scraper" />
             @else
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm min-w-[680px]">
+            <div class="tbl-wrap rounded-none! border-0! shadow-none!">
+                <table class="tbl">
                     <thead>
-                        <tr class="text-left text-zinc-500">
-                            <th class="py-2 pr-4 font-medium">Business</th>
-                            <th class="py-2 pr-4 font-medium">Category</th>
-                            <th class="py-2 pr-4 font-medium">Phone</th>
-                            <th class="py-2 pr-4 font-medium">District</th>
-                            <th class="py-2 pr-4 font-medium">Niche</th>
-                            <th class="py-2 font-medium text-right">Actions</th>
+                        <tr>
+                            <th>Business</th>
+                            <th>Category</th>
+                            <th>Phone</th>
+                            <th>District</th>
+                            <th>Niche</th>
+                            <th class="text-right!">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-neutral-200 dark:divide-white/10">
+                    <tbody>
                         @foreach($prospects as $p)
                         <tr>
-                            <td class="py-2.5 pr-4 font-semibold">{{ $p->name }}
-                                @if($p->verified)<span class="ml-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase">· verified</span>@endif
+                            <td class="font-semibold">{{ $p->name }}
+                                @if($p->verified)<span class="ml-1 text-[10px] font-bold text-emerald-700 uppercase dark:text-emerald-400">· verified</span>@endif
                             </td>
-                            <td class="py-2.5 pr-4">{{ $p->category ?? '—' }}</td>
-                            <td class="py-2.5 pr-4 font-mono text-xs">{{ $p->phone ?? '—' }}</td>
-                            <td class="py-2.5 pr-4">{{ $p->district ?? '—' }}</td>
-                            <td class="py-2.5 pr-4 text-xs text-zinc-500">{{ $p->niche }}</td>
-                            <td class="py-2.5 text-right whitespace-nowrap">
-                                <button data-save-row="{{ $p->id }}" class="text-xs font-bold text-[#9e005d] hover:underline">Save</button>
+                            <td>{{ $p->category ?? '—' }}</td>
+                            <td class="font-mono text-xs">{{ $p->phone ?? '—' }}</td>
+                            <td>{{ $p->district ?? '—' }}</td>
+                            <td class="text-xs text-zinc-500">{{ $p->niche }}</td>
+                            <td class="text-right whitespace-nowrap">
+                                <button data-save-row="{{ $p->id }}" class="text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Save</button>
                             </td>
                         </tr>
                         @endforeach

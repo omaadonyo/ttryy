@@ -1,12 +1,8 @@
 <x-layouts::app :title="__('My packages')">
     @include('partials.toast')
-    <div class="flex h-full w-full flex-1 flex-col gap-4">
-        <div class="flex items-end justify-between gap-3 flex-wrap">
-            <div>
-                <flux:heading size="xl">My packages</flux:heading>
-                <flux:text class="mt-1">Orders for <strong>{{ auth()->user()->name }}</strong>. Your website stays running while your plan is active.</flux:text>
-            </div>
-            <div class="flex items-center gap-2">
+    <div class="flex w-full flex-col gap-5">
+        <x-page-head :title="'My packages'" :sub="'Orders for '.auth()->user()->name.'. Your website stays running while your plan is active.'">
+            <x-slot:actions>
                 <div class="cs-wrap relative" id="status-filter">
                     <select id="statusSel" class="sr-only" aria-label="Filter by status">
                         <option value="">All statuses</option>
@@ -15,37 +11,37 @@
                         <option value="paid">Paid</option>
                     </select>
                 </div>
-                <flux:button :href="route('orders.new')" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]" >New order</flux:button>
-            </div>
-        </div>
+                <a href="{{ route('orders.new') }}" class="btn-brand">New order</a>
+            </x-slot:actions>
+        </x-page-head>
 
         @if($orders->isEmpty())
-        <div class="rounded-xl bg-white dark:bg-white/[.04] p-6 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
+        <div class="card card-pad">
             <x-empty-state icon="orders" title="No orders yet" message="Choose a package to get your website and prospect list started." :actionUrl="route('orders.new')" actionLabel="Choose a package" />
         </div>
         @else
-        <div class="grid sm:grid-cols-2 gap-4" id="order-grid">
+        <div class="grid gap-4 sm:grid-cols-2" id="order-grid">
             @foreach($orders as $order)
-            <div class="order-card rounded-xl bg-white dark:bg-white/[.04] p-6 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]" data-status="{{ $order->status }}">
+            <div class="order-card card card-pad" data-status="{{ $order->status }}">
                 <div class="flex items-center justify-between gap-2">
-                    <p class="font-mono text-xs text-zinc-500">{{ $order->reference }}</p>
+                    <p class="font-mono text-xs text-zinc-400">{{ $order->reference }}</p>
                     @if($order->status === 'paid')
-                    <flux:badge size="sm" color="emerald">{{ $order->status }}</flux:badge>
+                    <span class="pill-green">{{ $order->status }}</span>
                     @elseif($order->status === 'submitted')
-                    <flux:badge size="sm" color="sky">{{ $order->status }}</flux:badge>
+                    <span class="pill-amber">{{ $order->status }}</span>
                     @else
-                    <flux:badge size="sm" color="zinc">{{ $order->status }}</flux:badge>
+                    <span class="pill-zinc">{{ $order->status }}</span>
                     @endif
                 </div>
-                <p class="text-2xl font-extrabold mt-2">{{ $order->package }}</p>
-                <p class="text-sm text-zinc-500 mt-1">{{ ucfirst($order->billing_frequency) }} · {{ $order->duration_months }} months · {{ $order->periods }} payments</p>
-                <p class="text-sm text-zinc-500">Domain: {{ $order->domain }} (UGX {{ number_format($order->domain_fee) }})</p>
-                <p class="text-sm text-zinc-500">{{ $order->business_name }}@if($order->niche) · {{ $order->niche }}@endif</p>
-                <p class="text-xl font-extrabold mt-3">UGX {{ number_format($order->total_amount) }}</p>
-                <p class="text-xs text-zinc-500 mt-1">Due today was UGX {{ number_format($order->due_today) }} · Ordered {{ $order->created_at->format('d M Y') }}</p>
-                <div class="mt-3 rounded-lg bg-zinc-50 dark:bg-white/5 p-3">
+                <p class="font-display mt-2 text-2xl font-extrabold tracking-tight">{{ $order->package }}</p>
+                <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{{ ucfirst($order->billing_frequency) }} · {{ $order->duration_months }} months · {{ $order->periods }} payments</p>
+                <p class="text-sm text-zinc-500 dark:text-zinc-400">Domain: {{ $order->domain }} (UGX {{ number_format($order->domain_fee) }})</p>
+                <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ $order->business_name }}@if($order->niche) · {{ $order->niche }}@endif</p>
+                <p class="font-display mt-3 text-xl font-extrabold">UGX {{ number_format($order->total_amount) }}</p>
+                <p class="mt-1 text-xs text-zinc-500">Due today was UGX {{ number_format($order->due_today) }} · Ordered {{ $order->created_at->format('d M Y') }}</p>
+                <div class="mt-3 rounded-xl border border-zinc-200/80 bg-zinc-50 p-3 dark:border-white/10 dark:bg-white/5">
                     <div class="flex justify-between text-xs"><span class="text-zinc-500">Paid UGX {{ number_format($order->paid_amount) }}</span><span class="font-bold">UGX {{ number_format($order->amountRemaining()) }} left</span></div>
-                    <div class="mt-1.5 h-1.5 rounded-full bg-zinc-200 dark:bg-white/10 overflow-hidden">
+                    <div class="mt-1.5 h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-white/10">
                         <div class="h-1.5 rounded-full bg-emerald-600" style="width:{{ $order->paymentProgressPercent() }}%"></div>
                     </div>
                     <p class="mt-1 text-[11px] text-zinc-500">{{ $order->paymentProgressPercent() }}% of the service paid for</p>
@@ -53,8 +49,8 @@
                 @if($order->credentials_handed_over)
                 <p class="mt-3 text-xs font-semibold text-emerald-700 dark:text-emerald-400">cPanel + credentials handed over{{ $order->handed_over_at ? ' · '.$order->handed_over_at->format('d M Y') : '' }} — the website is fully yours.</p>
                 @elseif($order->isActive())
-                <div class="mt-3 h-1.5 rounded-full bg-zinc-100 dark:bg-white/10 overflow-hidden">
-                    <div class="h-1.5 rounded-full bg-[#9e005d]" style="width:{{ $order->progressPercent() }}%"></div>
+                <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-zinc-100 dark:bg-white/10">
+                    <div class="h-1.5 rounded-full bg-brand-600" style="width:{{ $order->progressPercent() }}%"></div>
                 </div>
                 <p class="mt-1.5 text-xs text-zinc-500">{{ $order->daysLeft() }} days left · expires {{ $order->expiresAt()->format('d M Y') }}</p>
                 @elseif($order->isExpired())
@@ -62,11 +58,11 @@
                 @else
                 <p class="mt-3 text-xs text-zinc-500">Awaiting payment — subscription starts once paid.</p>
                 @endif
-                <a href="{{ route('orders.invoice', $order) }}" class="inline-block mt-3 text-sm font-bold text-[#9e005d] hover:underline">Download invoice PDF →</a>
+                <a href="{{ route('orders.invoice', $order) }}" class="mt-3 inline-block text-sm font-bold text-brand-700 hover:underline dark:text-brand-300">Download invoice PDF →</a>
             </div>
             @endforeach
         </div>
-        <p id="no-match" class="hidden text-sm text-zinc-500 py-6 text-center">No orders with this status.</p>
+        <p id="no-match" class="hidden py-6 text-center text-sm text-zinc-500">No orders with this status.</p>
         @endif
     </div>
 
@@ -78,7 +74,7 @@
   sel.classList.add('sr-only'); sel.tabIndex = -1;
   const btn = document.createElement('button');
   btn.type = 'button';
-  btn.className = 'flex items-center justify-between gap-2 rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2 text-sm font-semibold outline-none min-w-[150px]';
+  btn.className = 'flex items-center justify-between gap-2 rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2 text-sm font-semibold outline-none min-w-[150px]';
   btn.setAttribute('aria-expanded', 'false');
   btn.innerHTML = '<span class="cs-label truncate text-zinc-500">All statuses</span><svg class="w-4 h-4 shrink-0 text-zinc-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
   const list = document.createElement('div');

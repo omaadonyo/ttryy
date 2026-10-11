@@ -1,28 +1,25 @@
 <x-layouts::app :title="__('Prospect scraper')">
     @include('partials.toast')
-    <div class="flex h-full w-full flex-1 flex-col gap-4">
-        <div>
-            <flux:heading size="xl">Prospect scraper</flux:heading>
-            <flux:text class="mt-1">Pull a sample of potential customers in your niche. Full contact details unlock for <strong>UGX 10,000</strong>.</flux:text>
-        </div>
+    <div class="flex w-full flex-col gap-5">
+        <x-page-head title="Prospect scraper" sub="Pull a sample of potential customers in your niche. Full contact details unlock for UGX 10,000." />
 
-        <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
-            <div class="grid sm:grid-cols-[1fr_1fr_auto] gap-2">
-                <select id="dsc-niche" aria-label="Choose your niche" class="w-full rounded-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]"></select>
-                <input id="dsc-biz" type="text" placeholder="What does your business sell?" aria-label="What does your business sell" class="w-full rounded-[0.575rem] border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] placeholder:text-zinc-400">
-                <flux:button id="dsc-btn" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]">Scrape</flux:button>
+        <div class="card card-pad">
+            <div class="grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
+                <select id="dsc-niche" aria-label="Choose your niche" class="field w-full"></select>
+                <input id="dsc-biz" type="text" placeholder="What does your business sell?" aria-label="What does your business sell" class="field w-full">
+                <button id="dsc-btn" class="btn-brand">Scrape</button>
             </div>
             <div id="dsc-status" class="hidden mt-4">
                 <div class="flex justify-between text-xs font-semibold text-zinc-500"><span id="dsc-label">Starting…</span><span id="dsc-pct">0%</span></div>
-                <div class="mt-1.5 h-2 bg-zinc-100 dark:bg-white/10 rounded-full overflow-hidden"><div id="dsc-bar" class="h-2 bg-[#9e005d] rounded-full transition-all duration-300" style="width:0%"></div></div>
+                <div class="mt-1.5 h-2 overflow-hidden rounded-full bg-zinc-100 dark:bg-white/10"><div id="dsc-bar" class="h-2 rounded-full bg-brand-600 transition-all duration-300" style="width:0%"></div></div>
             </div>
         </div>
 
-        <div class="rounded-xl bg-white dark:bg-white/[.04] shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)] overflow-hidden">
-            <div class="flex items-center gap-2.5 bg-zinc-50 dark:bg-white/5 border-b border-neutral-200 dark:border-neutral-700 px-4 py-3">
+        <div class="card overflow-hidden">
+            <div class="flex items-center gap-2.5 border-b border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-white/10 dark:bg-white/5">
                 <span class="text-[13px] font-semibold" id="dsc-file">prospects.pdf</span>
                 <span id="dsc-count" class="ml-auto text-[11px] font-semibold text-zinc-500">0 records</span>
-                <button id="dsc-save" class="hidden ml-2 shrink-0 text-[11px] font-bold text-white bg-[#9e005d] hover:bg-[#7e0049] rounded-full px-3 py-1 transition">Save contacts</button>
+                <button id="dsc-save" class="btn-brand btn-sm ml-2 hidden shrink-0">Save contacts</button>
             </div>
             <div id="dsc-rows" class="divide-y divide-neutral-200 dark:divide-neutral-700">
                 <p class="px-4 py-8 text-center text-sm text-zinc-400">Choose your niche and hit <strong>Scrape</strong> for a partially-visible sample.</p>
@@ -32,9 +29,9 @@
                 <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-white/70 dark:bg-zinc-950/70 px-6 text-center">
                     <p id="dsc-locked-text" class="text-sm font-bold">600+ full contacts locked</p>
                     <p class="text-xs text-zinc-500 max-w-xs">Names are visible above — phone numbers and contacts unlock with the full list.</p>
-                    <div class="flex flex-col sm:flex-row gap-2 mt-1">
-                        <flux:button id="dsc-unlock" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]">Unlock full list · UGX 10,000</flux:button>
-                        <flux:button :href="route('checkout')" variant="ghost">Get the full package</flux:button>
+                    <div class="mt-1 flex flex-col gap-2 sm:flex-row">
+                        <button id="dsc-unlock" class="btn-brand btn-sm">Unlock full list · UGX 10,000</button>
+                        <a href="{{ route('checkout') }}" class="btn-ghost btn-sm">Get the full package</a>
                     </div>
                 </div>
             </div>
@@ -78,11 +75,11 @@ D_NICHES.forEach(n=>{const o=document.createElement('option');o.value=n.code;o.t
   dSel.classList.add('sr-only'); dSel.tabIndex=-1; dSel.setAttribute('aria-hidden','true');
   const btn=document.createElement('button');
   btn.type='button';
-  btn.className='cs-btn w-full flex items-center justify-between gap-2 rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none min-h-[46px]';
+  btn.className='cs-btn w-full flex items-center justify-between gap-2 rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none min-h-[46px]';
   btn.setAttribute('aria-expanded','false');
   btn.innerHTML='<span class="cs-label truncate">Choose your niche</span><svg class="w-4 h-4 shrink-0 text-zinc-400 transition-transform" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
   const list=document.createElement('div');
-  list.className='cs-list hidden absolute z-30 left-0 right-0 mt-2 rounded-xl border border-neutral-200 dark:border-white/15 bg-white dark:bg-[#141416] shadow-2xl p-1.5 max-h-60 overflow-y-auto';
+  list.className='cs-list hidden absolute z-30 left-0 right-0 mt-2 rounded-xl border border-zinc-200 dark:border-white/15 bg-white dark:bg-[#141416] shadow-2xl p-1.5 max-h-60 overflow-y-auto';
   list.setAttribute('role','listbox');
   function syncDsc(){
     const opt=dSel.options[dSel.selectedIndex];

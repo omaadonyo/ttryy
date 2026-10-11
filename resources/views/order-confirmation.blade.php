@@ -48,7 +48,7 @@
       <div class="w-20 h-20 mx-auto grid place-items-center rounded-full {{ $order->status === 'paid' ? 'bg-emerald-600' : 'bg-[#9e005d]' }} text-white shadow-2xl">
         <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
       </div>
-      <p class="mt-5 text-xs font-semibold tracking-wide uppercase {{ $order->status === 'paid' ? 'text-emerald-700 dark:text-emerald-400' : 'text-[#9e005d]' }}">
+      <p class="mt-5 text-xs font-semibold tracking-wide uppercase {{ $order->status === 'paid' ? 'text-emerald-700 dark:text-emerald-400' : 'text-brand-700 dark:text-brand-300' }}">
         {{ $order->status === 'paid' ? 'Payment confirmed' : 'Order received' }}
       </p>
       <h1 class="font-display font-extrabold text-3xl sm:text-4xl mt-2 text-zinc-950 dark:text-white">
@@ -66,7 +66,7 @@
       </button>
     </div>
 
-    <div class="mt-10 rounded-xl bg-white dark:bg-[#141416] shadow-[0_12px_32px_-12px_rgba(10,10,12,.28)] p-6 sm:p-8">
+    <div class="card card-pad mt-10">
       <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">What happens next</h2>
       <ol class="mt-4 space-y-4">
         <li class="flex gap-4">
@@ -84,7 +84,7 @@
       </ol>
     </div>
 
-    <div class="mt-6 rounded-xl bg-white dark:bg-[#141416] shadow-[0_12px_32px_-12px_rgba(10,10,12,.28)] p-6 sm:p-8">
+    <div class="card card-pad mt-6">
       <div class="flex items-center justify-between gap-3">
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">Your order</h2>
         <span class="text-[11px] font-bold px-3 py-1 rounded-full uppercase {{ $order->status === 'paid' ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400' : 'bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-zinc-300' }}">{{ $order->status }}</span>
@@ -105,9 +105,9 @@
         </div>
         <a href="{{ route('orders.invoice', $order) }}" class="shrink-0 text-xs font-bold px-4 py-2.5 rounded-full {{ $order->status === 'paid' ? 'bg-white/20 hover:bg-white/30 text-white' : 'bg-white/10 hover:bg-white/20 dark:bg-zinc-950/5 dark:hover:bg-zinc-950/10 text-white dark:text-zinc-950' }} transition">Download invoice</a>
       </div>
-      <a target="_blank" href="https://wa.me/256700000000?text={{ urlencode('Hi Ttryy! I just placed order '.$order->reference.' ('.$order->package.', '.ucfirst($order->billing_frequency).', due today UGX '.number_format($order->due_today).'). How do I pay?') }}" class="mt-4 block text-center bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Confirm on WhatsApp</a>
+      <a target="_blank" href="https://wa.me/256700000000?text={{ urlencode('Hi Ttryy! I just placed order '.$order->reference.' ('.$order->package.', '.ucfirst($order->billing_frequency).', due today UGX '.number_format($order->due_today).'). How do I pay?') }}" class="btn-brand mt-4 w-full">Confirm on WhatsApp</a>
       @if($order->status !== 'paid')
-      <div class="mt-4 rounded-xl bg-zinc-50 dark:bg-white/5 p-5 text-sm">
+      <div class="mt-4 rounded-2xl border border-zinc-200/80 bg-zinc-50 p-5 text-sm dark:border-white/10 dark:bg-white/5">
         <p class="font-bold text-zinc-950 dark:text-white">Pay with MTN Mobile Money</p>
         <p class="font-display font-extrabold text-3xl tracking-widest mt-2 text-zinc-950 dark:text-white">{{ config('services.momo.merchant_code') }}</p>
         <ol class="mt-2 space-y-1 text-[13px] text-zinc-600 dark:text-zinc-400 list-decimal ml-4">
@@ -118,9 +118,9 @@
         </ol>
       </div>
       @endif
-      <div class="mt-3 flex flex-col sm:flex-row gap-3">
-        <a href="{{ route('packages.index') }}" class="flex-1 text-center border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold py-3 rounded-full transition text-sm">View my packages</a>
-        <a href="{{ route('dashboard') }}" class="flex-1 text-center border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold py-3 rounded-full transition text-sm">Go to dashboard</a>
+      <div class="mt-3 flex flex-col gap-3 sm:flex-row">
+        <a href="{{ route('packages.index') }}" class="btn-ghost flex-1 text-sm">View my packages</a>
+        <a href="{{ route('dashboard') }}" class="btn-ghost flex-1 text-sm">Go to dashboard</a>
       </div>
     </div>
   </div>

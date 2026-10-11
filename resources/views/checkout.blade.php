@@ -36,7 +36,7 @@
   </div>
 
   @guest
-  <div id="checkout-auth" class="mt-5 rounded-xl bg-white dark:bg-[#141416] shadow-[0_12px_32px_-12px_rgba(10,10,12,.28)] p-5 sm:p-6">
+  <div id="checkout-auth" class="card card-pad mt-5">
     <h2 class="font-display font-bold text-xl text-zinc-950 dark:text-white">Create an account or log in</h2>
     <p class="mt-1 text-sm text-zinc-500">Your package choices below are saved automatically — nothing is lost when you sign in.</p>
     <div class="mt-4 inline-flex rounded-full bg-zinc-100 dark:bg-white/10 p-1" role="tablist" aria-label="Account">
@@ -53,11 +53,11 @@
       <div class="text-sm text-zinc-500 space-y-3">
         <p class="font-bold text-zinc-900 dark:text-white">Why an account?</p>
         <ul class="space-y-2">
-          <li class="flex gap-2"><span class="text-[#9e005d] font-bold">✓</span> Track your order and payment status</li>
-          <li class="flex gap-2"><span class="text-[#9e005d] font-bold">✓</span> Download invoices anytime</li>
-          <li class="flex gap-2"><span class="text-[#9e005d] font-bold">✓</span> Manage renewals to keep your site running</li>
+          <li class="flex gap-2"><span class="text-brand-600 font-bold">✓</span> Track your order and payment status</li>
+          <li class="flex gap-2"><span class="text-brand-600 font-bold">✓</span> Download invoices anytime</li>
+          <li class="flex gap-2"><span class="text-brand-600 font-bold">✓</span> Manage renewals to keep your site running</li>
         </ul>
-        <p id="auth-required-note" class="hidden font-semibold text-[#9e005d]">Please log in or create an account first — then your order goes through with everything you selected.</p>
+        <p id="auth-required-note" class="hidden font-semibold text-brand-700 dark:text-brand-300">Please log in or create an account first — then your order goes through with everything you selected.</p>
       </div>
     </div>
   </div>
@@ -80,7 +80,7 @@
       </button>
       @endforeach
     </div>
-    <div class="mt-3 h-1.5 rounded-full bg-zinc-200 dark:bg-white/10 overflow-hidden"><div id="wiz-bar" class="h-full rounded-full bg-[#9e005d] transition-all duration-300" style="width:20%"></div></div>
+    <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-white/10"><div id="wiz-bar" class="h-full rounded-full bg-brand-600 transition-all duration-300" style="width:20%"></div></div>
   </div>
 
   <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form" class="mt-6 grid lg:grid-cols-[1fr_320px] gap-5 items-start" data-guest="{{ auth()->check() ? '0' : '1' }}" data-wiz-start="{{ $errors->any() ? '3' : '1' }}">
@@ -109,7 +109,7 @@
           @endforeach
         </div>
       </section>
-      <div class="mt-6 flex justify-end"><button type="button" data-next class="bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 font-bold text-sm px-6 py-2.5 rounded-full hover:opacity-85 transition">Continue →</button></div>
+      <div class="mt-6 flex justify-end"><button type="button" data-next class="btn-dark">Continue →</button></div>
       </div>
       <div class="wiz-step hidden" data-step="2">
       <section>
@@ -133,20 +133,20 @@
           @endforeach
         </div>
       </section>
-      <div class="mt-6 flex justify-end"><button type="button" data-next class="bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 font-bold text-sm px-6 py-2.5 rounded-full hover:opacity-85 transition">Continue →</button></div>
+      <div class="mt-6 flex justify-end"><button type="button" data-next class="btn-dark">Continue →</button></div>
       </div>
       <div class="wiz-step hidden" data-step="3">
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">3. Your business details</h2>
         <div class="mt-3 grid sm:grid-cols-2 gap-4">
-          <div><label class="text-xs font-semibold">Business name *</label><input required id="f-business" name="business_name" value="{{ old('business_name') }}" placeholder="Savanna Build Ltd" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"></div>
-          <div><label class="text-xs font-semibold">Phone / WhatsApp *</label><input required id="f-phone" name="phone" value="{{ old('phone') }}" placeholder="+256 700 000000" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"></div>
-          <div><label class="text-xs font-semibold">Industry / niche</label><select id="f-niche" name="niche" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"><option value="">Select…</option>@foreach(config('packages.niches') as $n)<option {{ old('niche', $selectedNiche) === $n ? 'selected' : '' }}>{{ $n }}</option>@endforeach</select></div>
-          <div><label class="text-xs font-semibold">Notes (optional)</label><input id="f-notes" name="notes" value="{{ old('notes') }}" placeholder="Anything we should know" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white"></div>
+          <div><label class="text-xs font-semibold">Business name *</label><input required id="f-business" name="business_name" value="{{ old('business_name') }}" placeholder="Savanna Build Ltd" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"></div>
+          <div><label class="text-xs font-semibold">Phone / WhatsApp *</label><input required id="f-phone" name="phone" value="{{ old('phone') }}" placeholder="+256 700 000000" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"></div>
+          <div><label class="text-xs font-semibold">Industry / niche</label><select id="f-niche" name="niche" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"><option value="">Select…</option>@foreach(config('packages.niches') as $n)<option {{ old('niche', $selectedNiche) === $n ? 'selected' : '' }}>{{ $n }}</option>@endforeach</select></div>
+          <div><label class="text-xs font-semibold">Notes (optional)</label><input id="f-notes" name="notes" value="{{ old('notes') }}" placeholder="Anything we should know" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"></div>
         </div>
         <p id="wiz-err-3" class="hidden mt-3 text-sm font-semibold text-red-600 dark:text-red-400">Please add your business name and phone number to continue.</p>
       </section>
-      <div class="mt-6 flex justify-between"><button type="button" data-back class="border border-zinc-300 dark:border-white/20 font-bold text-sm px-6 py-2.5 rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 transition">← Back</button><button type="button" data-next class="bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 font-bold text-sm px-6 py-2.5 rounded-full hover:opacity-85 transition">Continue →</button></div>
+      <div class="mt-6 flex justify-between"><button type="button" data-back class="btn-ghost">← Back</button><button type="button" data-next class="btn-dark">Continue →</button></div>
       </div>
       <div class="wiz-step hidden" data-step="4">
 
@@ -168,19 +168,19 @@
           @endforeach
         </div>
       </section>
-      <div class="mt-6 flex justify-between"><button type="button" data-back class="border border-zinc-300 dark:border-white/20 font-bold text-sm px-6 py-2.5 rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 transition">← Back</button><button type="button" data-next class="bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 font-bold text-sm px-6 py-2.5 rounded-full hover:opacity-85 transition">Continue →</button></div>
+      <div class="mt-6 flex justify-between"><button type="button" data-back class="btn-ghost">← Back</button><button type="button" data-next class="btn-dark">Continue →</button></div>
       </div>
       <div class="wiz-step hidden" data-step="5">
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">5. How long you pay</h2>
         <p class="text-sm text-zinc-500 mt-1">Your website stays running while your plan is active. Full upfront payment covers 12 months.</p>
-        <select name="duration_months" id="duration" class="mt-3 w-full sm:w-72 bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white">
+        <select name="duration_months" id="duration" class="mt-3 w-full sm:w-72 bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white">
           @foreach($durations as $d)
           <option value="{{ $d }}" {{ $d === 12 ? 'selected' : '' }}>{{ $d }} months</option>
           @endforeach
         </select>
       </section>
-      <div class="mt-6 flex justify-start"><button type="button" data-back class="border border-zinc-300 dark:border-white/20 font-bold text-sm px-6 py-2.5 rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 transition">← Back</button></div>
+      <div class="mt-6 flex justify-start"><button type="button" data-back class="btn-ghost">← Back</button></div>
       </div>
 
     </div>
@@ -234,7 +234,7 @@
         </div>
       </div>
 
-      <button type="button" id="pay-now" class="mt-5 w-full bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full transition">Pay <span id="pay-now-amount">now</span></button>
+      <button type="button" id="pay-now" class="btn-brand mt-5 w-full py-3!">Pay <span id="pay-now-amount">now</span></button>
 
       <button type="button" id="momo-continue" class="hidden mt-5 w-full bg-white dark:bg-zinc-950 text-zinc-950 dark:text-white font-bold py-3 rounded-full transition">Continue →</button>
 
@@ -394,8 +394,8 @@ function paintWiz(scroll){
     const n = +d.dataset.goto, num = d.querySelector('.wiz-num');
     const isCur = n === W.step, isPast = n < W.step, seen = !!W.visited[n];
     const base = 'wiz-num w-8 h-8 grid place-items-center rounded-full text-xs font-extrabold border-2 ';
-    num.className = base + (isCur ? 'bg-[#9e005d] border-[#9e005d] text-white shadow-lg'
-      : isPast ? 'border-[#9e005d] text-[#9e005d]'
+    num.className = base + (isCur ? 'bg-brand-600 border-brand-600 text-white shadow-lg'
+      : isPast ? 'border-brand-600 text-brand-700 dark:text-brand-300'
       : seen ? 'border-zinc-400 dark:border-white/30 text-zinc-500 dark:text-zinc-300'
       : 'border-zinc-300 dark:border-white/15 text-zinc-400');
     d.classList.toggle('cursor-pointer', seen && !isCur);

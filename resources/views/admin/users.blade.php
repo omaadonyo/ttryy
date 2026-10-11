@@ -1,49 +1,46 @@
 <x-layouts::app :title="__('Manage users')">
     @include('partials.toast')
-    <div class="flex h-full w-full flex-1 flex-col gap-4">
-        <div>
-            <flux:heading size="xl">Users</flux:heading>
-            <flux:text class="mt-1">Customer accounts, order activity and administrator access.</flux:text>
-        </div>
+    <div class="flex w-full flex-col gap-5">
+        <x-page-head title="Users" sub="Customer accounts, order activity and administrator access." />
 
-        <form method="GET" action="{{ route('admin.users') }}" class="rounded-xl bg-white dark:bg-white/[.04] p-4 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)] flex flex-col sm:flex-row gap-3">
-            <input type="text" name="search" value="{{ $search }}" placeholder="Search name or email…" class="flex-1 rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[#9e005d]">
-            <flux:button type="submit" variant="primary" class="!bg-[#9e005d] hover:!bg-[#7e0049]">Search</flux:button>
+        <form method="GET" action="{{ route('admin.users') }}" class="card card-pad flex flex-col gap-3 sm:flex-row">
+            <input type="text" name="search" value="{{ $search }}" placeholder="Search name or email…" class="field flex-1">
+            <button type="submit" class="btn-brand">Search</button>
         </form>
 
-        <div class="rounded-xl bg-white dark:bg-white/[.04] p-5 shadow-[0_12px_32px_-12px_rgba(10,10,12,.18)] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,.7)]">
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm min-w-[680px]">
+        <div class="card card-pad">
+            <div class="tbl-wrap rounded-none! border-0! shadow-none!">
+                <table class="tbl">
                     <thead>
-                        <tr class="text-left text-zinc-500">
-                            <th class="py-2 pr-4 font-medium">User</th>
-                            <th class="py-2 pr-4 font-medium">Registered</th>
-                            <th class="py-2 pr-4 font-medium">Orders</th>
-                            <th class="py-2 pr-4 font-medium">Total spent</th>
-                            <th class="py-2 pr-4 font-medium">Role</th>
-                            <th class="py-2 font-medium text-right">Actions</th>
+                        <tr>
+                            <th>User</th>
+                            <th>Registered</th>
+                            <th>Orders</th>
+                            <th>Total spent</th>
+                            <th>Role</th>
+                            <th class="text-right!">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-neutral-200 dark:divide-white/10">
+                    <tbody>
                         @forelse($users as $user)
                         <tr>
-                            <td class="py-2.5 pr-4"><p class="font-semibold">{{ $user->name }}</p><p class="text-xs text-zinc-500">{{ $user->email }}</p></td>
-                            <td class="py-2.5 pr-4 text-xs text-zinc-500">{{ $user->created_at->format('d M Y') }}</td>
-                            <td class="py-2.5 pr-4 font-semibold">{{ $user->package_orders_count }}</td>
-                            <td class="py-2.5 pr-4 font-semibold">UGX {{ number_format($user->package_orders_sum_total_amount ?? 0) }}</td>
-                            <td class="py-2.5 pr-4">
+                            <td><p class="font-semibold">{{ $user->name }}</p><p class="text-xs text-zinc-500">{{ $user->email }}</p></td>
+                            <td class="text-xs whitespace-nowrap text-zinc-500">{{ $user->created_at->format('d M Y') }}</td>
+                            <td class="font-semibold">{{ $user->package_orders_count }}</td>
+                            <td class="font-semibold whitespace-nowrap">UGX {{ number_format($user->package_orders_sum_total_amount ?? 0) }}</td>
+                            <td>
                                 @if($user->is_admin)
-                                <flux:badge size="sm" color="emerald">admin</flux:badge>
+                                <span class="pill-green">admin</span>
                                 @else
-                                <flux:badge size="sm" color="zinc">customer</flux:badge>
+                                <span class="pill-zinc">customer</span>
                                 @endif
                             </td>
-                            <td class="py-2.5 text-right">
+                            <td class="text-right">
                                 @if($user->id !== auth()->id())
                                 <form method="POST" action="{{ route('admin.users.admin', $user) }}" class="inline">
                                     @csrf
                                     @method('PATCH')
-                                    <flux:button type="submit" size="sm" variant="ghost">{{ $user->is_admin ? 'Remove admin' : 'Make admin' }}</flux:button>
+                                    <button type="submit" class="btn-ghost btn-sm">{{ $user->is_admin ? 'Remove admin' : 'Make admin' }}</button>
                                 </form>
                                 @else
                                 <span class="text-xs text-zinc-400">you</span>

@@ -24,6 +24,6 @@
     <p class="text-sm text-zinc-500 mt-1 max-w-sm mx-auto">{{ $message }}</p>
     @endif
     @if($actionUrl)
-    <a href="{{ $actionUrl }}" class="inline-block mt-5 bg-[#9e005d] hover:bg-[#7e0049] text-white text-sm font-bold px-6 py-2.5 rounded-full transition">{{ $actionLabel ?? 'Get started' }}</a>
+    <a href="{{ $actionUrl }}" class="btn-brand mt-5 inline-flex">{{ $actionLabel ?? 'Get started' }}</a>
     @endif
 </div>
