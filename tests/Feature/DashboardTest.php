@@ -73,8 +73,7 @@ test('analytics page renders charts', function () {
         ->assertSee('id="an-tokens"', false);
 });
 
-test('notifications are tracked and can be opened', function () {
-    $user = User::factory()->create();
+test('notifications are tracked and can be opened', function () {    $user = User::factory()->create();
     $user->notify(new App\Notifications\SiteAlert('Hello', 'World', route('dashboard'), 'info'));
 
     expect($user->unreadNotifications()->count())->toBe(1);
@@ -90,4 +89,24 @@ test('notifications are tracked and can be opened', function () {
     $this->actingAs($user)->post(route('notifications.read-all'))->assertRedirect();
 
     expect($user->fresh()->unreadNotifications()->count())->toBe(0);
+});
+
+test('notification center lists with tabs and palette is present', function () {
+    $user = User::factory()->create();
+    $user->notify(new App\Notifications\SiteAlert('Center check', 'Body', null, 'order'));
+
+    $this->actingAs($user)->get(route('notifications.index'))
+        ->assertOk()
+        ->assertSee('Notification center', false)
+        ->assertSee('Center check', false);
+
+    $this->actingAs($user)->get(route('notifications.index', ['tab' => 'unread']))
+        ->assertOk()
+        ->assertSee('Center check', false);
+
+    $this->actingAs($user)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('id="palette-overlay"', false)
+        ->assertSee('View all notifications', false)
+        ->assertSee('Notifications', false);
 });

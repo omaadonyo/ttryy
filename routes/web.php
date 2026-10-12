@@ -27,6 +27,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('analytics', [DashboardController::class, 'analytics'])->name('analytics.index');
     Route::get('notifications/{id}/open', [DashboardController::class, 'openNotification'])->name('notifications.open');
     Route::post('notifications/read-all', [DashboardController::class, 'readAllNotifications'])->name('notifications.read-all');
+    Route::get('notifications', [DashboardController::class, 'notifications'])->name('notifications.index');
     Route::get('orders/new', [CheckoutController::class, 'index'])->name('orders.new');
     Route::get('payments', [DashboardController::class, 'payments'])->name('payments.index');
     Route::post('checkout', [CheckoutController::class, 'store'])->name('checkout.store');

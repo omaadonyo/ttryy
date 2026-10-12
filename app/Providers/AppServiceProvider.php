@@ -28,8 +28,17 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('layouts.app.sidebar', function ($view) {
             $user = auth()->user();
-            $view->with('navNotifications', $user ? $user->notifications()->latest()->take(8)->get() : collect());
-            $view->with('navUnreadCount', $user ? $user->unreadNotifications()->count() : 0);
+            if (! $user) {
+                $view->with('navNotifications', collect())->with('navUnreadCount', 0);
+
+                return;
+            }
+            $unread = $user->unreadNotifications()->latest()->take(6)->get();
+            $read = $unread->count() < 8
+                ? $user->readNotifications()->latest()->take(8 - $unread->count())->get()
+                : collect();
+            $view->with('navNotifications', $unread->concat($read));
+            $view->with('navUnreadCount', $user->unreadNotifications()->count());
         });
     }
 

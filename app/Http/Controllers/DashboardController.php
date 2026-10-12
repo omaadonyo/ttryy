@@ -135,6 +135,22 @@ class DashboardController extends Controller
         return $url ? redirect()->away($url) : back();
     }
 
+    public function notifications(Request $request)
+    {
+        $tab = (string) $request->string('tab', 'all');
+        $query = $request->user()->notifications()->latest();
+        if ($tab === 'unread') {
+            $query->whereNull('read_at');
+        }
+
+        return view('notifications', [
+            'items' => $query->paginate(15)->withQueryString(),
+            'tab' => $tab,
+            'unreadCount' => $request->user()->unreadNotifications()->count(),
+            'totalCount' => $request->user()->notifications()->count(),
+        ]);
+    }
+
     public function readAllNotifications(Request $request)
     {
         $request->user()->unreadNotifications->markAsRead();
