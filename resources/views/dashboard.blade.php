@@ -9,15 +9,19 @@
     @endphp
     <div class="flex w-full flex-col gap-5">
         <div class="card card-pad border-transparent! bg-zinc-950 text-white dark:border-transparent! dark:bg-white dark:text-zinc-950">
-            <div class="flex items-end justify-between gap-4 flex-wrap">
+            <div class="flex items-center justify-between gap-4 flex-wrap">
                 <div class="min-w-0">
-                    <p class="text-xs font-bold tracking-[0.14em] uppercase opacity-60">{{ now()->format('l, d M Y') }}</p>
-                    <h1 class="font-display mt-1 text-[26px] leading-tight font-extrabold tracking-tight">{{ $greeting }}, {{ auth()->user()->name }}</h1>
-                    <p class="mt-1 text-sm opacity-70">{{ $pendingOrders }} order{{ $pendingOrders === 1 ? '' : 's' }} awaiting payment · {{ number_format($tokenBalance) }} tokens · {{ $mktStats['rate'] }}% email open rate</p>
+                    <p class="text-[11px] font-bold tracking-[0.14em] uppercase opacity-50">{{ now()->format('l, d M Y') }} · Overview</p>
+                    <h1 class="font-display mt-1.5 text-2xl leading-tight font-extrabold tracking-tight">{{ $greeting }}, {{ auth()->user()->name }}</h1>
+                    <div class="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[13px]">
+                        <span class="inline-flex items-center gap-1.5"><strong class="font-extrabold">{{ $pendingOrders }}</strong><span class="opacity-55">awaiting payment</span></span>
+                        <span class="inline-flex items-center gap-1.5"><strong class="font-extrabold">{{ number_format($tokenBalance) }}</strong><span class="opacity-55">tokens</span></span>
+                        <span class="inline-flex items-center gap-1.5"><strong class="font-extrabold">{{ $mktStats['rate'] }}%</strong><span class="opacity-55">email open rate</span></span>
+                    </div>
                 </div>
-                <div class="flex items-center gap-2 flex-wrap">
+                <div class="flex shrink-0 items-center gap-2 flex-wrap">
                     <a href="{{ route('marketing.index') }}" class="rounded-lg bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/20 dark:bg-zinc-950/5 dark:text-zinc-900 dark:hover:bg-zinc-950/10">Send campaign</a>
-                    <a href="{{ route('orders.new') }}" class="btn-brand">New order</a>
+                    <a href="{{ route('orders.new') }}" class="btn-brand btn-sm">New order</a>
                 </div>
             </div>
         </div>

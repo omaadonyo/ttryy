@@ -87,7 +87,7 @@
 
         <div id="dash-main">
             <header class="sticky top-0 z-20 border-b border-zinc-200/90 bg-[#f4f4f5]/85 backdrop-blur-md dark:border-white/10 dark:bg-zinc-950/85">
-                <div class="mx-auto flex h-[68px] w-full max-w-6xl items-center gap-2 px-4 sm:px-6">
+                <div class="mx-auto w-[92%] md:w-[80%] flex h-[68px] items-center gap-2">
                     <button onclick="openNav()" class="grid size-10 shrink-0 place-items-center rounded-full hover:bg-zinc-950/5 lg:hidden dark:hover:bg-white/10" aria-label="Open menu">
                         <flux:icon name="bars-3" class="size-5" />
                     </button>
@@ -186,7 +186,7 @@
                 </div>
             </header>
 
-            <div class="mx-auto w-full max-w-6xl px-4 pt-6 pb-16 sm:px-6">
+            <div class="mx-auto w-[92%] md:w-[80%] pt-6 pb-16">
                 {{ $slot }}
             </div>
         </div>
