@@ -29,7 +29,7 @@ test('dashboard shows kpis, checklist, activity chart and feed', function () {
 
     $this->actingAs($user)->get(route('dashboard'))
         ->assertOk()
-        ->assertSee('Get set up', false)
+        ->assertSee('Welcome to Ttryy', false)
         ->assertSee('id="dash-activity-chart"', false)
         ->assertSee('Recent activity', false)
         ->assertSee('vs prior 30 days', false);
@@ -89,6 +89,25 @@ test('notifications are tracked and can be opened', function () {    $user = Use
     $this->actingAs($user)->post(route('notifications.read-all'))->assertRedirect();
 
     expect($user->fresh()->unreadNotifications()->count())->toBe(0);
+});
+
+test('new users get a skippable onboarding tour of what to expect', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('Welcome to Ttryy', false)
+        ->assertSee('Skip tour', false)
+        ->assertSee('Order your website', false)
+        ->assertSee('Top up your wallet', false);
+
+    $this->actingAs($user)->get(route('scraper.index'))
+        ->assertOk()
+        ->assertSee('How prospecting works', false);
+
+    $this->actingAs($user)->get(route('marketing.index'))
+        ->assertOk()
+        ->assertSee('Close deals from here', false);
 });
 
 test('notification center lists with tabs and palette is present', function () {

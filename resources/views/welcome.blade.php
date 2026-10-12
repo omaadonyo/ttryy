@@ -528,7 +528,7 @@
       </div>
       <p class="mt-4 text-sm text-zinc-500 text-center">Pick a domain on your package — first payment plus the one-time domain fee gets your website live within 5 days.</p>
     </div>
-    <div class="mt-10 grid lg:grid-cols-4 gap-5 items-stretch mx-auto w-[92%] md:w-[80%]">
+    <div class="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4 items-stretch">
       <!-- CORPORATE -->
       <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl p-6 flex flex-col order-1">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">CORPORATE</p>

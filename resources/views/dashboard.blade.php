@@ -96,18 +96,29 @@
         @endif
 
         @unless($checklistDone)
-        <div class="card card-pad">
-            <div class="flex items-center justify-between gap-3 flex-wrap">
-                <h2 class="section-title">Get set up</h2>
-                <span class="pill-brand">{{ collect($checklist)->where('done', true)->count() }} of {{ count($checklist) }} done</span>
+        <div data-onboard-banner="welcome" class="card card-pad border-brand-600/25 bg-brand-50/50 dark:border-brand-500/25 dark:bg-brand-500/10">
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <p class="text-[11px] font-bold tracking-[0.14em] text-brand-700 uppercase dark:text-brand-300">Welcome to Ttryy — here's what to expect</p>
+                    <h2 class="section-title mt-1">{{ $isNewUser ? 'Your first 4 steps' : 'Almost there — finish setup' }}</h2>
+                </div>
+                <button data-onboard-dismiss="welcome" class="btn-ghost btn-sm shrink-0">Skip tour</button>
             </div>
-            <div class="mt-3 grid gap-2 sm:grid-cols-2">
-                @foreach($checklist as $step)
-                <a href="{{ $step['url'] }}" class="flex items-center gap-3 rounded-xl border border-zinc-200/80 bg-zinc-50 px-4 py-3 transition hover:border-brand-600/40 dark:border-white/10 dark:bg-white/5 dark:hover:border-brand-500/40">
-                    <span class="grid size-6 shrink-0 place-items-center rounded-full {{ $step['done'] ? 'bg-emerald-600 text-white' : 'border-2 border-zinc-300 text-transparent dark:border-white/20' }}">
-                        <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                @foreach($checklist as $i => $step)
+                <a href="{{ $step['url'] }}" class="flex gap-3 rounded-xl border border-zinc-200/80 bg-white p-4 transition hover:border-brand-600/40 dark:border-white/10 dark:bg-zinc-900 dark:hover:border-brand-500/40">
+                    <span class="grid size-8 shrink-0 place-items-center rounded-lg {{ $step['done'] ? 'bg-emerald-600 text-white' : 'bg-brand-600 text-white' }} text-sm font-extrabold">
+                        @if($step['done'])
+                        <svg class="size-4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                        @else
+                        {{ $i + 1 }}
+                        @endif
                     </span>
-                    <span class="text-sm font-semibold {{ $step['done'] ? 'text-zinc-400 line-through' : '' }}">{{ $step['label'] }}</span>
+                    <span class="min-w-0">
+                        <span class="block text-sm font-extrabold">{{ $step['label'] }}</span>
+                        <span class="mt-0.5 block text-[13px] text-zinc-500 dark:text-zinc-400">{{ $step['blurb'] }}</span>
+                        <span class="mt-1 block text-[13px] font-bold text-brand-700 dark:text-brand-300">{{ $step['done'] ? 'Done — review →' : 'Start →' }}</span>
+                    </span>
                 </a>
                 @endforeach
             </div>

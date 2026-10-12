@@ -35,6 +35,10 @@
     <span class="text-xs text-zinc-500">Confirm &amp; pay</span>
   </div>
 
+  @auth
+  @include('partials.onboard', ['key' => 'checkout', 'title' => 'How ordering works', 'body' => 'Pick a package, add a domain once, tell us about your business, then choose daily, weekly or monthly billing. You pay exactly what the summary shows — no hidden fees.', 'link' => route('packages.index'), 'linkLabel' => 'Review my packages →'])
+  @endauth
+
   @guest
   <div id="checkout-auth" class="card card-pad mt-5">
     <h2 class="font-display font-bold text-xl text-zinc-950 dark:text-white">Create an account or log in</h2>

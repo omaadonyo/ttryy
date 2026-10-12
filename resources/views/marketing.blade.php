@@ -21,8 +21,9 @@
             </div>
         </div>
 
-        <div class="seg self-start" role="tablist" aria-label="Marketing tools">
-            <button data-mtab="outreach" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">WhatsApp outreach <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $contacts->count() }}</span></button>
+        @include('partials.onboard', ['key' => 'marketing', 'title' => 'Close deals from here', 'body' => 'Start from a template or write freehand, send to saved contacts, and track opens on each campaign report. AI messages and group unlocks spend tokens.', 'link' => route('wallet.index'), 'linkLabel' => 'Top up tokens →'])
+
+        <div class="seg self-start" role="tablist" aria-label="Marketing tools">            <button data-mtab="outreach" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">WhatsApp outreach <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $contacts->count() }}</span></button>
             <button data-mtab="email" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Email campaigns <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $campaigns->count() }}</span></button>
             <button data-mtab="community" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Communities <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $groups->count() }}</span></button>
             <button data-mtab="templates" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Templates <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $templates->count() }}</span></button>

@@ -10,6 +10,8 @@
             </x-slot:actions>
         </x-page-head>
 
+        @include('partials.onboard', ['key' => 'wallet', 'title' => 'Tokens run the growth engine', 'body' => 'AI sales messages and community join-links spend tokens. Top up with Mobile Money or card — credit lands instantly after verification.', 'link' => route('marketing.index'), 'linkLabel' => 'Use tokens in marketing →'])
+
         <div class="card card-pad">
             <h2 class="section-title">Top up with Mobile Money or card</h2>
             <p class="page-sub">Pay securely with Flutterwave. Tokens land instantly after verification.</p>

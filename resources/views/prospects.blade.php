@@ -4,6 +4,8 @@
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Prospect catalogue" sub="Every business indexed from web directories. Filter, then save what you want to market to." />
 
+        @include('partials.onboard', ['key' => 'prospects', 'title' => 'Your permanent index', 'body' => 'Everything ever scraped lives here. Filter by niche, category or verified status — or browse A–Z — then save the best ones to market to.', 'link' => route('scraper.index'), 'linkLabel' => 'Run the scraper →'])
+
         <div class="grid auto-rows-min grid-cols-2 gap-4 xl:grid-cols-4">
             <x-stat label="Businesses indexed" :value="number_format($totals['indexed'])" />
             <x-stat label="Categories" :value="number_format($totals['categories'])" />

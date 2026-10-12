@@ -3,6 +3,8 @@
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Prospect scraper" sub="Pull a sample of potential customers in your niche. Full contact details unlock for UGX 10,000." />
 
+        @include('partials.onboard', ['key' => 'scraper', 'title' => 'How prospecting works', 'body' => 'Every search checks the local index first, then pulls fresh businesses from web directories. The first 10 records are free — unlock deeper pulls from UGX 10,000, and everything you save lands in Saved contacts.', 'link' => route('contacts.index'), 'linkLabel' => 'View saved contacts →'])
+
         <div class="grid auto-rows-min grid-cols-2 gap-4 xl:grid-cols-4">
             <div class="card card-pad">
                 <p class="eyebrow">Businesses indexed</p>

@@ -40,10 +40,10 @@ class DashboardController extends Controller
         ];
 
         $checklist = [
-            ['label' => 'Place your first order', 'done' => $orders->isNotEmpty(), 'url' => route('orders.new')],
-            ['label' => 'Save prospects to market to', 'done' => $user->savedContacts()->exists(), 'url' => route('scraper.index')],
-            ['label' => 'Send your first campaign', 'done' => $campaigns->isNotEmpty(), 'url' => route('marketing.index')],
-            ['label' => 'Top up your token wallet', 'done' => $user->tokenTopups()->where('status', 'paid')->exists(), 'url' => route('wallet.index')],
+            ['label' => 'Order your website', 'blurb' => 'Pick a package and pay a deposit. We confirm on WhatsApp and your site goes live in about 5 days.', 'done' => $orders->isNotEmpty(), 'url' => route('orders.new')],
+            ['label' => 'Find customers', 'blurb' => 'Scrape real businesses in your niche — the first 10 records of every search are free.', 'done' => $user->savedContacts()->exists(), 'url' => route('scraper.index')],
+            ['label' => 'Send your first campaign', 'blurb' => 'Reach saved contacts on WhatsApp or email, then watch opens land on the report.', 'done' => $campaigns->isNotEmpty(), 'url' => route('marketing.index')],
+            ['label' => 'Top up your wallet', 'blurb' => 'Tokens power AI messages and community access. Top up with Mobile Money or card.', 'done' => $user->tokenTopups()->where('status', 'paid')->exists(), 'url' => route('wallet.index')],
         ];
 
         return view('dashboard', [
@@ -73,6 +73,7 @@ class DashboardController extends Controller
             'activity' => $user->notifications()->latest()->take(6)->get(),
             'checklist' => $checklist,
             'checklistDone' => collect($checklist)->every(fn ($s) => $s['done']),
+            'isNewUser' => $orders->isEmpty() && $campaigns->isEmpty() && ! $user->savedContacts()->exists(),
             'tokenBalance' => (int) $user->token_balance,
         ]);
     }

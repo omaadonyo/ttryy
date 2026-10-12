@@ -10,7 +10,9 @@ test('landing header has profile menu, no whatsapp link, and legal pages exist',
     $this->get(route('home'))
         ->assertOk()
         ->assertDontSee('<svg class="w-5 h-5"><use href="#i-chat"/></svg>', false)
-        ->assertSee('application/ld+json', false);
+        ->assertSee('application/ld+json', false)
+        ->assertSee('Choose Your Growth Package', false)
+        ->assertSee('sm:grid-cols-2 xl:grid-cols-4', false);
 
     $user = App\Models\User::factory()->create();
     $this->actingAs($user)->get(route('home'))

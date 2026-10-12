@@ -8,6 +8,8 @@
             </x-slot:actions>
         </x-page-head>
 
+        @include('partials.onboard', ['key' => 'contacts', 'title' => 'Your outreach fuel', 'body' => 'Saved contacts feed both WhatsApp outreach and email campaigns. Make sure contacts have emails to unlock campaigns, then market to them in one click.', 'link' => route('marketing.index'), 'linkLabel' => 'Open marketing tool →'])
+
         <div class="grid auto-rows-min gap-4 sm:grid-cols-3">
             <x-stat label="Saved contacts" :value="$contacts->total()" hint="Ready for outreach" />
             <x-stat label="With email" :value="$emailCount" hint="Mailable for campaigns" />
