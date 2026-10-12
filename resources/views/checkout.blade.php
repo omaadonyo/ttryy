@@ -40,8 +40,8 @@
     <h2 class="font-display font-bold text-xl text-zinc-950 dark:text-white">Create an account or log in</h2>
     <p class="mt-1 text-sm text-zinc-500">Your package choices below are saved automatically — nothing is lost when you sign in.</p>
     <div class="mt-4 inline-flex rounded-full bg-zinc-100 dark:bg-white/10 p-1" role="tablist" aria-label="Account">
-      <button type="button" id="tab-login" class="rounded-full px-5 py-2 text-sm font-bold transition">Log in</button>
-      <button type="button" id="tab-register" class="rounded-full px-5 py-2 text-sm font-bold transition">Create account</button>
+      <button type="button" id="tab-login" class="rounded-lg px-4 py-2 text-sm font-bold transition">Log in</button>
+      <button type="button" id="tab-register" class="rounded-lg px-4 py-2 text-sm font-bold transition">Create account</button>
     </div>
     <div class="mt-6 grid lg:grid-cols-2 gap-8">
       <div id="panel-login">
@@ -139,10 +139,10 @@
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">3. Your business details</h2>
         <div class="mt-3 grid sm:grid-cols-2 gap-4">
-          <div><label class="text-xs font-semibold">Business name *</label><input required id="f-business" name="business_name" value="{{ old('business_name') }}" placeholder="Savanna Build Ltd" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"></div>
-          <div><label class="text-xs font-semibold">Phone / WhatsApp *</label><input required id="f-phone" name="phone" value="{{ old('phone') }}" placeholder="+256 700 000000" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"></div>
-          <div><label class="text-xs font-semibold">Industry / niche</label><select id="f-niche" name="niche" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"><option value="">Select…</option>@foreach(config('packages.niches') as $n)<option {{ old('niche', $selectedNiche) === $n ? 'selected' : '' }}>{{ $n }}</option>@endforeach</select></div>
-          <div><label class="text-xs font-semibold">Notes (optional)</label><input id="f-notes" name="notes" value="{{ old('notes') }}" placeholder="Anything we should know" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"></div>
+          <div><label class="text-xs font-semibold">Business name *</label><input required id="f-business" name="business_name" value="{{ old('business_name') }}" placeholder="Savanna Build Ltd" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-lg px-4 py-2 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"></div>
+          <div><label class="text-xs font-semibold">Phone / WhatsApp *</label><input required id="f-phone" name="phone" value="{{ old('phone') }}" placeholder="+256 700 000000" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-lg px-4 py-2 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"></div>
+          <div><label class="text-xs font-semibold">Industry / niche</label><select id="f-niche" name="niche" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-lg px-4 py-2 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"><option value="">Select…</option>@foreach(config('packages.niches') as $n)<option {{ old('niche', $selectedNiche) === $n ? 'selected' : '' }}>{{ $n }}</option>@endforeach</select></div>
+          <div><label class="text-xs font-semibold">Notes (optional)</label><input id="f-notes" name="notes" value="{{ old('notes') }}" placeholder="Anything we should know" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-lg px-4 py-2 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"></div>
         </div>
         <p id="wiz-err-3" class="hidden mt-3 text-sm font-semibold text-red-600 dark:text-red-400">Please add your business name and phone number to continue.</p>
       </section>
@@ -174,7 +174,7 @@
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">5. How long you pay</h2>
         <p class="text-sm text-zinc-500 mt-1">Your website stays running while your plan is active. Full upfront payment covers 12 months.</p>
-        <select name="duration_months" id="duration" class="mt-3 w-full sm:w-72 bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white">
+        <select name="duration_months" id="duration" class="mt-3 w-full sm:w-72 bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-lg px-4 py-2 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white">
           @foreach($durations as $d)
           <option value="{{ $d }}" {{ $d === 12 ? 'selected' : '' }}>{{ $d }} months</option>
           @endforeach
@@ -236,7 +236,7 @@
 
       <button type="button" id="pay-now" class="btn-brand mt-5 w-full py-3!">Pay <span id="pay-now-amount">now</span></button>
 
-      <button type="button" id="momo-continue" class="hidden mt-5 w-full bg-white dark:bg-zinc-950 text-zinc-950 dark:text-white font-bold py-3 rounded-full transition">Continue →</button>
+      <button type="button" id="momo-continue" class="hidden mt-5 w-full bg-white dark:bg-zinc-950 text-zinc-950 dark:text-white font-bold py-2 rounded-lg transition">Continue →</button>
 
       <p class="mt-3 text-[11px] opacity-60">You pay exactly what is shown here — no hidden fees. Secured by Flutterwave.</p>
     </aside>
@@ -451,8 +451,8 @@ function initCheckout(){
   const tabLogin = document.getElementById('tab-login'), tabReg = document.getElementById('tab-register');
   const pLogin = document.getElementById('panel-login'), pReg = document.getElementById('panel-register');
   const paintTabs = login => {
-    const on = 'rounded-full px-5 py-2 text-sm font-bold transition bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow';
-    const off = 'rounded-full px-5 py-2 text-sm font-bold transition text-zinc-500';
+    const on = 'rounded-lg px-4 py-2 text-sm font-bold transition bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow';
+    const off = 'rounded-lg px-4 py-2 text-sm font-bold transition text-zinc-500';
     if(!tabLogin) return;
     tabLogin.className = login ? on : off;
     tabReg.className = login ? off : on;

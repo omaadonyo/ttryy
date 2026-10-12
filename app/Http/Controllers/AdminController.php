@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PackageOrder;
 use App\Models\User;
+use App\Notifications\SiteAlert;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -60,6 +61,13 @@ class AdminController extends Controller
             'payment_method' => $order->payment_method === 'pending' ? 'momo_manual' : $order->payment_method,
         ]);
 
+        $order->user->notify(new SiteAlert(
+            "Payment confirmed for {$order->reference}",
+            'UGX '.number_format($order->paid_amount).' received. Website work is underway.',
+            route('packages.index'),
+            'payment'
+        ));
+
         return back()->with('status', "Order {$order->reference} marked as paid.");
     }
 
@@ -69,6 +77,13 @@ class AdminController extends Controller
             'credentials_handed_over' => true,
             'handed_over_at' => now(),
         ]);
+
+        $order->user->notify(new SiteAlert(
+            "Website {$order->reference} handed over",
+            'cPanel and credentials are with you — the website is fully yours.',
+            route('packages.index'),
+            'order'
+        ));
 
         return back()->with('status', "cPanel and credentials for {$order->reference} marked as handed over.");
     }

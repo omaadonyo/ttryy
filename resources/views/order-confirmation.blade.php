@@ -107,7 +107,7 @@
       </div>
       <a target="_blank" href="https://wa.me/256700000000?text={{ urlencode('Hi Ttryy! I just placed order '.$order->reference.' ('.$order->package.', '.ucfirst($order->billing_frequency).', due today UGX '.number_format($order->due_today).'). How do I pay?') }}" class="btn-brand mt-4 w-full">Confirm on WhatsApp</a>
       @if($order->status !== 'paid')
-      <div class="mt-4 rounded-2xl border border-zinc-200/80 bg-zinc-50 p-5 text-sm dark:border-white/10 dark:bg-white/5">
+      <div class="mt-4 rounded-xl border border-zinc-200/80 bg-zinc-50 p-5 text-sm dark:border-white/10 dark:bg-white/5">
         <p class="font-bold text-zinc-950 dark:text-white">Pay with MTN Mobile Money</p>
         <p class="font-display font-extrabold text-3xl tracking-widest mt-2 text-zinc-950 dark:text-white">{{ config('services.momo.merchant_code') }}</p>
         <ol class="mt-2 space-y-1 text-[13px] text-zinc-600 dark:text-zinc-400 list-decimal ml-4">

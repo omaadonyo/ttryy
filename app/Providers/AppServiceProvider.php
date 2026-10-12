@@ -5,6 +5,7 @@ namespace App\Providers;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -24,6 +25,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+
+        View::composer('layouts.app.sidebar', function ($view) {
+            $user = auth()->user();
+            $view->with('navNotifications', $user ? $user->notifications()->latest()->take(8)->get() : collect());
+            $view->with('navUnreadCount', $user ? $user->unreadNotifications()->count() : 0);
+        });
     }
 
     /**

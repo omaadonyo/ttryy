@@ -140,6 +140,25 @@ test('email campaigns send, track opens and report', function () {    Illuminate
         ->assertSee('Open rate', false);
 });
 
+test('placing an order notifies the buyer and admins', function () {
+    $buyer = App\Models\User::factory()->create();
+    $admin = App\Models\User::factory()->create(['is_admin' => true]);
+
+    $order = App\Models\PackageOrder::create([
+        'user_id' => $buyer->id, 'reference' => 'TTRYY-TEST01', 'package' => 'GROW',
+        'billing_frequency' => 'monthly', 'domain' => 'none', 'duration_months' => 12,
+        'periods' => 12, 'amount_per_period' => 30000, 'domain_fee' => 0,
+        'total_amount' => 360000, 'due_today' => 30000, 'currency' => 'UGX',
+        'status' => 'pending', 'payment_method' => 'flutterwave',
+        'business_name' => 'Test Biz', 'phone' => '+256700000000',
+    ]);
+
+    $this->actingAs($admin)->patch(route('admin.orders.paid', $order))->assertRedirect();
+
+    expect($buyer->fresh()->unreadNotifications()->count())->toBe(1)
+        ->and($buyer->fresh()->notifications()->first()->data['title'])->toContain('Payment confirmed');
+});
+
 test('prospects catalogue filters by search, niche and verified', function () {
     App\Models\ScrapedProspect::create([
         'niche' => 'Construction', 'name' => 'Alpha Builders Ltd', 'category' => 'Contractors',

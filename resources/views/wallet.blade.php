@@ -15,7 +15,7 @@
             <p class="page-sub">Pay securely with Flutterwave. Tokens land instantly after verification.</p>
             <div class="mt-4 grid gap-3 sm:grid-cols-3" id="pack-grid">
                 @foreach($packs as $key => $pack)
-                <div class="rounded-2xl border border-zinc-200/80 bg-zinc-50 p-5 text-center dark:border-white/10 dark:bg-white/5">
+                <div class="rounded-xl border border-zinc-200/80 bg-zinc-50 p-5 text-center dark:border-white/10 dark:bg-white/5">
                     <p class="font-display text-sm font-bold tracking-wide text-zinc-500 uppercase dark:text-zinc-400">{{ $pack['label'] }}</p>
                     <p class="stat-num mt-1">UGX {{ number_format($pack['price']) }}</p>
                     <button data-topup="{{ $key }}" data-tokens="{{ $pack['tokens'] }}" data-price="{{ $pack['price'] }}" class="btn-brand btn-sm mt-3 w-full">Buy {{ number_format($pack['tokens']) }} tokens</button>

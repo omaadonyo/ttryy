@@ -14,3 +14,41 @@ test('authenticated users can visit the dashboard', function () {
     $response = $this->get(route('dashboard'));
     $response->assertOk();
 });
+
+test('dashboard shows marketing performance and graphs', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('Marketing performance', false)
+        ->assertSee('id="dash-mkt-chart"', false);
+});
+
+test('analytics page renders charts', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get(route('analytics.index'))
+        ->assertOk()
+        ->assertSee('id="an-spend"', false)
+        ->assertSee('id="an-campaigns"', false)
+        ->assertSee('id="an-tokens"', false);
+});
+
+test('notifications are tracked and can be opened', function () {
+    $user = User::factory()->create();
+    $user->notify(new App\Notifications\SiteAlert('Hello', 'World', route('dashboard'), 'info'));
+
+    expect($user->unreadNotifications()->count())->toBe(1);
+
+    $n = $user->notifications()->first();
+
+    $this->actingAs($user)->get(route('notifications.open', $n->id))
+        ->assertRedirect(route('dashboard'));
+
+    expect($user->fresh()->unreadNotifications()->count())->toBe(0);
+
+    $user->notify(new App\Notifications\SiteAlert('Again', 'Body'));
+    $this->actingAs($user)->post(route('notifications.read-all'))->assertRedirect();
+
+    expect($user->fresh()->unreadNotifications()->count())->toBe(0);
+});

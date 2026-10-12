@@ -289,6 +289,13 @@ class MarketingController extends Controller
             'failed' => $failed,
         ]);
 
+        $request->user()->notify(new \App\Notifications\SiteAlert(
+            "Campaign '{$validated['subject']}' sent",
+            "{$sent} recipient".($sent === 1 ? '' : 's').' · opens are tracked on the report.',
+            route('marketing.campaigns.show', $campaign),
+            'email'
+        ));
+
         return response()->json([
             'campaign_id' => $campaign->id,
             'sent' => $sent,

@@ -12,13 +12,97 @@ class DashboardController extends Controller
     {
         $orders = $request->user()->packageOrders()->latest()->get();
 
+        $campaigns = \App\Models\EmailCampaign::where('user_id', $request->user()->id)
+            ->withCount(['recipients as read_count' => fn ($q) => $q->whereNotNull('opened_at')])
+            ->latest()->get();
+        $mktSent = (int) $campaigns->sum('sent');
+        $mktOpened = (int) $campaigns->sum('read_count');
+        $chartCampaigns = $campaigns->take(6)->reverse()->values();
+
         return view('dashboard', [
             'orders' => $orders,
             'recentOrders' => $orders->take(3),
             'totalOrders' => $orders->count(),
             'pendingOrders' => $orders->where('status', 'pending')->count(),
             'totalCommitted' => $orders->sum('total_amount'),
+            'campaigns' => $campaigns->take(4),
+            'mktStats' => [
+                'campaigns' => $campaigns->count(),
+                'sent' => $mktSent,
+                'opened' => $mktOpened,
+                'rate' => $mktSent > 0 ? (int) round($mktOpened / $mktSent * 100) : 0,
+            ],
+            'mktChart' => [
+                'labels' => $chartCampaigns->map(fn ($c) => mb_substr($c->subject, 0, 18))->all(),
+                'sent' => $chartCampaigns->map(fn ($c) => (int) $c->sent)->all(),
+                'opened' => $chartCampaigns->map(fn ($c) => (int) $c->read_count)->all(),
+            ],
         ]);
+    }
+
+    public function analytics(Request $request)
+    {
+        $user = $request->user();
+
+        $months = collect(range(5, 0))->map(fn ($i) => now()->subMonths($i));
+        $spendByMonth = $months->mapWithKeys(function ($m) use ($user) {
+            $sum = $user->packageOrders()
+                ->whereYear('created_at', $m->year)->whereMonth('created_at', $m->month)
+                ->sum('total_amount');
+
+            return [$m->format('M') => (int) $sum];
+        });
+
+        $campaigns = \App\Models\EmailCampaign::where('user_id', $user->id)
+            ->withCount(['recipients as read_count' => fn ($q) => $q->whereNotNull('opened_at')])
+            ->latest()->take(8)->get()->reverse()->values();
+
+        $days = collect(range(29, 0))->map(fn ($i) => now()->subDays($i)->toDateString());
+        $tokensByDay = $days->mapWithKeys(function ($d) use ($user) {
+            $spent = $user->tokenTransactions()->where('type', 'debit')->whereDate('created_at', $d)->sum('amount');
+
+            return [$d => (int) abs($spent)];
+        });
+
+        $savedByNiche = \App\Models\SavedContact::where('user_id', $user->id)
+            ->selectRaw('niche, COUNT(*) as c')->groupBy('niche')->orderByDesc('c')->take(6)->get();
+
+        $totalSent = (int) \App\Models\EmailCampaign::where('user_id', $user->id)->sum('sent');
+        $totalOpened = (int) \App\Models\CampaignRecipient::whereHas('campaign', fn ($q) => $q->where('user_id', $user->id))
+            ->whereNotNull('opened_at')->count();
+
+        return view('analytics', [
+            'spendByMonth' => $spendByMonth,
+            'totalCommitted' => (int) $user->packageOrders()->sum('total_amount'),
+            'totalPaid' => (int) $user->packageOrders()->sum('paid_amount'),
+            'campaigns' => $campaigns,
+            'mktTotals' => [
+                'sent' => $totalSent,
+                'opened' => $totalOpened,
+                'rate' => $totalSent > 0 ? (int) round($totalOpened / $totalSent * 100) : 0,
+            ],
+            'tokensByDay' => $tokensByDay,
+            'tokenBalance' => (int) $user->token_balance,
+            'savedByNiche' => $savedByNiche,
+            'savedTotal' => $user->savedContacts()->count(),
+        ]);
+    }
+
+    public function openNotification(Request $request, string $id)
+    {
+        $notification = $request->user()->notifications()->where('id', $id)->firstOrFail();
+        $notification->markAsRead();
+
+        $url = $notification->data['url'] ?? null;
+
+        return $url ? redirect()->away($url) : back();
+    }
+
+    public function readAllNotifications(Request $request)
+    {
+        $request->user()->unreadNotifications->markAsRead();
+
+        return back();
     }
 
     public function scraper()

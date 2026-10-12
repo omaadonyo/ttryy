@@ -17,10 +17,10 @@
         </x-page-head>
 
         <div class="seg self-start" role="tablist" aria-label="Marketing tools">
-            <button data-mtab="outreach" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">WhatsApp outreach <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $contacts->count() }}</span></button>
-            <button data-mtab="email" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Email campaigns <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $campaigns->count() }}</span></button>
-            <button data-mtab="community" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Communities <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $groups->count() }}</span></button>
-            <button data-mtab="templates" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Templates <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $templates->count() }}</span></button>
+            <button data-mtab="outreach" role="tab" class="mtab rounded-lg px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">WhatsApp outreach <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $contacts->count() }}</span></button>
+            <button data-mtab="email" role="tab" class="mtab rounded-lg px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Email campaigns <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $campaigns->count() }}</span></button>
+            <button data-mtab="community" role="tab" class="mtab rounded-lg px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Communities <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $groups->count() }}</span></button>
+            <button data-mtab="templates" role="tab" class="mtab rounded-lg px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Templates <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $templates->count() }}</span></button>
         </div>
 
         <!-- TAB: WhatsApp outreach -->
@@ -195,7 +195,7 @@
                 <div class="mt-4 grid gap-3 sm:grid-cols-2" id="group-grid">
                     @forelse($groups as $g)
                     @php $unlocked = in_array($g->id, $unlockedGroupIds); @endphp
-                    <div class="rounded-2xl border border-zinc-200/80 bg-zinc-50 p-4 dark:border-white/10 dark:bg-white/5" data-group="{{ $g->id }}" data-members="{{ $g->member_count }}" data-search="{{ strtolower($g->name.' '.$g->niche.' '.($g->description ?? '')) }}" data-niche="{{ $g->niche }}">
+                    <div class="rounded-xl border border-zinc-200/80 bg-zinc-50 p-4 dark:border-white/10 dark:bg-white/5" data-group="{{ $g->id }}" data-members="{{ $g->member_count }}" data-search="{{ strtolower($g->name.' '.$g->niche.' '.($g->description ?? '')) }}" data-niche="{{ $g->niche }}">
                         <div class="flex items-center justify-between gap-2">
                             <p class="text-sm font-bold">{{ $g->name }}</p>
                             <span class="pill-zinc">{{ number_format($g->member_count) }} members</span>
@@ -238,7 +238,7 @@
                 <p class="page-sub">Built-in closers plus your own. Placeholders: {name}, {business}, {need}, {phone}. Load any of them into the WhatsApp composer or an email.</p>
                 <div class="mt-4 grid gap-3 sm:grid-cols-2" id="tpl-list">
                     @foreach($templates as $t)
-                    <div class="flex flex-col rounded-2xl border border-zinc-200/80 bg-zinc-50 p-4 dark:border-white/10 dark:bg-white/5" data-tpl-row="{{ $t->id }}">
+                    <div class="flex flex-col rounded-xl border border-zinc-200/80 bg-zinc-50 p-4 dark:border-white/10 dark:bg-white/5" data-tpl-row="{{ $t->id }}">
                         <div class="flex items-center justify-between gap-2">
                             <p class="font-bold text-sm truncate">{{ $t->name }} @if(!$t->user_id)<span class="text-[11px] font-semibold text-zinc-500">· built-in</span>@endif</p>
                             @if($t->user_id)
@@ -326,7 +326,7 @@ function mktFill(tpl, c){
 function paintMtabs(active){
   document.querySelectorAll('[data-mtab]').forEach(b => {
     const on = b.dataset.mtab === active;
-    b.className = 'mtab rounded-full px-4 py-2 text-[13px] font-bold whitespace-nowrap transition ' + (on ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white');
+    b.className = 'mtab rounded-lg px-4 py-2 text-[13px] font-bold whitespace-nowrap transition ' + (on ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white');
   });
   document.querySelectorAll('[data-mtab-panel]').forEach(p => {
     const on = p.dataset.mtabPanel === active;
@@ -347,7 +347,7 @@ function mktRender(){
   list.innerHTML = shown.map((c, i) => {
     const msg = mktFill(tpl, c);
     const href = c.wa ? `https://wa.me/${c.wa}?text=${encodeURIComponent(msg)}` : '#';
-    return `<div class="rounded-2xl border border-zinc-200/80 bg-zinc-50 p-4 dark:border-white/10 dark:bg-white/5">`
+    return `<div class="rounded-xl border border-zinc-200/80 bg-zinc-50 p-4 dark:border-white/10 dark:bg-white/5">`
       + `<div class="flex items-center justify-between gap-3 flex-wrap">`
       + `<div class="min-w-0"><p class="font-bold text-sm truncate">${c.business}</p><p class="text-xs text-zinc-500">${c.name || ''} · ${c.phone || 'no phone'}</p></div>`
       + `<div class="flex gap-2 shrink-0">`

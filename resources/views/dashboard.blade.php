@@ -75,6 +75,45 @@
 
         <div class="card card-pad">
             <div class="flex items-center justify-between gap-3">
+                <h2 class="section-title">Marketing performance</h2>
+                <a href="{{ route('marketing.index') }}" class="btn-ghost btn-sm">Open marketing</a>
+            </div>
+            @if($mktStats['campaigns'] === 0)
+            <p class="mt-3 text-center text-sm text-zinc-500">No email campaigns yet — send your first one from the marketing tool.</p>
+            @endif
+            <div class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+                <div class="rounded-xl border border-zinc-200/70 bg-zinc-50 p-3 dark:border-white/10 dark:bg-white/5">
+                    <p class="eyebrow">Campaigns</p>
+                    <p class="font-display mt-1 text-[22px] leading-none font-extrabold tracking-tight">{{ $mktStats['campaigns'] }}</p>
+                </div>
+                <div class="rounded-xl border border-zinc-200/70 bg-zinc-50 p-3 dark:border-white/10 dark:bg-white/5">
+                    <p class="eyebrow">Emails sent</p>
+                    <p class="font-display mt-1 text-[22px] leading-none font-extrabold tracking-tight">{{ $mktStats['sent'] }}</p>
+                </div>
+                <div class="rounded-xl border border-zinc-200/70 bg-zinc-50 p-3 dark:border-white/10 dark:bg-white/5">
+                    <p class="eyebrow">Opened</p>
+                    <p class="font-display mt-1 text-[22px] leading-none font-extrabold tracking-tight text-brand-700 dark:text-brand-300">{{ $mktStats['opened'] }}</p>
+                </div>
+                <div class="rounded-xl border border-zinc-200/70 bg-zinc-50 p-3 dark:border-white/10 dark:bg-white/5">
+                    <p class="eyebrow">Open rate</p>
+                    <p class="font-display mt-1 text-[22px] leading-none font-extrabold tracking-tight">{{ $mktStats['rate'] }}%</p>
+                </div>
+            </div>
+            <div class="mt-4 h-52"><canvas id="dash-mkt-chart"></canvas></div>
+            @if($mktStats['campaigns'] > 0)
+            <div class="mt-3 divide-y divide-zinc-100 dark:divide-white/5">
+                @foreach($campaigns as $cp)
+                <a href="{{ route('marketing.campaigns.show', $cp) }}" class="flex items-center justify-between gap-3 py-2.5">
+                    <span class="min-w-0 truncate text-sm font-semibold">{{ $cp->subject }}</span>
+                    <span class="shrink-0 text-xs text-zinc-500">{{ $cp->sent }} sent · <span class="font-bold text-brand-700 dark:text-brand-300">{{ $cp->read_count }} opened</span></span>
+                </a>
+                @endforeach
+            </div>
+            @endif
+        </div>
+
+        <div class="card card-pad">
+            <div class="flex items-center justify-between gap-3">
                 <h2 class="section-title">Recent orders</h2>
                 <a href="{{ route('packages.index') }}" class="btn-ghost btn-sm">View all</a>
             </div>
@@ -116,4 +155,21 @@
             @endif
         </div>
     </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function(){
+  const el = document.getElementById('dash-mkt-chart');
+  if(!el || typeof Chart === 'undefined') return;
+  new Chart(el, { type: 'bar',
+    data: { labels: @json($mktChart['labels']),
+      datasets: [
+        { label: 'Sent', data: @json($mktChart['sent']), backgroundColor: '#a1a1aa', borderRadius: 5 },
+        { label: 'Opened', data: @json($mktChart['opened']), backgroundColor: '#9e005d', borderRadius: 5 },
+      ] },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 16 } } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } } });
+})();
+</script>
 </x-layouts::app>

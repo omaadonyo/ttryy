@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Mail\OrderPlaced;
 use App\Models\PackageOrder;
+use App\Models\User;
+use App\Notifications\SiteAlert;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -103,6 +105,20 @@ class CheckoutController extends Controller
         ]);
 
         $this->sendOrderEmails($order);
+
+        $request->user()->notify(new SiteAlert(
+            "Order {$order->reference} received",
+            "{$order->package} · UGX ".number_format($order->due_today).' due today.',
+            route('checkout.success', $order),
+            'order'
+        ));
+
+        User::where('is_admin', true)->where('id', '!=', $request->user()->id)->each(fn ($admin) => $admin->notify(new SiteAlert(
+            "New order {$order->reference}",
+            "{$order->business_name} · {$order->package} · ".ucfirst($order->billing_frequency).'.',
+            route('admin.orders'),
+            'order'
+        )));
 
         if ($request->expectsJson()) {
             return response()->json([

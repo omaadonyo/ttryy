@@ -11,11 +11,11 @@ function enhanceSelect(sel){
   sel.classList.add('sr-only'); sel.tabIndex=-1; sel.setAttribute('aria-hidden','true');
   const btn=document.createElement('button');
   btn.type='button';
-  btn.className='cs-btn w-full flex items-center justify-between gap-2 rounded-[0.575rem] border border-neutral-300 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-2.5 text-sm outline-none';
+  btn.className='cs-btn w-full flex items-center justify-between gap-2 rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3.5 py-2 text-sm outline-none';
   btn.setAttribute('aria-expanded','false');
   btn.innerHTML='<span class="cs-label truncate">Select…</span><svg class="w-4 h-4 shrink-0 text-zinc-400 transition-transform" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
   const list=document.createElement('div');
-  list.className='cs-list hidden absolute z-30 left-0 right-0 mt-2 rounded-xl border border-neutral-200 dark:border-white/15 bg-white dark:bg-[#141416] shadow-2xl p-1.5 max-h-60 overflow-y-auto';
+  list.className='cs-list hidden absolute z-30 left-0 right-0 mt-2 rounded-xl border border-zinc-200 dark:border-white/15 bg-white dark:bg-[#141416] shadow-2xl p-1.5 max-h-60 overflow-y-auto';
   list.setAttribute('role','listbox');
   function sync(){
     const opt=sel.options[sel.selectedIndex];

@@ -8,6 +8,13 @@
     <body class="min-h-screen bg-[#f4f4f5] font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100">
         @php
         $navSections = [
+            'Growth' => [
+                ['label' => 'Prospect scraper', 'icon' => 'magnifying-glass', 'href' => route('scraper.index'), 'active' => request()->routeIs('scraper.*')],
+                ['label' => 'Prospects', 'icon' => 'building-office-2', 'href' => route('prospects.index'), 'active' => request()->routeIs('prospects.*')],
+                ['label' => 'Saved contacts', 'icon' => 'bookmark', 'href' => route('contacts.index'), 'active' => request()->routeIs('contacts.*')],
+                ['label' => 'Marketing tool', 'icon' => 'megaphone', 'href' => route('marketing.index'), 'active' => request()->routeIs('marketing.*')],
+                ['label' => 'Analytics', 'icon' => 'presentation-chart-line', 'href' => route('analytics.index'), 'active' => request()->routeIs('analytics.*')],
+            ],
             'Overview' => [
                 ['label' => 'Dashboard', 'icon' => 'home', 'href' => route('dashboard'), 'active' => request()->routeIs('dashboard')],
             ],
@@ -16,12 +23,6 @@
                 ['label' => 'My packages', 'icon' => 'shopping-bag', 'href' => route('packages.index'), 'active' => request()->routeIs('packages.*')],
                 ['label' => 'Payments', 'icon' => 'banknotes', 'href' => route('payments.index'), 'active' => request()->routeIs('payments.*')],
                 ['label' => 'Wallet', 'icon' => 'wallet', 'href' => route('wallet.index'), 'active' => request()->routeIs('wallet.*')],
-            ],
-            'Growth' => [
-                ['label' => 'Prospect scraper', 'icon' => 'magnifying-glass', 'href' => route('scraper.index'), 'active' => request()->routeIs('scraper.*')],
-                ['label' => 'Prospects', 'icon' => 'building-office-2', 'href' => route('prospects.index'), 'active' => request()->routeIs('prospects.*')],
-                ['label' => 'Saved contacts', 'icon' => 'bookmark', 'href' => route('contacts.index'), 'active' => request()->routeIs('contacts.*')],
-                ['label' => 'Marketing tool', 'icon' => 'megaphone', 'href' => route('marketing.index'), 'active' => request()->routeIs('marketing.*')],
             ],
         ];
         if(auth()->user()?->is_admin){
@@ -42,7 +43,7 @@
             <div class="flex h-full flex-col">
                 <div class="flex h-[68px] shrink-0 items-center gap-2.5 px-5">
                     <a href="{{ route('dashboard') }}" class="flex min-w-0 items-center gap-2.5" title="Ttryy dashboard">
-                        <span class="grid size-9 shrink-0 place-items-center rounded-xl bg-brand-600 text-white shadow-[0_8px_16px_-8px_rgba(158,0,93,.8)]">
+                        <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-brand-600 text-white shadow-[0_8px_16px_-8px_rgba(158,0,93,.8)]">
                             <x-app-logo-icon class="size-5 fill-current" />
                         </span>
                         <span id="nav-brand-text" class="min-w-0">
@@ -94,6 +95,41 @@
                             <flux:icon name="globe-alt" class="size-4" />
                             View site
                         </a>
+                        @auth
+                        <div class="relative" id="bell-chip">
+                            <button onclick="toggleBell(event)" class="relative grid size-10 place-items-center rounded-full transition hover:bg-zinc-950/5 dark:hover:bg-white/10" aria-label="Notifications">
+                                <flux:icon name="bell" class="size-5" />
+                                @if(($navUnreadCount ?? 0) > 0)
+                                <span class="absolute top-1 right-1 grid min-w-4.5 h-4.5 place-items-center rounded-full bg-brand-600 px-1 text-[10px] font-extrabold text-white">{{ $navUnreadCount > 9 ? '9+' : $navUnreadCount }}</span>
+                                @endif
+                            </button>
+                            <div id="bell-menu" class="card absolute top-full right-0 z-50 mt-2 hidden w-80 overflow-hidden p-1.5">
+                                <div class="flex items-center justify-between px-3 py-2">
+                                    <p class="text-sm font-extrabold">Notifications</p>
+                                    @if(($navUnreadCount ?? 0) > 0)
+                                    <form method="POST" action="{{ route('notifications.read-all') }}" class="inline">
+                                        @csrf
+                                        <button type="submit" class="text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Mark all read</button>
+                                    </form>
+                                    @endif
+                                </div>
+                                <div class="max-h-80 overflow-y-auto">
+                                    @forelse($navNotifications ?? [] as $n)
+                                    <a href="{{ route('notifications.open', $n->id) }}" class="flex gap-2.5 rounded-lg px-3 py-2.5 transition hover:bg-zinc-950/5 dark:hover:bg-white/10 {{ $n->read_at ? 'opacity-60' : '' }}">
+                                        <span class="mt-1.5 size-2 shrink-0 rounded-full {{ ($n->data['kind'] ?? '') === 'payment' ? 'bg-emerald-500' : ((($n->data['kind'] ?? '') === 'tokens') ? 'bg-amber-500' : ((($n->data['kind'] ?? '') === 'email') ? 'bg-sky-500' : 'bg-brand-600')) }}"></span>
+                                        <span class="min-w-0">
+                                            <span class="block truncate text-[13px] font-bold">{{ $n->data['title'] ?? 'Notification' }}</span>
+                                            @if(!empty($n->data['body']))<span class="block truncate text-xs text-zinc-500">{{ $n->data['body'] }}</span>@endif
+                                            <span class="block text-[11px] text-zinc-400">{{ $n->created_at->diffForHumans() }}</span>
+                                        </span>
+                                    </a>
+                                    @empty
+                                    <p class="px-3 py-6 text-center text-[13px] text-zinc-500">No notifications yet — orders, payments and campaigns will show up here.</p>
+                                    @endforelse
+                                </div>
+                            </div>
+                        </div>
+                        @endauth
                         <button onclick="toggleTheme()" class="grid size-10 place-items-center rounded-full hover:bg-zinc-950/5 dark:hover:bg-white/10" aria-label="Toggle dark mode">
                             <svg class="theme-icon-moon size-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0110.5 4 8 8 0 1020 13.5z"/></svg>
                             <svg class="theme-icon-sun size-5 hidden" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
@@ -158,12 +194,18 @@
             if(e) e.stopPropagation();
             document.getElementById('user-menu').classList.toggle('hidden');
         }
+        function toggleBell(e){
+            if(e) e.stopPropagation();
+            document.getElementById('bell-menu')?.classList.toggle('hidden');
+        }
         document.addEventListener('click', e => {
             const chip = document.getElementById('user-chip');
             if(chip && !chip.contains(e.target)) document.getElementById('user-menu')?.classList.add('hidden');
+            const bell = document.getElementById('bell-chip');
+            if(bell && !bell.contains(e.target)) document.getElementById('bell-menu')?.classList.add('hidden');
         });
         document.addEventListener('keydown', e => {
-            if(e.key === 'Escape'){ document.getElementById('user-menu')?.classList.add('hidden'); closeNav(); }
+            if(e.key === 'Escape'){ document.getElementById('user-menu')?.classList.add('hidden'); document.getElementById('bell-menu')?.classList.add('hidden'); closeNav(); }
         });
         function paintThemeIcons(){var d=document.documentElement.classList.contains('dark');document.querySelectorAll('.theme-icon-moon').forEach(function(e){e.classList.toggle('hidden',d);});document.querySelectorAll('.theme-icon-sun').forEach(function(e){e.classList.toggle('hidden',!d);});}
         function toggleTheme(){var h=document.documentElement,next=h.classList.contains('dark')?'light':'dark';h.classList.toggle('dark',next==='dark');try{localStorage.setItem('flux.appearance',next);localStorage.setItem('ttryy-theme',next);}catch(e){}paintThemeIcons();}

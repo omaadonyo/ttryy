@@ -76,7 +76,14 @@ class WalletController extends Controller
             ->firstOrFail();
 
         if ($topup->status === 'paid') {
-            return response()->json(['redirect' => route('wallet.index')]);
+        $request->user()->notify(new \App\Notifications\SiteAlert(
+            'Top-up confirmed',
+            '+'.number_format($topup->tokens).' tokens added to your wallet.',
+            route('wallet.index'),
+            'tokens'
+        ));
+
+        return response()->json(['redirect' => route('wallet.index')]);
         }
 
         if (! config('services.flutterwave.secret_key')) {

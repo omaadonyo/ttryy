@@ -101,6 +101,25 @@ test('authenticated users can place a monthly package order', function () {
     $response->assertRedirect(route('checkout.success', $order));
 });
 
+test('placing an order notifies the buyer and admins', function () {
+    $buyer = User::factory()->create();
+    $admin = User::factory()->create(['is_admin' => true]);
+
+    $this->actingAs($buyer)->post('/dashboard/checkout', [
+        'package' => 'GROW',
+        'billing_frequency' => 'monthly',
+        'domain' => 'none',
+        'duration_months' => 12,
+        'business_name' => 'Notify Biz',
+        'phone' => '+256 700 000009',
+    ])->assertRedirect();
+
+    expect($buyer->fresh()->unreadNotifications()->count())->toBe(1)
+        ->and($buyer->fresh()->notifications()->first()->data['title'])->toContain('received')
+        ->and($admin->fresh()->unreadNotifications()->count())->toBe(1)
+        ->and($admin->fresh()->notifications()->first()->data['title'])->toContain('New order');
+});
+
 test('pay per day on the START package shows the deposit-first breakdown', function () {
     $user = User::factory()->create();
 
