@@ -37,6 +37,25 @@ test('admin overview shows revenue chart and users show stats', function () {
         ->assertSee('Administrators', false);
 });
 
+test('admin overview tracks platform usage', function () {
+    $this->actingAs(adminUser())->get(route('admin.dashboard'))
+        ->assertOk()
+        ->assertSee('Platform usage', false)
+        ->assertSee('id="admin-users-chart"', false)
+        ->assertSee('Tokens sold', false)
+        ->assertSee('Campaigns sent', false);
+});
+
+test('admin orders and payments show performance strips', function () {
+    $this->actingAs(adminUser())->get(route('admin.orders'))
+        ->assertOk()
+        ->assertSee('Needs action', false);
+
+    $this->actingAs(adminUser())->get(route('admin.payments'))
+        ->assertOk()
+        ->assertSee('Collection mix', false);
+});
+
 test('admins can mark an order paid', function () {
     $admin = adminUser();
     $order = PackageOrder::create([

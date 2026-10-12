@@ -8,6 +8,17 @@
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Orders" sub="Confirm manual Mobile Money payments and follow up on pending orders." />
 
+        <div class="grid auto-rows-min grid-cols-2 gap-4 xl:grid-cols-4">
+            <x-stat label="Pending" :value="$summary['pending']" hint="Awaiting first payment" />
+            <x-stat label="Submitted · MoMo" :value="$summary['submitted']" :hint="'UGX '.number_format($summary['submittedValue']).' claimed'" />
+            <x-stat label="Paid" :value="$summary['paid']" hint="Confirmed orders" />
+            <div class="card card-pad border-transparent! bg-brand-600 text-white dark:border-transparent!">
+                <p class="text-[11px] font-bold tracking-[0.14em] text-white/60 uppercase">Needs action</p>
+                <p class="stat-num mt-2 text-white!">{{ $summary['pending'] + $summary['submitted'] }}</p>
+                <p class="mt-1.5 text-[13px] text-white/60">Pending + submitted</p>
+            </div>
+        </div>
+
         <form method="GET" action="{{ route('admin.orders') }}" class="card card-pad grid gap-3 sm:grid-cols-[1fr_160px_160px_auto]">
             <input type="text" name="search" value="{{ $filters['search'] ?? '' }}" placeholder="Search reference, business, phone…" class="field">
             <select name="status" class="field">

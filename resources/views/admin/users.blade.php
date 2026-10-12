@@ -9,6 +9,12 @@
             <x-stat label="New · 30 days" :value="$newCount" />
         </div>
 
+        <div class="card card-pad">
+            <h2 class="section-title">Signups per month</h2>
+            <p class="page-sub">New accounts, last 6 months.</p>
+            <div class="mt-3 h-48"><canvas id="admin-signups-chart"></canvas></div>
+        </div>
+
         <form method="GET" action="{{ route('admin.users') }}" class="card card-pad flex flex-col gap-3 sm:flex-row">
             <input type="text" name="search" value="{{ $search }}" placeholder="Search name or email…" class="field flex-1">
             <button type="submit" class="btn-brand">Search</button>
@@ -62,4 +68,19 @@
             <div class="mt-4">{{ $users->links() }}</div>
         </div>
     </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function(){
+  const el = document.getElementById('admin-signups-chart');
+  if(!el || typeof Chart === 'undefined') return;
+  new Chart(el, { type: 'bar',
+    data: { labels: @json($signupChart['labels']),
+      datasets: [{ label: 'New users', data: @json($signupChart['values']),
+        backgroundColor: '#9e005d', borderRadius: 6 }] },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } } });
+})();
+</script>
 </x-layouts::app>

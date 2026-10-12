@@ -14,6 +14,9 @@ class AdminController extends Controller
         $orders = PackageOrder::query();
         $months = collect(range(5, 0))->map(fn ($i) => now()->subMonths($i));
 
+        $emailSent = (int) \App\Models\EmailCampaign::sum('sent');
+        $emailOpened = (int) \App\Models\CampaignRecipient::whereNotNull('opened_at')->count();
+
         return view('admin.dashboard', [
             'totalOrders' => (clone $orders)->count(),
             'pendingOrders' => (clone $orders)->where('status', 'pending')->count(),
@@ -29,6 +32,21 @@ class AdminController extends Controller
                     ->whereYear('paid_at', $m->year)->whereMonth('paid_at', $m->month)->sum('paid_amount'))->all(),
                 'orders' => $months->map(fn ($m) => PackageOrder::whereYear('created_at', $m->year)
                     ->whereMonth('created_at', $m->month)->count())->all(),
+            ],
+            'usage' => [
+                'signups' => $months->map(fn ($m) => User::whereYear('created_at', $m->year)->whereMonth('created_at', $m->month)->count())->all(),
+                'signupLabels' => $months->map(fn ($m) => $m->format('M'))->all(),
+                'tokensSold' => (int) \App\Models\TokenTopup::where('status', 'paid')->sum('tokens'),
+                'tokensUsed' => (int) abs(\App\Models\TokenTransaction::where('type', 'debit')->sum('amount')),
+                'tokensHeld' => (int) User::sum('token_balance'),
+                'topupRevenue' => (int) \App\Models\TokenTopup::where('status', 'paid')->sum('amount_ugx'),
+                'campaigns' => \App\Models\EmailCampaign::count(),
+                'emailSent' => $emailSent,
+                'emailOpened' => $emailOpened,
+                'emailRate' => $emailSent > 0 ? (int) round($emailOpened / $emailSent * 100) : 0,
+                'prospectsIndexed' => \App\Models\ScrapedProspect::count(),
+                'contactsSaved' => \App\Models\SavedContact::count(),
+                'groupsListed' => \App\Models\WhatsappGroup::where('is_active', true)->count(),
             ],
         ]);
     }
@@ -57,6 +75,12 @@ class AdminController extends Controller
             'orders' => $query->paginate(15)->withQueryString(),
             'filters' => $request->only(['status', 'package', 'search']),
             'packages' => array_keys(config('packages.packages')),
+            'summary' => [
+                'pending' => PackageOrder::where('status', 'pending')->count(),
+                'submitted' => PackageOrder::where('status', 'submitted')->count(),
+                'submittedValue' => (int) PackageOrder::where('status', 'submitted')->sum('due_today'),
+                'paid' => PackageOrder::where('status', 'paid')->count(),
+            ],
         ]);
     }
 
@@ -101,9 +125,11 @@ class AdminController extends Controller
         $query = PackageOrder::with('user')->whereIn('status', ['paid', 'submitted'])->latest();
 
         return view('admin.payments', [
-            'orders' => $query->paginate(15),
+            'orders' => $query->paginate(15)->withQueryString(),
             'collected' => PackageOrder::where('status', 'paid')->sum('paid_amount'),
             'awaiting' => PackageOrder::where('status', 'submitted')->sum('due_today'),
+            'onlineCollected' => (int) PackageOrder::where('status', 'paid')->where('payment_method', 'flutterwave')->sum('paid_amount'),
+            'momoCollected' => (int) PackageOrder::where('status', 'paid')->where('payment_method', 'momo_manual')->sum('paid_amount'),
         ]);
     }
 
@@ -124,6 +150,11 @@ class AdminController extends Controller
             'totalUsers' => User::count(),
             'adminCount' => User::where('is_admin', true)->count(),
             'newCount' => User::where('created_at', '>=', now()->subDays(30))->count(),
+            'signupChart' => [
+                'labels' => collect(range(5, 0))->map(fn ($i) => now()->subMonths($i)->format('M'))->all(),
+                'values' => collect(range(5, 0))->map(fn ($i) => User::whereYear('created_at', now()->subMonths($i)->year)
+                    ->whereMonth('created_at', now()->subMonths($i)->month)->count())->all(),
+            ],
         ]);
     }
 
