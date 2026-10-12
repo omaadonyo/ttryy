@@ -68,7 +68,7 @@
 
 <!-- TOP BAR -->
 <div class="bg-zinc-950 dark:bg-black dark:border-b dark:border-white/10 text-white text-xs sm:text-[13px]">
-  <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between gap-3">
+  <div class="mx-auto w-[92%] md:w-[80%] px-4 py-2 flex items-center justify-between gap-3">
     <p class="truncate">Professional website + 5,000 niche prospects. From <strong>UGX 250,000</strong>.</p>
     <a href="#pricing" class="hidden sm:inline-flex shrink-0 font-semibold hover:underline">See packages</a>
   </div>
@@ -76,7 +76,7 @@
 
 <!-- NAV -->
 <header id="nav" class="sticky top-0 z-50 bg-white/90 dark:bg-[#0A0A0B]/85 backdrop-blur-xl border-b border-zinc-200 dark:border-white/10 transition-shadow">
-  <nav class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 lg:h-[72px]">
+  <nav class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6 flex items-center justify-between h-16 lg:h-[72px]">
     <a href="#home" class="flex items-center gap-2">
       <span class="w-9 h-9 rounded-full bg-[#9e005d] text-white grid place-items-center font-black text-xl font-display">T</span>
       <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">Ttryy</span>
@@ -131,10 +131,10 @@
 <!-- HERO -->
 <section id="home" class="relative overflow-hidden bg-zinc-50 dark:bg-[#0A0A0B]">
   <div class="absolute inset-0 sqgrid pointer-events-none" aria-hidden="true"></div>
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-12 lg:pt-20 lg:pb-16 grid lg:grid-cols-2 gap-12 items-center">
+  <div class="relative mx-auto w-[92%] md:w-[80%] px-4 sm:px-6 pt-12 pb-12 lg:pt-20 lg:pb-16 grid lg:grid-cols-2 gap-12 items-center">
     <div class="reveal visible">
-      <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Websites from UGX 800/day · plus your potential customers</p>
-        <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.08] tracking-tight mt-4 text-zinc-950 dark:text-white">
+      <p class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-600 dark:border-white/15 dark:bg-white/5 dark:text-zinc-300"><span class="size-1.5 rounded-full bg-[#9e005d]"></span>Websites from UGX 800/day · plus your potential customers</p>
+        <h1 class="font-display font-extrabold text-4xl sm:text-5xl leading-[1.08] tracking-tight mt-4 text-zinc-950 dark:text-white">
         Get Your Website for UGX 800/Day.<br>
         We Find Customers. <span class="text-[#9e005d]">You Close Them.</span>
       </h1>
@@ -145,7 +145,11 @@
         <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/25 text-center">Get Your Website</a>
         <a href="#pricing" class="inline-flex justify-center items-center border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold px-7 py-3 rounded-full text-base transition">View Packages</a>
       </div>
-      <p class="mt-5 text-sm text-zinc-500">Run your website for as low as <strong class="text-zinc-900 dark:text-white">UGX 800/day</strong>. No WordPress. Full CMS. SEO included.</p>
+      <div class="mt-7 flex flex-wrap gap-x-7 gap-y-2 text-sm">
+        <span><strong class="text-zinc-950 dark:text-white">5 days</strong> <span class="text-zinc-500">to go live</span></span>
+        <span><strong class="text-zinc-950 dark:text-white">UGX 800/day</strong> <span class="text-zinc-500">from</span></span>
+        <span><strong class="text-zinc-950 dark:text-white">SEO + CMS</strong> <span class="text-zinc-500">included, no WordPress</span></span>
+      </div>
     </div>
 
     <!-- SCRAPER DEMO -->
@@ -193,7 +197,7 @@
 
 <!-- READING GUIDE (sticky) -->
   <div id="guideBar" class="sticky top-16 lg:top-[72px] z-40 bg-white/90 dark:bg-[#0A0A0B]/90 backdrop-blur-xl">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-2 overflow-x-auto">
+    <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6 py-2.5 flex items-center gap-2 overflow-x-auto">
       <span class="hidden md:inline text-xs font-semibold text-zinc-500 shrink-0 mr-1">New here? Read in order:</span>
       <a href="#what" data-spy="what" class="spy-link shrink-0 text-[13px] font-semibold rounded-full border border-zinc-200 dark:border-white/15 px-4 py-1.5 text-zinc-600 dark:text-zinc-300 hover:border-zinc-950 dark:hover:border-white transition">1 &middot; What we do</a>
       <a href="#why" data-spy="why" class="spy-link shrink-0 text-[13px] font-semibold rounded-full border border-zinc-200 dark:border-white/15 px-4 py-1.5 text-zinc-600 dark:text-zinc-300 hover:border-zinc-950 dark:hover:border-white transition">2 &middot; Why Ttryy</a>
@@ -203,7 +207,7 @@
 
 <!-- PART 1: WHAT WE DO -->
 <section id="what" class="py-16 lg:py-24 bg-white dark:bg-[#0A0A0B]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6">
     <div class="max-w-2xl reveal">
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Part 1 &middot; What we do</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Three Things, Clearly Divided</h2>
@@ -235,7 +239,7 @@
 
 <!-- PART 2: WHY TTRYY -->
 <section id="why" class="py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6">
     <div class="max-w-2xl reveal">
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Part 2 &middot; Why Ttryy</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">A Website Alone Doesn&rsquo;t Bring You Business.</h2>
@@ -283,7 +287,7 @@
 
 <!-- PROOF: OUR WORK -->
 <section id="work" class="py-16 lg:py-24 bg-white dark:bg-[#0A0A0B]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6">
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 reveal">
       <div><p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Proof &middot; Our work</p>
         <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Websites We&rsquo;ve Built</h2>
@@ -321,7 +325,7 @@
 <!-- PART 3: HOW WE CAN HELP -->
 <section id="help" class="relative overflow-hidden py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012]">
   <div class="absolute inset-0 sqgrid pointer-events-none" aria-hidden="true"></div>
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="relative mx-auto w-[92%] md:w-[80%] px-4 sm:px-6">
     <div class="max-w-2xl reveal" id="how">
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Part 3 &middot; How we can help</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">From Website to Potential Customer</h2>
@@ -362,7 +366,7 @@
 
 <!-- NICHES -->
 <section id="niches" class="py-16 lg:py-24 bg-white dark:bg-[#0A0A0B]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6">
     <div class="max-w-3xl reveal">
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">How we can help &middot; Your niche</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">We Don&rsquo;t Give You Random Contacts.</h2>
@@ -412,7 +416,7 @@
 
 <!-- OWNERSHIP: M-KOPA MODEL -->
 <section id="ownership" class="py-16 lg:py-24 bg-white dark:bg-[#0A0A0B]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6">
     <div class="max-w-2xl reveal">
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Own it like M-Kopa</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Pay Small-Small. Own It Outright.</h2>
@@ -445,7 +449,7 @@
 <!-- PRICING -->
 <section id="pricing" class="relative overflow-hidden py-16 lg:py-24 bg-white dark:bg-[#0A0A0B]">
   <div class="absolute inset-0 sqgrid pointer-events-none" aria-hidden="true"></div>
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="relative mx-auto w-[92%] md:w-[80%] px-4 sm:px-6">
     <div class="max-w-2xl reveal">
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">How we can help &middot; Pricing</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Choose Your Growth Package</h2>
@@ -460,7 +464,7 @@
       </div>
       <p class="mt-4 text-sm text-zinc-500 text-center">Pick a domain on your package — first payment plus the one-time domain fee gets your website live within 5 days.</p>
     </div>
-    <div class="mt-10 grid lg:grid-cols-4 gap-5 items-stretch max-w-7xl mx-auto">
+    <div class="mt-10 grid lg:grid-cols-4 gap-5 items-stretch mx-auto w-[92%] md:w-[80%]">
       <!-- CORPORATE -->
       <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl p-6 flex flex-col order-1">
         <p class="font-display font-bold text-sm tracking-wide text-zinc-500">CORPORATE</p>
@@ -599,7 +603,7 @@
 
 <!-- BUSINESS TOOLS -->
 <section id="tools" class="py-16 lg:py-24 bg-white dark:bg-[#0A0A0B]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6">
     <div class="max-w-2xl reveal">
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">In development &middot; Secondary preview</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">And We&rsquo;re Building the Tools to Run Your Business</h2>
@@ -652,7 +656,7 @@
 
 <!-- FOOTER -->
 <footer class="bg-[#08080A] dark:bg-black dark:border-t dark:border-white/10 text-zinc-400">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14">
+  <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6 py-14">
     <div class="grid md:grid-cols-2 lg:grid-cols-6 gap-10">
       <div class="lg:col-span-1">
         <div class="flex items-center gap-2"><span class="w-9 h-9 rounded-full bg-[#9e005d] text-white grid place-items-center font-black text-xl">T</span><span class="font-display font-extrabold text-2xl text-white">Ttryy</span></div>
