@@ -16,6 +16,12 @@
         </div>
 
         <div class="card card-pad">
+            <h2 class="section-title">Paid per month</h2>
+            <p class="page-sub">Verified payments, last 6 months.</p>
+            <div class="mt-3 h-52"><canvas id="pay-month-chart"></canvas></div>
+        </div>
+
+        <div class="card card-pad">
             <h2 class="section-title">All payments</h2>
             @if($orders->isEmpty())
                 <x-empty-state icon="payments" title="No payments yet" message="Payments appear here once you pay toward an order." :actionUrl="route('orders.new')" actionLabel="Place an order" />
@@ -57,4 +63,19 @@
             @endif
         </div>
     </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function(){
+  const el = document.getElementById('pay-month-chart');
+  if(!el || typeof Chart === 'undefined') return;
+  new Chart(el, { type: 'bar',
+    data: { labels: @json($paidByMonth['labels']),
+      datasets: [{ label: 'UGX paid', data: @json($paidByMonth['values']),
+        backgroundColor: '#9e005d', borderRadius: 6 }] },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } } });
+})();
+</script>
 </x-layouts::app>

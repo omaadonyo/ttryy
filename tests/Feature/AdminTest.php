@@ -27,6 +27,16 @@ test('admins can open every admin page', function () {
     $this->actingAs(adminUser())->get(route('admin.packages'))->assertOk()->assertSee('CORPORATE', false);
 });
 
+test('admin overview shows revenue chart and users show stats', function () {
+    $this->actingAs(adminUser())->get(route('admin.dashboard'))
+        ->assertOk()
+        ->assertSee('id="admin-rev-chart"', false);
+
+    $this->actingAs(adminUser())->get(route('admin.users'))
+        ->assertOk()
+        ->assertSee('Administrators', false);
+});
+
 test('admins can mark an order paid', function () {
     $admin = adminUser();
     $order = PackageOrder::create([

@@ -13,13 +13,22 @@ class WalletController extends Controller
 {
     public function index(Request $request)
     {
+        $user = $request->user();
+        $days = collect(range(29, 0))->map(fn ($i) => now()->subDays($i)->toDateString());
+
         return view('wallet', [
-            'balance' => (int) $request->user()->token_balance,
+            'balance' => (int) $user->token_balance,
             'packs' => config('tokens.packs'),
             'costs' => config('tokens.costs'),
-            'topups' => $request->user()->tokenTopups()->latest()->take(10)->get(),
-            'ledger' => $request->user()->tokenTransactions()->latest()->take(15)->get(),
+            'topups' => $user->tokenTopups()->latest()->take(10)->get(),
+            'ledger' => $user->tokenTransactions()->latest()->take(15)->get(),
             'flwKey' => config('services.flutterwave.public_key'),
+            'usage30' => [
+                'labels' => $days->map(fn ($d) => \Carbon\Carbon::parse($d)->format('d M'))->all(),
+                'used' => $days->map(fn ($d) => (int) abs($user->tokenTransactions()->where('type', 'debit')->whereDate('created_at', $d)->sum('amount')))->all(),
+                'earned' => $days->map(fn ($d) => (int) $user->tokenTransactions()->where('type', 'credit')->whereDate('created_at', $d)->sum('amount'))->all(),
+            ],
+            'spentTotal' => (int) abs($user->tokenTransactions()->where('type', 'debit')->sum('amount')),
         ]);
     }
 

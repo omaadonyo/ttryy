@@ -26,6 +26,12 @@
         </div>
 
         <div class="card card-pad">
+            <h2 class="section-title">Revenue & order volume</h2>
+            <p class="page-sub">Collected UGX and orders placed per month, last 6 months.</p>
+            <div class="mt-3 h-60"><canvas id="admin-rev-chart"></canvas></div>
+        </div>
+
+        <div class="card card-pad">
             <h2 class="section-title">Latest orders</h2>
             <div class="tbl-wrap mt-3 rounded-none! border-0! shadow-none!">
                 <table class="tbl">
@@ -63,4 +69,26 @@
             </div>
         </div>
     </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function(){
+  const el = document.getElementById('admin-rev-chart');
+  if(!el || typeof Chart === 'undefined') return;
+  new Chart(el, {
+    data: { labels: @json($revenueChart['labels']),
+      datasets: [
+        { type: 'bar', label: 'UGX collected', data: @json($revenueChart['revenue']),
+          backgroundColor: '#9e005d', borderRadius: 6, yAxisID: 'y' },
+        { type: 'line', label: 'Orders', data: @json($revenueChart['orders']),
+          borderColor: '#18181b', tension: .35, pointRadius: 3, yAxisID: 'y1' },
+      ] },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 16 } } },
+      scales: {
+        y: { beginAtZero: true, ticks: { precision: 0 } },
+        y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { precision: 0 } },
+      } } });
+})();
+</script>
 </x-layouts::app>

@@ -12,6 +12,7 @@ class AdminController extends Controller
     public function index()
     {
         $orders = PackageOrder::query();
+        $months = collect(range(5, 0))->map(fn ($i) => now()->subMonths($i));
 
         return view('admin.dashboard', [
             'totalOrders' => (clone $orders)->count(),
@@ -22,6 +23,13 @@ class AdminController extends Controller
             'outstanding' => (clone $orders)->whereIn('status', ['pending', 'submitted'])->sum('total_amount'),
             'totalUsers' => User::count(),
             'recentOrders' => PackageOrder::with('user')->latest()->take(8)->get(),
+            'revenueChart' => [
+                'labels' => $months->map(fn ($m) => $m->format('M'))->all(),
+                'revenue' => $months->map(fn ($m) => (int) PackageOrder::where('status', 'paid')
+                    ->whereYear('paid_at', $m->year)->whereMonth('paid_at', $m->month)->sum('paid_amount'))->all(),
+                'orders' => $months->map(fn ($m) => PackageOrder::whereYear('created_at', $m->year)
+                    ->whereMonth('created_at', $m->month)->count())->all(),
+            ],
         ]);
     }
 
@@ -113,6 +121,9 @@ class AdminController extends Controller
         return view('admin.users', [
             'users' => $query->paginate(15)->withQueryString(),
             'search' => (string) $request->string('search'),
+            'totalUsers' => User::count(),
+            'adminCount' => User::where('is_admin', true)->count(),
+            'newCount' => User::where('created_at', '>=', now()->subDays(30))->count(),
         ]);
     }
 

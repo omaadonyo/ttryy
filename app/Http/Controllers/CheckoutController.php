@@ -214,7 +214,12 @@ class CheckoutController extends Controller
     {
         $orders = request()->user()->packageOrders()->latest()->get();
 
-        return view('my-packages', ['orders' => $orders]);
+        return view('my-packages', [
+            'orders' => $orders,
+            'activeCount' => $orders->filter(fn ($o) => $o->isActive())->count(),
+            'paidSum' => (int) $orders->sum('paid_amount'),
+            'remainingSum' => (int) $orders->sum(fn ($o) => max(0, $o->total_amount - $o->paid_amount)),
+        ]);
     }
 
     /**

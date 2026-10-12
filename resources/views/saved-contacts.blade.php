@@ -8,6 +8,30 @@
             </x-slot:actions>
         </x-page-head>
 
+        <div class="grid auto-rows-min gap-4 sm:grid-cols-3">
+            <x-stat label="Saved contacts" :value="$contacts->total()" hint="Ready for outreach" />
+            <x-stat label="With email" :value="$emailCount" hint="Mailable for campaigns" />
+            <x-stat label="With phone" :value="$phoneCount" hint="WhatsApp-ready" />
+        </div>
+
+        @if($topNiches->isNotEmpty())
+        <div class="card card-pad">
+            <h2 class="section-title">Top niches in your list</h2>
+            <div class="mt-3 space-y-2.5">
+                @php $maxNiche = max(1, $topNiches->max('c')); @endphp
+                @foreach($topNiches as $row)
+                <div class="flex items-center gap-3">
+                    <span class="w-40 shrink-0 truncate text-[13px] font-semibold">{{ $row->niche ?? 'Unspecified' }}</span>
+                    <div class="h-2.5 flex-1 overflow-hidden rounded-full bg-zinc-100 dark:bg-white/10">
+                        <div class="h-2.5 rounded-full bg-brand-600" style="width:{{ round($row->c / $maxNiche * 100) }}%"></div>
+                    </div>
+                    <span class="w-8 shrink-0 text-right text-xs font-bold">{{ $row->c }}</span>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
         <div class="card card-pad">
             @if($contacts->isEmpty())
                 <x-empty-state icon="users" title="No saved contacts yet" message="Run the prospect scraper, then save the contacts you want to market to." :actionUrl="route('scraper.index')" actionLabel="Open scraper" />

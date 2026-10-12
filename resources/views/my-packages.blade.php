@@ -15,6 +15,14 @@
             </x-slot:actions>
         </x-page-head>
 
+        @unless($orders->isEmpty())
+        <div class="grid auto-rows-min gap-4 sm:grid-cols-3">
+            <x-stat label="Active websites" :value="$activeCount" hint="Subscriptions running now" />
+            <x-stat label="Paid so far" :value="'UGX '.number_format($paidSum)" hint="Verified payments" />
+            <x-stat label="Still to pay" :value="'UGX '.number_format($remainingSum)" hint="Across all orders" />
+        </div>
+        @endunless
+
         @if($orders->isEmpty())
         <div class="card card-pad">
             <x-empty-state icon="orders" title="No orders yet" message="Choose a package to get your website and prospect list started." :actionUrl="route('orders.new')" actionLabel="Choose a package" />

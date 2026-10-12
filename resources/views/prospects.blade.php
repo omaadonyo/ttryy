@@ -4,6 +4,13 @@
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Prospect catalogue" sub="Every business indexed from web directories. Filter, then save what you want to market to." />
 
+        <div class="grid auto-rows-min grid-cols-2 gap-4 xl:grid-cols-4">
+            <x-stat label="Businesses indexed" :value="number_format($totals['indexed'])" />
+            <x-stat label="Categories" :value="number_format($totals['categories'])" />
+            <x-stat label="Verified" :value="number_format($totals['verified'])" />
+            <x-stat label="Matching filters" :value="number_format($totals['showing'])" hint="Save them to market" />
+        </div>
+
         <form method="GET" action="{{ route('prospects.index') }}" class="card card-pad grid gap-3 sm:grid-cols-[1fr_200px_160px_auto]">
             <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" placeholder="Search name, category, phone…" class="field">
             <select name="niche" id="flt-niche" class="field">

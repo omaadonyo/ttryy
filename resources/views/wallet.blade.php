@@ -25,6 +25,17 @@
             <p id="topup-status" class="mt-3 hidden text-sm font-semibold"></p>
         </div>
 
+        <div class="grid auto-rows-min gap-4 sm:grid-cols-2">
+            <x-stat label="Tokens used · all time" :value="number_format($spentTotal)" hint="AI messages and group unlocks" />
+            <x-stat label="Top-ups" :value="count($topups)" hint="Recent purchases" />
+        </div>
+
+        <div class="card card-pad">
+            <h2 class="section-title">Token flow · last 30 days</h2>
+            <p class="page-sub">Earned vs used per day.</p>
+            <div class="mt-3 h-52"><canvas id="wallet-flow-chart"></canvas></div>
+        </div>
+
         <div class="grid gap-4 md:grid-cols-2">
             <div class="card card-pad">
                 <h2 class="section-title">What tokens buy</h2>
@@ -110,5 +121,21 @@ document.querySelectorAll('[data-topup]').forEach(b => b.addEventListener('click
   }catch(e){ status.textContent = e.message || 'Top-up failed.'; toast(e.message || 'Top-up failed.', 'danger'); }
   b.disabled = false;
 }));
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function(){
+  const el = document.getElementById('wallet-flow-chart');
+  if(!el || typeof Chart === 'undefined') return;
+  new Chart(el, { type: 'bar',
+    data: { labels: @json($usage30['labels']),
+      datasets: [
+        { label: 'Earned', data: @json($usage30['earned']), backgroundColor: '#10b981', borderRadius: 4 },
+        { label: 'Used', data: @json($usage30['used']), backgroundColor: '#9e005d', borderRadius: 4 },
+      ] },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 16 } } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 }, stacked: true }, x: { stacked: true, ticks: { maxTicksLimit: 10 } } } } });
+})();
 </script>
 </x-layouts::app>

@@ -7,14 +7,19 @@
       .cs-wrap:focus-within .cs-btn{ border-color:#9e005d; }
     </style>
     <div class="flex w-full flex-col gap-5">
-        <x-page-head title="Marketing tool" sub="Outreach, email campaigns, templates and growth communities.">
-            <x-slot:actions>
-                <a href="{{ route('wallet.index') }}" class="inline-flex items-center gap-2 rounded-full bg-zinc-950 px-4 py-2 text-sm font-bold text-white dark:bg-white dark:text-zinc-950">
+        <div class="card card-pad border-transparent! bg-zinc-950 text-white dark:border-white/10! dark:bg-zinc-900">
+            <div class="flex items-end justify-between gap-4 flex-wrap">
+                <div class="min-w-0">
+                    <p class="text-[11px] font-bold tracking-[0.14em] text-white/50 uppercase">Growth suite</p>
+                    <h1 class="font-display mt-1 text-[26px] leading-tight font-extrabold tracking-tight text-white">Marketing tool</h1>
+                    <p class="mt-1 text-sm text-white/70">{{ $contacts->count() }} contacts · {{ $campaigns->count() }} campaigns · {{ $groups->count() }} communities · {{ $templates->count() }} templates</p>
+                </div>
+                <a href="{{ route('wallet.index') }}" class="inline-flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/20">
                     <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
                     <span id="token-balance">{{ number_format($balance) }}</span>&nbsp;tokens
                 </a>
-            </x-slot:actions>
-        </x-page-head>
+            </div>
+        </div>
 
         <div class="seg self-start" role="tablist" aria-label="Marketing tools">
             <button data-mtab="outreach" role="tab" class="mtab rounded-lg px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">WhatsApp outreach <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $contacts->count() }}</span></button>

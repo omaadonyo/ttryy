@@ -3,6 +3,25 @@
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Prospect scraper" sub="Pull a sample of potential customers in your niche. Full contact details unlock for UGX 10,000." />
 
+        <div class="grid auto-rows-min grid-cols-2 gap-4 xl:grid-cols-4">
+            <div class="card card-pad">
+                <p class="eyebrow">Businesses indexed</p>
+                <p class="stat-num mt-2">{{ number_format($indexStats['indexed']) }}</p>
+            </div>
+            <div class="card card-pad">
+                <p class="eyebrow">Verified</p>
+                <p class="stat-num mt-2 text-emerald-600 dark:text-emerald-400">{{ number_format($indexStats['verified']) }}</p>
+            </div>
+            <div class="card card-pad">
+                <p class="eyebrow">Niches covered</p>
+                <p class="stat-num mt-2">{{ number_format($indexStats['niches']) }}</p>
+            </div>
+            <div class="card card-pad border-transparent! bg-brand-600 text-white dark:border-transparent!">
+                <p class="text-[11px] font-bold tracking-[0.14em] text-white/60 uppercase">My saved</p>
+                <p class="stat-num mt-2 text-white!">{{ number_format($indexStats['saved']) }}</p>
+            </div>
+        </div>
+
         <div class="card card-pad">
             <div class="grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
                 <select id="dsc-niche" aria-label="Choose your niche" class="field w-full"></select>

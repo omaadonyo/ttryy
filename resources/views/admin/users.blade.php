@@ -3,6 +3,12 @@
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Users" sub="Customer accounts, order activity and administrator access." />
 
+        <div class="grid auto-rows-min gap-4 sm:grid-cols-3">
+            <x-stat label="Registered users" :value="$totalUsers" />
+            <x-stat label="Administrators" :value="$adminCount" />
+            <x-stat label="New · 30 days" :value="$newCount" />
+        </div>
+
         <form method="GET" action="{{ route('admin.users') }}" class="card card-pad flex flex-col gap-3 sm:flex-row">
             <input type="text" name="search" value="{{ $search }}" placeholder="Search name or email…" class="field flex-1">
             <button type="submit" class="btn-brand">Search</button>

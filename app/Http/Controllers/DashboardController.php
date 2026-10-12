@@ -144,7 +144,14 @@ class DashboardController extends Controller
 
     public function scraper()
     {
-        return view('scraper');
+        return view('scraper', [
+            'indexStats' => [
+                'indexed' => \App\Models\ScrapedProspect::count(),
+                'verified' => \App\Models\ScrapedProspect::where('verified', true)->count(),
+                'niches' => \App\Models\ScrapedProspect::select('niche')->distinct()->count(),
+                'saved' => request()->user()->savedContacts()->count(),
+            ],
+        ]);
     }
 
     public function prospects(Request $request)
@@ -183,6 +190,12 @@ class DashboardController extends Controller
             'niches' => \App\Models\ScrapedProspect::select('niche')->distinct()->orderBy('niche')->pluck('niche'),
             'categories' => $categories,
             'filters' => $request->only(['q', 'niche', 'category', 'verified']),
+            'totals' => [
+                'indexed' => \App\Models\ScrapedProspect::count(),
+                'categories' => \App\Models\ScrapedProspect::whereNotNull('category')->select('category')->distinct()->count(),
+                'verified' => \App\Models\ScrapedProspect::where('verified', true)->count(),
+                'showing' => (clone $query)->count(),
+            ],
         ]);
     }
 
@@ -190,7 +203,13 @@ class DashboardController extends Controller
     {
         $contacts = $request->user()->savedContacts()->latest()->paginate(20);
 
-        return view('saved-contacts', ['contacts' => $contacts]);
+        return view('saved-contacts', [
+            'contacts' => $contacts,
+            'emailCount' => $request->user()->savedContacts()->whereNotNull('email')->count(),
+            'phoneCount' => $request->user()->savedContacts()->whereNotNull('phone')->count(),
+            'topNiches' => $request->user()->savedContacts()
+                ->selectRaw('niche, COUNT(*) as c')->groupBy('niche')->orderByDesc('c')->take(5)->get(),
+        ]);
     }
 
     public function storeContacts(Request $request)
@@ -258,10 +277,20 @@ class DashboardController extends Controller
     {
         $orders = $request->user()->packageOrders()->latest()->get();
 
+        $months = collect(range(5, 0))->map(fn ($i) => now()->subMonths($i));
+        $paidByMonth = [
+            'labels' => $months->map(fn ($m) => $m->format('M'))->all(),
+            'values' => $months->map(fn ($m) => (int) $request->user()->packageOrders()
+                ->where('status', 'paid')
+                ->whereYear('paid_at', $m->year)->whereMonth('paid_at', $m->month)
+                ->sum('paid_amount'))->all(),
+        ];
+
         return view('payments', [
             'orders' => $orders,
             'paidTotal' => $orders->where('status', 'paid')->sum('paid_amount'),
             'outstanding' => $orders->whereIn('status', ['pending', 'submitted'])->sum(fn ($o) => $o->total_amount - $o->paid_amount),
+            'paidByMonth' => $paidByMonth,
         ]);
     }
 }

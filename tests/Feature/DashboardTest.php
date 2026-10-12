@@ -35,6 +35,34 @@ test('dashboard shows kpis, checklist, activity chart and feed', function () {
         ->assertSee('vs prior 30 days', false);
 });
 
+test('account pages show stats and charts', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get(route('packages.index'))
+        ->assertOk()
+        ->assertSee('My packages', false);
+
+    $this->actingAs($user)->get(route('payments.index'))
+        ->assertOk()
+        ->assertSee('id="pay-month-chart"', false);
+
+    $this->actingAs($user)->get(route('wallet.index'))
+        ->assertOk()
+        ->assertSee('id="wallet-flow-chart"', false);
+
+    $this->actingAs($user)->get(route('scraper.index'))
+        ->assertOk()
+        ->assertSee('Businesses indexed', false);
+
+    $this->actingAs($user)->get(route('prospects.index'))
+        ->assertOk()
+        ->assertSee('Matching filters', false);
+
+    $this->actingAs($user)->get(route('contacts.index'))
+        ->assertOk()
+        ->assertSee('With email', false);
+});
+
 test('analytics page renders charts', function () {
     $user = User::factory()->create();
 
