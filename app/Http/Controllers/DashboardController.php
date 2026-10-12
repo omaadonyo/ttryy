@@ -10,14 +10,41 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $orders = $request->user()->packageOrders()->latest()->get();
+        $user = $request->user();
+        $orders = $user->packageOrders()->latest()->get();
 
-        $campaigns = \App\Models\EmailCampaign::where('user_id', $request->user()->id)
+        $campaigns = \App\Models\EmailCampaign::where('user_id', $user->id)
             ->withCount(['recipients as read_count' => fn ($q) => $q->whereNotNull('opened_at')])
             ->latest()->get();
         $mktSent = (int) $campaigns->sum('sent');
         $mktOpened = (int) $campaigns->sum('read_count');
         $chartCampaigns = $campaigns->take(6)->reverse()->values();
+
+        $now = now();
+        $curStart = $now->copy()->subDays(30);
+        $prevStart = $now->copy()->subDays(60);
+        $delta = fn ($c, $p) => $p > 0 ? (int) round(($c - $p) / $p * 100) : ($c > 0 ? 100 : 0);
+
+        $ordersCur = $user->packageOrders()->where('created_at', '>=', $curStart)->count();
+        $ordersPrev = $user->packageOrders()->where('created_at', '>=', $prevStart)->where('created_at', '<', $curStart)->count();
+        $spendCur = (int) $user->packageOrders()->where('created_at', '>=', $curStart)->sum('total_amount');
+        $spendPrev = (int) $user->packageOrders()->where('created_at', '>=', $prevStart)->where('created_at', '<', $curStart)->sum('total_amount');
+        $emailsCur = (int) \App\Models\EmailCampaign::where('user_id', $user->id)->where('created_at', '>=', $curStart)->sum('sent');
+        $emailsPrev = (int) \App\Models\EmailCampaign::where('user_id', $user->id)->where('created_at', '>=', $prevStart)->where('created_at', '<', $curStart)->sum('sent');
+
+        $days = collect(range(13, 0))->map(fn ($i) => $now->copy()->subDays($i));
+        $activityChart = [
+            'labels' => $days->map(fn ($d) => $d->format('d M'))->all(),
+            'orders' => $days->map(fn ($d) => $user->packageOrders()->whereDate('created_at', $d->toDateString())->count())->all(),
+            'emails' => $days->map(fn ($d) => (int) \App\Models\EmailCampaign::where('user_id', $user->id)->whereDate('created_at', $d->toDateString())->sum('sent'))->all(),
+        ];
+
+        $checklist = [
+            ['label' => 'Place your first order', 'done' => $orders->isNotEmpty(), 'url' => route('orders.new')],
+            ['label' => 'Save prospects to market to', 'done' => $user->savedContacts()->exists(), 'url' => route('scraper.index')],
+            ['label' => 'Send your first campaign', 'done' => $campaigns->isNotEmpty(), 'url' => route('marketing.index')],
+            ['label' => 'Top up your token wallet', 'done' => $user->tokenTopups()->where('status', 'paid')->exists(), 'url' => route('wallet.index')],
+        ];
 
         return view('dashboard', [
             'orders' => $orders,
@@ -37,6 +64,16 @@ class DashboardController extends Controller
                 'sent' => $chartCampaigns->map(fn ($c) => (int) $c->sent)->all(),
                 'opened' => $chartCampaigns->map(fn ($c) => (int) $c->read_count)->all(),
             ],
+            'kpis' => [
+                ['orders' => $ordersCur, 'delta' => $delta($ordersCur, $ordersPrev)],
+                ['spend' => $spendCur, 'delta' => $delta($spendCur, $spendPrev)],
+                ['emails' => $emailsCur, 'delta' => $delta($emailsCur, $emailsPrev)],
+            ],
+            'activityChart' => $activityChart,
+            'activity' => $user->notifications()->latest()->take(6)->get(),
+            'checklist' => $checklist,
+            'checklistDone' => collect($checklist)->every(fn ($s) => $s['done']),
+            'tokenBalance' => (int) $user->token_balance,
         ]);
     }
 

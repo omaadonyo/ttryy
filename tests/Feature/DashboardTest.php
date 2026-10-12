@@ -24,6 +24,17 @@ test('dashboard shows marketing performance and graphs', function () {
         ->assertSee('id="dash-mkt-chart"', false);
 });
 
+test('dashboard shows kpis, checklist, activity chart and feed', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('Get set up', false)
+        ->assertSee('id="dash-activity-chart"', false)
+        ->assertSee('Recent activity', false)
+        ->assertSee('vs prior 30 days', false);
+});
+
 test('analytics page renders charts', function () {
     $user = User::factory()->create();
 

@@ -8,15 +8,15 @@
     <body class="min-h-screen bg-[#f4f4f5] font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100">
         @php
         $navSections = [
+            'Overview' => [
+                ['label' => 'Dashboard', 'icon' => 'home', 'href' => route('dashboard'), 'active' => request()->routeIs('dashboard')],
+            ],
             'Growth' => [
                 ['label' => 'Prospect scraper', 'icon' => 'magnifying-glass', 'href' => route('scraper.index'), 'active' => request()->routeIs('scraper.*')],
                 ['label' => 'Prospects', 'icon' => 'building-office-2', 'href' => route('prospects.index'), 'active' => request()->routeIs('prospects.*')],
                 ['label' => 'Saved contacts', 'icon' => 'bookmark', 'href' => route('contacts.index'), 'active' => request()->routeIs('contacts.*')],
                 ['label' => 'Marketing tool', 'icon' => 'megaphone', 'href' => route('marketing.index'), 'active' => request()->routeIs('marketing.*')],
                 ['label' => 'Analytics', 'icon' => 'presentation-chart-line', 'href' => route('analytics.index'), 'active' => request()->routeIs('analytics.*')],
-            ],
-            'Overview' => [
-                ['label' => 'Dashboard', 'icon' => 'home', 'href' => route('dashboard'), 'active' => request()->routeIs('dashboard')],
             ],
             'Business' => [
                 ['label' => 'New order', 'icon' => 'plus', 'href' => route('orders.new'), 'active' => request()->routeIs('orders.new') || request()->routeIs('checkout*')],
