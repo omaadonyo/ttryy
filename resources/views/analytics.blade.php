@@ -16,8 +16,6 @@
         ]])
 
         <div id="tour-astats" class="grid auto-rows-min gap-4 md:grid-cols-4">
-
-        <div class="grid auto-rows-min gap-4 md:grid-cols-4">
             <x-stat label="Total committed" :value="'UGX '.number_format($totalCommitted)" hint="All orders" />
             <x-stat label="Total paid" :value="'UGX '.number_format($totalPaid)" hint="Verified payments" />
             <x-stat label="Email open rate" :value="$mktTotals['rate'].'%'" :hint="$mktTotals['opened'].' opened of '.$mktTotals['sent'].' sent'" />

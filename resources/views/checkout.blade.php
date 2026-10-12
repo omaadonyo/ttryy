@@ -540,5 +540,4 @@ if(document.readyState === 'loading') document.addEventListener('DOMContentLoade
 else initCheckout();
 if(window.Livewire) document.addEventListener('livewire:navigated', initCheckout);
 </script>
-    </div>
 </x-layouts::app>
