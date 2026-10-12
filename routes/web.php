@@ -9,6 +9,24 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
 
+Route::view('privacy', 'privacy')->name('privacy');
+Route::view('terms', 'terms')->name('terms');
+Route::view('sitemap', 'sitemap')->name('sitemap.page');
+Route::get('sitemap.xml', function () {
+    $today = now()->toDateString();
+    $urls = [
+        ['loc' => route('home'), 'lastmod' => $today, 'freq' => 'daily', 'priority' => '1.0'],
+        ['loc' => route('checkout'), 'lastmod' => $today, 'freq' => 'weekly', 'priority' => '0.8'],
+        ['loc' => route('privacy'), 'lastmod' => $today, 'freq' => 'monthly', 'priority' => '0.3'],
+        ['loc' => route('terms'), 'lastmod' => $today, 'freq' => 'monthly', 'priority' => '0.3'],
+        ['loc' => route('sitemap.page'), 'lastmod' => $today, 'freq' => 'weekly', 'priority' => '0.4'],
+        ['loc' => route('login'), 'lastmod' => $today, 'freq' => 'monthly', 'priority' => '0.2'],
+        ['loc' => route('register'), 'lastmod' => $today, 'freq' => 'monthly', 'priority' => '0.2'],
+    ];
+
+    return response()->view('sitemap-xml', ['urls' => $urls])->header('Content-Type', 'text/xml');
+})->name('sitemap.xml');
+
 Route::get('t/{token}', [MarketingController::class, 'trackOpen'])->name('tracking.open');
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {

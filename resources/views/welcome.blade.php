@@ -5,6 +5,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ttryy — Get Your Website for UGX 800/Day. We Find Customers. You Close Them.</title>
 <meta name="description" content="Get a professional, SEO-ready business website plus targeted potential customers and business opportunities specific to your niche. Run your website for as low as UGX 800/day.">
+<link rel="canonical" href="{{ url('/') }}">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ttryy">
+<meta property="og:title" content="Ttryy — Get Your Website for UGX 800/Day">
+<meta property="og:description" content="Professional, SEO-ready business websites plus targeted potential customers. Pay a small deposit, then daily, weekly or monthly.">
+<meta property="og:url" content="{{ url('/') }}">
+<meta property="og:image" content="{{ url('/favicon.svg') }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ttryy — Get Your Website for UGX 800/Day">
+<meta name="twitter:description" content="Professional websites plus customers, from UGX 800/day. We find customers. You close them.">
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@graph' => [
+        [
+            '@type' => 'Organization',
+            'name' => 'Ttryy',
+            'url' => url('/'),
+            'logo' => url('/favicon.svg'),
+            'email' => config('packages.admin_email'),
+            'sameAs' => [],
+        ],
+        [
+            '@type' => 'WebSite',
+            'name' => 'Ttryy',
+            'url' => url('/'),
+        ],
+        [
+            '@type' => 'Product',
+            'name' => 'Ttryy Website Packages',
+            'description' => 'Professional business websites with daily, weekly or monthly payment plans from UGX 800/day.',
+            'brand' => ['@type' => 'Brand', 'name' => 'Ttryy'],
+            'offers' => collect(config('packages.packages'))->map(fn ($p, $name) => [
+                '@type' => 'Offer',
+                'name' => $name.' package',
+                'price' => $p['price'],
+                'priceCurrency' => config('packages.currency'),
+                'availability' => 'https://schema.org/InStock',
+            ])->values()->all(),
+        ],
+    ],
+], JSON_UNESCAPED_SLASHES) !!}
+</script>
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0B">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%239e005d'/><text x='50' y='70' font-size='54' font-family='Arial Black' font-weight='900' fill='white' text-anchor='middle'>T</text></svg>">
@@ -95,13 +139,29 @@
         <svg class="theme-icon-moon w-5 h-5"><use href="#i-moon"/></svg>
         <svg class="theme-icon-sun w-5 h-5 hidden"><use href="#i-sun"/></svg>
       </button>
-      <a href="https://wa.me/256700000000?text=Hi%20Ttryy!%20I%20want%20a%20website%20for%20my%20business." target="_blank" class="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">
-        <svg class="w-5 h-5"><use href="#i-chat"/></svg>
-        WhatsApp
-      </a>
       <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white text-sm font-bold px-6 py-2 rounded-full transition shadow-lg shadow-[#9e005d]/25">Get Started</a>
       @auth
-      <a href="/dashboard" class="hidden md:inline-flex text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">Dashboard</a>
+      <div class="relative hidden md:block" id="landing-user">
+        <button onclick="toggleLandingMenu(event)" class="flex items-center gap-1.5 rounded-full py-1 pl-1 pr-2 transition hover:bg-zinc-100 dark:hover:bg-white/10" aria-label="Account menu" aria-haspopup="true">
+          <span class="grid size-8 place-items-center rounded-full bg-[#9e005d] text-xs font-extrabold text-white">{{ collect(explode(' ', trim(auth()->user()->name)))->map(fn($p) => mb_substr($p, 0, 1))->take(2)->implode('') }}</span>
+          <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div id="landing-menu" class="hidden absolute right-0 top-full z-50 mt-2 w-60 overflow-hidden rounded-xl border border-zinc-200 bg-white p-1.5 shadow-2xl dark:border-white/10 dark:bg-[#141416]">
+          <div class="px-3.5 py-3">
+            <p class="truncate text-sm font-bold text-zinc-950 dark:text-white">{{ auth()->user()->name }}</p>
+            <p class="truncate text-xs text-zinc-500">{{ auth()->user()->email }}</p>
+          </div>
+          <div class="border-t border-zinc-100 dark:border-white/10"></div>
+          <a href="/dashboard" class="mt-1.5 block rounded-lg px-3.5 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-950/5 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white">Dashboard</a>
+          <a href="/dashboard/packages" class="block rounded-lg px-3.5 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-950/5 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white">My packages</a>
+          <a href="/dashboard/marketing" class="block rounded-lg px-3.5 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-950/5 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white">Marketing tool</a>
+          <a href="/settings/profile" class="block rounded-lg px-3.5 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-950/5 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white">Profile settings</a>
+          <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="block w-full rounded-lg px-3.5 py-2 text-left text-sm font-semibold text-red-600 hover:bg-red-500/10 dark:text-red-400">Log out</button>
+          </form>
+        </div>
+      </div>
       @else
       <a href="/login" class="hidden md:inline-flex text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">Log in</a>
       @endauth
@@ -122,6 +182,10 @@
     <a href="/dashboard/checkout" class="block text-center w-full mt-2 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full">Get Started</a>
     @auth
     <a href="/dashboard" class="block text-center w-full mt-2 border border-zinc-300 dark:border-white/20 font-bold py-3 rounded-full">Dashboard</a>
+    <form method="POST" action="{{ route('logout') }}" class="w-full">
+      @csrf
+      <button type="submit" class="block text-center w-full mt-2 text-red-600 dark:text-red-400 font-bold py-3 rounded-full hover:bg-red-500/10">Log out</button>
+    </form>
     @else
     <a href="/login" class="block text-center w-full mt-2 border border-zinc-300 dark:border-white/20 font-bold py-3 rounded-full">Log in / Register</a>
     @endauth
@@ -674,7 +738,7 @@
       <div><p class="text-white font-bold text-sm">Find Business</p><ul class="mt-4 space-y-2.5 text-sm">@foreach(['Potential Customers','Business Directories','Tenders','Grants','Procurement Opportunities','Funding Opportunities','Business Opportunities'] as $l)<li><a href="#niches" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul></div>
       <div><p class="text-white font-bold text-sm">Business Tools</p><ul class="mt-4 space-y-2.5 text-sm">@foreach(['Accounting','CRM','Quotations','Invoicing','Receipts','POS','Inventory','Customers','Suppliers','Expenses','Reports','Cash Flow','P&L','Balance Sheet'] as $l)<li><a href="#tools" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul></div>
       <div><p class="text-white font-bold text-sm">Resources</p><ul class="mt-4 space-y-2.5 text-sm">@foreach(['Business Templates','Proposal Templates','Company Profiles','Tender Resources','Grant Resources','Business Plans','Marketing Resources','PDF Tools','Business Guides'] as $l)<li><a href="#" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul>
-        <p class="text-white font-bold text-sm mt-6">Company</p><ul class="mt-3 space-y-2.5 text-sm">@foreach(['About Ttryy','Our Work','Contact','FAQ','Terms','Privacy Policy'] as $l)<li><a href="#" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul></div>
+        <p class="text-white font-bold text-sm mt-6">Company</p><ul class="mt-3 space-y-2.5 text-sm"><li><a href="#home" class="hover:text-white">About Ttryy</a></li><li><a href="#work" class="hover:text-white">Our Work</a></li><li><a href="mailto:hello@ttryy.com" class="hover:text-white">Contact</a></li><li><a href="#faq" class="hover:text-white">FAQ</a></li><li><a href="{{ route('terms') }}" class="hover:text-white">Terms</a></li><li><a href="{{ route('privacy') }}" class="hover:text-white">Privacy Policy</a></li><li><a href="{{ route('sitemap.page') }}" class="hover:text-white">Sitemap</a></li></ul></div>
       <div><p class="text-white font-bold text-sm">Industries</p><ul class="mt-4 space-y-2.5 text-sm">@foreach(['NGOs & Charities','Construction','IT & Software','Marketing','Cleaning','Security','Catering','Printing','Furniture','Accounting','Logistics','Agriculture','Solar','Medical','Retail','Professional Services'] as $l)<li><a href="#niches" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul></div>
     </div>
     <div class="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-3 text-xs text-zinc-500">
@@ -936,6 +1000,8 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLead(); });
 const menuBtn=document.getElementById('menuBtn'), mobileMenu=document.getElementById('mobileMenu'), mO=document.getElementById('menuOpen'), mC=document.getElementById('menuClose');
 menuBtn.addEventListener('click', ()=>{ const open=mobileMenu.classList.toggle('hidden'); mO.classList.toggle('hidden',!open); mC.classList.toggle('hidden',open); });
 mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{ mobileMenu.classList.add('hidden'); mO.classList.remove('hidden'); mC.classList.add('hidden'); }));
+function toggleLandingMenu(e){ if(e) e.stopPropagation(); document.getElementById('landing-menu')?.classList.toggle('hidden'); }
+document.addEventListener('click', e=>{ const w=document.getElementById('landing-user'); if(w && !w.contains(e.target)) document.getElementById('landing-menu')?.classList.add('hidden'); });
 const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target);} }),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 window.addEventListener('scroll',()=>{ document.getElementById('nav').style.boxShadow = window.scrollY>10 ? '0 8px 30px -12px rgba(10,10,12,.18)' : 'none'; });

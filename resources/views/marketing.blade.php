@@ -22,10 +22,10 @@
         </div>
 
         <div class="seg self-start" role="tablist" aria-label="Marketing tools">
-            <button data-mtab="outreach" role="tab" class="mtab rounded-lg px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">WhatsApp outreach <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $contacts->count() }}</span></button>
-            <button data-mtab="email" role="tab" class="mtab rounded-lg px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Email campaigns <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $campaigns->count() }}</span></button>
-            <button data-mtab="community" role="tab" class="mtab rounded-lg px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Communities <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $groups->count() }}</span></button>
-            <button data-mtab="templates" role="tab" class="mtab rounded-lg px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Templates <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $templates->count() }}</span></button>
+            <button data-mtab="outreach" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">WhatsApp outreach <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $contacts->count() }}</span></button>
+            <button data-mtab="email" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Email campaigns <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $campaigns->count() }}</span></button>
+            <button data-mtab="community" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Communities <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $groups->count() }}</span></button>
+            <button data-mtab="templates" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Templates <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $templates->count() }}</span></button>
         </div>
 
         <!-- TAB: WhatsApp outreach -->
@@ -331,7 +331,7 @@ function mktFill(tpl, c){
 function paintMtabs(active){
   document.querySelectorAll('[data-mtab]').forEach(b => {
     const on = b.dataset.mtab === active;
-    b.className = 'mtab rounded-lg px-4 py-2 text-[13px] font-bold whitespace-nowrap transition ' + (on ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white');
+    b.className = 'mtab rounded-full px-4 py-2 text-[13px] font-bold whitespace-nowrap transition ' + (on ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white');
   });
   document.querySelectorAll('[data-mtab-panel]').forEach(p => {
     const on = p.dataset.mtabPanel === active;

@@ -21,8 +21,8 @@
         </x-page-head>
 
         <div class="seg self-start" role="tablist" aria-label="Notifications filter">
-            <a href="{{ route('notifications.index') }}" class="rounded-lg px-4 py-2 text-[13px] font-bold whitespace-nowrap transition {{ $tab !== 'unread' ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white' }}">All <span class="ml-1">{{ $totalCount }}</span></a>
-            <a href="{{ route('notifications.index', ['tab' => 'unread']) }}" class="rounded-lg px-4 py-2 text-[13px] font-bold whitespace-nowrap transition {{ $tab === 'unread' ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white' }}">Unread <span class="ml-1">{{ $unreadCount }}</span></a>
+            <a href="{{ route('notifications.index') }}" class="rounded-full px-4 py-2 text-[13px] font-bold whitespace-nowrap transition {{ $tab !== 'unread' ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white' }}">All <span class="ml-1">{{ $totalCount }}</span></a>
+            <a href="{{ route('notifications.index', ['tab' => 'unread']) }}" class="rounded-full px-4 py-2 text-[13px] font-bold whitespace-nowrap transition {{ $tab === 'unread' ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white' }}">Unread <span class="ml-1">{{ $unreadCount }}</span></a>
         </div>
 
         <div class="card card-pad">

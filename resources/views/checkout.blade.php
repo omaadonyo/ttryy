@@ -40,8 +40,8 @@
     <h2 class="font-display font-bold text-xl text-zinc-950 dark:text-white">Create an account or log in</h2>
     <p class="mt-1 text-sm text-zinc-500">Your package choices below are saved automatically — nothing is lost when you sign in.</p>
     <div class="mt-4 inline-flex rounded-full bg-zinc-100 dark:bg-white/10 p-1" role="tablist" aria-label="Account">
-      <button type="button" id="tab-login" class="rounded-lg px-4 py-2 text-sm font-bold transition">Log in</button>
-      <button type="button" id="tab-register" class="rounded-lg px-4 py-2 text-sm font-bold transition">Create account</button>
+      <button type="button" id="tab-login" class="rounded-full px-4 py-2 text-sm font-bold transition">Log in</button>
+      <button type="button" id="tab-register" class="rounded-full px-4 py-2 text-sm font-bold transition">Create account</button>
     </div>
     <div class="mt-6 grid lg:grid-cols-2 gap-8">
       <div id="panel-login">
@@ -451,8 +451,8 @@ function initCheckout(){
   const tabLogin = document.getElementById('tab-login'), tabReg = document.getElementById('tab-register');
   const pLogin = document.getElementById('panel-login'), pReg = document.getElementById('panel-register');
   const paintTabs = login => {
-    const on = 'rounded-lg px-4 py-2 text-sm font-bold transition bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow';
-    const off = 'rounded-lg px-4 py-2 text-sm font-bold transition text-zinc-500';
+    const on = 'rounded-full px-4 py-2 text-sm font-bold transition bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow';
+    const off = 'rounded-full px-4 py-2 text-sm font-bold transition text-zinc-500';
     if(!tabLogin) return;
     tabLogin.className = login ? on : off;
     tabReg.className = login ? off : on;

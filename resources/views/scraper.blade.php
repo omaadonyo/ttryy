@@ -40,7 +40,7 @@
                 <span id="dsc-count" class="ml-auto text-[11px] font-semibold text-zinc-500">0 records</span>
                 <button id="dsc-save" class="btn-brand btn-sm ml-2 hidden shrink-0">Save contacts</button>
             </div>
-            <div id="dsc-rows" class="divide-y divide-neutral-200 dark:divide-neutral-700">
+            <div id="dsc-rows" class="h-[380px] divide-y divide-neutral-200 overflow-y-auto dark:divide-neutral-700">
                 <p class="px-4 py-8 text-center text-sm text-zinc-400">Choose your niche and hit <strong>Scrape</strong> for a partially-visible sample.</p>
             </div>
             <div id="dsc-locked" class="hidden relative border-t border-neutral-200 dark:border-neutral-700">
