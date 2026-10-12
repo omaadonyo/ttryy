@@ -4,10 +4,17 @@
         <x-page-head title="Payment history" sub="Every payment toward your websites, in one place.">
             <x-slot:actions>
                 <a href="{{ route('orders.new') }}" class="btn-brand">New order</a>
+                <button onclick="startTour_payments()" class="btn-ghost btn-sm">Take tour</button>
             </x-slot:actions>
         </x-page-head>
 
-        <div class="grid auto-rows-min gap-4 md:grid-cols-2">
+        @include('partials.tour', ['key' => 'payments', 'steps' => [
+            ['target' => '#tour-pstats', 'title' => 'Money in, money owed', 'body' => 'Verified total paid vs what is still outstanding across your orders.'],
+            ['target' => '#tour-pchart', 'title' => 'Paid per month', 'body' => 'Verified payments over the last 6 months — watch the habit build.'],
+            ['target' => '#tour-ptable', 'title' => 'Every payment', 'body' => 'Date, reference, method, amount and status for the full history.'],
+        ]])
+
+        <div id="tour-pstats" class="grid auto-rows-min gap-4 md:grid-cols-2">
             <div class="card card-pad border-transparent! bg-brand-600 text-white dark:border-transparent!">
                 <p class="text-[11px] font-bold tracking-[0.14em] text-white/60 uppercase">Total paid</p>
                 <p class="stat-num mt-2 text-white!">UGX {{ number_format($paidTotal) }}</p>
@@ -15,13 +22,13 @@
             <x-stat label="Still outstanding" :value="'UGX '.number_format($outstanding)" hint="Clears as payments land" />
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-pchart" class="card card-pad">
             <h2 class="section-title">Paid per month</h2>
             <p class="page-sub">Verified payments, last 6 months.</p>
             <div class="mt-3 h-52"><canvas id="pay-month-chart"></canvas></div>
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-ptable" class="card card-pad">
             <h2 class="section-title">All payments</h2>
             @if($orders->isEmpty())
                 <x-empty-state icon="payments" title="No payments yet" message="Payments appear here once you pay toward an order." :actionUrl="route('orders.new')" actionLabel="Place an order" />

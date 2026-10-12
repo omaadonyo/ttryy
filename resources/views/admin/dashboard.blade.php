@@ -1,9 +1,20 @@
 <x-layouts::app :title="__('Admin overview')">
     @include('partials.toast')
     <div class="flex w-full flex-col gap-5">
-        <x-page-head title="Administration" sub="Orders, payments, users and package performance." />
+        <x-page-head title="Administration" sub="Orders, payments, users and package performance.">
+            <x-slot:actions>
+                <button onclick="startTour_admin()" class="btn-ghost btn-sm">Take tour</button>
+            </x-slot:actions>
+        </x-page-head>
 
-        <div class="grid auto-rows-min gap-4 md:grid-cols-4">
+        @include('partials.tour', ['key' => 'admin', 'steps' => [
+            ['target' => '#tour-aostats', 'title' => 'Business health', 'body' => 'Orders by status, verified collections, outstanding totals and registered users.'],
+            ['target' => '#tour-aorev', 'title' => 'Money in motion', 'body' => 'Collected revenue against order volume per month — spot slow months fast.'],
+            ['target' => '#tour-aousage', 'title' => 'Platform usage', 'body' => 'Token economy, user growth, email volume and content stats — how the product is really used.'],
+            ['target' => '#tour-aotable', 'title' => 'Latest orders', 'body' => 'Newest orders with customers and statuses. Full management lives under Orders.'],
+        ]])
+
+        <div id="tour-aostats" class="grid auto-rows-min gap-4 md:grid-cols-4">
             <x-stat label="Total orders" :value="$totalOrders" :hint="$pendingOrders.' pending · '.$submittedOrders.' submitted · '.$paidOrders.' paid'" />
             <div class="card card-pad">
                 <p class="eyebrow">Collected</p>
@@ -25,13 +36,13 @@
             <a href="{{ route('admin.packages') }}" class="btn-ghost btn-sm">Packages</a>
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-aorev" class="card card-pad">
             <h2 class="section-title">Revenue & order volume</h2>
             <p class="page-sub">Collected UGX and orders placed per month, last 6 months.</p>
             <div class="mt-3 h-60"><canvas id="admin-rev-chart"></canvas></div>
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-aousage" class="card card-pad">
             <div class="flex items-center justify-between gap-3 flex-wrap">
                 <div>
                     <h2 class="section-title">Platform usage</h2>
@@ -82,7 +93,7 @@
             </div>
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-aotable" class="card card-pad">
             <h2 class="section-title">Latest orders</h2>
             <div class="tbl-wrap mt-3 rounded-none! border-0! shadow-none!">
                 <table class="tbl">

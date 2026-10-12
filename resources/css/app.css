@@ -151,3 +151,6 @@ select:focus[data-flux-control] {
 /* Global tightening overrides */
 .rounded-xl { border-radius: 0.375rem; }
 .py-2\.5 { padding-block: calc(var(--spacing) * 1.5); }
+
+/* Guided tour spotlight */
+.tour-hl { outline: 2px solid #9e005d !important; outline-offset: 3px; }

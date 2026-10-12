@@ -12,11 +12,17 @@
                     </select>
                 </div>
                 <a href="{{ route('orders.new') }}" class="btn-brand">New order</a>
+                <button onclick="startTour_packages()" class="btn-ghost btn-sm">Take tour</button>
             </x-slot:actions>
         </x-page-head>
 
+        @include('partials.tour', ['key' => 'packages', 'steps' => [
+            ['target' => '#tour-pstats', 'title' => 'Portfolio at a glance', 'body' => 'Active websites, verified payments and what is still to pay across all orders.'],
+            ['target' => '#order-grid', 'title' => 'Your orders', 'body' => 'Filter by status. Each card shows plan, payments progress, subscription time left and the invoice PDF.'],
+        ]])
+
         @unless($orders->isEmpty())
-        <div class="grid auto-rows-min gap-4 sm:grid-cols-3">
+        <div id="tour-pstats" class="grid auto-rows-min gap-4 sm:grid-cols-3">
             <x-stat label="Active websites" :value="$activeCount" hint="Subscriptions running now" />
             <x-stat label="Paid so far" :value="'UGX '.number_format($paidSum)" hint="Verified payments" />
             <x-stat label="Still to pay" :value="'UGX '.number_format($remainingSum)" hint="Across all orders" />

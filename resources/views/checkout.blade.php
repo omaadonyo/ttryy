@@ -33,7 +33,18 @@
     <span class="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-zinc-300 px-3 py-1 text-xs font-semibold">Package &amp; plan</span>
     <span class="text-zinc-300 dark:text-zinc-600">→</span>
     <span class="text-xs text-zinc-500">Confirm &amp; pay</span>
+    <button onclick="startTour_checkout()" class="ml-auto text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Take the tour</button>
   </div>
+
+  @include('partials.tour', ['key' => 'checkout', 'steps' => [
+      ['target' => '#wiz-nav', 'title' => 'Five quick steps', 'body' => 'Package, domain, details, billing, then pay. Completed steps stay clickable so you can go back.'],
+      ['target' => '[data-step="1"]', 'wiz' => 1, 'title' => '1 · Your package', 'body' => 'START, GROW, BUSINESS or CORPORATE. Prices and deposits are fixed — the summary updates live.'],
+      ['target' => '[data-step="2"]', 'wiz' => 2, 'title' => '2 · Your domain', 'body' => 'Use your own domain free, or let us register a budget or premium one — a one-time fee, never billed again.'],
+      ['target' => '[data-step="3"]', 'wiz' => 3, 'title' => '3 · Business details', 'body' => 'Business name and WhatsApp number are required — this is where we confirm and deliver.'],
+      ['target' => '[data-step="4"]', 'wiz' => 4, 'title' => '4 · How you pay', 'body' => 'Full upfront covers 12 months, or spread it daily, weekly or monthly like M-Kopa.'],
+      ['target' => '[data-step="5"]', 'wiz' => 5, 'title' => '5 · How long', 'body' => 'Choose 3, 6 or 12 months. Your website stays running while the plan is active.'],
+      ['target' => '#tour-summary', 'title' => 'Review and pay', 'body' => 'The summary always shows exactly what is due today. Pay online instantly or send Mobile Money yourself.'],
+  ]])
 
   @auth
   @include('partials.onboard', ['key' => 'checkout', 'title' => 'How ordering works', 'body' => 'Pick a package, add a domain once, tell us about your business, then choose daily, weekly or monthly billing. You pay exactly what the summary shows — no hidden fees.', 'link' => route('packages.index'), 'linkLabel' => 'Review my packages →'])
@@ -189,7 +200,7 @@
 
     </div>
 
-    <aside class="lg:sticky lg:top-24 rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 p-6 shadow-xl h-fit">
+    <aside id="tour-summary" class="lg:sticky lg:top-24 rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 p-6 shadow-xl h-fit">
       <p class="text-xs font-bold tracking-wide uppercase opacity-60">Order summary</p>
       <p class="font-display font-bold text-xl mt-2" id="sumPackage">GROW</p>
       <dl class="mt-4 space-y-2 text-sm">
@@ -426,6 +437,7 @@ function initWizard(){
   form.dataset.wizInit = '1';
   const W = window.__wiz;
   const go = n => { W.step = Math.min(5, Math.max(1, n)); W.visited[W.step] = true; paintWiz(true); };
+  window.__wizGo = go;
   document.querySelectorAll('[data-next]').forEach(b => b.addEventListener('click', () => {
     if(W.step === 3 && !wizDetailsOk()) return;
     go(W.step + 1);

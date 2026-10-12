@@ -6,9 +6,19 @@
       .cs-wrap:focus-within .cs-btn{ border-color:#9e005d; }
     </style>
     <div class="flex w-full flex-col gap-5">
-        <x-page-head title="Orders" sub="Confirm manual Mobile Money payments and follow up on pending orders." />
+        <x-page-head title="Orders" sub="Confirm manual Mobile Money payments and follow up on pending orders.">
+            <x-slot:actions>
+                <button onclick="startTour_aorders()" class="btn-ghost btn-sm">Take tour</button>
+            </x-slot:actions>
+        </x-page-head>
 
-        <div class="grid auto-rows-min grid-cols-2 gap-4 xl:grid-cols-4">
+        @include('partials.tour', ['key' => 'aorders', 'steps' => [
+            ['target' => '#tour-aosum', 'title' => 'What needs action', 'body' => 'Pending, submitted MoMo claims with values, paid — plus one needs-action total.'],
+            ['target' => '#tour-aofilter', 'title' => 'Find any order', 'body' => 'Search references, businesses and phones. Filter by status or package.'],
+            ['target' => '#tour-aotable', 'title' => 'Confirm and hand over', 'body' => 'Mark manual payments paid, then hand over cPanel and credentials. Customers are notified at each step.'],
+        ]])
+
+        <div id="tour-aosum" class="grid auto-rows-min grid-cols-2 gap-4 xl:grid-cols-4">
             <x-stat label="Pending" :value="$summary['pending']" hint="Awaiting first payment" />
             <x-stat label="Submitted · MoMo" :value="$summary['submitted']" :hint="'UGX '.number_format($summary['submittedValue']).' claimed'" />
             <x-stat label="Paid" :value="$summary['paid']" hint="Confirmed orders" />
@@ -19,7 +29,7 @@
             </div>
         </div>
 
-        <form method="GET" action="{{ route('admin.orders') }}" class="card card-pad grid gap-3 sm:grid-cols-[1fr_160px_160px_auto]">
+        <form id="tour-aofilter" method="GET" action="{{ route('admin.orders') }}" class="card card-pad grid gap-3 sm:grid-cols-[1fr_160px_160px_auto]">
             <input type="text" name="search" value="{{ $filters['search'] ?? '' }}" placeholder="Search reference, business, phone…" class="field">
             <select name="status" class="field">
                 <option value="">All statuses</option>
@@ -36,7 +46,7 @@
             <button type="submit" class="btn-brand">Filter</button>
         </form>
 
-        <div class="card card-pad">
+        <div id="tour-aotable" class="card card-pad">
             <div class="tbl-wrap rounded-none! border-0! shadow-none!">
                 <table class="tbl">
                     <thead>

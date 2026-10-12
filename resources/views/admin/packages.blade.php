@@ -1,10 +1,18 @@
 <x-layouts::app :title="__('Manage packages')">
     @include('partials.toast')
     <div class="flex w-full flex-col gap-5">
-        <x-page-head title="Packages" sub="How each tier is performing. Prices live in config/packages.php." />
+        <x-page-head title="Packages" sub="How each tier is performing. Prices live in config/packages.php.">
+            <x-slot:actions>
+                <button onclick="startTour_apackages()" class="btn-ghost btn-sm">Take tour</button>
+            </x-slot:actions>
+        </x-page-head>
+
+        @include('partials.tour', ['key' => 'apackages', 'steps' => [
+            ['target' => '#tour-apgrid', 'title' => 'Tier scorecards', 'body' => 'Price, active sites, orders, committed and collected per tier — with order-share bars.'],
+        ]])
 
         @php $maxOrders = max(1, collect($stats)->max('orders')); @endphp
-        <div class="grid gap-4 sm:grid-cols-2">
+        <div id="tour-apgrid" class="grid gap-4 sm:grid-cols-2">
             @foreach($stats as $name => $s)
             <div class="card card-pad">
                 <div class="flex items-center justify-between gap-2">

@@ -5,10 +5,17 @@
         <x-page-head :title="$campaign->subject" :sub="'Sent '.$campaign->created_at->format('d M Y H:i').' · '.$campaign->total.' recipients'">
             <x-slot:actions>
                 <a href="{{ route('marketing.index') }}" class="btn-ghost btn-sm">Back to marketing</a>
+                <button onclick="startTour_report()" class="btn-ghost btn-sm">Take tour</button>
             </x-slot:actions>
         </x-page-head>
 
-        <div class="grid auto-rows-min gap-4 md:grid-cols-4">
+        @include('partials.tour', ['key' => 'report', 'auto' => false, 'steps' => [
+            ['target' => '#tour-rstats', 'title' => 'The headline numbers', 'body' => 'Sent, delivered, read and open rate — the whole story in four tiles.'],
+            ['target' => '#tour-rcharts', 'title' => 'Funnel and timing', 'body' => 'The doughnut shows drop-off at each stage; the bars show when people opened.'],
+            ['target' => '#tour-rtable', 'title' => 'Per-recipient truth', 'body' => 'Every address with sent, delivered and read timestamps plus open counts.'],
+        ]])
+
+        <div id="tour-rstats" class="grid auto-rows-min gap-4 md:grid-cols-4">
             <x-stat label="Sent" :value="$campaign->sent" />
             <x-stat label="Delivered" :value="$campaign->delivered" />
             <x-stat label="Read" :value="$campaign->read_count" />
@@ -18,7 +25,7 @@
             </div>
         </div>
 
-        <div class="grid gap-4 md:grid-cols-2">
+        <div id="tour-rcharts" class="grid gap-4 md:grid-cols-2">
             <div class="card card-pad">
                 <h2 class="section-title">Email funnel</h2>
                 <p class="page-sub">Sent → delivered → opened. Opens register when a recipient loads images in the email.</p>
@@ -62,7 +69,7 @@
         })();
         </script>
 
-        <div class="card card-pad">
+        <div id="tour-rtable" class="card card-pad">
             <h2 class="section-title">Recipients</h2>
             <div class="tbl-wrap mt-2 rounded-none! border-0! shadow-none!">
                 <table class="tbl">

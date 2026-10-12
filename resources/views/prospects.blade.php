@@ -2,18 +2,29 @@
     @include('partials.custom-select')
     @include('partials.toast')
     <div class="flex w-full flex-col gap-5">
-        <x-page-head title="Prospect catalogue" sub="Every business indexed from web directories. Filter, then save what you want to market to." />
+        <x-page-head title="Prospect catalogue" sub="Every business indexed from web directories. Filter, then save what you want to market to.">
+            <x-slot:actions>
+                <button onclick="startTour_prospects()" class="btn-ghost btn-sm">Take tour</button>
+            </x-slot:actions>
+        </x-page-head>
+
+        @include('partials.tour', ['key' => 'prospects', 'steps' => [
+            ['target' => '#tour-stats', 'title' => 'Index at a glance', 'body' => 'Total indexed, categories, verified records — and how many match your current filters.'],
+            ['target' => '#tour-filter', 'title' => 'Slice the index', 'body' => 'Search names, categories and phones. Narrow by niche or verified status.'],
+            ['target' => '#tour-cats', 'title' => 'Browse A–Z', 'body' => 'Every business category with counts. Pick one to filter the whole catalogue.'],
+            ['target' => '#tour-table', 'title' => 'Save to market', 'body' => 'Save any row into Saved contacts — that is where WhatsApp and email outreach begin.'],
+        ]])
 
         @include('partials.onboard', ['key' => 'prospects', 'title' => 'Your permanent index', 'body' => 'Everything ever scraped lives here. Filter by niche, category or verified status — or browse A–Z — then save the best ones to market to.', 'link' => route('scraper.index'), 'linkLabel' => 'Run the scraper →'])
 
-        <div class="grid auto-rows-min grid-cols-2 gap-4 xl:grid-cols-4">
+        <div id="tour-stats" class="grid auto-rows-min grid-cols-2 gap-4 xl:grid-cols-4">
             <x-stat label="Businesses indexed" :value="number_format($totals['indexed'])" />
             <x-stat label="Categories" :value="number_format($totals['categories'])" />
             <x-stat label="Verified" :value="number_format($totals['verified'])" />
             <x-stat label="Matching filters" :value="number_format($totals['showing'])" hint="Save them to market" />
         </div>
 
-        <form method="GET" action="{{ route('prospects.index') }}" class="card card-pad grid gap-3 sm:grid-cols-[1fr_200px_160px_auto]">
+        <form id="tour-filter" method="GET" action="{{ route('prospects.index') }}" class="card card-pad grid gap-3 sm:grid-cols-[1fr_200px_160px_auto]">
             <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" placeholder="Search name, category, phone…" class="field">
             <select name="niche" id="flt-niche" class="field">
                 <option value="">All niches</option>
@@ -28,7 +39,7 @@
             <button type="submit" class="btn-brand">Filter</button>
         </form>
 
-        <div class="card card-pad">
+        <div id="tour-cats" class="card card-pad">
             <h2 class="section-title">Browse by category</h2>
             <p class="page-sub">A–Z of every business category in the index. Pick one to filter the catalogue.</p>
             @if($categories->isEmpty())
@@ -57,7 +68,7 @@
             @endif
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-table" class="card card-pad">
             @if($prospects->isEmpty())
                 <x-empty-state icon="search" title="No prospects indexed yet" message="Run the prospect scraper first — everything found lands here permanently." :actionUrl="route('scraper.index')" actionLabel="Open scraper" />
             @else

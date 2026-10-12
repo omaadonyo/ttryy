@@ -14,16 +14,30 @@
                     <h1 class="font-display mt-1 text-[26px] leading-tight font-extrabold tracking-tight text-white">Marketing tool</h1>
                     <p class="mt-1 text-sm text-white/70">{{ $contacts->count() }} contacts · {{ $campaigns->count() }} campaigns · {{ $groups->count() }} communities · {{ $templates->count() }} templates</p>
                 </div>
+                <div class="flex items-center gap-2 flex-wrap">
                 <a href="{{ route('wallet.index') }}" class="inline-flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/20">
                     <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
                     <span id="token-balance">{{ number_format($balance) }}</span>&nbsp;tokens
                 </a>
+                <button onclick="startTour_marketing()" class="rounded-lg bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/20">Take tour</button>
+                </div>
             </div>
         </div>
 
         @include('partials.onboard', ['key' => 'marketing', 'title' => 'Close deals from here', 'body' => 'Start from a template or write freehand, send to saved contacts, and track opens on each campaign report. AI messages and group unlocks spend tokens.', 'link' => route('wallet.index'), 'linkLabel' => 'Top up tokens →'])
 
-        <div class="seg self-start" role="tablist" aria-label="Marketing tools">            <button data-mtab="outreach" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">WhatsApp outreach <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $contacts->count() }}</span></button>
+        @include('partials.tour', ['key' => 'marketing', 'steps' => [
+            ['target' => '#tour-tabs', 'title' => 'Four tools in one', 'body' => 'WhatsApp outreach, email campaigns, growth communities and templates — switch any time, your work is kept.'],
+            ['target' => '#tour-ai', 'tab' => 'outreach', 'title' => 'AI sales writer', 'body' => 'Pick a contact, tone and goal — get a ready-to-send message for 10 tokens.'],
+            ['target' => '#tour-composer', 'tab' => 'outreach', 'title' => 'Message composer', 'body' => '{name}, {business} and {need} personalize every message per contact automatically.'],
+            ['target' => '#tour-list', 'tab' => 'outreach', 'title' => 'Outreach list', 'body' => 'Every saved contact previewed with its message. Copy it or send straight into WhatsApp.'],
+            ['target' => '#tour-email', 'tab' => 'email', 'title' => 'Email campaigns', 'body' => 'Start from a template, pick saved contacts or type addresses (max 50), and opens are tracked per recipient.'],
+            ['target' => '#tour-camps', 'tab' => 'email', 'title' => 'Past campaigns', 'body' => 'Sent, delivered, opened and open rate for every campaign — open any row for the full report.'],
+            ['target' => '#tour-comms', 'tab' => 'community', 'title' => 'Growth communities', 'body' => 'Search and filter Ugandan business groups, unlock a join link once with tokens — it is yours forever.'],
+            ['target' => '#tour-tpls', 'tab' => 'templates', 'title' => 'Templates', 'body' => 'Built-in closers plus your own. Load any of them into the WhatsApp composer or an email.'],
+        ]])
+
+        <div id="tour-tabs" class="seg self-start" role="tablist" aria-label="Marketing tools">            <button data-mtab="outreach" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">WhatsApp outreach <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $contacts->count() }}</span></button>
             <button data-mtab="email" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Email campaigns <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $campaigns->count() }}</span></button>
             <button data-mtab="community" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Communities <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $groups->count() }}</span></button>
             <button data-mtab="templates" role="tab" class="mtab rounded-full px-4 py-2 text-[13px] font-bold transition whitespace-nowrap">Templates <span class="ml-1 inline-grid min-w-5 h-5 place-items-center rounded-full bg-black/10 dark:bg-white/20 px-1 text-[11px]">{{ $templates->count() }}</span></button>
@@ -31,7 +45,7 @@
 
         <!-- TAB: WhatsApp outreach -->
         <div data-mtab-panel="outreach" class="flex flex-col gap-4">
-            <div class="card card-pad">
+            <div id="tour-ai" class="card card-pad">
                 <div class="flex items-center justify-between gap-2 flex-wrap">
                     <h2 class="section-title">AI sales writer <span class="text-xs font-semibold text-zinc-500">· {{ $aiCost }} tokens per message</span></h2>
                     <span id="ai-status" class="text-xs font-semibold text-zinc-500"></span>
@@ -64,7 +78,7 @@
                 </div>
             </div>
 
-            <div class="card card-pad">
+            <div id="tour-composer" class="card card-pad">
                 <h2 class="section-title">Message composer</h2>
                 <p class="page-sub">Use <span class="font-mono text-xs">{name}</span>, <span class="font-mono text-xs">{business}</span>, <span class="font-mono text-xs">{need}</span> — they personalize per contact.</p>
                 <textarea id="mkt-template" rows="4" class="field mt-3 w-full" placeholder="Hi {name}, ...">Hi {name}, this is {{ auth()->user()->name }}. We help businesses like {business} grow. Are you open to a quick chat about {need}?</textarea>
@@ -91,7 +105,7 @@
                 </div>
             </div>
 
-            <div class="card card-pad">
+            <div id="tour-list" class="card card-pad">
                 <h2 class="section-title">Your outreach list</h2>
                 @if($contacts->isEmpty())
                     <x-empty-state icon="users" title="No contacts to market to" message="Scrape prospects and save them first — they will appear here ready for outreach." :actionUrl="route('scraper.index')" actionLabel="Open scraper" />
@@ -103,7 +117,7 @@
 
         <!-- TAB: Email campaigns -->
         <div data-mtab-panel="email" class="hidden flex-col gap-4">
-            <div class="card card-pad">
+            <div id="tour-email" class="card card-pad">
                 <h2 class="section-title">New email campaign</h2>
                 <p class="page-sub">Sends from your configured mail account. Opens are tracked per recipient — max 50 recipients per send.</p>
                 <div class="mt-3 grid gap-3">
@@ -133,7 +147,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card card-pad">
+            <div id="tour-camps" class="card card-pad">
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <h2 class="section-title">Past campaigns</h2>
                     <p class="text-sm text-zinc-500">{{ $campaigns->count() }} total</p>
@@ -182,7 +196,7 @@
 
         <!-- TAB: Communities -->
         <div data-mtab-panel="community" class="hidden flex-col gap-4">
-            <div class="card card-pad">
+            <div id="tour-comms" class="card card-pad">
             <h2 class="section-title">WhatsApp growth communities</h2>
             <p class="page-sub">Active Ugandan business groups by niche. Unlock a join link once with tokens — it is yours forever.</p>
             <div class="mt-3 grid gap-2 sm:grid-cols-[1fr_200px_160px]">
@@ -239,7 +253,7 @@
 
         <!-- TAB: Templates -->
         <div data-mtab-panel="templates" class="hidden flex-col gap-4">
-            <div class="card card-pad">
+            <div id="tour-tpls" class="card card-pad">
                 <h2 class="section-title">Message templates</h2>
                 <p class="page-sub">Built-in closers plus your own. Placeholders: {name}, {business}, {need}, {phone}. Load any of them into the WhatsApp composer or an email.</p>
                 <div class="mt-4 grid gap-3 sm:grid-cols-2" id="tpl-list">

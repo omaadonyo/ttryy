@@ -5,19 +5,26 @@
             <x-slot:actions>
                 <a href="{{ route('contacts.export') }}" class="btn-ghost btn-sm">Export CSV</a>
                 <a href="{{ route('marketing.index') }}" class="btn-brand btn-sm">Market to them</a>
+                <button onclick="startTour_contacts()" class="btn-ghost btn-sm">Take tour</button>
             </x-slot:actions>
         </x-page-head>
 
+        @include('partials.tour', ['key' => 'contacts', 'steps' => [
+            ['target' => '#tour-cstats', 'title' => 'List health', 'body' => 'Totals with emails and phones at a glance — emails unlock campaigns, phones unlock WhatsApp.'],
+            ['target' => '#tour-niches', 'title' => 'Where it is strong', 'body' => 'Your top niches by saved count. Double down where the list is deepest.'],
+            ['target' => '#tour-ctable', 'title' => 'Work the list', 'body' => 'Message on WhatsApp, export CSV, remove stale rows — or market to everyone in one click.'],
+        ]])
+
         @include('partials.onboard', ['key' => 'contacts', 'title' => 'Your outreach fuel', 'body' => 'Saved contacts feed both WhatsApp outreach and email campaigns. Make sure contacts have emails to unlock campaigns, then market to them in one click.', 'link' => route('marketing.index'), 'linkLabel' => 'Open marketing tool →'])
 
-        <div class="grid auto-rows-min gap-4 sm:grid-cols-3">
+        <div id="tour-cstats" class="grid auto-rows-min gap-4 sm:grid-cols-3">
             <x-stat label="Saved contacts" :value="$contacts->total()" hint="Ready for outreach" />
             <x-stat label="With email" :value="$emailCount" hint="Mailable for campaigns" />
             <x-stat label="With phone" :value="$phoneCount" hint="WhatsApp-ready" />
         </div>
 
         @if($topNiches->isNotEmpty())
-        <div class="card card-pad">
+        <div id="tour-niches" class="card card-pad">
             <h2 class="section-title">Top niches in your list</h2>
             <div class="mt-3 space-y-2.5">
                 @php $maxNiche = max(1, $topNiches->max('c')); @endphp
@@ -34,7 +41,7 @@
         </div>
         @endif
 
-        <div class="card card-pad">
+        <div id="tour-ctable" class="card card-pad">
             @if($contacts->isEmpty())
                 <x-empty-state icon="users" title="No saved contacts yet" message="Run the prospect scraper, then save the contacts you want to market to." :actionUrl="route('scraper.index')" actionLabel="Open scraper" />
             @else

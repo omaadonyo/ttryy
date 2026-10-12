@@ -1,15 +1,25 @@
 <x-layouts::app :title="__('Manage users')">
     @include('partials.toast')
     <div class="flex w-full flex-col gap-5">
-        <x-page-head title="Users" sub="Customer accounts, order activity and administrator access." />
+        <x-page-head title="Users" sub="Customer accounts, order activity and administrator access.">
+            <x-slot:actions>
+                <button onclick="startTour_ausers()" class="btn-ghost btn-sm">Take tour</button>
+            </x-slot:actions>
+        </x-page-head>
 
-        <div class="grid auto-rows-min gap-4 sm:grid-cols-3">
+        @include('partials.tour', ['key' => 'ausers', 'steps' => [
+            ['target' => '#tour-austats', 'title' => 'Base at a glance', 'body' => 'Registered users, administrators and 30-day growth.'],
+            ['target' => '#tour-auschart', 'title' => 'Signup momentum', 'body' => 'New accounts per month for the last 6 months.'],
+            ['target' => '#tour-autable', 'title' => 'Manage access', 'body' => 'Search anyone, see orders and spend, grant or revoke admin — never your own account.'],
+        ]])
+
+        <div id="tour-austats" class="grid auto-rows-min gap-4 sm:grid-cols-3">
             <x-stat label="Registered users" :value="$totalUsers" />
             <x-stat label="Administrators" :value="$adminCount" />
             <x-stat label="New · 30 days" :value="$newCount" />
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-auschart" class="card card-pad">
             <h2 class="section-title">Signups per month</h2>
             <p class="page-sub">New accounts, last 6 months.</p>
             <div class="mt-3 h-48"><canvas id="admin-signups-chart"></canvas></div>
@@ -20,7 +30,7 @@
             <button type="submit" class="btn-brand">Search</button>
         </form>
 
-        <div class="card card-pad">
+        <div id="tour-autable" class="card card-pad">
             <div class="tbl-wrap rounded-none! border-0! shadow-none!">
                 <table class="tbl">
                     <thead>

@@ -1,11 +1,21 @@
 <x-layouts::app :title="__('Prospect scraper')">
     @include('partials.toast')
     <div class="flex w-full flex-col gap-5">
-        <x-page-head title="Prospect scraper" sub="Pull a sample of potential customers in your niche. Full contact details unlock for UGX 10,000." />
+        <x-page-head title="Prospect scraper" sub="Pull a sample of potential customers in your niche. Full contact details unlock for UGX 10,000.">
+            <x-slot:actions>
+                <button onclick="startTour_scraper()" class="btn-ghost btn-sm">Take tour</button>
+            </x-slot:actions>
+        </x-page-head>
+
+        @include('partials.tour', ['key' => 'scraper', 'steps' => [
+            ['target' => '#tour-controls', 'title' => 'Start a search', 'body' => 'Pick your niche, describe what you sell, hit Scrape. The local index answers first; fresh directory pulls follow.'],
+            ['target' => '#tour-stats', 'title' => 'The index, live', 'body' => 'Businesses indexed, verified records, niches covered — and how many you have saved.'],
+            ['target' => '#tour-results', 'title' => 'Your sample', 'body' => 'Uniform rows, first 10 free. Save contacts in one click, or unlock deeper pulls from UGX 10,000.'],
+        ]])
 
         @include('partials.onboard', ['key' => 'scraper', 'title' => 'How prospecting works', 'body' => 'Every search checks the local index first, then pulls fresh businesses from web directories. The first 10 records are free — unlock deeper pulls from UGX 10,000, and everything you save lands in Saved contacts.', 'link' => route('contacts.index'), 'linkLabel' => 'View saved contacts →'])
 
-        <div class="grid auto-rows-min grid-cols-2 gap-4 xl:grid-cols-4">
+        <div id="tour-stats" class="grid auto-rows-min grid-cols-2 gap-4 xl:grid-cols-4">
             <div class="card card-pad">
                 <p class="eyebrow">Businesses indexed</p>
                 <p class="stat-num mt-2">{{ number_format($indexStats['indexed']) }}</p>
@@ -24,7 +34,7 @@
             </div>
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-controls" class="card card-pad">
             <div class="grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
                 <select id="dsc-niche" aria-label="Choose your niche" class="field w-full"></select>
                 <input id="dsc-biz" type="text" placeholder="What does your business sell?" aria-label="What does your business sell" class="field w-full">
@@ -36,7 +46,7 @@
             </div>
         </div>
 
-        <div class="card overflow-hidden">
+        <div id="tour-results" class="card overflow-hidden">
             <div class="flex items-center gap-2.5 border-b border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-white/10 dark:bg-white/5">
                 <span class="text-[13px] font-semibold" id="dsc-file">prospects.pdf</span>
                 <span id="dsc-count" class="ml-auto text-[11px] font-semibold text-zinc-500">0 records</span>

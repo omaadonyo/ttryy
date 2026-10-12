@@ -7,12 +7,19 @@
                     <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
                     <span id="wallet-balance">{{ number_format($balance) }}</span>&nbsp;tokens
                 </div>
+                <button onclick="startTour_wallet()" class="btn-ghost btn-sm">Take tour</button>
             </x-slot:actions>
         </x-page-head>
 
+        @include('partials.tour', ['key' => 'wallet', 'steps' => [
+            ['target' => '#tour-topup', 'title' => 'Top up in seconds', 'body' => 'Pick a pack and pay with Mobile Money or card. Tokens land instantly after verification.'],
+            ['target' => '#tour-flow', 'title' => 'Token flow', 'body' => 'Earned vs used per day for the last 30 days — spot heavy spending weeks.'],
+            ['target' => '#tour-ledger', 'title' => 'Every token accounted for', 'body' => 'Full ledger with running balances, plus recent top-up receipts.'],
+        ]])
+
         @include('partials.onboard', ['key' => 'wallet', 'title' => 'Tokens run the growth engine', 'body' => 'AI sales messages and community join-links spend tokens. Top up with Mobile Money or card — credit lands instantly after verification.', 'link' => route('marketing.index'), 'linkLabel' => 'Use tokens in marketing →'])
 
-        <div class="card card-pad">
+        <div id="tour-topup" class="card card-pad">
             <h2 class="section-title">Top up with Mobile Money or card</h2>
             <p class="page-sub">Pay securely with Flutterwave. Tokens land instantly after verification.</p>
             <div class="mt-4 grid gap-3 sm:grid-cols-3" id="pack-grid">
@@ -32,7 +39,7 @@
             <x-stat label="Top-ups" :value="count($topups)" hint="Recent purchases" />
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-flow" class="card card-pad">
             <h2 class="section-title">Token flow · last 30 days</h2>
             <p class="page-sub">Earned vs used per day.</p>
             <div class="mt-3 h-52"><canvas id="wallet-flow-chart"></canvas></div>
@@ -60,7 +67,7 @@
             </div>
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-ledger" class="card card-pad">
             <h2 class="section-title">Token history</h2>
             @if($ledger->isEmpty())
             <p class="mt-2 text-sm text-zinc-500">No token activity yet — top up or earn your welcome bonus.</p>

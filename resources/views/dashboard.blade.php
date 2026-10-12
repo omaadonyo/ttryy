@@ -8,7 +8,7 @@
         $spotlight = $orders->first(fn ($o) => $o->isActive()) ?? $orders->first();
     @endphp
     <div class="flex w-full flex-col gap-5">
-        <div class="card card-pad border-transparent! bg-zinc-950 text-white dark:border-transparent! dark:bg-white dark:text-zinc-950">
+        <div id="tour-hero" class="card card-pad border-transparent! bg-zinc-950 text-white dark:border-transparent! dark:bg-white dark:text-zinc-950">
             <div class="flex items-center justify-between gap-4 flex-wrap">
                 <div class="min-w-0">
                     <p class="text-[11px] font-bold tracking-[0.14em] uppercase opacity-50">{{ now()->format('l, d M Y') }} · Overview</p>
@@ -20,13 +20,22 @@
                     </div>
                 </div>
                 <div class="flex shrink-0 items-center gap-2 flex-wrap">
+                    <button onclick="startTour_dashboard()" class="rounded-lg bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/20 dark:bg-zinc-950/5 dark:text-zinc-900 dark:hover:bg-zinc-950/10">Take tour</button>
                     <a href="{{ route('marketing.index') }}" class="rounded-lg bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/20 dark:bg-zinc-950/5 dark:text-zinc-900 dark:hover:bg-zinc-950/10">Send campaign</a>
                     <a href="{{ route('orders.new') }}" class="btn-brand btn-sm">New order</a>
                 </div>
             </div>
         </div>
 
-        <div class="grid auto-rows-min gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        @include('partials.tour', ['key' => 'dashboard', 'auto' => false, 'steps' => [
+            ['target' => '#tour-hero', 'title' => 'Your command center', 'body' => 'Greeting, key numbers and quick actions. New order and Send campaign are always one click away.'],
+            ['target' => '#tour-kpis', 'title' => 'Month in motion', 'body' => 'Orders, spend and emails for the last 30 days with trend vs the prior 30 days — plus your all-time email open rate.'],
+            ['target' => '#tour-spot', 'title' => 'Your subscription', 'body' => 'Active plan, days left and expiry. Renew before it lapses to keep your website running.'],
+            ['target' => '#tour-charts', 'title' => 'Performance at a glance', 'body' => 'Campaign results and 14-day activity side by side. Full analytics is one click away.'],
+            ['target' => '#tour-lists', 'title' => 'Orders and activity', 'body' => 'Recent orders plus a live activity feed driven by your notifications.'],
+        ]])
+
+        <div id="tour-kpis" class="grid auto-rows-min gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <div class="card card-pad">
                 <div class="flex items-center justify-between gap-2">
                     <p class="eyebrow">Orders · 30d</p>
@@ -64,7 +73,7 @@
         </div>
 
         @if($spotlight)
-        <div class="card card-pad">
+        <div id="tour-spot" class="card card-pad">
             <div class="flex items-center justify-between gap-3 flex-wrap">
                 <div class="min-w-0">
                     <h2 class="section-title">{{ $spotlight->package }} subscription</h2>
@@ -125,7 +134,7 @@
         </div>
         @endunless
 
-        <div class="grid gap-4 xl:grid-cols-2">
+        <div id="tour-charts" class="grid gap-4 xl:grid-cols-2">
             <div class="card card-pad">
                 <div class="flex items-center justify-between gap-3">
                     <h2 class="section-title">Marketing performance</h2>
@@ -159,7 +168,7 @@
             </div>
         </div>
 
-        <div class="grid gap-4 xl:grid-cols-3">
+        <div id="tour-lists" class="grid gap-4 xl:grid-cols-3">
             <div class="card card-pad xl:col-span-2">
                 <div class="flex items-center justify-between gap-3">
                     <h2 class="section-title">Recent orders</h2>

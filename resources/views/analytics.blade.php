@@ -2,7 +2,20 @@
     @include('partials.toast')
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <div class="flex w-full flex-col gap-5">
-        <x-page-head title="Analytics" sub="Spending, email results, token usage and saved contacts — last 6 months." />
+        <x-page-head title="Analytics" sub="Spending, email results, token usage and saved contacts — last 6 months.">
+            <x-slot:actions>
+                <button onclick="startTour_analytics()" class="btn-ghost btn-sm">Take tour</button>
+            </x-slot:actions>
+        </x-page-head>
+
+        @include('partials.tour', ['key' => 'analytics', 'steps' => [
+            ['target' => '#tour-astats', 'title' => 'Headline numbers', 'body' => 'Committed, paid, email open rate and token balance — the account in four numbers.'],
+            ['target' => '#tour-spend', 'title' => 'Spend by month', 'body' => 'Committed order value per month for the last 6 months.'],
+            ['target' => '#tour-agrid', 'title' => 'Growth signals', 'body' => 'Campaign results side by side with 30-day token flow.'],
+            ['target' => '#tour-aniches', 'title' => 'Where the list is strong', 'body' => 'Saved contacts by niche — focus outreach where depth already exists.'],
+        ]])
+
+        <div id="tour-astats" class="grid auto-rows-min gap-4 md:grid-cols-4">
 
         <div class="grid auto-rows-min gap-4 md:grid-cols-4">
             <x-stat label="Total committed" :value="'UGX '.number_format($totalCommitted)" hint="All orders" />
@@ -11,13 +24,13 @@
             <x-stat label="Token balance" :value="number_format($tokenBalance)" :hint="$savedTotal.' saved contacts'" />
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-spend" class="card card-pad">
             <h2 class="section-title">Order spend by month</h2>
             <p class="page-sub">Committed UGX per month, last 6 months.</p>
             <div class="mt-3 h-60"><canvas id="an-spend"></canvas></div>
         </div>
 
-        <div class="grid gap-4 md:grid-cols-2">
+        <div id="tour-agrid" class="grid gap-4 md:grid-cols-2">
             <div class="card card-pad">
                 <h2 class="section-title">Campaign results</h2>
                 <p class="page-sub">Sent vs opened per campaign.</p>
@@ -30,7 +43,7 @@
             </div>
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-aniches" class="card card-pad">
             <h2 class="section-title">Saved contacts by niche</h2>
             <p class="page-sub">Where your prospect list is strongest.</p>
             @if($savedByNiche->isEmpty())

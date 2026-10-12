@@ -276,3 +276,24 @@ test('marketing page offers email presets, campaign table and toast helper', fun
         ->assertSee('function toast(', false)
         ->assertSee('data-use-email', false);
 });
+
+test('key pages include skippable guided tours', function () {
+    $user = App\Models\User::factory()->create();
+
+    $this->actingAs($user)->get(route('marketing.index'))
+        ->assertOk()
+        ->assertSee('startTour_marketing', false)
+        ->assertSee('id="tour-tabs"', false);
+
+    $this->actingAs($user)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('startTour_dashboard', false);
+
+    $this->actingAs($user)->get(route('scraper.index'))
+        ->assertOk()
+        ->assertSee('startTour_scraper', false);
+
+    $this->actingAs($user)->get('/dashboard/checkout')
+        ->assertOk()
+        ->assertSee('startTour_checkout', false);
+});

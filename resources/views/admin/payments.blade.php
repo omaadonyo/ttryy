@@ -1,9 +1,19 @@
 <x-layouts::app :title="__('Payments')">
     @include('partials.toast')
     <div class="flex w-full flex-col gap-5">
-        <x-page-head title="Payments" sub="Verified collections and manual Mobile Money claims awaiting confirmation." />
+        <x-page-head title="Payments" sub="Verified collections and manual Mobile Money claims awaiting confirmation.">
+            <x-slot:actions>
+                <button onclick="startTour_apayments()" class="btn-ghost btn-sm">Take tour</button>
+            </x-slot:actions>
+        </x-page-head>
 
-        <div class="grid auto-rows-min gap-4 md:grid-cols-2">
+        @include('partials.tour', ['key' => 'apayments', 'steps' => [
+            ['target' => '#tour-apstats', 'title' => 'Collected vs awaiting', 'body' => 'Verified money in against manual claims still to confirm.'],
+            ['target' => '#tour-apmix', 'title' => 'Collection mix', 'body' => 'How verified money arrived — online card/MoMo vs manual MoMo.'],
+            ['target' => '#tour-aptable', 'title' => 'Payment trail', 'body' => 'Every collection with method, amounts, timestamps and status.'],
+        ]])
+
+        <div id="tour-apstats" class="grid auto-rows-min gap-4 md:grid-cols-2">
             <div class="card card-pad border-transparent! bg-brand-600 text-white dark:border-transparent!">
                 <p class="text-[11px] font-bold tracking-[0.14em] text-white/60 uppercase">Collected (verified)</p>
                 <p class="stat-num mt-2 text-white!">UGX {{ number_format($collected) }}</p>
@@ -11,7 +21,7 @@
             <x-stat label="Awaiting confirmation" :value="'UGX '.number_format($awaiting)" hint="Manual MoMo claims to verify" />
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-apmix" class="card card-pad">
             <h2 class="section-title">Collection mix</h2>
             <p class="page-sub">Where verified money came from.</p>
             @php $mixTotal = max(1, $onlineCollected + $momoCollected); @endphp
@@ -33,7 +43,7 @@
             </div>
         </div>
 
-        <div class="card card-pad">
+        <div id="tour-aptable" class="card card-pad">
             <h2 class="section-title">All payments</h2>
             <div class="tbl-wrap mt-3 rounded-none! border-0! shadow-none!">
                 <table class="tbl">
