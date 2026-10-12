@@ -8,7 +8,7 @@
         $spotlight = $orders->first(fn ($o) => $o->isActive()) ?? $orders->first();
     @endphp
     <div class="flex w-full flex-col gap-5">
-        <div class="card card-pad border-transparent! bg-gradient-to-br from-[#150826] via-brand-800 to-brand-600 text-white">
+        <div class="card card-pad border-transparent! bg-zinc-950 text-white dark:border-transparent! dark:bg-white dark:text-zinc-950">
             <div class="flex items-end justify-between gap-4 flex-wrap">
                 <div class="min-w-0">
                     <p class="text-xs font-bold tracking-[0.14em] uppercase opacity-60">{{ now()->format('l, d M Y') }}</p>
@@ -16,7 +16,7 @@
                     <p class="mt-1 text-sm opacity-70">{{ $pendingOrders }} order{{ $pendingOrders === 1 ? '' : 's' }} awaiting payment · {{ number_format($tokenBalance) }} tokens · {{ $mktStats['rate'] }}% email open rate</p>
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
-                    <a href="{{ route('marketing.index') }}" class="rounded-lg bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/20">Send campaign</a>
+                    <a href="{{ route('marketing.index') }}" class="rounded-lg bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/20 dark:bg-zinc-950/5 dark:text-zinc-900 dark:hover:bg-zinc-950/10">Send campaign</a>
                     <a href="{{ route('orders.new') }}" class="btn-brand">New order</a>
                 </div>
             </div>

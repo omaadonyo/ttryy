@@ -5,7 +5,7 @@
         <script>(function(){try{if(localStorage.getItem('ttryy-nav')==='mini')document.documentElement.dataset.nav='mini';}catch(e){}})();</script>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-[#EBEEF3] font-sans text-zinc-900 antialiased dark:bg-[#070B16] dark:text-zinc-100">
+    <body class="min-h-screen bg-[#f4f4f5] font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100">
         @php
         $navSections = [
             'Overview' => [
@@ -40,7 +40,7 @@
 
         <div id="nav-overlay" class="fixed inset-0 z-30 hidden bg-zinc-950/50 opacity-0 lg:hidden" onclick="closeNav()"></div>
 
-        <aside id="dash-sidebar" class="border-e border-white/5">
+        <aside id="dash-sidebar" class="border-e border-zinc-200/90 bg-white dark:border-white/10 dark:bg-zinc-900">
             <div class="flex h-full flex-col">
                 <div class="flex h-[68px] shrink-0 items-center gap-2.5 px-5">
                     <a href="{{ route('dashboard') }}" class="flex min-w-0 items-center gap-2.5" title="Ttryy dashboard">
@@ -48,11 +48,11 @@
                             <x-app-logo-icon class="size-5 fill-current" />
                         </span>
                         <span id="nav-brand-text" class="min-w-0">
-                            <span class="font-display block truncate text-[17px] font-extrabold tracking-tight text-white">Ttryy</span>
-                            <span class="block text-[11px] font-semibold text-slate-400">Business growth</span>
+                            <span class="font-display block truncate text-[17px] font-extrabold tracking-tight">Ttryy</span>
+                            <span class="block text-[11px] font-semibold text-zinc-400">Business growth</span>
                         </span>
                     </a>
-                    <button onclick="closeNav()" class="ml-auto grid size-9 shrink-0 place-items-center rounded-full text-slate-400 hover:bg-white/10 hover:text-white lg:hidden" aria-label="Close menu">
+                    <button onclick="closeNav()" class="ml-auto grid size-9 shrink-0 place-items-center rounded-full text-zinc-400 hover:bg-zinc-950/5 hover:text-zinc-700 lg:hidden dark:hover:bg-white/10 dark:hover:text-white" aria-label="Close menu">
                         <flux:icon name="x-mark" class="size-5" />
                     </button>
                 </div>
@@ -86,15 +86,12 @@
         </aside>
 
         <div id="dash-main">
-            <header class="sticky top-0 z-20 border-b border-zinc-200/90 bg-[#EBEEF3]/85 backdrop-blur-md dark:border-white/10 dark:bg-[#070B16]/85">
+            <header class="sticky top-0 z-20 border-b border-zinc-200/90 bg-[#f4f4f5]/85 backdrop-blur-md dark:border-white/10 dark:bg-zinc-950/85">
                 <div class="mx-auto flex h-[68px] w-full max-w-6xl items-center gap-2 px-4 sm:px-6">
                     <button onclick="openNav()" class="grid size-10 shrink-0 place-items-center rounded-full hover:bg-zinc-950/5 lg:hidden dark:hover:bg-white/10" aria-label="Open menu">
                         <flux:icon name="bars-3" class="size-5" />
                     </button>
-                    <div class="min-w-0">
-                        <p class="text-[11px] font-bold tracking-[0.14em] text-zinc-400 uppercase dark:text-zinc-500">Launchpad</p>
-                        <p class="font-display -mt-0.5 min-w-0 truncate text-[17px] font-bold tracking-tight">{{ $title ?? config('app.name', 'Ttryy') }}</p>
-                    </div>
+                    <p class="font-display min-w-0 truncate text-[17px] font-bold tracking-tight">{{ $title ?? config('app.name', 'Ttryy') }}</p>
                     <button onclick="openPalette(event)" class="ml-4 hidden min-w-0 flex-1 items-center gap-2.5 rounded-lg border border-zinc-200/90 bg-white px-3.5 py-2 text-sm text-zinc-400 transition hover:border-zinc-300 hover:text-zinc-500 md:flex lg:max-w-xs dark:border-white/10 dark:bg-white/5 dark:hover:border-white/20" aria-label="Search">
                         <flux:icon name="magnifying-glass" class="size-4 shrink-0" />
                         <span class="truncate">Search pages and actions…</span>
@@ -171,7 +168,6 @@
                             </button>
                             <div id="user-menu" class="card absolute top-full right-0 z-50 mt-2 hidden w-64 overflow-hidden p-1.5">
                                 <div class="px-3.5 py-3">
-                                    <p class="text-[11px] font-bold tracking-[0.14em] text-zinc-400 uppercase">Hi, {{ explode(' ', auth()->user()->name)[0] }}</p>
                                     <p class="truncate text-sm font-bold">{{ auth()->user()->name }}</p>
                                     <p class="truncate text-xs text-zinc-500">{{ auth()->user()->email }}</p>
                                 </div>

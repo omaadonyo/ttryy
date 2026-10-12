@@ -7,7 +7,7 @@
       .cs-wrap:focus-within .cs-btn{ border-color:#9e005d; }
     </style>
     <div class="flex w-full flex-col gap-5">
-        <div class="card card-pad border-transparent! bg-gradient-to-br from-[#150826] via-brand-800 to-brand-600 text-white">
+        <div class="card card-pad border-transparent! bg-zinc-950 text-white dark:border-white/10! dark:bg-zinc-900">
             <div class="flex items-end justify-between gap-4 flex-wrap">
                 <div class="min-w-0">
                     <p class="text-[11px] font-bold tracking-[0.14em] text-white/50 uppercase">Growth suite</p>

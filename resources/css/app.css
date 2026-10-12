@@ -127,17 +127,7 @@ select:focus[data-flux-control] {
     position: fixed; inset: 0 auto 0 0; width: 16.75rem; z-index: 40;
     transform: translateX(-105%);
     transition: width .3s cubic-bezier(.22,.61,.36,1), transform .3s cubic-bezier(.22,.61,.36,1);
-    background: #0B1326;
 }
-/* Deep-space sidebar in both modes (Spaceship-style) */
-#dash-sidebar .nav-link { color: #93A1B8; }
-#dash-sidebar .nav-link:hover { background: rgba(255,255,255,.07); color: #fff; }
-#dash-sidebar .nav-link-active,
-#dash-sidebar .nav-link-active:hover { background: rgba(255,255,255,.1); color: #fff; box-shadow: inset 2px 0 0 #E14E9A; }
-#dash-sidebar .nav-section { color: #5B6B85; }
-#dash-sidebar #nav-foot-note { color: #5B6B85; }
-#dash-sidebar #nav-foot-note strong { color: #C4CDDD; }
-#dash-sidebar .nav-caret { color: #E14E9A; }
 #dash-sidebar.open { transform: none; }
 #dash-main { min-height: 100dvh; transition: padding .3s cubic-bezier(.22,.61,.36,1); }
 #nav-overlay { transition: opacity .25s ease; }
