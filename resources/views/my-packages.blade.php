@@ -11,7 +11,7 @@
                         <option value="paid">Paid</option>
                     </select>
                 </div>
-                <a href="{{ route('orders.new') }}" class="btn-brand">New order</a>
+                <a href="{{ route('checkout') }}" class="btn-brand">New order</a>
                 <button onclick="startTour_packages()" class="btn-ghost btn-sm">Take tour</button>
             </x-slot:actions>
         </x-page-head>
@@ -31,7 +31,7 @@
 
         @if($orders->isEmpty())
         <div class="card card-pad">
-            <x-empty-state icon="orders" title="No orders yet" message="Choose a package to get your website and prospect list started." :actionUrl="route('orders.new')" actionLabel="Choose a package" />
+            <x-empty-state icon="orders" title="No orders yet" message="Choose a package to get your website and prospect list started." :actionUrl="route('checkout')" actionLabel="Choose a package" />
         </div>
         @else
         <div class="grid gap-4 sm:grid-cols-2" id="order-grid">

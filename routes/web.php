@@ -81,7 +81,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('notifications/{id}/open', [DashboardController::class, 'openNotification'])->name('notifications.open');
     Route::post('notifications/read-all', [DashboardController::class, 'readAllNotifications'])->name('notifications.read-all');
     Route::get('notifications', [DashboardController::class, 'notifications'])->name('notifications.index');
-    Route::get('orders/new', [CheckoutController::class, 'index'])->name('orders.new');
+    Route::redirect('orders/new', '/checkout');
     Route::get('payments', [DashboardController::class, 'payments'])->name('payments.index');
     Route::post('checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::post('checkout/verify', [CheckoutController::class, 'verify'])->name('checkout.verify');
@@ -129,6 +129,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
 });
 
 // Guests may browse checkout and sign in inline; placing an order needs an account.
-Route::get('dashboard/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::get('dashboard/checkout', fn () => redirect('/checkout'));
 
 require __DIR__.'/settings.php';

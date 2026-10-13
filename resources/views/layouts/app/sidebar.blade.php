@@ -20,7 +20,7 @@
                 ['label' => 'Analytics', 'icon' => 'presentation-chart-line', 'href' => route('analytics.index'), 'active' => request()->routeIs('analytics.*')],
             ],
             'Business' => [
-                ['label' => 'New order', 'icon' => 'plus', 'href' => route('orders.new'), 'active' => request()->routeIs('orders.new') || request()->routeIs('checkout*')],
+                ['label' => 'New order', 'icon' => 'plus', 'href' => route('checkout'), 'active' => request()->routeIs('checkout*')],
                 ['label' => 'My packages', 'icon' => 'shopping-bag', 'href' => route('packages.index'), 'active' => request()->routeIs('packages.*')],
                 ['label' => 'Hosting', 'icon' => 'server-stack', 'href' => route('hosting.index'), 'active' => request()->routeIs('hosting.*')],
                 ['label' => 'Payments', 'icon' => 'banknotes', 'href' => route('payments.index'), 'active' => request()->routeIs('payments.*')],
@@ -224,7 +224,7 @@
             { group: @json($section), label: @json($link['label']), href: @json($link['href']) },
             @endforeach
             @endforeach
-            { group: 'Actions', label: 'Start a new order', href: @json(route('orders.new')) },
+            { group: 'Actions', label: 'Start a new order', href: @json(route('checkout')) },
             { group: 'Actions', label: 'Send an email campaign', href: @json(route('marketing.index')) },
             { group: 'Actions', label: 'Scrape new prospects', href: @json(route('scraper.index')) },
             { group: 'Actions', label: 'Top up token wallet', href: @json(route('wallet.index')) },

@@ -42,7 +42,7 @@
       <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">Your account</h2>
       <ul class="mt-3 space-y-2.5 text-zinc-600 dark:text-zinc-400">
         <li><a class="hover:text-[#9e005d] hover:underline" href="{{ route('dashboard') }}">Dashboard</a></li>
-        <li><a class="hover:text-[#9e005d] hover:underline" href="{{ route('orders.new') }}">New order</a></li>
+        <li><a class="hover:text-[#9e005d] hover:underline" href="{{ route('checkout') }}">New order</a></li>
         <li><a class="hover:text-[#9e005d] hover:underline" href="{{ route('packages.index') }}">My packages</a></li>
         <li><a class="hover:text-[#9e005d] hover:underline" href="{{ route('scraper.index') }}">Prospect scraper</a></li>
         <li><a class="hover:text-[#9e005d] hover:underline" href="{{ route('prospects.index') }}">Prospect catalogue</a></li>

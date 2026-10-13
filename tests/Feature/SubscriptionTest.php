@@ -98,10 +98,13 @@ test('my packages shows time left on active orders', function () {
         ->assertSee('days left', false);
 });
 
-test('new order page renders checkout for members, redirects guests', function () {
-    $this->get(route('orders.new'))->assertRedirect(route('login'));
+test('standalone checkout renders for members and guests without the sidebar', function () {
+    $this->get(route('checkout'))
+        ->assertOk()
+        ->assertSee('Create an account or log in', false)
+        ->assertDontSee('id="dash-sidebar"', false);
 
-    $this->actingAs(User::factory()->create())->get(route('orders.new'))
+    $this->actingAs(User::factory()->create())->get(route('checkout'))
         ->assertOk()
         ->assertSee('Your domain', false);
 });

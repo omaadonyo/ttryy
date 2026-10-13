@@ -5,7 +5,7 @@ use App\Models\User;
 use Livewire\Livewire;
 
 test('guests can browse checkout but must sign in to order', function () {
-    $this->get('/dashboard/checkout?package=GROW')
+    $this->get('/checkout?package=GROW')
         ->assertOk()
         ->assertSee('Create an account or log in', false);
 
@@ -56,7 +56,7 @@ test('corporate monthly orders include the domain one-time fee', function () {
 test('checkout page shows the preselected package', function () {
     $user = User::factory()->create();
 
-    $this->actingAs($user)->get('/dashboard/checkout?package=BUSINESS')
+    $this->actingAs($user)->get('/checkout?package=BUSINESS')
         ->assertOk()
         ->assertSee('UGX 650,000', false);
 });
@@ -64,7 +64,7 @@ test('checkout page shows the preselected package', function () {
 test('checkout renders as a five-step wizard with progress bar', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->get('/dashboard/checkout')->assertOk();
+    $response = $this->actingAs($user)->get('/checkout')->assertOk();
 
     foreach ([1, 2, 3, 4, 5] as $step) {
         $response->assertSee('data-step="'.$step.'"', false);
@@ -364,7 +364,7 @@ test('verification accepts per-attempt suffixed references', function () {
 test('checkout offers an explicit mobile money or online choice', function () {
     config()->set('services.flutterwave.public_key', 'test-pub');
 
-    $this->actingAs(User::factory()->create())->get('/dashboard/checkout')
+    $this->actingAs(User::factory()->create())->get('/checkout')
         ->assertOk()
         ->assertSee('How do you want to pay?', false)
         ->assertSee('Mobile Money to', false)
@@ -418,7 +418,7 @@ test('owners can download their invoice, strangers cannot', function () {
 test('checkout offers a free subdomain captured on the order', function () {
     $user = User::factory()->create();
 
-    $this->actingAs($user)->get('/dashboard/checkout')
+    $this->actingAs($user)->get('/checkout')
         ->assertOk()
         ->assertSee('Free yourname.ttryy.com subdomain', false)
         ->assertSee('id="f-subdomain"', false);

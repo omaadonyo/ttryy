@@ -293,7 +293,7 @@ test('key pages include skippable guided tours', function () {
         ->assertOk()
         ->assertSee('startTour_scraper', false);
 
-    $this->actingAs($user)->get('/dashboard/checkout')
+    $this->actingAs($user)->get('/checkout')
         ->assertOk()
         ->assertSee('startTour_checkout', false);
 });

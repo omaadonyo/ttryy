@@ -3,7 +3,7 @@
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Payment history" sub="Every payment toward your websites, in one place.">
             <x-slot:actions>
-                <a href="{{ route('orders.new') }}" class="btn-brand">New order</a>
+                <a href="{{ route('checkout') }}" class="btn-brand">New order</a>
                 <button onclick="startTour_payments()" class="btn-ghost btn-sm">Take tour</button>
             </x-slot:actions>
         </x-page-head>
@@ -31,7 +31,7 @@
         <div id="tour-ptable" class="card card-pad">
             <h2 class="section-title">All payments</h2>
             @if($orders->isEmpty())
-                <x-empty-state icon="payments" title="No payments yet" message="Payments appear here once you pay toward an order." :actionUrl="route('orders.new')" actionLabel="Place an order" />
+                <x-empty-state icon="payments" title="No payments yet" message="Payments appear here once you pay toward an order." :actionUrl="route('checkout')" actionLabel="Place an order" />
             @else
             <div class="tbl-wrap mt-4 rounded-none! border-0! shadow-none!">
                 <table class="tbl">

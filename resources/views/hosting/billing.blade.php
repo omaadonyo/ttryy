@@ -4,7 +4,7 @@
         <x-page-head :title="'Billing · '.$website->name" sub="Uses your existing Ttryy orders — no separate billing system.">
             <x-slot:actions>
                 <a href="{{ route('hosting.show', $website) }}" class="btn-ghost btn-sm">← Website</a>
-                <a href="{{ route('orders.new') }}" class="btn-brand btn-sm">New order</a>
+                <a href="{{ route('checkout') }}" class="btn-brand btn-sm">New order</a>
             </x-slot:actions>
         </x-page-head>
 

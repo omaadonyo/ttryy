@@ -1,4 +1,4 @@
-<x-layouts::app :title="__('Checkout')">
+<x-layouts::checkout :title="__('Checkout')">
     @include('partials.toast')
     @if($flwKey)
     <script src="https://checkout.flutterwave.com/v3.js"></script>
@@ -7,13 +7,16 @@
       .opt > div{ box-shadow:0 2px 12px -6px rgba(10,10,12,.14); }
       .dark .opt > div{ box-shadow:0 8px 24px -10px rgba(0,0,0,.75); }
       .opt .tick{ opacity:0; transform:scale(.4); transition:opacity .25s ease, transform .25s ease, background-color .25s ease; }
-  .opt input:checked + div{ background:color-mix(in srgb, #9e005d 8%, transparent); }
-  .opt input:checked + div .tick{ opacity:1; transform:scale(1); background:#9e005d; border-color:#9e005d; color:#fff; }
-  .opt input:focus-visible + div{ outline:2px solid #9e005d; outline-offset:2px; }
+  .opt input:checked + div{ background:color-mix(in srgb, var(--ac) 10%, transparent); box-shadow:0 0 0 1.5px var(--ac); }
+  .opt input:checked + div .tick{ opacity:1; transform:scale(1); background:var(--ac); border-color:var(--ac); color:#fff; }
+  .opt input:focus-visible + div{ outline:2px solid var(--ac); outline-offset:2px; }
       .opt[data-accent="zinc"]{ --ac:#52525b; }
       .opt[data-accent="brand"]{ --ac:#9e005d; }
       .opt[data-accent="black"]{ --ac:#18181b; }
       .dark .opt[data-accent="black"]{ --ac:#e4e4e7; }
+      .opt[data-accent="emerald"]{ --ac:#059669; }
+      .opt[data-accent="amber"]{ --ac:#d97706; }
+      .opt[data-accent="blue"]{ --ac:#2563eb; }
       .cs-wrap:focus-within .cs-btn{ border-color:#9e005d; }
       .cs-btn svg{ transition:transform .25s ease; }
       .cs-btn[aria-expanded="true"] svg{ transform:rotate(180deg); }
@@ -86,26 +89,25 @@
   @endif
   <div id="pay-error" class="hidden mt-6 rounded-xl border border-red-300 bg-red-50 dark:bg-red-500/10 px-5 py-4 text-sm text-red-700 dark:text-red-300"></div>
 
-  <div class="mt-6" id="wiz-nav">
-    <div class="flex items-start gap-1 sm:gap-2" id="wiz-dots" role="tablist" aria-label="Checkout steps">
-      @foreach([1 => 'Package', 2 => 'Domain', 3 => 'Details', 4 => 'Billing', 5 => 'Pay'] as $n => $label)
-      <button type="button" data-goto="{{ $n }}" class="wiz-dot flex-1 flex flex-col items-center gap-1.5" role="tab">
-        <span class="wiz-num w-8 h-8 grid place-items-center rounded-full text-xs font-extrabold border-2 border-zinc-300 dark:border-white/15 text-zinc-400">{{ $n }}</span>
-        <span class="text-[11px] font-bold text-zinc-500 dark:text-zinc-400">{{ $label }}</span>
-      </button>
-      @endforeach
-    </div>
-    <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-white/10"><div id="wiz-bar" class="h-full rounded-full bg-brand-600 transition-all duration-300" style="width:20%"></div></div>
-  </div>
-
   <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form" class="mt-6 grid lg:grid-cols-[1fr_320px] gap-5 items-start" data-guest="{{ auth()->check() ? '0' : '1' }}" data-wiz-start="{{ $errors->any() ? '3' : '1' }}">
     @csrf
     <input type="hidden" name="payment_method" id="pay-method" value="online">
     <div class="space-y-6">
+      <div id="wiz-nav">
+        <div class="flex items-start gap-1 sm:gap-2" id="wiz-dots" role="tablist" aria-label="Checkout steps">
+          @foreach([1 => 'Package', 2 => 'Domain', 3 => 'Details', 4 => 'Billing', 5 => 'Pay'] as $n => $label)
+          <button type="button" data-goto="{{ $n }}" class="wiz-dot flex-1 flex flex-col items-center gap-1.5" role="tab">
+            <span class="wiz-num w-8 h-8 grid place-items-center rounded-full text-xs font-extrabold border-2 border-zinc-300 dark:border-white/15 text-zinc-400">{{ $n }}</span>
+            <span class="text-[11px] font-bold text-zinc-500 dark:text-zinc-400">{{ $label }}</span>
+          </button>
+          @endforeach
+        </div>
+        <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-white/10"><div id="wiz-bar" class="h-full rounded-full bg-brand-600 transition-all duration-300" style="width:20%"></div></div>
+      </div>
       <div class="wiz-step" data-step="1">
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">1. Your package</h2>
-        @php $accents = ['START' => 'black', 'GROW' => 'brand', 'BUSINESS' => 'black', 'CORPORATE' => 'black']; @endphp
+        @php $accents = ['START' => 'emerald', 'GROW' => 'brand', 'BUSINESS' => 'amber', 'CORPORATE' => 'blue']; @endphp
         <div class="mt-3 grid sm:grid-cols-2 gap-3">
           @foreach($packages as $name => $p)
           <label class="opt cursor-pointer" data-accent="{{ $accents[$name] ?? 'zinc' }}">
@@ -129,8 +131,8 @@
       <div class="wiz-step hidden" data-step="2">
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">2. Your domain <span class="text-xs font-semibold text-zinc-500">— one-time fee, never billed again</span></h2>
-        @php $domAccents = ['none' => 'black', 'subdomain' => 'brand', 'budget' => 'black', 'premium' => 'black']; @endphp
-        <div class="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        @php $domAccents = ['none' => 'zinc', 'subdomain' => 'brand', 'budget' => 'emerald', 'premium' => 'amber']; @endphp
+        <div class="mt-3 grid gap-3 sm:grid-cols-2">
           @foreach($domains as $key => $d)
           <label class="opt cursor-pointer" data-accent="{{ $domAccents[$key] ?? 'zinc' }}">
             <input type="radio" name="domain" value="{{ $key }}" class="sr-only" {{ $selectedDomain === $key ? 'checked' : '' }}>
@@ -175,7 +177,7 @@
 
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">4. How you pay</h2>
-        @php $freqAccents = ['full' => 'black', 'monthly' => 'brand', 'weekly' => 'black', 'daily' => 'black']; @endphp
+        @php $freqAccents = ['full' => 'blue', 'monthly' => 'brand', 'weekly' => 'emerald', 'daily' => 'amber']; @endphp
         <div class="mt-3 grid sm:grid-cols-2 gap-3">
           @foreach([['full','Pay in full','fullLabel'],['monthly','Monthly','monthlyLabel'],['weekly','Weekly','weeklyLabel'],['daily','Daily','dailyLabel']] as [$val,$title,$lid])
           <label class="opt cursor-pointer" data-accent="{{ $freqAccents[$val] }}">
@@ -385,7 +387,7 @@ function enhanceCoSelect(sel){
   sel.classList.add('sr-only'); sel.tabIndex=-1; sel.setAttribute('aria-hidden','true');
   const btn=document.createElement('button');
   btn.type='button';
-  btn.className='cs-btn w-full flex items-center justify-between gap-2 rounded-full border border-zinc-200 dark:border-white/15 bg-white dark:bg-[#17171A] px-5 py-3 text-sm text-zinc-900 dark:text-white outline-none';
+  btn.className='cs-btn w-full flex items-center justify-between gap-2 rounded-lg border border-zinc-200 dark:border-white/15 bg-white dark:bg-[#17171A] px-4 py-2 text-sm text-zinc-900 dark:text-white outline-none';
   btn.setAttribute('aria-expanded','false');
   btn.innerHTML='<span class="cs-label truncate">Select…</span><svg class="w-4 h-4 shrink-0 text-zinc-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
   const list=document.createElement('div');
@@ -556,4 +558,4 @@ if(document.readyState === 'loading') document.addEventListener('DOMContentLoade
 else initCheckout();
 if(window.Livewire) document.addEventListener('livewire:navigated', initCheckout);
 </script>
-</x-layouts::app>
+</x-layouts::checkout>

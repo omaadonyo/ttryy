@@ -22,7 +22,7 @@
                 <div class="flex shrink-0 items-center gap-2 flex-wrap">
                     <button onclick="startTour_dashboard()" class="rounded-lg bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/20 dark:bg-zinc-950/5 dark:text-zinc-900 dark:hover:bg-zinc-950/10">Take tour</button>
                     <a href="{{ route('marketing.index') }}" class="rounded-lg bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/20 dark:bg-zinc-950/5 dark:text-zinc-900 dark:hover:bg-zinc-950/10">Send campaign</a>
-                    <a href="{{ route('orders.new') }}" class="btn-brand btn-sm">New order</a>
+                    <a href="{{ route('checkout') }}" class="btn-brand btn-sm">New order</a>
                 </div>
             </div>
         </div>
@@ -189,7 +189,7 @@
                     <a href="{{ route('packages.index') }}" class="btn-ghost btn-sm">View all</a>
                 </div>
                 @if($recentOrders->isEmpty())
-                    <x-empty-state icon="orders" title="No orders yet" message="Choose a package to get your website and prospect list started." :actionUrl="route('orders.new')" actionLabel="Choose a package" />
+                    <x-empty-state icon="orders" title="No orders yet" message="Choose a package to get your website and prospect list started." :actionUrl="route('checkout')" actionLabel="Choose a package" />
                 @else
                     <div class="tbl-wrap mt-4 rounded-none! border-0! shadow-none!">
                         <table class="tbl">

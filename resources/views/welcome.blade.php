@@ -139,7 +139,7 @@
         <svg class="theme-icon-moon w-5 h-5"><use href="#i-moon"/></svg>
         <svg class="theme-icon-sun w-5 h-5 hidden"><use href="#i-sun"/></svg>
       </button>
-      <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white text-sm font-bold px-6 py-2 rounded-full transition shadow-lg shadow-[#9e005d]/25">Get Started</a>
+      <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white text-sm font-bold px-6 py-2 rounded-full transition shadow-lg shadow-[#9e005d]/25">Get Started</a>
       @auth
       <div class="relative hidden md:block" id="landing-user">
         <button onclick="toggleLandingMenu(event)" class="flex items-center gap-1.5 rounded-full py-1 pl-1 pr-2 transition hover:bg-zinc-100 dark:hover:bg-white/10" aria-label="Account menu" aria-haspopup="true">
@@ -179,7 +179,7 @@
     <a href="#pricing" data-navspy="pricing" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Pricing</a>
     <a href="#tools" data-navspy="tools" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Business Tools</a>
     <a href="#faq" data-navspy="faq" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">FAQ</a>
-    <a href="/dashboard/checkout" class="block text-center w-full mt-2 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full">Get Started</a>
+    <a href="/checkout" class="block text-center w-full mt-2 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full">Get Started</a>
     @auth
     <a href="/dashboard" class="block text-center w-full mt-2 border border-zinc-300 dark:border-white/20 font-bold py-3 rounded-full">Dashboard</a>
     <form method="POST" action="{{ route('logout') }}" class="w-full">
@@ -206,7 +206,7 @@
         Ttryy builds and hosts your website — from <strong class="text-zinc-900 dark:text-white">UGX 10,000 with a free subdomain</strong>, live in 5 days. Can't raise UGX 350,000 upfront? Don't wait till you have the money. Pay small-small while your site works for you.
       </p>
       <div class="mt-8 flex flex-col sm:flex-row gap-3">
-        <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/25 text-center">Launch My Website</a>
+        <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/25 text-center">Launch My Website</a>
         <a href="#launch" class="inline-flex justify-center items-center border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold px-7 py-3 rounded-full text-base transition">The UGX 10,000 deal</a>
       </div>
       <div class="mt-7 flex flex-wrap gap-x-7 gap-y-2 text-sm">
@@ -235,136 +235,223 @@
 <!-- LAUNCH DEAL -->
 <section id="launch" class="relative overflow-hidden bg-zinc-950 dark:bg-black dark:border-y dark:border-white/10 text-white">
 <script>
-/* Hero concept canvas: UGX 10,000 + your idea = online revenue. Lightweight 2D flow field. */
+/* Hero concept canvas: UGX 10,000 + your idea = online revenue. Infinite flow-field animation. */
 (function(){
-  const cv = document.getElementById('launchCanvas');
+  'use strict';
+  var cv = document.getElementById('launchCanvas');
   if(!cv) return;
-  const ctx = cv.getContext('2d');
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let W = 0, H = 0, running = true;
+  var ctx = null;
+  try { ctx = cv.getContext('2d'); } catch (e) { return; }
+  if(!ctx) return;
+  var reduced = false;
+  try { reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  var W = 600, H = 380, running = true, startedAt = 0;
+  var BRAND = '#9e005d', PINK = '#ff4d9a', GOLD = '#f5b301', GREEN = '#10b981';
   function resize(){
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const r = cv.getBoundingClientRect();
-    W = Math.max(280, r.width); H = Math.max(280, r.height);
-    cv.width = W * dpr; cv.height = H * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    try {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var r = cv.getBoundingClientRect();
+      if(r && r.width > 10 && r.height > 10){ W = r.width; H = r.height; }
+      cv.width = Math.round(W * dpr);
+      cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    } catch (e) {}
   }
-  resize();
-  window.addEventListener('resize', resize);
-  new IntersectionObserver(es => es.forEach(e => { running = e.isIntersecting; }), {threshold: 0}).observe(cv);
-  const dark = () => document.documentElement.classList.contains('dark');
-  const BRAND = '#9e005d', PINK = '#ff4d9a', GOLD = '#f5b301', GREEN = '#10b981';
   function hubs(t){
-    const cx = W / 2, cy = H * 0.44;
-    const spread = Math.max(90, Math.min(W * 0.31, 290));
-    const bob = Math.sin(t / 900) * 7;
+    var cx = W / 2, cy = H * 0.44;
+    var spread = Math.max(86, Math.min(W * 0.31, 290));
+    var bob = Math.sin(t / 850) * 8;
     return [
       {x: cx - spread, y: cy + bob * 0.4, r: 32, top: 'UGX 10,000', sub: 'to start', kind: 'coin'},
       {x: cx, y: cy - bob, r: 38, top: 'YOUR IDEA', sub: 'we build it', kind: 'idea'},
       {x: cx + spread, y: cy + bob * 0.4, r: 32, top: 'UGX / DAY', sub: 'revenue online', kind: 'money'}
     ];
   }
-  const P = [];
-  for(let i = 0; i < 44; i++) P.push({seg: i % 2, t: Math.random(), sp: 0.0008 + Math.random() * 0.0016, s: 1 + Math.random() * 2.2});
-  const AMBIENT = [];
-  for(let i = 0; i < 42; i++) AMBIENT.push({x: Math.random(), y: Math.random(), r: 0.6 + Math.random() * 1.6, v: 0.02 + Math.random() * 0.06, ph: Math.random() * 6.28});
+  var P = [];
+  for(var i = 0; i < 40; i++) P.push({seg: i % 2, t: Math.random(), sp: 0.0011 + Math.random() * 0.0021, s: 1.2 + Math.random() * 2.4, trail: []});
+  var AMBIENT = [];
+  for(var j = 0; j < 40; j++) AMBIENT.push({x: Math.random(), y: Math.random(), r: 0.6 + Math.random() * 1.7, v: 0.02 + Math.random() * 0.07, ph: Math.random() * 6.28});
+  var PULSES = [];
+  var lastPulse = 0;
   function bez(a, b, t){
-    const mx = (a.x + b.x) / 2, my = Math.min(a.y, b.y) - 52;
-    const u = 1 - t;
+    var mx = (a.x + b.x) / 2, my = Math.min(a.y, b.y) - 54;
+    var u = 1 - t;
     return {x: u*u*a.x + 2*u*t*mx + t*t*b.x, y: u*u*a.y + 2*u*t*my + t*t*b.y};
   }
+  function isDark(){ try { return document.documentElement.classList.contains('dark'); } catch (e) { return false; } }
   function star(x, y, r, color){
-    ctx.save(); ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = 14;
+    ctx.save();
+    ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = 14;
     ctx.beginPath();
-    for(let i = 0; i < 8; i++){
-      const a = i * Math.PI / 4, rr = i % 2 ? r * 0.42 : r;
-      ctx[i ? 'lineTo' : 'moveTo'](x + Math.cos(a) * rr, y + Math.sin(a) * rr);
+    for(var k = 0; k < 8; k++){
+      var a = k * Math.PI / 4, rr = (k % 2) ? r * 0.42 : r;
+      if(k) ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr);
+      else ctx.moveTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr);
     }
     ctx.closePath(); ctx.fill(); ctx.restore();
   }
   function draw(t){
-    const isDark = dark();
+    var dark = isDark();
     ctx.clearRect(0, 0, W, H);
-    const ink = isDark ? '#f4f4f5' : '#18181b';
-    const faint = isDark ? 'rgba(255,255,255,.10)' : 'rgba(24,24,27,.10)';
-    // dot grid
+    var ink = dark ? '#f4f4f5' : '#18181b';
+    var faint = dark ? 'rgba(255,255,255,.10)' : 'rgba(24,24,27,.10)';
+    var gs, gx, gy;
     ctx.fillStyle = faint;
-    const gs = 26;
-    for(let gx = gs/2; gx < W; gx += gs) for(let gy = gs/2; gy < H; gy += gs){
+    gs = 26;
+    for(gx = gs / 2; gx < W; gx += gs) for(gy = gs / 2; gy < H; gy += gs){
       ctx.beginPath(); ctx.arc(gx, gy, 1, 0, 6.29); ctx.fill();
     }
-    // ambient drift
-    AMBIENT.forEach(a => {
-      const y = ((a.y + t * 0.000016 * a.v * 60) % 1) * H;
-      ctx.globalAlpha = 0.35 + 0.3 * Math.sin(t / 700 + a.ph);
-      ctx.fillStyle = isDark ? '#71717a' : '#a1a1aa';
+    var ai;
+    for(ai = 0; ai < AMBIENT.length; ai++){
+      var a = AMBIENT[ai];
+      var y = ((a.y + t * 0.00003 * a.v * 60) % 1) * H;
+      ctx.globalAlpha = 0.3 + 0.3 * Math.sin(t / 700 + a.ph);
+      ctx.fillStyle = dark ? '#71717a' : '#a1a1aa';
       ctx.beginPath(); ctx.arc(a.x * W, y, a.r, 0, 6.29); ctx.fill();
-    });
+    }
     ctx.globalAlpha = 1;
-    // soft brand orbs
-    [[W*0.12, H*0.85, 130, BRAND], [W*0.88, H*0.15, 150, PINK]].forEach(([x, y, r, c]) => {
-      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-      g.addColorStop(0, isDark ? c + '55' : c + '2e');
-      g.addColorStop(1, c + '00');
-      ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2);
-    });
-    const [A, B, C] = hubs(t);
-    // streams
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    P.forEach(p => {
-      p.t += p.sp * 16; if(p.t > 1){ p.t = 0; p.seg = p.seg ? 0 : 1; }
-      const from = p.seg ? B : A, to = p.seg ? C : B;
-      const pt = bez(from, to, p.t);
-      ctx.fillStyle = p.seg ? GREEN : BRAND;
-      ctx.shadowColor = p.seg ? GREEN : PINK;
-      ctx.shadowBlur = 10;
-      ctx.beginPath(); ctx.arc(pt.x, pt.y, p.s, 0, 6.29); ctx.fill();
-    });
-    ctx.restore();
-    // links under nodes
-    ctx.strokeStyle = faint; ctx.lineWidth = 1.5; ctx.setLineDash([4, 5]);
-    [[A, B], [B, C]].forEach(([a, b]) => { ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); });
-    ctx.setLineDash([]);
-    // nodes
-    const node = (n) => {
-      const g = ctx.createRadialGradient(n.x - 8, n.y - 10, 4, n.x, n.y, n.r + 14);
-      const base = n.kind === 'coin' ? GOLD : n.kind === 'money' ? GREEN : BRAND;
-      g.addColorStop(0, base); g.addColorStop(1, n.kind === 'idea' ? PINK : base);
-      ctx.save();
-      ctx.shadowColor = base; ctx.shadowBlur = 26;
+    var orbs = [[W * 0.12, H * 0.85, 130, BRAND], [W * 0.88, H * 0.15, 150, PINK]];
+    for(var oi = 0; oi < orbs.length; oi++){
+      var ox = orbs[oi][0] + Math.sin(t / 2400 + oi * 2) * 14;
+      var oy = orbs[oi][1] + Math.cos(t / 2900 + oi) * 12;
+      var or_ = orbs[oi][2], oc = orbs[oi][3];
+      var g = ctx.createRadialGradient(ox, oy, 0, ox, oy, or_);
+      g.addColorStop(0, dark ? oc + '55' : oc + '2e');
+      g.addColorStop(1, oc + '00');
       ctx.fillStyle = g;
-      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, 6.29); ctx.fill();
-      ctx.restore();
-      ctx.fillStyle = 'rgba(255,255,255,.92)';
-      ctx.font = '800 13px Sora, Inter, sans-serif';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      if(n.kind === 'coin') ctx.fillText('10K', n.x, n.y + 1);
-      if(n.kind === 'money'){
-        ctx.fillRect(n.x - 11, n.y + 2, 5, 9);
-        ctx.fillRect(n.x - 3, n.y - 3, 5, 14);
-        ctx.fillRect(n.x + 5, n.y - 8, 5, 19);
+      ctx.fillRect(ox - or_, oy - or_, or_ * 2, or_ * 2);
+    }
+    var hubs_ = hubs(t), A = hubs_[0], B = hubs_[1], C = hubs_[2];
+    // comet streams with trails
+    ctx.save();
+    try { ctx.globalCompositeOperation = 'lighter'; } catch (e) {}
+    var pi;
+    for(pi = 0; pi < P.length; pi++){
+      var p = P[pi];
+      p.t += p.sp * 16;
+      if(p.t > 1){ p.t = 0; p.seg = p.seg ? 0 : 1; p.trail = []; }
+      var from = p.seg ? B : A, to = p.seg ? C : B;
+      var pt = bez(from, to, p.t);
+      p.trail.push({x: pt.x, y: pt.y});
+      if(p.trail.length > 9) p.trail.shift();
+      var col = p.seg ? GREEN : BRAND;
+      var ti;
+      for(ti = 0; ti < p.trail.length; ti++){
+        var tp = p.trail[ti];
+        var al = (ti + 1) / p.trail.length;
+        ctx.globalAlpha = al * 0.85;
+        ctx.fillStyle = col;
+        try { ctx.shadowColor = col; ctx.shadowBlur = 10; } catch (ee) {}
+        ctx.beginPath(); ctx.arc(tp.x, tp.y, p.s * al + 0.4, 0, 6.29); ctx.fill();
       }
-      if(n.kind === 'idea') star(n.x, n.y, 11, '#ffffff');
-      ctx.fillStyle = isDark ? 'rgba(255,255,255,.55)' : 'rgba(24,24,27,.55)';
-      ctx.font = '700 10px Inter, sans-serif';
-      ctx.fillText(n.top, n.x, n.y - n.r - 12);
-      ctx.fillStyle = ink;
-      ctx.font = '800 12px Inter, sans-serif';
-      ctx.fillText(n.sub, n.x, n.y + n.r + 14);
-    };
-    [A, B, C].forEach(node);
-    // plus / equals glyphs between hubs
-    ctx.fillStyle = isDark ? 'rgba(255,255,255,.5)' : 'rgba(24,24,27,.45)';
+    }
+    ctx.restore();
+    ctx.globalAlpha = 1;
+    // dashed links
+    ctx.strokeStyle = faint; ctx.lineWidth = 1.5; ctx.setLineDash([4, 5]);
+    var pairs = [[A, B], [B, C]];
+    for(var qi = 0; qi < pairs.length; qi++){
+      ctx.beginPath(); ctx.moveTo(pairs[qi][0].x, pairs[qi][0].y); ctx.lineTo(pairs[qi][1].x, pairs[qi][1].y); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    // rotating orbit ring around the idea hub — unmistakable motion
+    ctx.save();
+    ctx.strokeStyle = dark ? 'rgba(255,77,154,.65)' : 'rgba(158,0,93,.55)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([10, 8]);
+    try { ctx.lineDashOffset = -(t / 28); } catch (e) {}
+    ctx.beginPath(); ctx.arc(B.x, B.y, B.r + 16, 0, 6.29); ctx.stroke();
+    ctx.restore();
+    ctx.setLineDash([]);
+    // pulse rings
+    if(t - lastPulse > 1400){
+      lastPulse = t;
+      PULSES.push({x: B.x, y: B.y, r: B.r + 6, a: 0.55});
+      PULSES.push({x: C.x, y: C.y, r: C.r + 6, a: 0.45});
+    }
+    for(var ri = PULSES.length - 1; ri >= 0; ri--){
+      var pr = PULSES[ri];
+      pr.r += 1.1; pr.a -= 0.011;
+      if(pr.a <= 0){ PULSES.splice(ri, 1); continue; }
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, pr.a);
+      ctx.strokeStyle = BRAND; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(pr.x, pr.y, pr.r, 0, 6.29); ctx.stroke();
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
+    // nodes
+    var nodes = [A, B, C];
+    for(var ni = 0; ni < nodes.length; ni++){
+      (function(n){
+        var base = n.kind === 'coin' ? GOLD : (n.kind === 'money' ? GREEN : BRAND);
+        var gg = ctx.createRadialGradient(n.x - 8, n.y - 10, 4, n.x, n.y, n.r + 14);
+        gg.addColorStop(0, base);
+        gg.addColorStop(1, n.kind === 'idea' ? PINK : base);
+        ctx.save();
+        ctx.shadowColor = base; ctx.shadowBlur = 26;
+        ctx.fillStyle = gg;
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, 6.29); ctx.fill();
+        ctx.restore();
+        ctx.fillStyle = 'rgba(255,255,255,.92)';
+        ctx.font = '800 13px Sora, Inter, sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        if(n.kind === 'coin') ctx.fillText('10K', n.x, n.y + 1);
+        if(n.kind === 'money'){
+          ctx.fillRect(n.x - 11, n.y + 2, 5, 9);
+          ctx.fillRect(n.x - 3, n.y - 3, 5, 14);
+          ctx.fillRect(n.x + 5, n.y - 8, 5, 19);
+        }
+        if(n.kind === 'idea') star(n.x, n.y, 11, '#ffffff');
+        ctx.fillStyle = dark ? 'rgba(255,255,255,.55)' : 'rgba(24,24,27,.55)';
+        ctx.font = '700 10px Inter, sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(n.top, n.x, n.y - n.r - 12);
+        ctx.fillStyle = ink;
+        ctx.font = '800 12px Inter, sans-serif';
+        ctx.fillText(n.sub, n.x, n.y + n.r + 16 + Math.sin(t / 850) * 2);
+      })(nodes[ni]);
+    }
+    ctx.fillStyle = dark ? 'rgba(255,255,255,.5)' : 'rgba(24,24,27,.45)';
     ctx.font = '800 20px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('+', (A.x + B.x) / 2, (A.y + B.y) / 2 - 34);
     ctx.fillText('=', (B.x + C.x) / 2, (B.y + C.y) / 2 - 34);
   }
-  if(reduced){ draw(0); return; }
-  (function frame(t){
-    requestAnimationFrame(frame);
-    if(running) draw(t || 0);
-  })(0);
+  function frame(t){
+    try { requestAnimationFrame(frame); } catch (e) {}
+    if(!running) return;
+    try { draw(t || 0); } catch (e) { if(window.console) console.error('launch canvas:', e); }
+  }
+  function boot(){
+    resize();
+    startedAt = 0;
+    if(reduced){ try { draw(0); } catch (e) {} return; }
+    try { requestAnimationFrame(frame); } catch (e) {}
+  }
+  try {
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(es){
+        es.forEach(function(e){ running = e.isIntersecting; });
+      }, {threshold: 0}).observe(cv);
+    }
+  } catch (e) {}
+  try {
+    if('ResizeObserver' in window){ new ResizeObserver(function(){ resize(); }).observe(cv); }
+    else { window.addEventListener('resize', resize); }
+  } catch (e) {}
+  function readyStart(){
+    resize();
+    setTimeout(resize, 60);
+    setTimeout(resize, 600);
+    boot();
+  }
+  try {
+    if(document.readyState === 'complete' || document.readyState === 'interactive') readyStart();
+    else if(document.addEventListener) document.addEventListener('DOMContentLoaded', readyStart);
+    else readyStart();
+    window.addEventListener('load', function(){ resize(); });
+  } catch (e) { boot(); }
 })();
 </script>
 <section id="launch" class="relative overflow-hidden bg-zinc-950 dark:bg-black dark:border-y dark:border-white/10 text-white">
@@ -431,7 +518,7 @@
       </div>
     </div>
     <div class="mt-8 reveal flex flex-col sm:flex-row gap-3">
-      <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25 text-center">Get Your Website</a>
+      <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25 text-center">Get Your Website</a>
       <a href="#why" class="inline-flex justify-center items-center font-bold px-8 py-3 rounded-full border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white transition">Next: why this works &rarr;</a>
     </div>
   </div>
@@ -472,9 +559,9 @@
       <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-zinc-950 dark:text-white">Watch It Find Customers Live</h3>
       <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pick a niche and hit Scrape — this is the same engine that maps 5,000 prospects for your package.</p>
     </div>
-    <div class="reveal mt-6 max-w-4xl">
-        <!-- SCRAPER DEMO -->
-        <div class="reveal visible" id="scraperDemo">
+    <div class="reveal mt-6 max-w-3xl">
+    <!-- SCRAPER DEMO -->
+    <div id="scraperDemo">
           <div class="bg-white dark:bg-[#141416] rounded-xl shadow-2xl shadow-zinc-950/10 dark:shadow-black/50 overflow-hidden">
             <div class="flex items-center justify-between gap-2 px-5 pt-4">
               <p class="font-display font-bold text-[15px] text-zinc-950 dark:text-white">Prospect scraper <span class="scan-pulse inline-block w-2 h-2 rounded-full bg-zinc-400 ml-1 align-middle"></span></p>
@@ -543,7 +630,7 @@
       </div>
       @endforeach
     </div>
-    <div class="mt-10 reveal"><a href="/dashboard/checkout" class="inline-block bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Start Building My Business</a></div>
+    <div class="mt-10 reveal"><a href="/checkout" class="inline-block bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Start Building My Business</a></div>
 
     <!-- Everything included -->
     <div class="mt-16 max-w-3xl reveal">
@@ -643,7 +730,7 @@
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0 text-zinc-400 dark:text-zinc-500"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <a href="/dashboard/checkout?package=CORPORATE" data-plan-cta="CORPORATE" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Choose Corporate</a>
+        <a href="/checkout?package=CORPORATE" data-plan-cta="CORPORATE" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Choose Corporate</a>
       </div>
       <!-- START -->
       <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-4">
@@ -661,7 +748,7 @@
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0 text-zinc-400 dark:text-zinc-500"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <a href="/dashboard/checkout?package=START" data-plan-cta="START" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Get Started</a>
+        <a href="/checkout?package=START" data-plan-cta="START" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Get Started</a>
       </div>
       <!-- GROW -->
       <div class="reveal relative bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 rounded-xl p-6 flex flex-col lg:scale-[1.05] shadow-2xl shadow-zinc-950/30 ring-1 ring-zinc-950/10 dark:ring-white/20 order-3">
@@ -681,7 +768,7 @@
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <a href="/dashboard/checkout?package=GROW" data-plan-cta="GROW" class="mt-7 w-full text-center bg-white dark:bg-zinc-950 text-zinc-950 dark:text-white font-bold py-3 rounded-full transition hover:bg-zinc-100 dark:hover:bg-zinc-800">Choose Grow</a>
+        <a href="/checkout?package=GROW" data-plan-cta="GROW" class="mt-7 w-full text-center bg-white dark:bg-zinc-950 text-zinc-950 dark:text-white font-bold py-3 rounded-full transition hover:bg-zinc-100 dark:hover:bg-zinc-800">Choose Grow</a>
       </div>
       <!-- BUSINESS -->
       <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl   p-6 flex flex-col order-2">
@@ -700,7 +787,7 @@
           <li class="flex gap-2"><svg class="w-5 h-5 shrink-0 text-zinc-400 dark:text-zinc-500"><use href="#i-check"/></svg><span>{{ $f }}</span></li>
           @endforeach
         </ul>
-        <a href="/dashboard/checkout?package=BUSINESS" data-plan-cta="BUSINESS" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Choose Business</a>
+        <a href="/checkout?package=BUSINESS" data-plan-cta="BUSINESS" class="mt-7 w-full text-center bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 border border-zinc-950 dark:border-white shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold py-3 rounded-full transition">Choose Business</a>
       </div>
     </div>
     <!-- comparison table -->
@@ -799,7 +886,7 @@
     <h2 class="reveal font-display font-extrabold text-3xl sm:text-5xl leading-tight">Launch This Week. Pay Small-Small.</h2>
     <p class="reveal text-zinc-400 text-lg mt-4 max-w-2xl mx-auto">For UGX 10,000, get your idea or website up and running in 5 days — free domain plus hosting inclusive. We build it; you bring the customers.</p>
     <div class="reveal mt-8 flex flex-col sm:flex-row justify-center gap-3">
-      <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-xl shadow-[#9e005d]/30 text-center">Launch My Website</a>
+      <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-xl shadow-[#9e005d]/30 text-center">Launch My Website</a>
       <a href="https://wa.me/256700000000?text=Hi%20Ttryy!%20I%20want%20to%20talk%20about%20growing%20my%20business." target="_blank" class="border border-white/25 hover:bg-white/10 font-bold px-8 py-3 rounded-full transition">Talk to Ttryy</a>
     </div>
     <p class="reveal mt-5 text-sm text-zinc-500">Hosting from <strong class="text-white">UGX 10,000</strong> · live in <strong class="text-white">5 days</strong> · startups: <strong class="text-white">10% build terms</strong></p>
@@ -841,7 +928,7 @@
   <svg class="w-6 h-6"><use href="#i-chat"/></svg>
 </a>
 <div class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-[#0A0A0B]/95 backdrop-blur border-t border-zinc-200 dark:border-white/10 px-4 py-3 flex gap-2">
-  <a href="/dashboard/checkout" class="flex-1 text-center bg-[#9e005d] text-white font-bold py-3 rounded-full text-sm">Get Your Website</a>
+  <a href="/checkout" class="flex-1 text-center bg-[#9e005d] text-white font-bold py-3 rounded-full text-sm">Get Your Website</a>
   <a href="#pricing" class="flex-1 text-center border-2 border-zinc-950 dark:border-white/30 font-bold py-2 rounded-full text-sm">See Packages</a>
 </div>
 <div class="h-16 sm:hidden"></div>
@@ -909,7 +996,7 @@ function nicheCard(n){
     + `<p class="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">Opportunities</p>`
     + `<ul class="mt-2 space-y-1.5 text-[13px] text-zinc-700 dark:text-zinc-300">${n.opps.slice(0,4).map(li).join('')}</ul></div>`
     + (n.note?`<p class="mx-5 mt-4 text-xs text-zinc-500 border-l-2 border-zinc-300 dark:border-zinc-600 pl-3">${n.note}</p>`:'')
-    + `<div class="p-5"><a href="/dashboard/checkout?niche=${encodeURIComponent(n.name)}" class="block text-center w-full border border-zinc-300 dark:border-white/15 hover:border-zinc-950 dark:hover:border-white text-zinc-900 dark:text-white font-bold py-2 rounded-full text-sm transition">Get the ${n.name} Package</a></div></div>`;
+    + `<div class="p-5"><a href="/checkout?niche=${encodeURIComponent(n.name)}" class="block text-center w-full border border-zinc-300 dark:border-white/15 hover:border-zinc-950 dark:hover:border-white text-zinc-900 dark:text-white font-bold py-2 rounded-full text-sm transition">Get the ${n.name} Package</a></div></div>`;
 }
 function renderNiches(filter=''){
   const grid = document.getElementById('nicheGrid');
@@ -1142,7 +1229,7 @@ function refreshPlanCards(){
     const rate=PLAN_PRICES[pkg][planBilling], fee=DOM_FEES[planDomain[pkg]]||0;
     document.querySelectorAll(`[data-plan-price="${pkg}"]`).forEach(el=>{ el.textContent='UGX '+(rate+fee).toLocaleString('en-US'); });
     document.querySelectorAll(`[data-plan-then="${pkg}"]`).forEach(el=>{ el.textContent='UGX '+rate.toLocaleString('en-US')+PER_SUFFIX[planBilling]; });
-    document.querySelectorAll(`[data-plan-cta="${pkg}"]`).forEach(el=>{ el.href=`/dashboard/checkout?package=${pkg}&billing=${planBilling}&domain=${planDomain[pkg]}`; });
+    document.querySelectorAll(`[data-plan-cta="${pkg}"]`).forEach(el=>{ el.href=`/checkout?package=${pkg}&billing=${planBilling}&domain=${planDomain[pkg]}`; });
     document.querySelectorAll(`[data-domain-switch="${pkg}"] button`).forEach(b=>{
       const on=b.dataset.domain===planDomain[pkg];
       b.className='rounded-full px-2 py-1.5 text-[11px] font-bold transition '+(on?'bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow':'text-zinc-500 hover:text-zinc-900 dark:hover:text-white');
@@ -1194,3 +1281,4 @@ paintThemeIcons();
 </script>
 </body>
 </html>
+
