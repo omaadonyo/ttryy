@@ -25,6 +25,7 @@ class PackageOrder extends Model
         'status',
         'payment_method',
         'tx_ref',
+        'gateway_tx_id',
         'paid_amount',
         'paid_at',
         'credentials_handed_over',

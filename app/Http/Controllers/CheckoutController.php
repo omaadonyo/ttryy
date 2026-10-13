@@ -9,6 +9,7 @@ use App\Models\WebsiteDomain;
 use App\Notifications\SiteAlert;
 use App\Services\Hosting\HostingSubscription;
 use App\Services\Hosting\SubdomainGenerator;
+use App\Services\IotecPay;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -54,6 +55,7 @@ class CheckoutController extends Controller
             'currency' => config('packages.currency'),
             'flwKey' => config('services.flutterwave.public_key'),
             'momoCode' => config('services.momo.merchant_code'),
+            'iotecEnabled' => IotecPay::enabled(),
         ]);
     }
 
@@ -65,7 +67,7 @@ class CheckoutController extends Controller
             'package' => ['required', Rule::in(array_keys($packages))],
             'billing_frequency' => ['required', Rule::in(config('packages.frequencies'))],
             'domain' => ['required', Rule::in(array_keys(config('packages.domains')))],
-            'payment_method' => ['nullable', Rule::in(['online', 'momo_manual'])],
+            'payment_method' => ['nullable', Rule::in(['online', 'momo_manual', 'iotec'])],
             'duration_months' => ['nullable', 'integer', Rule::in(config('packages.durations'))],
             'business_name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:50'],
@@ -94,7 +96,7 @@ class CheckoutController extends Controller
             $subdomainLabel = $label;
         }
 
-        $method = $validated['payment_method'] ?? 'online';
+        $method = $validated['payment_method'] ?? 'iotec';
 
         $quote = $this->quote(
             $validated['package'],
@@ -122,7 +124,7 @@ class CheckoutController extends Controller
             'due_today' => $quote['due_today'],
             'currency' => config('packages.currency'),
             'status' => $method === 'momo_manual' ? 'submitted' : 'pending',
-            'payment_method' => $method === 'momo_manual' ? 'momo_manual' : 'flutterwave',
+            'payment_method' => $method === 'momo_manual' ? 'momo_manual' : ($method === 'online' ? 'flutterwave' : 'iotec'),
             'business_name' => $validated['business_name'],
             'phone' => $validated['phone'],
             'niche' => $validated['niche'] ?? null,

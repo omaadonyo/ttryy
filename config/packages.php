@@ -3,6 +3,9 @@
 return [
     'currency' => 'UGX',
 
+    // Launch 10K campaign fee: build setup + free subdomain + first 10 days.
+    'launch_fee' => 10000,
+
     // Order copies go to the customer plus this admin inbox.
     'admin_email' => env('ADMIN_EMAIL', 'pay@ttryy.com'),
 

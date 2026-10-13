@@ -42,7 +42,7 @@
         <li>We may suspend accounts that breach these terms, with notice where practical.</li>
       </ul></section>
     <section><h2 class="font-display font-bold text-xl text-zinc-950 dark:text-white">6. Liability</h2>
-      <p class="mt-2 text-zinc-600 dark:text-zinc-400">We provide the service with reasonable skill and care, but to the maximum extent permitted by law our liability is limited to amounts you paid in the 12 months before a claim. We are not liable for business you do or do not close from prospects, or for third-party services (Flutterwave, WhatsApp, email delivery).</p></section>
+      <p class="mt-2 text-zinc-600 dark:text-zinc-400">We provide the service with reasonable skill and care, but to the maximum extent permitted by law our liability is limited to amounts you paid in the 12 months before a claim. We are not liable for business you do or do not close from prospects, or for third-party services (payment providers, WhatsApp, email delivery).</p></section>
     <section><h2 class="font-display font-bold text-xl text-zinc-950 dark:text-white">7. Changes & contact</h2>
       <p class="mt-2 text-zinc-600 dark:text-zinc-400">We may update these terms; material changes will be flagged here and, where appropriate, by email or dashboard notice. Questions: {{ config('packages.admin_email') }}.</p></section>
   </div>

@@ -52,6 +52,11 @@ document.querySelectorAll('select[name="status"]').forEach(enhanceSelect);
                             <p class="text-[13px] text-zinc-500">{{ $s->name }} · {{ $s->phone }}{{ $s->email ? ' · '.$s->email : '' }}{{ $s->niche ? ' · '.$s->niche : '' }}</p>
                         </div>
                         <span class="{{ $s->status === 'converted' ? 'pill-green' : ($s->status === 'declined' ? 'pill-red' : ($s->status === 'contacted' ? 'pill-amber' : 'pill-brand')) }}">{{ $s->status }}</span>
+                        @if($s->payment_status === 'paid')
+                        <span class="pill-green">UGX {{ number_format($s->paid_amount ?? 0) }} paid</span>
+                        @elseif($s->gateway_tx_id)
+                        <span class="pill-amber">pay pending</span>
+                        @endif
                     </div>
                     <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400 whitespace-pre-wrap">{{ $s->idea }}</p>
                     @if($s->admin_note)<p class="mt-2 text-xs text-zinc-500">Note: {{ $s->admin_note }}</p>@endif

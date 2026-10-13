@@ -23,6 +23,19 @@ return [
         'secret_key' => env('FLW_SECRET_KEY'),
     ],
 
+    'iotec' => [
+        // ioTec Pay (https://pay.iotec.io) — Mobile Money + card collections.
+        // Credentials arrive by email after ioTec merchant onboarding.
+        'client_id' => env('IOTEC_CLIENT_ID'),
+        'client_secret' => env('IOTEC_CLIENT_SECRET'),
+        'wallet_id' => env('IOTEC_WALLET_ID'),
+        'base_url' => env('IOTEC_BASE_URL', 'https://pay.iotec.io'),
+        'auth_url' => env('IOTEC_AUTH_URL', 'https://id.iotec.io/connect/token'),
+        // Shared secret you also enter in the ioTec portal's Callback URLs card
+        // (Security Headers). Callbacks carrying a wrong token are rejected.
+        'callback_token' => env('IOTEC_CALLBACK_TOKEN'),
+    ],
+
     'openai' => [
         'key' => env('OPENAI_API_KEY'),
         'base_url' => env('OPENAI_BASE_URL', 'https://api.openai.com/v1'),

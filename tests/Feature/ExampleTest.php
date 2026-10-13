@@ -44,7 +44,8 @@ test('launch campaign page sells the 10k offer with form, countdown and terms', 
         ->assertOk()
         ->assertSee('Launch it for', false)
         ->assertSee('768665', false)
-        ->assertSee('Flutterwave', false)
+        ->assertSee('id="launch-pay-now"', false)
+        ->assertSee('Apply free, pay later', false)
         ->assertSee('id="countdown"', false)
         ->assertSee('id="apply"', false)
         ->assertSee('Simple terms', false);

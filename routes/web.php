@@ -5,15 +5,19 @@ use App\Http\Controllers\AdminHostingController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HostingController;
+use App\Http\Controllers\IotecPaymentController;
 use App\Http\Controllers\LaunchController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
-
 Route::get('launch', [LaunchController::class, 'index'])->name('launch');
+
 Route::post('launch', [LaunchController::class, 'store'])->name('launch.store');
+Route::post('launch/iotec/pay', [IotecPaymentController::class, 'payLaunch'])->middleware('throttle:20,1')->name('launch.iotec.pay');
+Route::get('launch/iotec/status', [IotecPaymentController::class, 'launchStatus'])->middleware('throttle:60,1')->name('launch.iotec.status');
+Route::get('payments/iotec/card-return', [IotecPaymentController::class, 'cardReturn'])->name('payments.iotec.card-return');
 
 Route::view('privacy', 'privacy')->name('privacy');
 Route::view('terms', 'terms')->name('terms');
@@ -85,6 +89,9 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('payments', [DashboardController::class, 'payments'])->name('payments.index');
     Route::post('checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::post('checkout/verify', [CheckoutController::class, 'verify'])->name('checkout.verify');
+    Route::post('checkout/iotec/pay', [IotecPaymentController::class, 'payOrder'])->middleware('throttle:30,1')->name('checkout.iotec.pay');
+    Route::post('checkout/iotec/card', [IotecPaymentController::class, 'payOrderCard'])->middleware('throttle:30,1')->name('checkout.iotec.card');
+    Route::get('checkout/iotec/status', [IotecPaymentController::class, 'orderStatus'])->name('checkout.iotec.status');
     Route::get('orders/{order}/invoice', [CheckoutController::class, 'invoice'])->name('orders.invoice');
     Route::get('checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('packages', [CheckoutController::class, 'orders'])->name('packages.index');

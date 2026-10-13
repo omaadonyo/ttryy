@@ -1,8 +1,5 @@
 <x-layouts::checkout :title="__('Checkout')">
     @include('partials.toast')
-    @if($flwKey)
-    <script src="https://checkout.flutterwave.com/v3.js"></script>
-    @endif
     <style>
       .opt > div{ box-shadow:0 2px 12px -6px rgba(10,10,12,.14); }
       .dark .opt > div{ box-shadow:0 8px 24px -10px rgba(0,0,0,.75); }
@@ -24,8 +21,8 @@
     </style>
     <div class="flex h-full w-full flex-1 flex-col gap-5">
   <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Secure checkout</p>
-  <h1 class="font-display font-extrabold text-3xl mt-1 text-zinc-950 dark:text-white">Choose how you pay</h1>
-  <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pick a package, a domain, a billing rhythm, and how long you want your website kept running. You pay exactly what is shown — no hidden fees.</p>
+  <h1 class="font-display font-extrabold text-3xl mt-1 text-zinc-950 dark:text-white">Get your website in 3 quick steps</h1>
+  <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pick a plan, tell us about your business, then pay with Mobile Money in seconds. You pay exactly what is shown — no hidden fees.</p>
 
   <div class="mt-5 flex items-center gap-2 text-sm flex-wrap">
     @auth
@@ -40,17 +37,15 @@
   </div>
 
   @include('partials.tour', ['key' => 'checkout', 'steps' => [
-      ['target' => '#wiz-nav', 'title' => 'Five quick steps', 'body' => 'Package, domain, details, billing, then pay. Completed steps stay clickable so you can go back.'],
-      ['target' => '[data-step="1"]', 'wiz' => 1, 'title' => '1 · Your package', 'body' => 'START, GROW, BUSINESS or CORPORATE. Prices and deposits are fixed — the summary updates live.'],
-      ['target' => '[data-step="2"]', 'wiz' => 2, 'title' => '2 · Your domain', 'body' => 'Use your own domain free, or let us register a budget or premium one — a one-time fee, never billed again.'],
-      ['target' => '[data-step="3"]', 'wiz' => 3, 'title' => '3 · Business details', 'body' => 'Business name and WhatsApp number are required — this is where we confirm and deliver.'],
-      ['target' => '[data-step="4"]', 'wiz' => 4, 'title' => '4 · How you pay', 'body' => 'Full upfront covers 12 months, or spread it daily, weekly or monthly like M-Kopa.'],
-      ['target' => '[data-step="5"]', 'wiz' => 5, 'title' => '5 · How long', 'body' => 'Choose 3, 6 or 12 months. Your website stays running while the plan is active.'],
-      ['target' => '#tour-summary', 'title' => 'Review and pay', 'body' => 'The summary always shows exactly what is due today. Hit Continue to pay online instantly.'],
+      ['target' => '#wiz-nav', 'title' => 'Three quick steps', 'body' => 'Plan, details, then pay. Completed steps stay clickable so you can go back.'],
+      ['target' => '[data-step="1"]', 'wiz' => 1, 'title' => '1 · Your plan', 'body' => 'START, GROW, BUSINESS or CORPORATE, plus your domain — a one-time fee, never billed again.'],
+      ['target' => '[data-step="2"]', 'wiz' => 2, 'title' => '2 · Details & rhythm', 'body' => 'Business name and phone are required. Pay in full for 12 months, or spread it daily, weekly or monthly.'],
+      ['target' => '[data-step="3"]', 'wiz' => 3, 'title' => '3 · Pay in seconds', 'body' => 'Enter your Mobile Money number, hit Pay, approve the prompt on your phone. Done.'],
+      ['target' => '#tour-summary', 'title' => 'Review and pay', 'body' => 'The summary always shows exactly what is due today.'],
   ]])
 
   @auth
-  @include('partials.onboard', ['key' => 'checkout', 'title' => 'How ordering works', 'body' => 'Pick a package, add a domain once, tell us about your business, then choose daily, weekly or monthly billing. You pay exactly what the summary shows — no hidden fees.', 'link' => route('packages.index'), 'linkLabel' => 'Review my packages →'])
+  @include('partials.onboard', ['key' => 'checkout', 'title' => 'How ordering works', 'body' => 'Pick a plan, tell us about your business, then pay with Mobile Money in seconds. You pay exactly what the summary shows — no hidden fees.', 'link' => route('packages.index'), 'linkLabel' => 'Review my packages →'])
   @endauth
 
   @guest
@@ -89,24 +84,24 @@
   @endif
   <div id="pay-error" class="hidden mt-6 rounded-xl border border-red-300 bg-red-50 dark:bg-red-500/10 px-5 py-4 text-sm text-red-700 dark:text-red-300"></div>
 
-  <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form" class="mt-6 grid lg:grid-cols-[1fr_320px] gap-5 items-start" data-guest="{{ auth()->check() ? '0' : '1' }}" data-wiz-start="{{ $errors->any() ? '3' : '1' }}">
+  <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form" class="mt-6 grid lg:grid-cols-[1fr_320px] gap-5 items-start" data-guest="{{ auth()->check() ? '0' : '1' }}" data-wiz-start="{{ $errors->any() ? '2' : '1' }}">
     @csrf
-    <input type="hidden" name="payment_method" id="pay-method" value="online">
+    <input type="hidden" name="payment_method" id="pay-method" value="iotec">
     <div class="space-y-6">
       <div id="wiz-nav">
         <div class="flex items-start gap-1 sm:gap-2" id="wiz-dots" role="tablist" aria-label="Checkout steps">
-          @foreach([1 => 'Package', 2 => 'Domain', 3 => 'Details', 4 => 'Billing', 5 => 'Pay'] as $n => $label)
+          @foreach([1 => 'Plan', 2 => 'Details', 3 => 'Pay'] as $n => $label)
           <button type="button" data-goto="{{ $n }}" class="wiz-dot flex-1 flex flex-col items-center gap-1.5" role="tab">
             <span class="wiz-num w-8 h-8 grid place-items-center rounded-full text-xs font-extrabold border-2 border-zinc-300 dark:border-white/15 text-zinc-400">{{ $n }}</span>
             <span class="text-[11px] font-bold text-zinc-500 dark:text-zinc-400">{{ $label }}</span>
           </button>
           @endforeach
         </div>
-        <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-white/10"><div id="wiz-bar" class="h-full rounded-full bg-brand-600 transition-all duration-300" style="width:20%"></div></div>
+        <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-white/10"><div id="wiz-bar" class="h-full rounded-full bg-brand-600 transition-all duration-300" style="width:33%"></div></div>
       </div>
       <div class="wiz-step" data-step="1">
       <section>
-        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">1. Your package</h2>
+        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">1. Package & domain</h2>
         @php $accents = ['START' => 'emerald', 'GROW' => 'brand', 'BUSINESS' => 'amber', 'CORPORATE' => 'blue']; @endphp
         <div class="mt-3 grid sm:grid-cols-2 gap-3">
           @foreach($packages as $name => $p)
@@ -126,11 +121,8 @@
           @endforeach
         </div>
       </section>
-      <div class="mt-6 flex justify-end"><button type="button" data-next class="btn-dark">Continue →</button></div>
-      </div>
-      <div class="wiz-step hidden" data-step="2">
-      <section>
-        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">2. Your domain <span class="text-xs font-semibold text-zinc-500">— one-time fee, never billed again</span></h2>
+      <section class="mt-8">
+        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">Your domain <span class="text-xs font-semibold text-zinc-500">— one-time fee, never billed again</span></h2>
         @php $domAccents = ['none' => 'zinc', 'subdomain' => 'brand', 'budget' => 'emerald', 'premium' => 'amber']; @endphp
         <div class="mt-3 grid gap-3 sm:grid-cols-2">
           @foreach($domains as $key => $d)
@@ -160,9 +152,9 @@
       </section>
       <div class="mt-6 flex justify-end"><button type="button" data-next class="btn-dark">Continue →</button></div>
       </div>
-      <div class="wiz-step hidden" data-step="3">
+      <div class="wiz-step hidden" data-step="2">
       <section>
-        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">3. Your business details</h2>
+        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">2. Your details</h2>
         <div class="mt-3 grid sm:grid-cols-2 gap-4">
           <div><label class="text-xs font-semibold">Business name *</label><input required id="f-business" name="business_name" value="{{ old('business_name') }}" placeholder="Savanna Build Ltd" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-lg px-4 py-2 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"></div>
           <div><label class="text-xs font-semibold">Phone / WhatsApp *</label><input required id="f-phone" name="phone" value="{{ old('phone') }}" placeholder="+256 700 000000" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-lg px-4 py-2 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white"></div>
@@ -171,12 +163,8 @@
         </div>
         <p id="wiz-err-3" class="hidden mt-3 text-sm font-semibold text-red-600 dark:text-red-400">Please add your business name and phone number to continue.</p>
       </section>
-      <div class="mt-6 flex justify-between"><button type="button" data-back class="btn-ghost">← Back</button><button type="button" data-next class="btn-dark">Continue →</button></div>
-      </div>
-      <div class="wiz-step hidden" data-step="4">
-
-      <section>
-        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">4. How you pay</h2>
+      <section class="mt-8">
+        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">How you pay over time</h2>
         @php $freqAccents = ['full' => 'blue', 'monthly' => 'brand', 'weekly' => 'emerald', 'daily' => 'amber']; @endphp
         <div class="mt-3 grid sm:grid-cols-2 gap-3">
           @foreach([['full','Pay in full','fullLabel'],['monthly','Monthly','monthlyLabel'],['weekly','Weekly','weeklyLabel'],['daily','Daily','dailyLabel']] as [$val,$title,$lid])
@@ -195,9 +183,9 @@
       </section>
       <div class="mt-6 flex justify-between"><button type="button" data-back class="btn-ghost">← Back</button><button type="button" data-next class="btn-dark">Continue →</button></div>
       </div>
-      <div class="wiz-step hidden" data-step="5">
+      <div class="wiz-step hidden" data-step="3">
       <section>
-        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">5. How long you pay</h2>
+        <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">3. Pay now</h2>
         <p class="text-sm text-zinc-500 mt-1">Your website stays running while your plan is active. Full upfront payment covers 12 months.</p>
         <select name="duration_months" id="duration" class="mt-3 w-full sm:w-72 bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-lg px-4 py-2 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white">
           @foreach($durations as $d)
@@ -205,7 +193,30 @@
           @endforeach
         </select>
       </section>
-      <div class="mt-6 flex flex-col sm:flex-row gap-3 sm:items-center"><button type="button" data-back class="btn-ghost">← Back</button><button type="button" id="step5-continue" class="btn-brand flex-1 py-4! text-base font-extrabold">Continue — <span id="step5-amount">…</span></button></div>
+      <section class="mt-6 rounded-xl bg-white dark:bg-[#141416] p-5">
+        <h3 class="font-display font-bold text-base text-zinc-950 dark:text-white">Mobile Money — approve on your phone</h3>
+        <p class="mt-1 text-sm text-zinc-500">We send a payment prompt to this number. Enter your MoMo PIN on your handset and you are done — no codes, no waiting.</p>
+        <div class="mt-3 max-w-md">
+          <label class="text-xs font-semibold" for="pay-phone">Mobile Money number *</label>
+          <input id="pay-phone" inputmode="tel" placeholder="0772 123456" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-lg px-4 py-2 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white">
+        </div>
+        <p id="pay-err" class="hidden mt-3 text-sm font-semibold text-red-600 dark:text-red-400"></p>
+        <div id="pay-pending" class="hidden mt-4 rounded-xl bg-brand-50 dark:bg-brand-500/10 p-4">
+          <p class="flex items-center gap-2 text-sm font-bold text-zinc-900 dark:text-white"><span class="size-4 animate-spin rounded-full border-2 border-brand-600 border-t-transparent"></span><span>Waiting for approval…</span></p>
+          <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-300">Approve the <strong id="pay-pending-amount">…</strong> prompt on <strong id="pay-pending-phone">your phone</strong>, then enter your MoMo PIN.</p>
+          <button type="button" id="pay-cancel" class="mt-2 text-xs font-bold text-zinc-500 hover:underline">Cancel and try again</button>
+        </div>
+        @if($iotecEnabled)
+        <div class="mt-4 flex flex-col sm:flex-row gap-3">
+          <button type="button" id="pay-submit" class="btn-brand flex-1 py-4! text-base font-extrabold">Pay <span id="pay-amount">…</span> now</button>
+          <button type="button" id="pay-card" class="btn-ghost">Pay by card</button>
+        </div>
+        <p class="mt-3 text-[11px] text-zinc-500">Secured by ioTec Pay. You pay exactly what is shown — no hidden fees.</p>
+        @else
+        <div class="mt-4 rounded-xl bg-amber-500/10 p-4 text-sm text-amber-800 dark:text-amber-200">Online payments are switching on soon. Place your order and confirm with us on WhatsApp — we will activate it immediately.</div>
+        @endif
+      </section>
+      <div class="mt-6 flex justify-start"><button type="button" data-back class="btn-ghost">← Back</button></div>
       </div>
 
     </div>
@@ -227,7 +238,7 @@
         <p class="text-xs opacity-60 mt-2">Grand total over term: <strong id="sumTotal">—</strong></p>
       </div>
 
-      <p class="mt-5 text-[11px] opacity-60">You pay exactly what is shown here — no hidden fees. Secured by Flutterwave. Hit Continue on the last step to pay.</p>
+      <p class="mt-5 text-[11px] opacity-60">You pay exactly what is shown here — no hidden fees. Pay on the last step with Mobile Money or card.</p>
     </aside>
   </form>
 </div>
@@ -235,7 +246,7 @@
 <script>
 const DATA = @json($packages);
 const DOMAINS = @json($domains);
-const FLW_KEY = @json($flwKey);
+const IOTEC = @json($iotecEnabled);
 const fmt = n => 'UGX ' + Number(n).toLocaleString('en-US');
 const pkgInputs = [...document.querySelectorAll('input[name="package"]')];
 const freqInputs = [...document.querySelectorAll('input[name="billing_frequency"]')];
@@ -310,8 +321,11 @@ function refresh(){
   document.getElementById('weeklyLabel').textContent = fmt(d.weekly) + ' per week';
   document.getElementById('dailyLabel').textContent = fmt(d.daily) + ' per day';
   document.getElementById('fullLabel').textContent = fmt(d.price) + ' once · website runs 12 months';
-  const step5Amt = document.getElementById('step5-amount');
-  if(step5Amt) step5Amt.textContent = fmt(q.due);
+  const payAmt = document.getElementById('pay-amount');
+  if(payAmt) payAmt.textContent = fmt(q.due);
+  const payPhone = document.getElementById('pay-phone');
+  const detailPhone = document.getElementById('f-phone');
+  if(payPhone && !payPhone.value && detailPhone && detailPhone.value) payPhone.value = detailPhone.value;
   durationSel.disabled = freq === 'full';
   durationSel.classList.toggle('opacity-50', freq === 'full');
 }
@@ -396,7 +410,7 @@ function paintWiz(scroll){
     d.classList.toggle('opacity-60', !seen && !isCur);
   });
   const bar = document.getElementById('wiz-bar');
-  if(bar) bar.style.width = (W.step * 20) + '%';
+  if(bar) bar.style.width = Math.round(W.step / 3 * 100) + '%';
   if(scroll !== false){
     const form = document.getElementById('checkout-form');
     if(form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -407,7 +421,7 @@ function initWizard(){
   const dots = [...document.querySelectorAll('#wiz-dots .wiz-dot')];
   if(!dots.length || !form) return;
   if(!window.__wiz){
-    const start = Math.min(5, Math.max(1, parseInt(form.dataset.wizStart || '1', 10) || 1));
+    const start = Math.min(3, Math.max(1, parseInt(form.dataset.wizStart || '1', 10) || 1));
     window.__wiz = { step: start, visited: {} };
     window.__wiz.visited[start] = true;
     if(start > 1){ for(let s = 1; s < start; s++) window.__wiz.visited[s] = true; }
@@ -415,10 +429,10 @@ function initWizard(){
   if(form.dataset.wizInit){ paintWiz(false); return; }
   form.dataset.wizInit = '1';
   const W = window.__wiz;
-  const go = n => { W.step = Math.min(5, Math.max(1, n)); W.visited[W.step] = true; paintWiz(true); };
+  const go = n => { W.step = Math.min(3, Math.max(1, n)); W.visited[W.step] = true; paintWiz(true); };
   window.__wizGo = go;
   document.querySelectorAll('[data-next]').forEach(b => b.addEventListener('click', () => {
-    if(W.step === 3 && !wizDetailsOk()) return;
+    if(W.step === 2 && !wizDetailsOk()) return;
     go(W.step + 1);
   }));
   document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => go(W.step - 1)));
@@ -466,38 +480,83 @@ function initCheckout(){
     const auth = document.getElementById('checkout-auth');
     if(auth) auth.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
-  const step5Continue = document.getElementById('step5-continue');
-  if(step5Continue){
-    step5Continue.addEventListener('click', async () => {
+  let payPollTimer = null;
+  function payError(msg){
+    const box = document.getElementById('pay-err');
+    if(box){ box.textContent = msg; box.classList.remove('hidden'); }
+    toast(msg, 'danger');
+  }
+  function setPayPending(on, amount, phone){
+    const panel = document.getElementById('pay-pending');
+    if(!panel) return;
+    panel.classList.toggle('hidden', !on);
+    if(on){
+      const a = document.getElementById('pay-pending-amount'), p = document.getElementById('pay-pending-phone');
+      if(a && amount) a.textContent = amount;
+      if(p && phone) p.textContent = phone;
+    }
+  }
+  function stopPayPoll(){
+    if(payPollTimer){ clearInterval(payPollTimer); payPollTimer = null; }
+  }
+  async function postJSON(url, body){
+    const token = form.querySelector('input[name=_token]').value;
+    const res = await fetch(url, { method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'X-Requested-With': 'XMLHttpRequest' },
+      body: JSON.stringify(body || {}) });
+    return res.json().catch(() => ({}));
+  }
+  function pollOrderStatus(reference, left){
+    stopPayPoll();
+    let tries = left || 40;
+    payPollTimer = setInterval(async () => {
+      tries--;
+      try{
+        const s = await (await fetch("{{ route('checkout.iotec.status') }}?reference=" + encodeURIComponent(reference), { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })).json();
+        if(s.status === 'paid' && s.redirect){ stopPayPoll(); window.location.href = s.redirect; return; }
+        if(s.status === 'failed'){ stopPayPoll(); setPayPending(false); payError(s.message || 'The payment was not approved. Try again.'); const b = document.getElementById('pay-submit'); if(b){ b.disabled = false; b.classList.remove('opacity-60'); } return; }
+      }catch(e){}
+      if(tries <= 0){ stopPayPoll(); setPayPending(false); payError('Still waiting on the provider — if you approved, check My packages in a minute. Your order is saved.'); const b = document.getElementById('pay-submit'); if(b){ b.disabled = false; b.classList.remove('opacity-60'); } }
+    }, 3000);
+  }
+  const paySubmit = document.getElementById('pay-submit');
+  if(paySubmit){
+    paySubmit.addEventListener('click', async () => {
       if(form.dataset.guest === '1'){ form.requestSubmit(); return; }
       if(!form.checkValidity()){ form.reportValidity(); return; }
-      step5Continue.disabled = true; step5Continue.classList.add('opacity-60');
+      const phoneEl = document.getElementById('pay-phone');
+      const phone = (phoneEl && phoneEl.value || '').trim();
+      if(!phone){ payError('Enter the Mobile Money number that will approve this payment.'); if(phoneEl) phoneEl.focus(); return; }
+      document.getElementById('pay-err').classList.add('hidden');
+      paySubmit.disabled = true; paySubmit.classList.add('opacity-60');
       try{
-        const order = await createOrder('online');
-        if(typeof FlutterwaveCheckout === 'undefined') throw new Error('Payment popup failed to load. Please check your connection and try again.');
-        FlutterwaveCheckout({
-          public_key: order.public_key || FLW_KEY,
-          tx_ref: order.reference + '-' + Date.now(),
-          amount: order.due_today,
-          currency: order.currency || 'UGX',
-          payment_options: 'mobilemoney,card',
-          customer: { email: order.email, name: order.name, phone_number: order.phone },
-          customizations: { title: 'Ttryy', description: 'Website package order ' + order.reference, logo: location.origin + '/favicon.svg' },
-          callback: async resp => {
-            try{
-              const token = form.querySelector('input[name=_token]').value;
-              const v = await fetch("{{ route('checkout.verify') }}", { method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'X-Requested-With': 'XMLHttpRequest' },
-                body: JSON.stringify({ transaction_id: resp.transaction_id || resp.id, tx_ref: order.reference }) });
-              const j = await v.json();
-              if(j.redirect) window.location.href = j.redirect;
-              else showPayError(j.message || 'Payment could not be verified. Your order is saved — confirm on WhatsApp.');
-            }catch(err){ showPayError('Payment could not be verified. Your order is saved — confirm on WhatsApp.'); }
-          },
-          onclose: () => { window.location.href = order.order_url; },
-        });
-      }catch(err){ showPayError(err.message || 'Something went wrong. Please try again.'); }
-      step5Continue.disabled = false; step5Continue.classList.remove('opacity-60');
+        const order = await createOrder('iotec');
+        const pay = await postJSON("{{ route('checkout.iotec.pay') }}", { reference: order.reference, phone });
+        if(pay.redirect){ window.location.href = pay.redirect; return; }
+        if(!pay.tx_id) throw new Error(pay.message || 'Payment could not be started. Please try again.');
+        setPayPending(true, fmt(order.due_today), phone);
+        pollOrderStatus(order.reference, 40);
+      }catch(err){ payError(err.message || 'Something went wrong. Please try again.'); paySubmit.disabled = false; paySubmit.classList.remove('opacity-60'); }
+    });
+  }
+  const payCancel = document.getElementById('pay-cancel');
+  if(payCancel) payCancel.addEventListener('click', () => {
+    stopPayPoll(); setPayPending(false);
+    const b = document.getElementById('pay-submit'); if(b){ b.disabled = false; b.classList.remove('opacity-60'); }
+  });
+  const payCard = document.getElementById('pay-card');
+  if(payCard){
+    payCard.addEventListener('click', async () => {
+      if(form.dataset.guest === '1'){ form.requestSubmit(); return; }
+      if(!form.checkValidity()){ form.reportValidity(); return; }
+      payCard.disabled = true; payCard.classList.add('opacity-60');
+      try{
+        const order = await createOrder('iotec');
+        const r = await postJSON("{{ route('checkout.iotec.card') }}", { reference: order.reference });
+        if(r.redirect){ window.location.href = r.redirect; return; }
+        throw new Error(r.message || 'Card payments could not be started. Please pay with Mobile Money.');
+      }catch(err){ payError(err.message || 'Something went wrong. Please try again.'); }
+      payCard.disabled = false; payCard.classList.remove('opacity-60');
     });
   }
 }

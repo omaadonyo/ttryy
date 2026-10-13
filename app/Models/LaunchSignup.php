@@ -18,7 +18,13 @@ class LaunchSignup extends Model
     protected $fillable = [
         'name', 'phone', 'email', 'idea_name', 'niche', 'idea',
         'status', 'user_id', 'admin_note',
+        'payment_status', 'gateway_tx_id', 'paid_amount', 'paid_at',
     ];
+
+    protected function casts(): array
+    {
+        return ['paid_at' => 'datetime'];
+    }
 
     public function user(): BelongsTo
     {

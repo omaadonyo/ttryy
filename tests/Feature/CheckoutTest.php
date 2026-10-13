@@ -61,14 +61,16 @@ test('checkout page shows the preselected package', function () {
         ->assertSee('UGX 650,000', false);
 });
 
-test('checkout renders as a five-step wizard with progress bar', function () {
+test('checkout renders as a three-step wizard with progress bar', function () {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)->get('/checkout')->assertOk();
 
-    foreach ([1, 2, 3, 4, 5] as $step) {
+    foreach ([1, 2, 3] as $step) {
         $response->assertSee('data-step="'.$step.'"', false);
     }
+
+    $response->assertDontSee('data-step="5"', false);
 
     $response->assertSee('id="wiz-bar"', false)
         ->assertSee('id="wiz-dots"', false)
@@ -362,14 +364,29 @@ test('verification accepts per-attempt suffixed references', function () {
 });
 
 test('checkout shows a big continue button with the amount due', function () {
-    config()->set('services.flutterwave.public_key', 'test-pub');
+    config()->set('services.iotec.client_id', 'test-client');
+    config()->set('services.iotec.client_secret', 'test-secret');
+    config()->set('services.iotec.wallet_id', 'test-wallet');
 
-    $this->actingAs(User::factory()->create())->get('/checkout')
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get('/checkout')
         ->assertOk()
-        ->assertSee('id="step5-continue"', false)
+        ->assertSee('id="pay-submit"', false)
+        ->assertSee('id="pay-phone"', false)
         ->assertDontSee('id="pay-now"', false)
         ->assertDontSee('How do you want to pay?', false)
         ->assertDontSee('momo-continue', false);
+});
+
+test('checkout explains when online payments are not configured', function () {
+    config()->set('services.iotec.client_id', null);
+    config()->set('services.iotec.client_secret', null);
+
+    $this->actingAs(User::factory()->create())->get('/checkout')
+        ->assertOk()
+        ->assertDontSee('id="pay-submit"', false)
+        ->assertSee('switching on soon', false);
 });
 
 test('placing an order emails the customer and the admin inbox', function () {

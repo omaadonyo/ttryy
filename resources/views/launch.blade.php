@@ -218,8 +218,8 @@
       </div>
       <div class="rounded-xl bg-zinc-50 dark:bg-[#141416] p-6 sm:p-8">
         <p class="text-xs font-bold tracking-wide uppercase text-zinc-500">Card & online</p>
-        <p class="font-display font-extrabold text-3xl mt-3 text-zinc-950 dark:text-white">Flutterwave secure checkout</p>
-        <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-2">Pay the launch fee online with card or Mobile Money through our secure checkout.</p>
+        <p class="font-display font-extrabold text-3xl mt-3 text-zinc-950 dark:text-white">Secure online checkout</p>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-2">Pay the launch fee online with card or Mobile Money through our secure checkout — or pay instantly in the application form below.</p>
         <a href="{{ route('checkout') }}" class="mt-5 inline-block bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full transition">Pay UGX 10,000 online</a>
         <p class="mt-3 text-xs text-zinc-500">Select any package at checkout — mention LAUNCH in the notes and we align it to the 10K campaign.</p>
       </div>
@@ -280,7 +280,23 @@
         </div>
         <div class="sm:col-span-2"><label class="text-xs font-semibold" for="l-idea">Describe your idea * <span class="font-normal text-zinc-500">(what it does, who pays for it — a few sentences is enough)</span></label><textarea id="l-idea" name="idea" required rows="4" minlength="20" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-lg px-4 py-2 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white" placeholder="My idea helps … by …">{{ old('idea') }}</textarea></div>
         <label class="sm:col-span-2 flex items-start gap-2.5 text-sm cursor-pointer"><input type="checkbox" name="terms" value="1" required class="mt-1 size-4 accent-[#9e005d]"> <span>I have read and accept the <a href="#launch-terms" class="font-bold underline">terms above</a> — including the 10K fee, 800/day continuation and fair-review promise.</span></label>
-        <button type="submit" class="sm:col-span-2 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Submit my idea — free to apply</button>
+        <div class="sm:col-span-2 rounded-xl bg-brand-50 dark:bg-brand-500/10 p-4 sm:p-5" id="launch-pay-box">
+          <p class="font-display font-bold text-base text-zinc-950 dark:text-white">Pay the UGX {{ number_format(config('packages.launch_fee', 10000)) }} fee right now <span class="ml-1 rounded-full bg-emerald-600 px-2 py-0.5 text-[11px] font-bold text-white">Fastest</span></p>
+          <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-300">We send a Mobile Money prompt to your number — approve it on your handset and build starts the moment we approve your idea. No codes, no waiting.</p>
+          <p id="launch-pay-err" class="hidden mt-2 text-sm font-semibold text-red-600 dark:text-red-400"></p>
+          <div id="launch-pay-pending" class="hidden mt-3 rounded-xl bg-white dark:bg-white/5 p-4">
+            <p class="flex items-center gap-2 text-sm font-bold text-zinc-900 dark:text-white"><span class="size-4 animate-spin rounded-full border-2 border-brand-600 border-t-transparent"></span><span>Waiting for approval…</span></p>
+            <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-300">Approve the <strong>UGX {{ number_format(config('packages.launch_fee', 10000)) }}</strong> prompt on <strong id="launch-pay-phone">your phone</strong>, then enter your MoMo PIN.</p>
+          </div>
+          <div id="launch-pay-done" class="hidden mt-3 rounded-xl bg-emerald-600 p-4 text-white">
+            <p class="font-display font-bold text-lg">Fee paid. You are in the build queue.</p>
+            <p class="mt-1 text-sm text-white/90">Application <strong id="launch-pay-ref">#</strong> confirmed — expect our call within 2 working days.</p>
+          </div>
+          <div class="mt-3 flex flex-col sm:flex-row gap-3" id="launch-pay-actions">
+            <button type="button" id="launch-pay-now" class="flex-1 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Apply & pay UGX {{ number_format(config('packages.launch_fee', 10000)) }} now</button>
+            <button type="submit" class="flex-1 border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold py-3 rounded-full transition">Apply free, pay later</button>
+          </div>
+        </div>
       </form>
       @endif
     </div>
@@ -368,6 +384,60 @@ function toggleTheme(){var h=document.documentElement,next=h.classList.contains(
     wrap.appendChild(btn);
     wrap.appendChild(list);
     sync();
+  }
+  // Instant Mobile Money pay: apply + pay the launch fee in one tap.
+  const payNow = document.getElementById('launch-pay-now');
+  if(payNow){
+    let timer = null;
+    const errBox = document.getElementById('launch-pay-err');
+    const fail = msg => { if(errBox){ errBox.textContent = msg; errBox.classList.remove('hidden'); } };
+    payNow.addEventListener('click', async () => {
+      const form = payNow.closest('form');
+      if(!form) return;
+      if(errBox) errBox.classList.add('hidden');
+      if(!form.checkValidity()){ form.reportValidity(); return; }
+      const fd = new FormData(form);
+      const phone = (fd.get('phone') || '').toString().trim();
+      if(!phone){ fail('Enter the Mobile Money number that will approve this payment.'); return; }
+      payNow.disabled = true; payNow.classList.add('opacity-60');
+      payNow.textContent = 'Sending prompt…';
+      try{
+        const token = form.querySelector('input[name=_token]').value;
+        const res = await fetch("{{ route('launch.iotec.pay') }}", { method: 'POST',
+          headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': token, 'X-Requested-With': 'XMLHttpRequest' }, body: fd });
+        const j = await res.json().catch(() => ({}));
+        if(!res.ok || !j.signup_id || !j.tx_id) throw new Error((j && j.message) || 'Payment could not be started. Your application ' + (j && j.signup_id ? 'was received — ' : 'was not received — ') + 'try again or apply free.');
+        document.getElementById('launch-pay-pending').classList.remove('hidden');
+        document.getElementById('launch-pay-phone').textContent = phone;
+        document.getElementById('launch-pay-actions').classList.add('hidden');
+        let tries = 40;
+        timer = setInterval(async () => {
+          tries--;
+          try{
+            const s = await (await fetch("{{ route('launch.iotec.status') }}?signup=" + j.signup_id, { headers: { 'Accept': 'application/json' } })).json();
+            if(s.status === 'paid'){
+              clearInterval(timer);
+              document.getElementById('launch-pay-pending').classList.add('hidden');
+              document.getElementById('launch-pay-done').classList.remove('hidden');
+              document.getElementById('launch-pay-ref').textContent = '#' + j.signup_id;
+              return;
+            }
+            if(s.status === 'failed'){
+              clearInterval(timer);
+              document.getElementById('launch-pay-pending').classList.add('hidden');
+              document.getElementById('launch-pay-actions').classList.remove('hidden');
+              fail((s && s.message) || 'The payment was not approved. Your application was received — try again or pay later.');
+            }
+          }catch(e){}
+          if(tries <= 0){
+            clearInterval(timer);
+            document.getElementById('launch-pay-pending').classList.add('hidden');
+            document.getElementById('launch-pay-actions').classList.remove('hidden');
+            fail('Still waiting on the provider — if you approved, your payment will reflect shortly. Your application was received.');
+          }
+        }, 3000);
+      }catch(e){ fail(e.message || 'Something went wrong. Please try again.'); payNow.disabled = false; payNow.classList.remove('opacity-60'); payNow.textContent = 'Apply & pay now'; }
+    });
   }
 })();
 </script>

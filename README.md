@@ -255,6 +255,30 @@ php artisan test        # Pest suite
 ./vendor/bin/pint --test  # code style (use --parallel on large repos)
 ```
 
+## ioTec Pay (Mobile Money + card collections)
+
+Checkout and the Launch 10K form collect payments through
+[ioTec Pay](https://pay.iotec.io) — the customer approves a Mobile Money
+prompt on their handset, or pays by card on PegPay's hosted page.
+
+1. Finish ioTec merchant onboarding; your `client_id` and `client_secret`
+   arrive by email. Copy your wallet ID from the portal.
+2. Add to `.env`:
+   `IOTEC_CLIENT_ID=`, `IOTEC_CLIENT_SECRET=`, `IOTEC_WALLET_ID=`
+   (optional: `IOTEC_CALLBACK_TOKEN=` — any random string).
+3. In the ioTec portal, open your wallet → Settings → Callback URLs → Add:
+   - Category: Collection
+   - URL: `https://ttryy.com/api/payments/iotec/callback`
+   - Security header: `X-Callback-Token: <same IOTEC_CALLBACK_TOKEN>`
+4. Migrate (`php artisan migrate`) — orders track `gateway_tx_id`,
+   signups track `payment_status`.
+
+How it stays correct: the portal callback is treated as a hint only — every
+callback and every browser poll re-reads the authoritative transaction from
+ioTec before an order or signup is marked paid. Local development without a
+public URL still works: the checkout and launch pages poll
+`checkout/iotec/status` / `launch/iotec/status` until the payer approves.
+
 ## License
 
 MIT. © 2026 Ttryy. All rights reserved.
