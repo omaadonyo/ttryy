@@ -1,5 +1,6 @@
 <x-layouts::app :title="__($website->name)">
     @include('partials.toast')
+    @include('partials.custom-select')
     @php
         $statusPill = fn($s) => match($s) {
             'active' => 'pill-green', 'suspended', 'failed' => 'pill-red',
@@ -190,6 +191,9 @@
                 </form>
             </div>
         </div>
+<script>
+enhanceSelect(document.querySelector('select[name="order_id"]'));
+</script>
 
         <div class="card card-pad">
             <h2 class="section-title">Operations</h2>

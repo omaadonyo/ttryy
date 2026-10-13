@@ -33,6 +33,7 @@
                 ['label' => 'Orders', 'icon' => 'shopping-bag', 'href' => route('admin.orders'), 'active' => request()->routeIs('admin.orders*')],
                 ['label' => 'Payments', 'icon' => 'banknotes', 'href' => route('admin.payments'), 'active' => request()->routeIs('admin.payments')],
                 ['label' => 'Users', 'icon' => 'users', 'href' => route('admin.users'), 'active' => request()->routeIs('admin.users*')],
+                ['label' => 'Launch 10K', 'icon' => 'rocket-launch', 'href' => route('admin.launch.index'), 'active' => request()->routeIs('admin.launch.*')],
                 ['label' => 'Hosting', 'icon' => 'circle-stack', 'href' => route('admin.hosting.dashboard'), 'active' => request()->routeIs('admin.hosting.*')],
                 ['label' => 'Packages', 'icon' => 'squares-2x2', 'href' => route('admin.packages'), 'active' => request()->routeIs('admin.packages')],
             ];

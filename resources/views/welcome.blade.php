@@ -129,7 +129,7 @@
       <a href="#home" data-navspy="home" class="hover:text-zinc-950 dark:hover:text-white">Home</a>
       <a href="#how" class="hover:text-zinc-950 dark:hover:text-white">How It Works</a>
       <a href="#niches" class="hover:text-zinc-950 dark:hover:text-white">Niches</a>
-      <a href="#work" data-navspy="work" class="hover:text-zinc-950 dark:hover:text-white">Our Work</a>
+      <a href="#launch" data-navspy="launch" class="hover:text-zinc-950 dark:hover:text-white">Launch 10K</a>
       <a href="#pricing" data-navspy="pricing" class="hover:text-zinc-950 dark:hover:text-white">Pricing</a>
       <a href="#tools" data-navspy="tools" class="hover:text-zinc-950 dark:hover:text-white">Business Tools</a>
       <a href="#faq" data-navspy="faq" class="hover:text-zinc-950 dark:hover:text-white">FAQ</a>
@@ -175,7 +175,7 @@
     <a href="#home" data-navspy="home" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Home</a>
     <a href="#how" data-navspy="how" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">How It Works</a>
     <a href="#niches" data-navspy="niches" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Niches</a>
-    <a href="#work" data-navspy="work" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Our Work</a>
+    <a href="#launch" data-navspy="launch" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Launch 10K</a>
     <a href="#pricing" data-navspy="pricing" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Pricing</a>
     <a href="#tools" data-navspy="tools" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">Business Tools</a>
     <a href="#faq" data-navspy="faq" class="block px-4 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-white/5">FAQ</a>
@@ -216,43 +216,16 @@
       </div>
     </div>
 
-    <!-- SCRAPER DEMO -->
-    <div class="reveal visible" id="scraperDemo">
-      <div class="bg-white dark:bg-[#141416] rounded-xl shadow-2xl shadow-zinc-950/10 dark:shadow-black/50 overflow-hidden">
+    <div class="reveal visible">
+      <div class="rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#101014] shadow-2xl shadow-zinc-950/10 dark:shadow-black/50 overflow-hidden">
         <div class="flex items-center justify-between gap-2 px-5 pt-4">
-          <p class="font-display font-bold text-[15px] text-zinc-950 dark:text-white">Prospect scraper <span class="scan-pulse inline-block w-2 h-2 rounded-full bg-zinc-400 ml-1 align-middle"></span></p>
-          <span class="text-[10px] font-semibold text-zinc-500 border border-zinc-200 dark:border-white/15 rounded-full px-2 py-0.5">LIVE DEMO</span>
+          <p class="font-display font-bold text-[15px] text-zinc-950 dark:text-white">Idea → Online → Revenue</p>
+          <span class="text-[10px] font-semibold text-zinc-500 border border-zinc-200 dark:border-white/15 rounded-full px-2 py-0.5">LIVE CONCEPT</span>
         </div>
-        <div class="px-5 pt-3 grid sm:grid-cols-[1fr_1fr_auto] gap-2">
-          <select id="scrapeNiche" class="w-full bg-zinc-50 dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white" aria-label="Choose your niche"></select>
-          <input id="scrapeBiz" type="text" placeholder="What does your business sell?" class="w-full bg-zinc-50 dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white placeholder:text-zinc-400" aria-label="What does your business sell">
-          <button id="scrapeBtn" onclick="runScrape()" class="bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold px-5 py-2 rounded-full text-sm transition whitespace-nowrap">Scrape</button>
-        </div>
-        <div id="scrapeStatus" class="hidden px-5 pt-3">
-          <div class="flex justify-between text-xs font-semibold text-zinc-500"><span id="scrapeLabel">Starting&hellip;</span><span id="scrapePct">0%</span></div>
-          <div class="mt-1.5 h-1.5 bg-zinc-100 dark:bg-white/10 rounded-full overflow-hidden"><div id="scrapeBar" class="h-1.5 bg-zinc-900 dark:bg-white rounded-full transition-all duration-300" style="width:0%"></div></div>
-        </div>
-        <div class="px-5 py-4">
-          <div class="rounded-xl bg-zinc-50 dark:bg-[#17171A] overflow-hidden">
-            <div class="flex items-center gap-2 bg-zinc-50 dark:bg-[#17171A] border-b border-zinc-200 dark:border-white/10 px-4 py-2.5">
-              <svg class="w-4 h-4 text-zinc-400"><use href="#i-doc"/></svg>
-              <span id="pdfName" class="text-xs font-semibold text-zinc-800 dark:text-zinc-200 truncate">prospects.pdf</span>
-              <span id="pdfCount" class="ml-auto text-[11px] font-semibold text-zinc-500 shrink-0">0 records</span>
-              <button id="pdfDl" onclick="downloadSamplePdf()" class="hidden ml-2 shrink-0 text-[11px] font-bold text-zinc-950 bg-white border border-zinc-200 shadow-sm hover:bg-zinc-950 hover:text-white hover:border-zinc-950 rounded-full px-3 py-1 transition">Download PDF</button>
-            </div>
-            <div id="scrapeRows" class="divide-y divide-zinc-100 dark:divide-white/5 max-h-56 overflow-y-auto">
-              <p id="scrapeEmpty" class="px-4 py-6 text-center text-[13px] text-zinc-400">Choose your niche and hit <strong>Scrape</strong> to pull 10 sample records.</p>
-            </div>
-            <div id="lockedZone" class="hidden relative border-t border-zinc-200 dark:border-white/10">
-              <div id="blurRows" class="select-none blur-[3px] pointer-events-none px-4 py-3 space-y-2" aria-hidden="true"></div>
-              <div class="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-white/60 dark:bg-[#0A0A0B]/60 px-6 text-center">
-                <span class="w-9 h-9 grid place-items-center rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950"><svg class="w-4 h-4"><use href="#i-lock"/></svg></span>
-                <p id="lockedText" class="text-[13px] font-bold text-zinc-900 dark:text-white">600+ more records locked</p>
-                <button id="unlockBtn" onclick="unlockPdf()" class="bg-[#9e005d] hover:bg-[#7e0049] text-white text-[13px] font-bold px-5 py-2 rounded-full transition shadow-lg shadow-[#9e005d]/25">Unlock Full PDF &middot; UGX 10,000</button>
-              </div>
-            </div>
-          </div>
-          <p class="mt-2 text-[11px] text-zinc-400">Sample data — paid unlocks deliver the real list.</p>
+        <canvas id="launchCanvas" class="block w-full h-[340px] sm:h-[400px]" aria-label="Animation: ten thousand shillings plus your app idea becomes an online business generating money"></canvas>
+        <div class="px-5 pb-4 flex items-center justify-between gap-2 text-[13px] font-bold">
+          <span class="text-zinc-500">UGX 10,000 + your idea</span>
+          <span class="text-[#9e005d]">= online, earning for you</span>
         </div>
       </div>
     </div>
@@ -261,13 +234,147 @@
 
 <!-- LAUNCH DEAL -->
 <section id="launch" class="relative overflow-hidden bg-zinc-950 dark:bg-black dark:border-y dark:border-white/10 text-white">
+<script>
+/* Hero concept canvas: UGX 10,000 + your idea = online revenue. Lightweight 2D flow field. */
+(function(){
+  const cv = document.getElementById('launchCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W = 0, H = 0, running = true;
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const r = cv.getBoundingClientRect();
+    W = Math.max(280, r.width); H = Math.max(280, r.height);
+    cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  new IntersectionObserver(es => es.forEach(e => { running = e.isIntersecting; }), {threshold: 0}).observe(cv);
+  const dark = () => document.documentElement.classList.contains('dark');
+  const BRAND = '#9e005d', PINK = '#ff4d9a', GOLD = '#f5b301', GREEN = '#10b981';
+  function hubs(t){
+    const cx = W / 2, cy = H * 0.44;
+    const spread = Math.max(90, Math.min(W * 0.31, 290));
+    const bob = Math.sin(t / 900) * 7;
+    return [
+      {x: cx - spread, y: cy + bob * 0.4, r: 32, top: 'UGX 10,000', sub: 'to start', kind: 'coin'},
+      {x: cx, y: cy - bob, r: 38, top: 'YOUR IDEA', sub: 'we build it', kind: 'idea'},
+      {x: cx + spread, y: cy + bob * 0.4, r: 32, top: 'UGX / DAY', sub: 'revenue online', kind: 'money'}
+    ];
+  }
+  const P = [];
+  for(let i = 0; i < 44; i++) P.push({seg: i % 2, t: Math.random(), sp: 0.0008 + Math.random() * 0.0016, s: 1 + Math.random() * 2.2});
+  const AMBIENT = [];
+  for(let i = 0; i < 42; i++) AMBIENT.push({x: Math.random(), y: Math.random(), r: 0.6 + Math.random() * 1.6, v: 0.02 + Math.random() * 0.06, ph: Math.random() * 6.28});
+  function bez(a, b, t){
+    const mx = (a.x + b.x) / 2, my = Math.min(a.y, b.y) - 52;
+    const u = 1 - t;
+    return {x: u*u*a.x + 2*u*t*mx + t*t*b.x, y: u*u*a.y + 2*u*t*my + t*t*b.y};
+  }
+  function star(x, y, r, color){
+    ctx.save(); ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = 14;
+    ctx.beginPath();
+    for(let i = 0; i < 8; i++){
+      const a = i * Math.PI / 4, rr = i % 2 ? r * 0.42 : r;
+      ctx[i ? 'lineTo' : 'moveTo'](x + Math.cos(a) * rr, y + Math.sin(a) * rr);
+    }
+    ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+  function draw(t){
+    const isDark = dark();
+    ctx.clearRect(0, 0, W, H);
+    const ink = isDark ? '#f4f4f5' : '#18181b';
+    const faint = isDark ? 'rgba(255,255,255,.10)' : 'rgba(24,24,27,.10)';
+    // dot grid
+    ctx.fillStyle = faint;
+    const gs = 26;
+    for(let gx = gs/2; gx < W; gx += gs) for(let gy = gs/2; gy < H; gy += gs){
+      ctx.beginPath(); ctx.arc(gx, gy, 1, 0, 6.29); ctx.fill();
+    }
+    // ambient drift
+    AMBIENT.forEach(a => {
+      const y = ((a.y + t * 0.000016 * a.v * 60) % 1) * H;
+      ctx.globalAlpha = 0.35 + 0.3 * Math.sin(t / 700 + a.ph);
+      ctx.fillStyle = isDark ? '#71717a' : '#a1a1aa';
+      ctx.beginPath(); ctx.arc(a.x * W, y, a.r, 0, 6.29); ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    // soft brand orbs
+    [[W*0.12, H*0.85, 130, BRAND], [W*0.88, H*0.15, 150, PINK]].forEach(([x, y, r, c]) => {
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, isDark ? c + '55' : c + '2e');
+      g.addColorStop(1, c + '00');
+      ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2);
+    });
+    const [A, B, C] = hubs(t);
+    // streams
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    P.forEach(p => {
+      p.t += p.sp * 16; if(p.t > 1){ p.t = 0; p.seg = p.seg ? 0 : 1; }
+      const from = p.seg ? B : A, to = p.seg ? C : B;
+      const pt = bez(from, to, p.t);
+      ctx.fillStyle = p.seg ? GREEN : BRAND;
+      ctx.shadowColor = p.seg ? GREEN : PINK;
+      ctx.shadowBlur = 10;
+      ctx.beginPath(); ctx.arc(pt.x, pt.y, p.s, 0, 6.29); ctx.fill();
+    });
+    ctx.restore();
+    // links under nodes
+    ctx.strokeStyle = faint; ctx.lineWidth = 1.5; ctx.setLineDash([4, 5]);
+    [[A, B], [B, C]].forEach(([a, b]) => { ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); });
+    ctx.setLineDash([]);
+    // nodes
+    const node = (n) => {
+      const g = ctx.createRadialGradient(n.x - 8, n.y - 10, 4, n.x, n.y, n.r + 14);
+      const base = n.kind === 'coin' ? GOLD : n.kind === 'money' ? GREEN : BRAND;
+      g.addColorStop(0, base); g.addColorStop(1, n.kind === 'idea' ? PINK : base);
+      ctx.save();
+      ctx.shadowColor = base; ctx.shadowBlur = 26;
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, 6.29); ctx.fill();
+      ctx.restore();
+      ctx.fillStyle = 'rgba(255,255,255,.92)';
+      ctx.font = '800 13px Sora, Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      if(n.kind === 'coin') ctx.fillText('10K', n.x, n.y + 1);
+      if(n.kind === 'money'){
+        ctx.fillRect(n.x - 11, n.y + 2, 5, 9);
+        ctx.fillRect(n.x - 3, n.y - 3, 5, 14);
+        ctx.fillRect(n.x + 5, n.y - 8, 5, 19);
+      }
+      if(n.kind === 'idea') star(n.x, n.y, 11, '#ffffff');
+      ctx.fillStyle = isDark ? 'rgba(255,255,255,.55)' : 'rgba(24,24,27,.55)';
+      ctx.font = '700 10px Inter, sans-serif';
+      ctx.fillText(n.top, n.x, n.y - n.r - 12);
+      ctx.fillStyle = ink;
+      ctx.font = '800 12px Inter, sans-serif';
+      ctx.fillText(n.sub, n.x, n.y + n.r + 14);
+    };
+    [A, B, C].forEach(node);
+    // plus / equals glyphs between hubs
+    ctx.fillStyle = isDark ? 'rgba(255,255,255,.5)' : 'rgba(24,24,27,.45)';
+    ctx.font = '800 20px Inter, sans-serif';
+    ctx.fillText('+', (A.x + B.x) / 2, (A.y + B.y) / 2 - 34);
+    ctx.fillText('=', (B.x + C.x) / 2, (B.y + C.y) / 2 - 34);
+  }
+  if(reduced){ draw(0); return; }
+  (function frame(t){
+    requestAnimationFrame(frame);
+    if(running) draw(t || 0);
+  })(0);
+})();
+</script>
+<section id="launch" class="relative overflow-hidden bg-zinc-950 dark:bg-black dark:border-y dark:border-white/10 text-white">
   <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6 py-14 lg:py-20 grid lg:grid-cols-2 gap-10 items-center">
     <div class="reveal">
       <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/80"><span class="size-1.5 rounded-full bg-[#ff4d9a]"></span>Launch deal · hosting + build</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-4 leading-tight">For UGX 10,000, get your idea up and running in 5 days.</h2>
       <p class="mt-4 text-white/70 text-base sm:text-lg leading-relaxed">Free <strong class="text-white">yourname.ttryy.com</strong> domain plus hosting inclusive. <strong class="text-white">We build it</strong> — then we discuss terms of payment that fit you.</p>
       <div class="mt-7 flex flex-col sm:flex-row gap-3">
-        <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/30 text-center">Start with hosting</a>
+        <a href="{{ route('launch') }}" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/30 text-center">Start with the 10K launch</a>
         <a href="#pricing" class="inline-flex justify-center items-center border border-white/25 hover:bg-white/10 font-bold px-7 py-3 rounded-full text-base transition">Compare full packages</a>
       </div>
     </div>
@@ -360,46 +467,56 @@
       </div>
     </div>
     <p class="reveal mt-6 text-zinc-600 dark:text-zinc-400 max-w-3xl">Your website is the front door. Your prospect database is where the business starts.</p>
-    <div class="mt-6 reveal flex flex-col sm:flex-row gap-3">
-      <a href="#work" class="inline-flex justify-center items-center font-bold px-8 py-3 rounded-full border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white transition">See the proof &rarr;</a>
-      <a href="#help" class="inline-flex justify-center items-center bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Next: how we can help &rarr;</a>
-    </div>
-  </div>
-</section>
 
-<!-- PROOF: OUR WORK -->
-<section id="work" class="py-16 lg:py-24 bg-white dark:bg-[#0A0A0B]">
-  <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6">
-    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 reveal">
-      <div><p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Proof &middot; Our work</p>
-        <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Websites We&rsquo;ve Built</h2>
-        <p class="text-zinc-600 dark:text-zinc-400 mt-2">Placeholder concepts showing the standard each site ships to.</p></div>
-      <a href="/dashboard/checkout" class="shrink-0 border-2 border-zinc-950 dark:border-white/30 hover:bg-zinc-950 hover:text-white dark:hover:bg-white dark:hover:text-zinc-950 font-bold px-6 py-3 rounded-full transition text-sm text-center">Get One Like This</a>
+    <div class="reveal mt-10 max-w-3xl">
+      <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-zinc-950 dark:text-white">Watch It Find Customers Live</h3>
+      <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pick a niche and hit Scrape — this is the same engine that maps 5,000 prospects for your package.</p>
     </div>
-    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      @php $works=[['SB','Savanna Build Ltd','Construction','Company site with tender-ready profile and contractor prospect pack.'],['BC','BrightSmile Clinics','Medical','Clinic site with booking pages, SEO and a hospital buyer directory.'],['EF','EduCare Foundation','NGO and Charity','Donor-ready NGO site with a grant platform resource pack.'],['VA','VoltAfrica Solar','Solar and Energy','Solar installer site with an institutional buyer prospect pack.'],['FP','FreshPlate Catering','Catering','Catering site with quote forms and a corporate events directory.'],['SL','SwiftLine Logistics','Logistics','Logistics site with service pages and an importer directory.']]; @endphp
-      @foreach($works as $w)
-      <div class="reveal bg-zinc-50 dark:bg-[#141416] rounded-xl overflow-hidden   hover:shadow-xl transition">
-        <div class="bg-zinc-950 dark:bg-black px-4 pt-3">
-          <div class="flex gap-1.5 px-1"><span class="w-2.5 h-2.5 rounded-full bg-white/25"></span><span class="w-2.5 h-2.5 rounded-full bg-white/25"></span><span class="w-2.5 h-2.5 rounded-full bg-white/25"></span></div>
-          <div class="mt-3 bg-white dark:bg-zinc-900 rounded-t-xl p-4">
-            <div class="flex items-center gap-3">
-              <span class="w-10 h-10 rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 grid place-items-center font-display font-bold text-xs">{{ $w[0] }}</span>
-              <div class="flex-1"><div class="h-2.5 bg-zinc-800 dark:bg-white rounded-full w-2/3"></div><div class="mt-1.5 h-2 bg-zinc-200 dark:bg-white/15 rounded-full w-1/2"></div></div>
+    <div class="reveal mt-6 max-w-4xl">
+        <!-- SCRAPER DEMO -->
+        <div class="reveal visible" id="scraperDemo">
+          <div class="bg-white dark:bg-[#141416] rounded-xl shadow-2xl shadow-zinc-950/10 dark:shadow-black/50 overflow-hidden">
+            <div class="flex items-center justify-between gap-2 px-5 pt-4">
+              <p class="font-display font-bold text-[15px] text-zinc-950 dark:text-white">Prospect scraper <span class="scan-pulse inline-block w-2 h-2 rounded-full bg-zinc-400 ml-1 align-middle"></span></p>
+              <span class="text-[10px] font-semibold text-zinc-500 border border-zinc-200 dark:border-white/15 rounded-full px-2 py-0.5">LIVE DEMO</span>
             </div>
-            <div class="mt-3 h-2 bg-zinc-100 dark:bg-white/10 rounded-full w-full"></div>
-            <div class="mt-1.5 h-2 bg-zinc-100 dark:bg-white/10 rounded-full w-5/6"></div>
-            <div class="mt-3 flex gap-2"><span class="h-6 w-20 rounded-full bg-zinc-950 dark:bg-white"></span><span class="h-6 w-20 rounded-full border border-zinc-200 dark:border-white/20"></span></div>
+            <div class="px-5 pt-3 grid sm:grid-cols-[1fr_1fr_auto] gap-2">
+              <select id="scrapeNiche" class="w-full bg-zinc-50 dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white" aria-label="Choose your niche"></select>
+              <input id="scrapeBiz" type="text" placeholder="What does your business sell?" class="w-full bg-zinc-50 dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-4 py-2.5 text-sm outline-none focus:border-[#9e005d] text-zinc-900 dark:text-white placeholder:text-zinc-400" aria-label="What does your business sell">
+              <button id="scrapeBtn" onclick="runScrape()" class="bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold px-5 py-2 rounded-full text-sm transition whitespace-nowrap">Scrape</button>
+            </div>
+            <div id="scrapeStatus" class="hidden px-5 pt-3">
+              <div class="flex justify-between text-xs font-semibold text-zinc-500"><span id="scrapeLabel">Starting&hellip;</span><span id="scrapePct">0%</span></div>
+              <div class="mt-1.5 h-1.5 bg-zinc-100 dark:bg-white/10 rounded-full overflow-hidden"><div id="scrapeBar" class="h-1.5 bg-zinc-900 dark:bg-white rounded-full transition-all duration-300" style="width:0%"></div></div>
+            </div>
+            <div class="px-5 py-4">
+              <div class="rounded-xl bg-zinc-50 dark:bg-[#17171A] overflow-hidden">
+                <div class="flex items-center gap-2 bg-zinc-50 dark:bg-[#17171A] border-b border-zinc-200 dark:border-white/10 px-4 py-2.5">
+                  <svg class="w-4 h-4 text-zinc-400"><use href="#i-doc"/></svg>
+                  <span id="pdfName" class="text-xs font-semibold text-zinc-800 dark:text-zinc-200 truncate">prospects.pdf</span>
+                  <span id="pdfCount" class="ml-auto text-[11px] font-semibold text-zinc-500 shrink-0">0 records</span>
+                  <button id="pdfDl" onclick="downloadSamplePdf()" class="hidden ml-2 shrink-0 text-[11px] font-bold text-zinc-950 bg-white border border-zinc-200 shadow-sm hover:bg-zinc-950 hover:text-white hover:border-zinc-950 rounded-full px-3 py-1 transition">Download PDF</button>
+                </div>
+                <div id="scrapeRows" class="divide-y divide-zinc-100 dark:divide-white/5 max-h-56 overflow-y-auto">
+                  <p id="scrapeEmpty" class="px-4 py-6 text-center text-[13px] text-zinc-400">Choose your niche and hit <strong>Scrape</strong> to pull 10 sample records.</p>
+                </div>
+                <div id="lockedZone" class="hidden relative border-t border-zinc-200 dark:border-white/10">
+                  <div id="blurRows" class="select-none blur-[3px] pointer-events-none px-4 py-3 space-y-2" aria-hidden="true"></div>
+                  <div class="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-white/60 dark:bg-[#0A0A0B]/60 px-6 text-center">
+                    <span class="w-9 h-9 grid place-items-center rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950"><svg class="w-4 h-4"><use href="#i-lock"/></svg></span>
+                    <p id="lockedText" class="text-[13px] font-bold text-zinc-900 dark:text-white">600+ more records locked</p>
+                    <button id="unlockBtn" onclick="unlockPdf()" class="bg-[#9e005d] hover:bg-[#7e0049] text-white text-[13px] font-bold px-5 py-2 rounded-full transition shadow-lg shadow-[#9e005d]/25">Unlock Full PDF &middot; UGX 10,000</button>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-2 text-[11px] text-zinc-400">Sample data — paid unlocks deliver the real list.</p>
+            </div>
           </div>
         </div>
-        <div class="p-6">
-          <span class="text-[11px] font-semibold bg-zinc-200/70 dark:bg-white/10 text-zinc-700 dark:text-zinc-300 px-3 py-1 rounded-full">{{ $w[2] }}</span>
-          <h3 class="font-display font-bold text-lg mt-2.5 text-zinc-950 dark:text-white">{{ $w[1] }}</h3>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">{{ $w[3] }}</p>
-          <button onclick="openLead('')" class="mt-4 text-sm font-bold text-zinc-950 dark:text-white hover:underline">View Website &rarr;</button>
-        </div>
-      </div>
-      @endforeach
+    </div>
+    <div class="mt-6 reveal flex flex-col sm:flex-row gap-3">
+      <a href="#launch" class="inline-flex justify-center items-center font-bold px-8 py-3 rounded-full border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white transition">See the launch deal &rarr;</a>
+      <a href="#help" class="inline-flex justify-center items-center bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Next: how we can help &rarr;</a>
     </div>
   </div>
 </section>
@@ -705,11 +822,11 @@
           @foreach(['X','LinkedIn','Facebook','Instagram','YouTube'] as $s)<a href="#" class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-white/40 hover:text-white transition">{{ $s }}</a>@endforeach
         </div>
       </div>
-      <div><p class="text-white font-bold text-sm">Website Services</p><ul class="mt-4 space-y-2.5 text-sm">@foreach(['Business Websites','Custom CMS','SEO','Website Maintenance','Website Portfolio'] as $l)<li><a href="#work" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul></div>
+      <div><p class="text-white font-bold text-sm">Website Services</p><ul class="mt-4 space-y-2.5 text-sm">@foreach(['Business Websites','Custom CMS','SEO','Website Maintenance','Website Portfolio'] as $l)<li><a href="#pricing" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul></div>
       <div><p class="text-white font-bold text-sm">Find Business</p><ul class="mt-4 space-y-2.5 text-sm">@foreach(['Potential Customers','Business Directories','Tenders','Grants','Procurement Opportunities','Funding Opportunities','Business Opportunities'] as $l)<li><a href="#niches" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul></div>
       <div><p class="text-white font-bold text-sm">Business Tools</p><ul class="mt-4 space-y-2.5 text-sm">@foreach(['Accounting','CRM','Quotations','Invoicing','Receipts','POS','Inventory','Customers','Suppliers','Expenses','Reports','Cash Flow','P&L','Balance Sheet'] as $l)<li><a href="#tools" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul></div>
       <div><p class="text-white font-bold text-sm">Resources</p><ul class="mt-4 space-y-2.5 text-sm">@foreach(['Business Templates','Proposal Templates','Company Profiles','Tender Resources','Grant Resources','Business Plans','Marketing Resources','PDF Tools','Business Guides'] as $l)<li><a href="#" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul>
-        <p class="text-white font-bold text-sm mt-6">Company</p><ul class="mt-3 space-y-2.5 text-sm"><li><a href="#home" class="hover:text-white">About Ttryy</a></li><li><a href="#work" class="hover:text-white">Our Work</a></li><li><a href="mailto:hello@ttryy.com" class="hover:text-white">Contact</a></li><li><a href="#faq" class="hover:text-white">FAQ</a></li><li><a href="{{ route('terms') }}" class="hover:text-white">Terms</a></li><li><a href="{{ route('privacy') }}" class="hover:text-white">Privacy Policy</a></li><li><a href="{{ route('sitemap.page') }}" class="hover:text-white">Sitemap</a></li></ul></div>
+        <p class="text-white font-bold text-sm mt-6">Company</p><ul class="mt-3 space-y-2.5 text-sm"><li><a href="#home" class="hover:text-white">About Ttryy</a></li><li><a href="{{ route('launch') }}" class="hover:text-white">Startup 10K campaign</a></li><li><a href="#launch" class="hover:text-white">Launch 10K deal</a></li><li><a href="mailto:hello@ttryy.com" class="hover:text-white">Contact</a></li><li><a href="#faq" class="hover:text-white">FAQ</a></li><li><a href="{{ route('terms') }}" class="hover:text-white">Terms</a></li><li><a href="{{ route('privacy') }}" class="hover:text-white">Privacy Policy</a></li><li><a href="{{ route('sitemap.page') }}" class="hover:text-white">Sitemap</a></li></ul></div>
       <div><p class="text-white font-bold text-sm">Industries</p><ul class="mt-4 space-y-2.5 text-sm">@foreach(['NGOs & Charities','Construction','IT & Software','Marketing','Cleaning','Security','Catering','Printing','Furniture','Accounting','Logistics','Agriculture','Solar','Medical','Retail','Professional Services'] as $l)<li><a href="#niches" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul></div>
     </div>
     <div class="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-3 text-xs text-zinc-500">

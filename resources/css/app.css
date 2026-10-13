@@ -115,7 +115,7 @@ select:focus[data-flux-control] {
     .tbl tbody td { @apply px-4 py-3 align-middle; }
     .tbl tbody tr { @apply border-b border-zinc-100 transition last:border-0 hover:bg-zinc-50/80 dark:border-white/5 dark:hover:bg-white/5; }
 
-    .seg { @apply inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-full bg-zinc-100 p-1 dark:bg-white/5; }
+    .seg { @apply inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-full bg-zinc-200/70 p-1 dark:bg-white/10; }
     .stat-num { @apply font-display text-[28px] leading-none font-extrabold tracking-tight text-zinc-950 dark:text-white; }
 
     .nav-link { @apply flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-zinc-600 transition hover:bg-zinc-950/5 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-white; }

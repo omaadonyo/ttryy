@@ -5,11 +5,15 @@ use App\Http\Controllers\AdminHostingController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HostingController;
+use App\Http\Controllers\LaunchController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
+
+Route::get('launch', [LaunchController::class, 'index'])->name('launch');
+Route::post('launch', [LaunchController::class, 'store'])->name('launch.store');
 
 Route::view('privacy', 'privacy')->name('privacy');
 Route::view('terms', 'terms')->name('terms');
@@ -66,6 +70,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('hosting/health', [AdminHostingController::class, 'health'])->name('hosting.health');
     Route::get('hosting/audit', [AdminHostingController::class, 'audit'])->name('hosting.audit');
     Route::get('hosting/integrations', [AdminHostingController::class, 'integrations'])->name('hosting.integrations');
+    Route::get('launch-signups', [AdminHostingController::class, 'launchSignups'])->name('launch.index');
+    Route::patch('launch-signups/{signup}', [AdminHostingController::class, 'launchStatus'])->name('launch.status');
+    Route::post('launch-signups/{signup}/create-user', [AdminHostingController::class, 'launchCreateUser'])->name('launch.create-user');
 });
 
 Route::middleware('auth')->prefix('dashboard')->group(function () {

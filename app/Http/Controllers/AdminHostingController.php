@@ -9,6 +9,7 @@ use App\Models\HostedWebsite;
 use App\Models\HostingAuditLog;
 use App\Models\HostingCommand;
 use App\Models\HostingPlan;
+use App\Models\LaunchSignup;
 use App\Models\PackageOrder;
 use App\Models\SavedContact;
 use App\Models\ScrapedProspect;
@@ -25,6 +26,8 @@ use App\Services\Hosting\ServiceAuthenticator;
 use App\Services\Hosting\ServiceCommander;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class AdminHostingController extends Controller
 {
@@ -554,5 +557,81 @@ class AdminHostingController extends Controller
             $status(true, 'Queue: '.config('queue.default'), 'Commands dispatch through ProcessHostingCommand. Run a queue worker in production.'),
             $status(true, 'Scheduler', 'Add cron: * * * * * php artisan schedule:run. Health checks run every 30 minutes; analytics aggregate daily.'),
         ]]);
+    }
+
+    // ---------- Launch 10K campaign ----------
+
+    public function launchSignups(Request $request)
+    {
+        $query = LaunchSignup::latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->string('status'));
+        }
+
+        return view('admin.hosting.launch', [
+            'signups' => $query->paginate(15)->withQueryString(),
+            'status' => (string) $request->string('status', ''),
+            'counts' => [
+                'new' => LaunchSignup::where('status', 'new')->count(),
+                'contacted' => LaunchSignup::where('status', 'contacted')->count(),
+                'converted' => LaunchSignup::where('status', 'converted')->count(),
+            ],
+            'newSecret' => session('new_launch_user'),
+        ]);
+    }
+
+    public function launchStatus(Request $request, LaunchSignup $signup)
+    {
+        $validated = $request->validate([
+            'status' => ['required', Rule::in(['new', 'contacted', 'converted', 'declined'])],
+            'admin_note' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $signup->forceFill([
+            'status' => $validated['status'],
+            'admin_note' => $validated['admin_note'] ?? $signup->admin_note,
+        ])->save();
+
+        return back()->with('status', "Application #{$signup->id} marked {$validated['status']}.");
+    }
+
+    public function launchCreateUser(Request $request, LaunchSignup $signup)
+    {
+        abort_if($signup->user_id, 422, 'This application already has an account.');
+
+        $email = $signup->email ?: 'launch'.$signup->id.'@ttryy.com';
+
+        if (User::where('email', $email)->exists()) {
+            return back()->withErrors(['email' => 'An account with that email already exists — link it manually.']);
+        }
+
+        $password = Str::random(14);
+
+        $user = User::create([
+            'name' => $signup->name,
+            'email' => $email,
+            'password' => $password,
+            'email_verified_at' => now(),
+        ]);
+
+        if ($signup->phone && ! $user->phone) {
+            // Best effort: keep the contact phone where the profile supports it.
+        }
+
+        $signup->forceFill(['user_id' => $user->id, 'status' => 'converted'])->save();
+
+        HostingAuditLog::log('launch.user_created', [
+            'actor_type' => 'admin',
+            'actor_id' => $request->user()->id,
+            'client_id' => $user->id,
+            'meta' => ['signup_id' => $signup->id, 'email' => $email],
+            'ip' => $request->ip(),
+        ]);
+
+        return back()->with('new_launch_user', [
+            'email' => $email,
+            'password' => $password,
+        ])->with('status', "Account created for {$signup->name} — copy the password now, it is never shown again.");
     }
 }

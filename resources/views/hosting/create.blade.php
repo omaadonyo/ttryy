@@ -1,5 +1,6 @@
 <x-layouts::app :title="__('Register website')">
     @include('partials.toast')
+    @include('partials.custom-select')
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Register a website" sub="A database record first, a live site after provisioning and health checks succeed." />
 
@@ -41,4 +42,7 @@
             </form>
         </div>
     </div>
+<script>
+enhanceSelect(document.getElementById('f-plan'));
+</script>
 </x-layouts::app>

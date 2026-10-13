@@ -1,5 +1,6 @@
 <x-layouts::app :title="__('Audit log')">
     @include('partials.toast')
+    @include('partials.custom-select')
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Audit log" sub="Every hosting event with actor, outcome and correlation ID. Secrets are never stored here.">
             <x-slot:actions>
@@ -20,6 +21,9 @@
                 <button type="submit" class="btn-brand">Filter</button>
             </form>
         </div>
+<script>
+enhanceSelect(document.querySelector('select[name="outcome"]'));
+</script>
 
         <div class="card card-pad">
             <div class="tbl-wrap rounded-none! border-0! shadow-none!">
