@@ -212,7 +212,7 @@
     </div>
 
     <div class="reveal visible">
-      <div class="rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#101014] shadow-2xl shadow-zinc-950/10 dark:shadow-black/50 overflow-hidden">
+      <div class="rounded-xl bg-white dark:bg-[#101014] shadow-2xl shadow-zinc-950/10 dark:shadow-black/50 overflow-hidden">
         <div class="flex items-center justify-between gap-2 px-5 pt-4">
           <p class="font-display font-bold text-[15px] text-zinc-950 dark:text-white">Idea → Online → Revenue</p>
           <span class="text-[10px] font-semibold text-zinc-500 border border-zinc-200 dark:border-white/15 rounded-full px-2 py-0.5">LIVE CONCEPT</span>
@@ -222,13 +222,12 @@
         .dark .launch-dots{ background-image: radial-gradient(circle, rgba(255,255,255,.13) 1px, transparent 1.6px); }
         .launch-orb-b{ background: radial-gradient(circle, rgba(158,0,93,.20), transparent 70%); }
         .launch-orb-p{ background: radial-gradient(circle, rgba(255,77,154,.18), transparent 70%); }
-        @keyframes launch-float{ 0%,100%{ transform: translateY(7px); } 50%{ transform: translateY(-7px); } }
+        @keyframes launch-float{ 0%,100%{ transform: translateY(9px); } 50%{ transform: translateY(-9px); } }
         @keyframes launch-dash{ to{ stroke-dashoffset: -24; } }
         @keyframes launch-spin{ to{ transform: rotate(360deg); } }
-        .launch-float{ animation: launch-float 5s ease-in-out infinite; }
-        .launch-flow{ stroke-dasharray: 5 7; animation: launch-dash 1.1s linear infinite; }
-        .launch-orbit{ animation: launch-spin 7s linear infinite; }
-        @media (prefers-reduced-motion: reduce){ .launch-float,.launch-flow,.launch-orbit{ animation: none; } }
+        .launch-float{ animation: launch-float 4s ease-in-out infinite; }
+        .launch-flow{ stroke-dasharray: 5 7; animation: launch-dash .9s linear infinite; }
+        .launch-orbit{ animation: launch-spin 6s linear infinite; }
         </style>
         <div role="img" aria-label="Illustration: ten thousand shillings plus your app idea becomes an online business generating money" class="relative block w-full h-[340px] sm:h-[400px] overflow-hidden">
           <div class="launch-dots absolute inset-0" aria-hidden="true"></div>
@@ -247,7 +246,7 @@
           </div>
           <div class="absolute left-1/2 top-1/2" aria-hidden="true">
             <span class="launch-orbit absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 block size-28"><span class="absolute left-1/2 top-0 -translate-x-1/2 block size-2.5 rounded-full bg-[#ff4d9a]"></span></span>
-            <span class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 block size-24 rounded-full bg-[#9e005d]/15 motion-safe:animate-ping"></span>
+            <span class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 block size-24 rounded-full bg-[#9e005d]/15 animate-ping"></span>
           </div>
           <div class="launch-float absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5 text-center" style="animation-delay:-3.4s">
             <span class="text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Your idea</span>
@@ -643,7 +642,7 @@
 <!-- APPLICATION SUPPORT -->
 <section class="py-16 lg:py-20 bg-zinc-50 dark:bg-[#101012]">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="reveal bg-zinc-950 dark:bg-[#151517] dark:border dark:border-white/10 text-white rounded-xl p-6 sm:p-8 grid lg:grid-cols-2 gap-10">
+    <div class="reveal bg-zinc-950 dark:bg-[#151517] text-white rounded-xl p-6 sm:p-8 grid lg:grid-cols-2 gap-10">
       <div>
         <p class="text-xs font-semibold tracking-wide uppercase text-white/60">How we can help &middot; Application support</p>
         <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 leading-tight">Found an Opportunity? We Can Help You Apply.</h2>

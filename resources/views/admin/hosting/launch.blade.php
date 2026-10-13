@@ -45,7 +45,7 @@ document.querySelectorAll('select[name="status"]').forEach(enhanceSelect);
             @else
             <div class="space-y-3">
                 @foreach($signups as $s)
-                <div class="rounded-xl border border-zinc-200/80 p-4 dark:border-white/10">
+                <div class="rounded-xl bg-zinc-50 p-4 dark:bg-white/5">
                     <div class="flex items-start justify-between gap-3 flex-wrap">
                         <div class="min-w-0">
                             <p class="font-extrabold">{{ $s->idea_name }}</p>

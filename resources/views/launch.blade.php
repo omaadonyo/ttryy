@@ -66,7 +66,7 @@
   <div class="absolute inset-0 sqgrid pointer-events-none" aria-hidden="true"></div>
   <div class="relative mx-auto w-[92%] md:w-[80%] py-14 lg:py-20 grid lg:grid-cols-2 gap-12 items-center">
     <div>
-      <p class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-600 dark:border-white/15 dark:bg-white/5 dark:text-zinc-300"><span class="size-1.5 rounded-full bg-[#9e005d] animate-pulse"></span>Startup launch campaign · {{ now()->format('F') }} intake open</p>
+      <p class="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-600 dark:bg-white/5 dark:text-zinc-300"><span class="size-1.5 rounded-full bg-[#9e005d] animate-pulse"></span>Startup launch campaign · {{ now()->format('F') }} intake open</p>
       <h1 class="font-display font-extrabold text-4xl sm:text-5xl leading-[1.08] tracking-tight mt-4 text-zinc-950 dark:text-white">Have an app idea?<br>Launch it for <span class="text-[#9e005d]">UGX 10,000.</span></h1>
       <p class="mt-5 text-zinc-600 dark:text-zinc-400 text-base sm:text-lg leading-relaxed max-w-xl">That notebook full of ideas. That problem you keep saying someone should solve. <strong class="text-zinc-900 dark:text-white">Stop waiting for a big budget</strong> — we build it with Laravel and AI, hand you a free <strong class="text-zinc-900 dark:text-white">myapp.ttryy.com</strong> domain, and put you online in <strong class="text-zinc-900 dark:text-white">5 days</strong>.</p>
       <div class="mt-8 flex flex-col sm:flex-row gap-3">
@@ -83,10 +83,10 @@
       <div class="rounded-xl bg-zinc-950 dark:bg-black text-white p-6 sm:p-8 shadow-2xl">
         <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-white/50">{{ now()->format('F') }} intake closes in</p>
         <div class="mt-3 grid grid-cols-4 gap-2 text-center" id="countdown" role="timer" aria-label="Countdown to intake close">
-          <div class="rounded-xl bg-white/5 border border-white/10 p-3"><p id="cd-d" class="font-display font-extrabold text-2xl sm:text-3xl">–</p><p class="text-[11px] text-white/50 mt-1">days</p></div>
-          <div class="rounded-xl bg-white/5 border border-white/10 p-3"><p id="cd-h" class="font-display font-extrabold text-2xl sm:text-3xl">–</p><p class="text-[11px] text-white/50 mt-1">hours</p></div>
-          <div class="rounded-xl bg-white/5 border border-white/10 p-3"><p id="cd-m" class="font-display font-extrabold text-2xl sm:text-3xl">–</p><p class="text-[11px] text-white/50 mt-1">mins</p></div>
-          <div class="rounded-xl bg-white/5 border border-white/10 p-3"><p id="cd-s" class="font-display font-extrabold text-2xl sm:text-3xl">–</p><p class="text-[11px] text-white/50 mt-1">secs</p></div>
+          <div class="rounded-xl bg-white/5 p-3"><p id="cd-d" class="font-display font-extrabold text-2xl sm:text-3xl">–</p><p class="text-[11px] text-white/50 mt-1">days</p></div>
+          <div class="rounded-xl bg-white/5 p-3"><p id="cd-h" class="font-display font-extrabold text-2xl sm:text-3xl">–</p><p class="text-[11px] text-white/50 mt-1">hours</p></div>
+          <div class="rounded-xl bg-white/5 p-3"><p id="cd-m" class="font-display font-extrabold text-2xl sm:text-3xl">–</p><p class="text-[11px] text-white/50 mt-1">mins</p></div>
+          <div class="rounded-xl bg-white/5 p-3"><p id="cd-s" class="font-display font-extrabold text-2xl sm:text-3xl">–</p><p class="text-[11px] text-white/50 mt-1">secs</p></div>
         </div>
         <p class="mt-4 text-sm text-white/60">We only onboard a handful of ideas per month so every launch gets real attention. When the timer hits zero, applications wait for next month.</p>
         <a href="#apply" class="mt-5 block text-center bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full transition">Claim my launch slot →</a>
@@ -216,7 +216,7 @@
         </ol>
         <p class="mt-4 text-xs opacity-60">Apply below first, then pay — we match payment to your application by phone number.</p>
       </div>
-      <div class="rounded-xl bg-zinc-50 dark:bg-[#141416] p-6 sm:p-8 border border-zinc-200 dark:border-white/10">
+      <div class="rounded-xl bg-zinc-50 dark:bg-[#141416] p-6 sm:p-8">
         <p class="text-xs font-bold tracking-wide uppercase text-zinc-500">Card & online</p>
         <p class="font-display font-extrabold text-3xl mt-3 text-zinc-950 dark:text-white">Flutterwave secure checkout</p>
         <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-2">Pay the launch fee online with card or Mobile Money through our secure checkout.</p>
@@ -251,7 +251,7 @@
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Tell us your idea.</h2>
       <p class="text-zinc-600 dark:text-zinc-400 mt-3">Two minutes. Plain words. We reply within 2 working days.</p>
     </div>
-    <div class="mt-8 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-[#141416] p-6 sm:p-8">
+    <div class="mt-8 rounded-xl bg-zinc-50 dark:bg-[#141416] p-6 sm:p-8">
       @if(session('launch_success'))
       <div class="text-center py-6">
         <div class="w-16 h-16 mx-auto grid place-items-center rounded-full bg-emerald-600 text-white"><svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
