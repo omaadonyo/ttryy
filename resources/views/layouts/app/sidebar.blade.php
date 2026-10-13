@@ -22,6 +22,7 @@
             'Business' => [
                 ['label' => 'New order', 'icon' => 'plus', 'href' => route('orders.new'), 'active' => request()->routeIs('orders.new') || request()->routeIs('checkout*')],
                 ['label' => 'My packages', 'icon' => 'shopping-bag', 'href' => route('packages.index'), 'active' => request()->routeIs('packages.*')],
+                ['label' => 'Hosting', 'icon' => 'server-stack', 'href' => route('hosting.index'), 'active' => request()->routeIs('hosting.*')],
                 ['label' => 'Payments', 'icon' => 'banknotes', 'href' => route('payments.index'), 'active' => request()->routeIs('payments.*')],
                 ['label' => 'Wallet', 'icon' => 'wallet', 'href' => route('wallet.index'), 'active' => request()->routeIs('wallet.*')],
             ],
@@ -32,6 +33,7 @@
                 ['label' => 'Orders', 'icon' => 'shopping-bag', 'href' => route('admin.orders'), 'active' => request()->routeIs('admin.orders*')],
                 ['label' => 'Payments', 'icon' => 'banknotes', 'href' => route('admin.payments'), 'active' => request()->routeIs('admin.payments')],
                 ['label' => 'Users', 'icon' => 'users', 'href' => route('admin.users'), 'active' => request()->routeIs('admin.users*')],
+                ['label' => 'Hosting', 'icon' => 'circle-stack', 'href' => route('admin.hosting.dashboard'), 'active' => request()->routeIs('admin.hosting.*')],
                 ['label' => 'Packages', 'icon' => 'squares-2x2', 'href' => route('admin.packages'), 'active' => request()->routeIs('admin.packages')],
             ];
         }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -9,6 +10,7 @@ class PackageOrder extends Model
 {
     protected $fillable = [
         'user_id',
+        'hosted_website_id',
         'reference',
         'package',
         'billing_frequency',
@@ -56,7 +58,7 @@ class PackageOrder extends Model
      * When the subscription period ends. The website stays running
      * while the plan is active and paid for.
      */
-    public function expiresAt(): ?\Carbon\CarbonInterface
+    public function expiresAt(): ?CarbonInterface
     {
         if (! $this->created_at) {
             return null;

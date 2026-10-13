@@ -130,6 +130,60 @@ or any production SMTP credentials, then verify with:
 php artisan app:test-mail you@example.com
 ```
 
+## Hosting management platform
+
+Three integrated panels share one codebase, one design system and one billing model:
+
+- **Client panel** (`/dashboard/hosting`): website register/manage, subdomain
+  generation (`‹label›.ttryy.com` via `HOSTING_BASE_DOMAIN`), custom domains
+  with DNS-TXT verification, per-website analytics (first-party beacon +
+  daily aggregates, CSV/PDF export), health history, billing from linked
+  `package_orders`, and suspension/reactivation requests.
+- **Admin panel** (`/admin/hosting`): estate overview with usage tracking
+  (tokens, email volume, growth), website/client/domain/operation/health/
+  audit management, suspend/restore with confirmations, manual provisioning
+  confirmation, service credentials (secret shown once), and an honest
+  **integrations status screen**.
+- **Service backend**: `App\Services\Hosting\Service\ServiceCommandProcessor`
+  (v1.0.0) embeds into any hosted Laravel site and exposes
+  `POST /hosting-service/commands`, `GET /hosting-service/status` and
+  `GET /hosting-service/health`. Central ingest lives at
+  `POST /api/v1/hosting/service/{heartbeat,health-report}` and
+  `GET /api/v1/hosting/service/status`, authenticated with HMAC
+  (`X-Service-Key/Timestamp/Nonce/Site/Signature`, ±5 min window, nonce =
+  operation uuid for idempotent replays, `hash_equals`, revoked-key and
+  cross-site rejection, throttle 60/min).
+
+Key honesty rules enforced in code: website status changes **only on service
+acknowledgment** (queued commands never flip status early); unreachable
+services read **Unknown/Unreachable, never suspended**; DNS/SSL/provisioning
+drivers default to unconfigured and the UI says so; analytics shows real
+aggregates or empty states — nothing is invented.
+
+### Hosting setup
+
+```bash
+php artisan migrate            # includes hosting_* tables + plans seed
+php artisan schedule:run       # every minute via cron (health: every 30 min, analytics daily 01:30)
+php artisan queue:work         # database queue (ProcessHostingCommand)
+php artisan hosting:health-check
+php artisan hosting:aggregate-analytics --date=2026-10-12
+```
+
+Env: `HOSTING_BASE_DOMAIN` (default `ttryy.com`),
+`HOSTING_PROVISION_DRIVER` (default `manual`),
+`HOSTING_DNS_DRIVER` / `HOSTING_SSL_DRIVER` (unset = honestly unconfigured),
+`HOSTING_SERVICE_TOLERANCE` (default 300s),
+`HOSTING_HEALTH_TIMEOUT`, `HOSTING_HEARTBEAT_STALE_MINUTES` (default 60),
+`HOSTING_ANALYTICS_ENABLED`.
+
+### Still requiring infrastructure
+
+Live server provisioning, DNS automation, SSL issuance and real remote
+website endpoints are **not** configured — commands to unconnected services
+fail with explicit reasons (`service_not_connected`, `no_credentials`),
+retries are safe, and the integrations screen documents exactly what to set.
+
 ## Pricing model: own it like M-Kopa
 
 Packages sell from **UGX 800/day**: the customer pays a small initial

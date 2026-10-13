@@ -71,6 +71,16 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     }
 
     /**
+     * Websites this client owns on the hosting platform.
+     *
+     * @return HasMany<HostedWebsite, $this>
+     */
+    public function hostedWebsites(): HasMany
+    {
+        return $this->hasMany(HostedWebsite::class);
+    }
+
+    /**
      * @return HasMany<TokenTopup, $this>
      */
     public function tokenTopups(): HasMany

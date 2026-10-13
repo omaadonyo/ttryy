@@ -1,9 +1,15 @@
 <?php
 
+use App\Models\HostedWebsite;
+use App\Models\ScrapedProspect;
 use App\Models\User;
+use App\Services\DirectoryScraper;
+use App\Services\Hosting\AnalyticsRecorder;
+use App\Services\Hosting\HealthChecker;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -14,6 +20,7 @@ Artisan::command('app:make-admin {email}', function (string $email) {
 
     if (! $user) {
         $this->error("No user found with email {$email}. They must register first.");
+
         return 1;
     }
 
@@ -25,7 +32,7 @@ Artisan::command('app:make-admin {email}', function (string $email) {
 
 Artisan::command('app:scrape-catalogue {--limit=5000}', function () {
     $limit = max(1, (int) $this->option('limit'));
-    $service = App\Services\DirectoryScraper::class;
+    $service = DirectoryScraper::class;
 
     // Phase 1: seed searches discover real category slugs.
     $slugs = [];
@@ -55,18 +62,18 @@ Artisan::command('app:scrape-catalogue {--limit=5000}', function () {
     $this->info('Phase 2: scraping categories (limit '.$limit.')…');
     $bar = $this->output->createProgressBar(min($limit, max(1, count($slugs) * 10)));
     $bar->start();
-    $total = App\Models\ScrapedProspect::count();
+    $total = ScrapedProspect::count();
     foreach ($slugs as $slug => $name) {
-        if (App\Models\ScrapedProspect::count() >= $limit) {
+        if (ScrapedProspect::count() >= $limit) {
             break;
         }
-        $before = App\Models\ScrapedProspect::count();
+        $before = ScrapedProspect::count();
         $service::scrapeCategory($slug, $name);
-        $bar->advance(App\Models\ScrapedProspect::count() - $before);
+        $bar->advance(ScrapedProspect::count() - $before);
     }
     $bar->finish();
     $this->newLine(2);
-    $this->info('Done. Index holds '.App\Models\ScrapedProspect::count().' prospects ('.$total.' before this run).');
+    $this->info('Done. Index holds '.ScrapedProspect::count().' prospects ('.$total.' before this run).');
 })->purpose('Bulk-scrape directory categories into the prospect index');
 
 Artisan::command('app:test-mail {email}', function (string $email) {
@@ -84,3 +91,39 @@ Artisan::command('app:test-mail {email}', function (string $email) {
 
     return 0;
 })->purpose('Send a test email to verify mail delivery');
+
+Artisan::command('hosting:health-check', function () {
+    $sites = HostedWebsite::whereIn('status', [
+        HostedWebsite::STATUS_ACTIVE,
+        HostedWebsite::STATUS_PROVISIONING,
+    ])->get();
+
+    $counts = ['healthy' => 0, 'degraded' => 0, 'unavailable' => 0, 'unknown' => 0];
+
+    foreach ($sites as $site) {
+        $check = HealthChecker::checkWebsite($site);
+        $counts[$check->status] = ($counts[$check->status] ?? 0) + 1;
+    }
+
+    $this->info('Checked '.$sites->count().' websites: '.collect($counts)->map(fn ($c, $s) => "{$s}={$c}")->implode(', '));
+
+    return 0;
+})->purpose('Run central availability checks for hosted websites');
+
+Artisan::command('hosting:aggregate-analytics {--date=}', function () {
+    $date = $this->option('date') ?: now()->subDay()->toDateString();
+    $sites = HostedWebsite::all();
+    $events = 0;
+
+    foreach ($sites as $site) {
+        $day = AnalyticsRecorder::aggregateDay($site, $date);
+        $events += $day->pageviews;
+    }
+
+    $this->info("Aggregated {$date}: {$events} pageviews across ".$sites->count().' websites.');
+
+    return 0;
+})->purpose('Roll raw analytics events into daily aggregates');
+
+Schedule::command('hosting:health-check')->everyThirtyMinutes();
+Schedule::command('hosting:aggregate-analytics')->dailyAt('01:30');

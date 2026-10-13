@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminHostingController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HostingController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +30,7 @@ Route::get('sitemap.xml', function () {
 })->name('sitemap.xml');
 
 Route::get('t/{token}', [MarketingController::class, 'trackOpen'])->name('tracking.open');
+Route::get('t/w/{uuid}', [HostingController::class, 'beacon'])->middleware('throttle:120,1')->name('hosting.beacon');
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
@@ -38,6 +41,25 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('users', [AdminController::class, 'users'])->name('users');
     Route::patch('users/{user}/admin', [AdminController::class, 'toggleAdmin'])->name('users.admin');
     Route::get('packages', [AdminController::class, 'packages'])->name('packages');
+    Route::get('hosting', [AdminHostingController::class, 'dashboard'])->name('hosting.dashboard');
+    Route::get('hosting/websites', [AdminHostingController::class, 'websites'])->name('hosting.websites');
+    Route::get('hosting/websites/{website}', [AdminHostingController::class, 'websiteShow'])->name('hosting.websites.show');
+    Route::post('hosting/websites/{website}/suspend', [AdminHostingController::class, 'suspend'])->name('hosting.websites.suspend');
+    Route::post('hosting/websites/{website}/restore', [AdminHostingController::class, 'restore'])->name('hosting.websites.restore');
+    Route::post('hosting/websites/{website}/health-check', [AdminHostingController::class, 'triggerHealthCheck'])->name('hosting.websites.health');
+    Route::post('hosting/websites/{website}/retry-provision', [AdminHostingController::class, 'retryProvision'])->name('hosting.websites.retry');
+    Route::post('hosting/websites/{website}/mark-active', [AdminHostingController::class, 'markActive'])->name('hosting.websites.activate');
+    Route::post('hosting/websites/{website}/service-url', [AdminHostingController::class, 'updateServiceUrl'])->name('hosting.websites.service-url');
+    Route::post('hosting/websites/{website}/credentials', [AdminHostingController::class, 'issueCredential'])->name('hosting.websites.credentials');
+    Route::delete('hosting/websites/{website}/credentials/{credential}', [AdminHostingController::class, 'revokeCredential'])->name('hosting.websites.credentials.revoke');
+    Route::get('hosting/clients', [AdminHostingController::class, 'clients'])->name('hosting.clients');
+    Route::get('hosting/clients/{user}', [AdminHostingController::class, 'clientShow'])->name('hosting.clients.show');
+    Route::get('hosting/domains', [AdminHostingController::class, 'domains'])->name('hosting.domains');
+    Route::get('hosting/operations', [AdminHostingController::class, 'operations'])->name('hosting.operations');
+    Route::post('hosting/operations/{command}/retry', [AdminHostingController::class, 'retryOperation'])->name('hosting.operations.retry');
+    Route::get('hosting/health', [AdminHostingController::class, 'health'])->name('hosting.health');
+    Route::get('hosting/audit', [AdminHostingController::class, 'audit'])->name('hosting.audit');
+    Route::get('hosting/integrations', [AdminHostingController::class, 'integrations'])->name('hosting.integrations');
 });
 
 Route::middleware('auth')->prefix('dashboard')->group(function () {
@@ -71,6 +93,26 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('wallet', [WalletController::class, 'index'])->name('wallet.index');
     Route::post('wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');
     Route::post('wallet/verify', [WalletController::class, 'verify'])->name('wallet.verify');
+    Route::get('hosting', [HostingController::class, 'index'])->name('hosting.index');
+    Route::get('hosting/create', [HostingController::class, 'create'])->name('hosting.create');
+    Route::post('hosting', [HostingController::class, 'store'])->name('hosting.store');
+    Route::get('hosting/{website}', [HostingController::class, 'show'])->name('hosting.show');
+    Route::delete('hosting/{website}', [HostingController::class, 'destroy'])->name('hosting.destroy');
+    Route::get('hosting/{website}/domains', [HostingController::class, 'domains'])->name('hosting.domains');
+    Route::post('hosting/{website}/domains', [HostingController::class, 'storeDomain'])->name('hosting.domains.store');
+    Route::post('hosting/{website}/subdomains', [HostingController::class, 'storeSubdomain'])->name('hosting.subdomains.store');
+    Route::patch('hosting/{website}/domains/{domain}', [HostingController::class, 'updateSubdomain'])->name('hosting.domains.update');
+    Route::post('hosting/{website}/domains/{domain}/verify', [HostingController::class, 'verifyDomain'])->name('hosting.domains.verify');
+    Route::post('hosting/{website}/domains/{domain}/primary', [HostingController::class, 'setPrimary'])->name('hosting.domains.primary');
+    Route::delete('hosting/{website}/domains/{domain}', [HostingController::class, 'destroyDomain'])->name('hosting.domains.destroy');
+    Route::get('hosting/{website}/analytics', [HostingController::class, 'analytics'])->name('hosting.analytics');
+    Route::get('hosting/{website}/analytics/export', [HostingController::class, 'exportAnalytics'])->name('hosting.analytics.export');
+    Route::get('hosting/{website}/health', [HostingController::class, 'health'])->name('hosting.health');
+    Route::get('hosting/{website}/billing', [HostingController::class, 'billing'])->name('hosting.billing');
+    Route::get('hosting/{website}/reports', [HostingController::class, 'reports'])->name('hosting.reports');
+    Route::get('hosting/{website}/reports/pdf', [HostingController::class, 'reportPdf'])->name('hosting.reports.pdf');
+    Route::post('hosting/{website}/suspend', [HostingController::class, 'requestSuspend'])->name('hosting.suspend');
+    Route::post('hosting/{website}/reactivate', [HostingController::class, 'requestReactivate'])->name('hosting.reactivate');
 });
 
 // Guests may browse checkout and sign in inline; placing an order needs an account.
