@@ -366,8 +366,8 @@ test('checkout shows a big continue button with the amount due', function () {
 
     $this->actingAs(User::factory()->create())->get('/checkout')
         ->assertOk()
-        ->assertSee('id="pay-now"', false)
         ->assertSee('id="step5-continue"', false)
+        ->assertDontSee('id="pay-now"', false)
         ->assertDontSee('How do you want to pay?', false)
         ->assertDontSee('momo-continue', false);
 });

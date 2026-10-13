@@ -227,9 +227,7 @@
         <p class="text-xs opacity-60 mt-2">Grand total over term: <strong id="sumTotal">—</strong></p>
       </div>
 
-      <button type="button" id="pay-now" class="btn-brand mt-5 w-full py-4! text-base font-extrabold">Continue — <span id="pay-now-amount">…</span></button>
-
-      <p class="mt-3 text-[11px] opacity-60">You pay exactly what is shown here — no hidden fees. Secured by Flutterwave.</p>
+      <p class="mt-5 text-[11px] opacity-60">You pay exactly what is shown here — no hidden fees. Secured by Flutterwave. Hit Continue on the last step to pay.</p>
     </aside>
   </form>
 </div>
@@ -312,8 +310,6 @@ function refresh(){
   document.getElementById('weeklyLabel').textContent = fmt(d.weekly) + ' per week';
   document.getElementById('dailyLabel').textContent = fmt(d.daily) + ' per day';
   document.getElementById('fullLabel').textContent = fmt(d.price) + ' once · website runs 12 months';
-  const payAmt = document.getElementById('pay-now-amount');
-  if(payAmt) payAmt.textContent = fmt(q.due);
   const step5Amt = document.getElementById('step5-amount');
   if(step5Amt) step5Amt.textContent = fmt(q.due);
   durationSel.disabled = freq === 'full';
@@ -470,12 +466,12 @@ function initCheckout(){
     const auth = document.getElementById('checkout-auth');
     if(auth) auth.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
-  const payNow = document.getElementById('pay-now');
-  if(payNow){
-    payNow.addEventListener('click', async () => {
+  const step5Continue = document.getElementById('step5-continue');
+  if(step5Continue){
+    step5Continue.addEventListener('click', async () => {
       if(form.dataset.guest === '1'){ form.requestSubmit(); return; }
       if(!form.checkValidity()){ form.reportValidity(); return; }
-      payNow.disabled = true; payNow.classList.add('opacity-60');
+      step5Continue.disabled = true; step5Continue.classList.add('opacity-60');
       try{
         const order = await createOrder('online');
         if(typeof FlutterwaveCheckout === 'undefined') throw new Error('Payment popup failed to load. Please check your connection and try again.');
@@ -501,16 +497,9 @@ function initCheckout(){
           onclose: () => { window.location.href = order.order_url; },
         });
       }catch(err){ showPayError(err.message || 'Something went wrong. Please try again.'); }
-      payNow.disabled = false; payNow.classList.remove('opacity-60');
+      step5Continue.disabled = false; step5Continue.classList.remove('opacity-60');
     });
   }
-  const step5Continue = document.getElementById('step5-continue');
-  if(step5Continue) step5Continue.addEventListener('click', () => {
-    if(form.dataset.guest === '1'){ form.requestSubmit(); return; }
-    if(!form.checkValidity()){ form.reportValidity(); return; }
-    const payNowBtn = document.getElementById('pay-now');
-    if(payNowBtn) payNowBtn.click();
-  });
 }
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCheckout);
 else initCheckout();

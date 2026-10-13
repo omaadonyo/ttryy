@@ -217,7 +217,53 @@
           <p class="font-display font-bold text-[15px] text-zinc-950 dark:text-white">Idea → Online → Revenue</p>
           <span class="text-[10px] font-semibold text-zinc-500 border border-zinc-200 dark:border-white/15 rounded-full px-2 py-0.5">LIVE CONCEPT</span>
         </div>
-        <canvas id="launchCanvas" width="640" height="400" style="height:340px;background:radial-gradient(120px 120px at 12% 85%, rgba(158,0,93,.14), transparent 70%),radial-gradient(150px 150px at 88% 12%, rgba(255,77,154,.12), transparent 70%)" class="block w-full sm:h-[400px]" aria-label="Animation: ten thousand shillings plus your app idea becomes an online business generating money"></canvas>
+        <style>
+        .launch-dots{ background-image: radial-gradient(circle, rgba(24,24,27,.13) 1px, transparent 1.6px); background-size: 26px 26px; }
+        .dark .launch-dots{ background-image: radial-gradient(circle, rgba(255,255,255,.13) 1px, transparent 1.6px); }
+        .launch-orb-b{ background: radial-gradient(circle, rgba(158,0,93,.20), transparent 70%); }
+        .launch-orb-p{ background: radial-gradient(circle, rgba(255,77,154,.18), transparent 70%); }
+        @keyframes launch-float{ 0%,100%{ transform: translateY(7px); } 50%{ transform: translateY(-7px); } }
+        @keyframes launch-dash{ to{ stroke-dashoffset: -24; } }
+        @keyframes launch-spin{ to{ transform: rotate(360deg); } }
+        .launch-float{ animation: launch-float 5s ease-in-out infinite; }
+        .launch-flow{ stroke-dasharray: 5 7; animation: launch-dash 1.1s linear infinite; }
+        .launch-orbit{ animation: launch-spin 7s linear infinite; }
+        @media (prefers-reduced-motion: reduce){ .launch-float,.launch-flow,.launch-orbit{ animation: none; } }
+        </style>
+        <div role="img" aria-label="Illustration: ten thousand shillings plus your app idea becomes an online business generating money" class="relative block w-full h-[340px] sm:h-[400px] overflow-hidden">
+          <div class="launch-dots absolute inset-0" aria-hidden="true"></div>
+          <div class="launch-orb-b absolute -left-10 -bottom-14 size-56" aria-hidden="true"></div>
+          <div class="launch-orb-p absolute -right-10 -top-14 size-64" aria-hidden="true"></div>
+          <svg class="absolute inset-0 h-full w-full" viewBox="0 0 600 340" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M 72 172 Q 186 104 300 152" fill="none" stroke="#9e005d" stroke-width="2.5" stroke-opacity=".55" class="launch-flow"/>
+            <path d="M 300 152 Q 414 104 528 172" fill="none" stroke="#10b981" stroke-width="2.5" stroke-opacity=".6" class="launch-flow"/>
+            <text x="186" y="104" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="22" fill="currentColor" class="text-[#9e005d] dark:text-[#ff4d9a]">+</text>
+            <text x="414" y="104" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="22" fill="currentColor" class="text-emerald-600 dark:text-emerald-400">=</text>
+          </svg>
+          <div class="launch-float absolute left-[12%] top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5 text-center" style="animation-delay:-1.2s">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">UGX 10,000</span>
+            <span class="grid size-16 place-items-center rounded-full text-white text-sm font-extrabold" style="background:radial-gradient(circle at 32% 28%, #fcd34d, #d97706 72%);box-shadow:0 12px 30px -8px rgba(217,119,6,.55)">10K</span>
+            <span class="text-xs font-extrabold text-zinc-700 dark:text-zinc-200">to start</span>
+          </div>
+          <div class="absolute left-1/2 top-1/2" aria-hidden="true">
+            <span class="launch-orbit absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 block size-28"><span class="absolute left-1/2 top-0 -translate-x-1/2 block size-2.5 rounded-full bg-[#ff4d9a]"></span></span>
+            <span class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 block size-24 rounded-full bg-[#9e005d]/15 motion-safe:animate-ping"></span>
+          </div>
+          <div class="launch-float absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5 text-center" style="animation-delay:-3.4s">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Your idea</span>
+            <span class="grid size-20 place-items-center rounded-full text-white" style="background:radial-gradient(circle at 32% 28%, #ff4d9a, #9e005d 72%);box-shadow:0 12px 30px -8px rgba(158,0,93,.55)">
+              <svg class="size-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 6.2 6.6.4-5.1 4.2 1.7 6.4L12 15.7 6.4 19.2l1.7-6.4L3 8.6l6.6-.4z"/></svg>
+            </span>
+            <span class="text-xs font-extrabold text-zinc-700 dark:text-zinc-200">we build it</span>
+          </div>
+          <div class="launch-float absolute left-[88%] top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5 text-center" style="animation-delay:-2.2s">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">UGX / day</span>
+            <span class="grid size-16 place-items-center rounded-full text-white" style="background:radial-gradient(circle at 32% 28%, #34d399, #059669 72%);box-shadow:0 12px 30px -8px rgba(16,185,129,.55)">
+              <svg class="size-7" fill="currentColor" viewBox="0 0 24 24"><path d="M5 20V12h3v8H5zm5.5 0V7h3v13h-3zM16 20V4h3v16h-3z"/></svg>
+            </span>
+            <span class="text-xs font-extrabold text-zinc-700 dark:text-zinc-200">revenue online</span>
+          </div>
+        </div>
         <div class="px-5 pb-4 flex items-center justify-between gap-2 text-[13px] font-bold">
           <span class="text-zinc-500">UGX 10,000 + your idea</span>
           <span class="text-[#9e005d]">= online, earning for you</span>
@@ -228,229 +274,6 @@
 </section>
 
 <!-- LAUNCH DEAL -->
-<script>
-/* Hero concept canvas: UGX 10,000 + your idea = online revenue. Infinite flow-field animation. */
-(function(){
-  'use strict';
-  var cv = document.getElementById('launchCanvas');
-  if(!cv) return;
-  var ctx = null;
-  try { ctx = cv.getContext('2d'); } catch (e) { return; }
-  if(!ctx) return;
-  var reduced = false;
-  try { reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-  var W = 600, H = 380, running = true, startedAt = 0, booted = false;
-  var BRAND = '#9e005d', PINK = '#ff4d9a', GOLD = '#f5b301', GREEN = '#10b981';
-  function resize(){
-    try {
-      var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      var r = cv.getBoundingClientRect();
-      if(r && r.width > 10 && r.height > 10){ W = r.width; H = r.height; }
-      cv.width = Math.round(W * dpr);
-      cv.height = Math.round(H * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    } catch (e) {}
-  }
-  function hubs(t){
-    var cx = W / 2, cy = H * 0.44;
-    var spread = Math.max(86, Math.min(W * 0.31, 290));
-    var bob = Math.sin(t / 850) * 8;
-    return [
-      {x: cx - spread, y: cy + bob * 0.4, r: 32, top: 'UGX 10,000', sub: 'to start', kind: 'coin'},
-      {x: cx, y: cy - bob, r: 38, top: 'YOUR IDEA', sub: 'we build it', kind: 'idea'},
-      {x: cx + spread, y: cy + bob * 0.4, r: 32, top: 'UGX / DAY', sub: 'revenue online', kind: 'money'}
-    ];
-  }
-  var P = [];
-  for(var i = 0; i < 40; i++) P.push({seg: i % 2, t: Math.random(), sp: 0.0011 + Math.random() * 0.0021, s: 1.2 + Math.random() * 2.4, trail: []});
-  var AMBIENT = [];
-  for(var j = 0; j < 40; j++) AMBIENT.push({x: Math.random(), y: Math.random(), r: 0.6 + Math.random() * 1.7, v: 0.02 + Math.random() * 0.07, ph: Math.random() * 6.28});
-  var PULSES = [];
-  var lastPulse = 0;
-  function bez(a, b, t){
-    var mx = (a.x + b.x) / 2, my = Math.min(a.y, b.y) - 54;
-    var u = 1 - t;
-    return {x: u*u*a.x + 2*u*t*mx + t*t*b.x, y: u*u*a.y + 2*u*t*my + t*t*b.y};
-  }
-  function isDark(){ try { return document.documentElement.classList.contains('dark'); } catch (e) { return false; } }
-  function star(x, y, r, color){
-    ctx.save();
-    ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = 14;
-    ctx.beginPath();
-    for(var k = 0; k < 8; k++){
-      var a = k * Math.PI / 4, rr = (k % 2) ? r * 0.42 : r;
-      if(k) ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr);
-      else ctx.moveTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr);
-    }
-    ctx.closePath(); ctx.fill(); ctx.restore();
-  }
-  function draw(t){
-    var dark = isDark();
-    ctx.clearRect(0, 0, W, H);
-    var ink = dark ? '#f4f4f5' : '#18181b';
-    var faint = dark ? 'rgba(255,255,255,.10)' : 'rgba(24,24,27,.10)';
-    var gs, gx, gy;
-    ctx.fillStyle = faint;
-    gs = 26;
-    for(gx = gs / 2; gx < W; gx += gs) for(gy = gs / 2; gy < H; gy += gs){
-      ctx.beginPath(); ctx.arc(gx, gy, 1, 0, 6.29); ctx.fill();
-    }
-    var ai;
-    for(ai = 0; ai < AMBIENT.length; ai++){
-      var a = AMBIENT[ai];
-      var y = ((a.y + t * 0.00003 * a.v * 60) % 1) * H;
-      ctx.globalAlpha = 0.3 + 0.3 * Math.sin(t / 700 + a.ph);
-      ctx.fillStyle = dark ? '#71717a' : '#a1a1aa';
-      ctx.beginPath(); ctx.arc(a.x * W, y, a.r, 0, 6.29); ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-    var orbs = [[W * 0.12, H * 0.85, 130, BRAND], [W * 0.88, H * 0.15, 150, PINK]];
-    for(var oi = 0; oi < orbs.length; oi++){
-      var ox = orbs[oi][0] + Math.sin(t / 2400 + oi * 2) * 14;
-      var oy = orbs[oi][1] + Math.cos(t / 2900 + oi) * 12;
-      var or_ = orbs[oi][2], oc = orbs[oi][3];
-      var g = ctx.createRadialGradient(ox, oy, 0, ox, oy, or_);
-      g.addColorStop(0, dark ? oc + '55' : oc + '2e');
-      g.addColorStop(1, oc + '00');
-      ctx.fillStyle = g;
-      ctx.fillRect(ox - or_, oy - or_, or_ * 2, or_ * 2);
-    }
-    var hubs_ = hubs(t), A = hubs_[0], B = hubs_[1], C = hubs_[2];
-    // comet streams with trails
-    ctx.save();
-    try { ctx.globalCompositeOperation = 'lighter'; } catch (e) {}
-    var pi;
-    for(pi = 0; pi < P.length; pi++){
-      var p = P[pi];
-      p.t += p.sp * 16;
-      if(p.t > 1){ p.t = 0; p.seg = p.seg ? 0 : 1; p.trail = []; }
-      var from = p.seg ? B : A, to = p.seg ? C : B;
-      var pt = bez(from, to, p.t);
-      p.trail.push({x: pt.x, y: pt.y});
-      if(p.trail.length > 9) p.trail.shift();
-      var col = p.seg ? GREEN : BRAND;
-      var ti;
-      for(ti = 0; ti < p.trail.length; ti++){
-        var tp = p.trail[ti];
-        var al = (ti + 1) / p.trail.length;
-        ctx.globalAlpha = al * 0.85;
-        ctx.fillStyle = col;
-        try { ctx.shadowColor = col; ctx.shadowBlur = 10; } catch (ee) {}
-        ctx.beginPath(); ctx.arc(tp.x, tp.y, p.s * al + 0.4, 0, 6.29); ctx.fill();
-      }
-    }
-    ctx.restore();
-    ctx.globalAlpha = 1;
-    // dashed links
-    ctx.strokeStyle = faint; ctx.lineWidth = 1.5; ctx.setLineDash([4, 5]);
-    var pairs = [[A, B], [B, C]];
-    for(var qi = 0; qi < pairs.length; qi++){
-      ctx.beginPath(); ctx.moveTo(pairs[qi][0].x, pairs[qi][0].y); ctx.lineTo(pairs[qi][1].x, pairs[qi][1].y); ctx.stroke();
-    }
-    ctx.setLineDash([]);
-    // rotating orbit ring around the idea hub — unmistakable motion
-    ctx.save();
-    ctx.strokeStyle = dark ? 'rgba(255,77,154,.65)' : 'rgba(158,0,93,.55)';
-    ctx.lineWidth = 2;
-    ctx.setLineDash([10, 8]);
-    try { ctx.lineDashOffset = -(t / 28); } catch (e) {}
-    ctx.beginPath(); ctx.arc(B.x, B.y, B.r + 16, 0, 6.29); ctx.stroke();
-    ctx.restore();
-    ctx.setLineDash([]);
-    // pulse rings
-    if(t - lastPulse > 1400){
-      lastPulse = t;
-      PULSES.push({x: B.x, y: B.y, r: B.r + 6, a: 0.55});
-      PULSES.push({x: C.x, y: C.y, r: C.r + 6, a: 0.45});
-    }
-    for(var ri = PULSES.length - 1; ri >= 0; ri--){
-      var pr = PULSES[ri];
-      pr.r += 1.1; pr.a -= 0.011;
-      if(pr.a <= 0){ PULSES.splice(ri, 1); continue; }
-      ctx.save();
-      ctx.globalAlpha = Math.max(0, pr.a);
-      ctx.strokeStyle = BRAND; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(pr.x, pr.y, pr.r, 0, 6.29); ctx.stroke();
-      ctx.restore();
-    }
-    ctx.globalAlpha = 1;
-    // nodes
-    var nodes = [A, B, C];
-    for(var ni = 0; ni < nodes.length; ni++){
-      (function(n){
-        var base = n.kind === 'coin' ? GOLD : (n.kind === 'money' ? GREEN : BRAND);
-        var gg = ctx.createRadialGradient(n.x - 8, n.y - 10, 4, n.x, n.y, n.r + 14);
-        gg.addColorStop(0, base);
-        gg.addColorStop(1, n.kind === 'idea' ? PINK : base);
-        ctx.save();
-        ctx.shadowColor = base; ctx.shadowBlur = 26;
-        ctx.fillStyle = gg;
-        ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, 6.29); ctx.fill();
-        ctx.restore();
-        ctx.fillStyle = 'rgba(255,255,255,.92)';
-        ctx.font = '800 13px Sora, Inter, sans-serif';
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        if(n.kind === 'coin') ctx.fillText('10K', n.x, n.y + 1);
-        if(n.kind === 'money'){
-          ctx.fillRect(n.x - 11, n.y + 2, 5, 9);
-          ctx.fillRect(n.x - 3, n.y - 3, 5, 14);
-          ctx.fillRect(n.x + 5, n.y - 8, 5, 19);
-        }
-        if(n.kind === 'idea') star(n.x, n.y, 11, '#ffffff');
-        ctx.fillStyle = dark ? 'rgba(255,255,255,.55)' : 'rgba(24,24,27,.55)';
-        ctx.font = '700 10px Inter, sans-serif';
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(n.top, n.x, n.y - n.r - 12);
-        ctx.fillStyle = ink;
-        ctx.font = '800 12px Inter, sans-serif';
-        ctx.fillText(n.sub, n.x, n.y + n.r + 16 + Math.sin(t / 850) * 2);
-      })(nodes[ni]);
-    }
-    ctx.fillStyle = dark ? 'rgba(255,255,255,.5)' : 'rgba(24,24,27,.45)';
-    ctx.font = '800 20px Inter, sans-serif';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('+', (A.x + B.x) / 2, (A.y + B.y) / 2 - 34);
-    ctx.fillText('=', (B.x + C.x) / 2, (B.y + C.y) / 2 - 34);
-  }
-  function frame(t){
-    try { requestAnimationFrame(frame); } catch (e) {}
-    if(!running) return;
-    try { draw(t || 0); } catch (e) { if(window.console) console.error('launch canvas:', e); }
-  }
-  function boot(){
-    if(booted) return;
-    booted = true;
-    resize();
-    startedAt = 0;
-    if(reduced){ try { draw(0); } catch (e) {} return; }
-    try { requestAnimationFrame(frame); } catch (e) {}
-  }
-  try {
-    if('IntersectionObserver' in window){
-      new IntersectionObserver(function(es){
-        es.forEach(function(e){ running = e.isIntersecting; });
-      }, {threshold: 0}).observe(cv);
-    }
-  } catch (e) {}
-  try {
-    if('ResizeObserver' in window){ new ResizeObserver(function(){ resize(); }).observe(cv); }
-    else { window.addEventListener('resize', resize); }
-  } catch (e) {}
-  function readyStart(){
-    resize();
-    setTimeout(resize, 60);
-    setTimeout(resize, 600);
-    boot();
-  }
-  try {
-    if(document.readyState === 'complete' || document.readyState === 'interactive') readyStart();
-    else if(document.addEventListener) document.addEventListener('DOMContentLoaded', readyStart);
-    else readyStart();
-    window.addEventListener('load', function(){ resize(); });
-  } catch (e) { boot(); }
-  try { boot(); } catch (e) {}
-})();
-</script>
 <section id="launch" class="relative overflow-hidden bg-zinc-950 dark:bg-black dark:border-y dark:border-white/10 text-white">
   <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6 py-14 lg:py-20 grid lg:grid-cols-2 gap-10 items-center">
     <div class="reveal">

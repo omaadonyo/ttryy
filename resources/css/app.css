@@ -158,3 +158,11 @@ select:focus[data-flux-control] {
 /* Borderless cards in dark mode */
 .dark .card, .dark .tbl-wrap { border-color: transparent; }
 .dark .card-hover:hover { border-color: transparent; }
+
+/* Stronger muted-text contrast: darker greys on light, brighter on dark */
+html:not(.dark) .text-zinc-400 { color: var(--color-zinc-600); }
+html:not(.dark) .text-zinc-500 { color: var(--color-zinc-700); }
+html:not(.dark) .text-zinc-600 { color: var(--color-zinc-800); }
+.dark .text-zinc-500 { color: var(--color-zinc-300); }
+.dark .text-zinc-400 { color: var(--color-zinc-200); }
+.dark .text-zinc-300 { color: var(--color-zinc-50); }
