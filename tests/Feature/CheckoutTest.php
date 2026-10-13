@@ -361,14 +361,15 @@ test('verification accepts per-attempt suffixed references', function () {
     expect($order->fresh()->status)->toBe('paid');
 });
 
-test('checkout offers an explicit mobile money or online choice', function () {
+test('checkout shows a big continue button with the amount due', function () {
     config()->set('services.flutterwave.public_key', 'test-pub');
 
     $this->actingAs(User::factory()->create())->get('/checkout')
         ->assertOk()
-        ->assertSee('How do you want to pay?', false)
-        ->assertSee('Mobile Money to', false)
-        ->assertSee('Pay online now', false);
+        ->assertSee('id="pay-now"', false)
+        ->assertSee('id="step5-continue"', false)
+        ->assertDontSee('How do you want to pay?', false)
+        ->assertDontSee('momo-continue', false);
 });
 
 test('placing an order emails the customer and the admin inbox', function () {

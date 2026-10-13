@@ -46,7 +46,7 @@
       ['target' => '[data-step="3"]', 'wiz' => 3, 'title' => '3 · Business details', 'body' => 'Business name and WhatsApp number are required — this is where we confirm and deliver.'],
       ['target' => '[data-step="4"]', 'wiz' => 4, 'title' => '4 · How you pay', 'body' => 'Full upfront covers 12 months, or spread it daily, weekly or monthly like M-Kopa.'],
       ['target' => '[data-step="5"]', 'wiz' => 5, 'title' => '5 · How long', 'body' => 'Choose 3, 6 or 12 months. Your website stays running while the plan is active.'],
-      ['target' => '#tour-summary', 'title' => 'Review and pay', 'body' => 'The summary always shows exactly what is due today. Pay online instantly or send Mobile Money yourself.'],
+      ['target' => '#tour-summary', 'title' => 'Review and pay', 'body' => 'The summary always shows exactly what is due today. Hit Continue to pay online instantly.'],
   ]])
 
   @auth
@@ -205,7 +205,7 @@
           @endforeach
         </select>
       </section>
-      <div class="mt-6 flex justify-start"><button type="button" data-back class="btn-ghost">← Back</button></div>
+      <div class="mt-6 flex flex-col sm:flex-row gap-3 sm:items-center"><button type="button" data-back class="btn-ghost">← Back</button><button type="button" id="step5-continue" class="btn-brand flex-1 py-4! text-base font-extrabold">Continue — <span id="step5-amount">…</span></button></div>
       </div>
 
     </div>
@@ -227,41 +227,7 @@
         <p class="text-xs opacity-60 mt-2">Grand total over term: <strong id="sumTotal">—</strong></p>
       </div>
 
-      <div class="mt-5">
-        <p class="text-xs font-bold tracking-wide uppercase opacity-60">How do you want to pay?</p>
-        <div class="mt-2 space-y-2" id="pay-choices">
-          @if($flwKey)
-          <label class="opt cursor-pointer block" data-accent="brand">
-            <input type="radio" name="pay_choice" value="online" class="sr-only" checked>
-            <div class="rounded-xl bg-white/10 dark:bg-zinc-950/5 p-4 transition flex items-center gap-3">
-              <span class="grid size-10 place-items-center rounded-xl bg-white/15 dark:bg-zinc-950/10 shrink-0">
-                <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
-              </span>
-              <span class="min-w-0"><span class="block font-bold text-sm">Pay online now</span><span class="block text-xs opacity-60">Card or Mobile Money · instant confirmation</span></span>
-              <span class="tick ml-auto w-6 h-6 grid place-items-center rounded-full border-2 border-white/40 dark:border-zinc-950/30 text-transparent shrink-0">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
-              </span>
-            </div>
-          </label>
-          @endif
-          <label class="opt cursor-pointer block" data-accent="black">
-            <input type="radio" name="pay_choice" value="momo" class="sr-only" @if(!$flwKey) checked @endif>
-            <div class="rounded-xl bg-white/10 dark:bg-zinc-950/5 p-4 transition flex items-center gap-3">
-              <span class="grid size-10 place-items-center rounded-xl bg-white/15 dark:bg-zinc-950/10 shrink-0">
-                <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>
-              </span>
-              <span class="min-w-0"><span class="block font-bold text-sm">Mobile Money to {{ $momoCode }}</span><span class="block text-xs opacity-60">Send it yourself · we confirm on WhatsApp</span></span>
-              <span class="tick ml-auto w-6 h-6 grid place-items-center rounded-full border-2 border-white/40 dark:border-zinc-950/30 text-transparent shrink-0">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
-              </span>
-            </div>
-          </label>
-        </div>
-      </div>
-
-      <button type="button" id="pay-now" class="btn-brand mt-5 w-full py-3!">Pay <span id="pay-now-amount">now</span></button>
-
-      <button type="button" id="momo-continue" class="hidden mt-5 w-full bg-white dark:bg-zinc-950 text-zinc-950 dark:text-white font-bold py-2 rounded-lg transition">Continue →</button>
+      <button type="button" id="pay-now" class="btn-brand mt-5 w-full py-4! text-base font-extrabold">Continue — <span id="pay-now-amount">…</span></button>
 
       <p class="mt-3 text-[11px] opacity-60">You pay exactly what is shown here — no hidden fees. Secured by Flutterwave.</p>
     </aside>
@@ -348,8 +314,8 @@ function refresh(){
   document.getElementById('fullLabel').textContent = fmt(d.price) + ' once · website runs 12 months';
   const payAmt = document.getElementById('pay-now-amount');
   if(payAmt) payAmt.textContent = fmt(q.due);
-  const momoAmt = document.getElementById('momo-amount');
-  if(momoAmt) momoAmt.textContent = fmt(q.due);
+  const step5Amt = document.getElementById('step5-amount');
+  if(step5Amt) step5Amt.textContent = fmt(q.due);
   durationSel.disabled = freq === 'full';
   durationSel.classList.toggle('opacity-50', freq === 'full');
 }
@@ -538,20 +504,12 @@ function initCheckout(){
       payNow.disabled = false; payNow.classList.remove('opacity-60');
     });
   }
-  const payChoiceInputs = [...document.querySelectorAll('input[name="pay_choice"]')];
-  const momoContinue = document.getElementById('momo-continue');
-  function syncPayChoice(){
-    const choice = (payChoiceInputs.find(i => i.checked) || {}).value || 'momo';
-    if(payNow) payNow.classList.toggle('hidden', choice !== 'online');
-    if(momoContinue) momoContinue.classList.toggle('hidden', choice !== 'momo');
-  }
-  payChoiceInputs.forEach(i => i.addEventListener('change', syncPayChoice));
-  syncPayChoice();
-  if(momoContinue) momoContinue.addEventListener('click', () => {
-    const hidden = document.createElement('input');
-    hidden.type = 'hidden'; hidden.name = 'payment_method'; hidden.value = 'momo_manual';
-    form.appendChild(hidden);
-    form.requestSubmit();
+  const step5Continue = document.getElementById('step5-continue');
+  if(step5Continue) step5Continue.addEventListener('click', () => {
+    if(form.dataset.guest === '1'){ form.requestSubmit(); return; }
+    if(!form.checkValidity()){ form.reportValidity(); return; }
+    const payNowBtn = document.getElementById('pay-now');
+    if(payNowBtn) payNowBtn.click();
   });
 }
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCheckout);

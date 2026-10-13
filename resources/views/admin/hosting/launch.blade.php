@@ -1,5 +1,6 @@
 <x-layouts::app :title="__('Launch 10K signups')">
     @include('partials.toast')
+    @include('partials.custom-select')
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Launch 10K signups" sub="Campaign applications — review, contact, convert into accounts.">
             <x-slot:actions>
@@ -34,6 +35,9 @@
                 <button type="submit" class="btn-brand">Filter</button>
             </form>
         </div>
+<script>
+document.querySelectorAll('select[name="status"]').forEach(enhanceSelect);
+</script>
 
         <div class="card card-pad">
             @if($signups->isEmpty())

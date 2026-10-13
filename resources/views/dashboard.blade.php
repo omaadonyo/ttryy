@@ -130,7 +130,7 @@
             <div class="mt-4 grid gap-3 sm:grid-cols-2">
                 @foreach($checklist as $i => $step)
                 <a href="{{ $step['url'] }}" class="flex gap-3 rounded-xl border border-zinc-200/80 bg-white p-4 transition hover:border-brand-600/40 dark:border-white/10 dark:bg-zinc-900 dark:hover:border-brand-500/40">
-                    <span class="grid size-8 shrink-0 place-items-center rounded-lg {{ $step['done'] ? 'bg-emerald-600 text-white' : 'bg-brand-600 text-white' }} text-sm font-extrabold">
+                    <span class="grid size-8 shrink-0 place-items-center rounded-full {{ $step['done'] ? 'bg-emerald-600 text-white' : 'bg-brand-600 text-white' }} text-sm font-extrabold">
                         @if($step['done'])
                         <svg class="size-4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
                         @else

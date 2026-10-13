@@ -197,7 +197,7 @@
   <div class="absolute inset-0 sqgrid pointer-events-none" aria-hidden="true"></div>
   <div class="relative mx-auto w-[92%] md:w-[80%] px-4 sm:px-6 pt-12 pb-12 lg:pt-20 lg:pb-16 grid lg:grid-cols-2 gap-12 items-center">
     <div class="reveal visible">
-      <p class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-600 dark:border-white/15 dark:bg-white/5 dark:text-zinc-300"><span class="size-1.5 rounded-full bg-[#9e005d]"></span>Hosting from UGX 10,000 · free yourname.ttryy.com</p>
+      <p class="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-600 dark:bg-white/5 dark:text-zinc-300"><span class="size-1.5 rounded-full bg-[#9e005d]"></span>Hosting from UGX 10,000 · free yourname.ttryy.com</p>
         <h1 class="font-display font-extrabold text-4xl sm:text-5xl leading-[1.08] tracking-tight mt-4 text-zinc-950 dark:text-white">
         Get Your Idea Online for UGX 800/Day.<br>
         No Big Budget. <span class="text-[#9e005d]">No Waiting.</span>
@@ -209,11 +209,6 @@
         <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/25 text-center">Launch My Website</a>
         <a href="#launch" class="inline-flex justify-center items-center border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold px-7 py-3 rounded-full text-base transition">The UGX 10,000 deal</a>
       </div>
-      <div class="mt-7 flex flex-wrap gap-x-7 gap-y-2 text-sm">
-        <span><strong class="text-zinc-950 dark:text-white">5 days</strong> <span class="text-zinc-500">to go live</span></span>
-        <span><strong class="text-zinc-950 dark:text-white">UGX 10,000</strong> <span class="text-zinc-500">hosting, domain free</span></span>
-        <span><strong class="text-zinc-950 dark:text-white">We build it</strong> <span class="text-zinc-500">you bring customers</span></span>
-      </div>
     </div>
 
     <div class="reveal visible">
@@ -222,7 +217,7 @@
           <p class="font-display font-bold text-[15px] text-zinc-950 dark:text-white">Idea → Online → Revenue</p>
           <span class="text-[10px] font-semibold text-zinc-500 border border-zinc-200 dark:border-white/15 rounded-full px-2 py-0.5">LIVE CONCEPT</span>
         </div>
-        <canvas id="launchCanvas" class="block w-full h-[340px] sm:h-[400px]" aria-label="Animation: ten thousand shillings plus your app idea becomes an online business generating money"></canvas>
+        <canvas id="launchCanvas" width="640" height="400" style="height:340px;background:radial-gradient(120px 120px at 12% 85%, rgba(158,0,93,.14), transparent 70%),radial-gradient(150px 150px at 88% 12%, rgba(255,77,154,.12), transparent 70%)" class="block w-full sm:h-[400px]" aria-label="Animation: ten thousand shillings plus your app idea becomes an online business generating money"></canvas>
         <div class="px-5 pb-4 flex items-center justify-between gap-2 text-[13px] font-bold">
           <span class="text-zinc-500">UGX 10,000 + your idea</span>
           <span class="text-[#9e005d]">= online, earning for you</span>
@@ -233,7 +228,6 @@
 </section>
 
 <!-- LAUNCH DEAL -->
-<section id="launch" class="relative overflow-hidden bg-zinc-950 dark:bg-black dark:border-y dark:border-white/10 text-white">
 <script>
 /* Hero concept canvas: UGX 10,000 + your idea = online revenue. Infinite flow-field animation. */
 (function(){
@@ -245,7 +239,7 @@
   if(!ctx) return;
   var reduced = false;
   try { reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-  var W = 600, H = 380, running = true, startedAt = 0;
+  var W = 600, H = 380, running = true, startedAt = 0, booted = false;
   var BRAND = '#9e005d', PINK = '#ff4d9a', GOLD = '#f5b301', GREEN = '#10b981';
   function resize(){
     try {
@@ -424,6 +418,8 @@
     try { draw(t || 0); } catch (e) { if(window.console) console.error('launch canvas:', e); }
   }
   function boot(){
+    if(booted) return;
+    booted = true;
     resize();
     startedAt = 0;
     if(reduced){ try { draw(0); } catch (e) {} return; }
@@ -452,6 +448,7 @@
     else readyStart();
     window.addEventListener('load', function(){ resize(); });
   } catch (e) { boot(); }
+  try { boot(); } catch (e) {}
 })();
 </script>
 <section id="launch" class="relative overflow-hidden bg-zinc-950 dark:bg-black dark:border-y dark:border-white/10 text-white">
@@ -466,15 +463,15 @@
       </div>
     </div>
     <div class="reveal grid gap-3">
-      <div class="rounded-xl bg-white/5 border border-white/10 p-5">
+      <div class="rounded-xl bg-white/5 p-5">
         <p class="font-display font-bold text-lg">Free subdomain</p>
         <p class="text-sm text-white/60 mt-1">yourname.ttryy.com, created on our server with DNS and SSL handled for you. Yours free while hosted with us.</p>
       </div>
-      <div class="rounded-xl bg-white/5 border border-white/10 p-5">
+      <div class="rounded-xl bg-white/5 p-5">
         <p class="font-display font-bold text-lg">Hosting UGX 10,000</p>
         <p class="mt-1 text-sm text-white/60">Billed on your rhythm — daily, weekly or monthly. Your site stays running while the plan is active.</p>
       </div>
-      <div class="rounded-xl bg-white/5 border border-white/10 p-5">
+      <div class="rounded-xl bg-white/5 p-5">
         <p class="font-display font-bold text-lg">We build it, fairly</p>
         <p class="mt-1 text-sm text-white/60">Startup idea with no budget? We build with you for 10% of the company, terms discussed together. Standard business sites: development included in hosting.</p>
       </div>

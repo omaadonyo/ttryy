@@ -154,3 +154,7 @@ select:focus[data-flux-control] {
 
 /* Guided tour spotlight */
 .tour-hl { outline: 2px solid #9e005d !important; outline-offset: 3px; }
+
+/* Borderless cards in dark mode */
+.dark .card, .dark .tbl-wrap { border-color: transparent; }
+.dark .card-hover:hover { border-color: transparent; }
