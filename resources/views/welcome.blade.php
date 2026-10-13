@@ -113,7 +113,7 @@
 <!-- TOP BAR -->
 <div class="bg-zinc-950 dark:bg-black dark:border-b dark:border-white/10 text-white text-xs sm:text-[13px]">
   <div class="mx-auto w-[92%] md:w-[80%] px-4 py-2 flex items-center justify-between gap-3">
-    <p class="truncate">Professional website + 5,000 niche prospects. From <strong>UGX 250,000</strong>.</p>
+    <p class="truncate">Launch your website from <strong>UGX 800/day</strong> · hosting from <strong>UGX 10,000</strong>.</p>
     <a href="#pricing" class="hidden sm:inline-flex shrink-0 font-semibold hover:underline">See packages</a>
   </div>
 </div>
@@ -197,22 +197,22 @@
   <div class="absolute inset-0 sqgrid pointer-events-none" aria-hidden="true"></div>
   <div class="relative mx-auto w-[92%] md:w-[80%] px-4 sm:px-6 pt-12 pb-12 lg:pt-20 lg:pb-16 grid lg:grid-cols-2 gap-12 items-center">
     <div class="reveal visible">
-      <p class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-600 dark:border-white/15 dark:bg-white/5 dark:text-zinc-300"><span class="size-1.5 rounded-full bg-[#9e005d]"></span>Websites from UGX 800/day · plus your potential customers</p>
+      <p class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-600 dark:border-white/15 dark:bg-white/5 dark:text-zinc-300"><span class="size-1.5 rounded-full bg-[#9e005d]"></span>Hosting from UGX 10,000 · free yourname.ttryy.com</p>
         <h1 class="font-display font-extrabold text-4xl sm:text-5xl leading-[1.08] tracking-tight mt-4 text-zinc-950 dark:text-white">
-        Get Your Website for UGX 800/Day.<br>
-        We Find Customers. <span class="text-[#9e005d]">You Close Them.</span>
+        Get Your Idea Online for UGX 800/Day.<br>
+        No Big Budget. <span class="text-[#9e005d]">No Waiting.</span>
       </h1>
       <p class="mt-5 text-zinc-600 dark:text-zinc-400 text-base sm:text-lg leading-relaxed max-w-xl">
-        Get a professional, SEO-ready business website plus targeted potential customers and business opportunities specific to your niche. Just like M-Kopa phones: pay a small initial deposit, then pay daily, weekly, or monthly until you complete. <strong class="text-zinc-900 dark:text-white">Your job is to close the client.</strong>
+        Ttryy builds and hosts your website — from <strong class="text-zinc-900 dark:text-white">UGX 10,000 with a free subdomain</strong>, live in 5 days. Can't raise UGX 350,000 upfront? Don't wait till you have the money. Pay small-small while your site works for you.
       </p>
       <div class="mt-8 flex flex-col sm:flex-row gap-3">
-        <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/25 text-center">Get Your Website</a>
-        <a href="#pricing" class="inline-flex justify-center items-center border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold px-7 py-3 rounded-full text-base transition">View Packages</a>
+        <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/25 text-center">Launch My Website</a>
+        <a href="#launch" class="inline-flex justify-center items-center border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold px-7 py-3 rounded-full text-base transition">The UGX 10,000 deal</a>
       </div>
       <div class="mt-7 flex flex-wrap gap-x-7 gap-y-2 text-sm">
         <span><strong class="text-zinc-950 dark:text-white">5 days</strong> <span class="text-zinc-500">to go live</span></span>
-        <span><strong class="text-zinc-950 dark:text-white">UGX 800/day</strong> <span class="text-zinc-500">from</span></span>
-        <span><strong class="text-zinc-950 dark:text-white">SEO + CMS</strong> <span class="text-zinc-500">included, no WordPress</span></span>
+        <span><strong class="text-zinc-950 dark:text-white">UGX 10,000</strong> <span class="text-zinc-500">hosting, domain free</span></span>
+        <span><strong class="text-zinc-950 dark:text-white">We build it</strong> <span class="text-zinc-500">you bring customers</span></span>
       </div>
     </div>
 
@@ -254,6 +254,35 @@
           </div>
           <p class="mt-2 text-[11px] text-zinc-400">Sample data — paid unlocks deliver the real list.</p>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LAUNCH DEAL -->
+<section id="launch" class="relative overflow-hidden bg-zinc-950 dark:bg-black dark:border-y dark:border-white/10 text-white">
+  <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6 py-14 lg:py-20 grid lg:grid-cols-2 gap-10 items-center">
+    <div class="reveal">
+      <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/80"><span class="size-1.5 rounded-full bg-[#ff4d9a]"></span>Launch deal · hosting + build</p>
+      <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-4 leading-tight">For UGX 10,000, get your idea up and running in 5 days.</h2>
+      <p class="mt-4 text-white/70 text-base sm:text-lg leading-relaxed">Free <strong class="text-white">yourname.ttryy.com</strong> domain plus hosting inclusive. <strong class="text-white">We build it</strong> — then we discuss terms of payment that fit you.</p>
+      <div class="mt-7 flex flex-col sm:flex-row gap-3">
+        <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/30 text-center">Start with hosting</a>
+        <a href="#pricing" class="inline-flex justify-center items-center border border-white/25 hover:bg-white/10 font-bold px-7 py-3 rounded-full text-base transition">Compare full packages</a>
+      </div>
+    </div>
+    <div class="reveal grid gap-3">
+      <div class="rounded-xl bg-white/5 border border-white/10 p-5">
+        <p class="font-display font-bold text-lg">Free subdomain</p>
+        <p class="text-sm text-white/60 mt-1">yourname.ttryy.com, created on our server with DNS and SSL handled for you. Yours free while hosted with us.</p>
+      </div>
+      <div class="rounded-xl bg-white/5 border border-white/10 p-5">
+        <p class="font-display font-bold text-lg">Hosting UGX 10,000</p>
+        <p class="mt-1 text-sm text-white/60">Billed on your rhythm — daily, weekly or monthly. Your site stays running while the plan is active.</p>
+      </div>
+      <div class="rounded-xl bg-white/5 border border-white/10 p-5">
+        <p class="font-display font-bold text-lg">We build it, fairly</p>
+        <p class="mt-1 text-sm text-white/60">Startup idea with no budget? We build with you for 10% of the company, terms discussed together. Standard business sites: development included in hosting.</p>
       </div>
     </div>
   </div>
@@ -315,17 +344,6 @@
       @endforeach
     </ol>
     <p class="reveal mt-6 text-lg text-zinc-700 dark:text-zinc-300 max-w-3xl">A typical web designer answers none of these. They hand over a website and leave. <strong class="text-zinc-950 dark:text-white">Ttryy pairs the website with the market intelligence to go after.</strong></p>
-
-    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      @php $why=[['Website','A professional online presence that makes buyers trust you.'],['Visibility','SEO and discoverability foundations so customers can find you.'],['Prospecting','Potential customers relevant to your niche, organised and ready.'],['Opportunities','Business, procurement, funding and application resources.']]; @endphp
-      @foreach($why as $i=>$w)
-      <div class="reveal   rounded-xl p-6 bg-white dark:bg-[#141416] hover:shadow-lg transition">
-        <p class="font-display font-extrabold text-2xl text-zinc-300 dark:text-zinc-600">{{ sprintf('%02d', $i+1) }}</p>
-        <h3 class="font-display font-bold text-lg mt-3 text-zinc-950 dark:text-white">{{ $w[0] }}</h3>
-        <p class="text-zinc-600 dark:text-zinc-400 text-[15px] mt-2">{{ $w[1] }}</p>
-      </div>
-      @endforeach
-    </div>
 
     <!-- Comparison -->
     <div class="reveal mt-10 bg-white dark:bg-[#141416] rounded-xl   overflow-hidden max-w-4xl">
@@ -411,19 +429,9 @@
     <div class="mt-10 reveal"><a href="/dashboard/checkout" class="inline-block bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Start Building My Business</a></div>
 
     <!-- Everything included -->
-    <div class="mt-16 max-w-2xl reveal">
+    <div class="mt-16 max-w-3xl reveal">
       <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-zinc-950 dark:text-white">Everything Included in Your Package</h3>
-      <p class="text-zinc-600 dark:text-zinc-400 mt-2">One package covers all of this. Nothing on this list costs extra.</p>
-    </div>
-    <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      @php $gets=[['Professional Website','A modern website designed around your business, products and services.'],['Custom CMS','Manage your website content without depending on WordPress.'],['SEO','SEO foundations included to help you become discoverable online.'],['Potential Customers','Targeted business prospects based on your niche.'],['Business Directories','Businesses and organisations that may need your products or services.'],['Opportunities','Tenders, procurement, grants, applications and business opportunities.'],['Sales Resources','Company profiles, proposals and quotation templates so you approach buyers professionally.'],['Business Tools','Tools for accounting, CRM, inventory, POS, invoicing and daily management.']]; @endphp
-      @foreach($gets as $i=>$g)
-      <div class="reveal   rounded-xl p-6 bg-white dark:bg-[#141416] hover:shadow-lg transition">
-        <p class="font-display font-extrabold text-xl text-zinc-300 dark:text-zinc-600">{{ sprintf('%02d', $i+1) }}</p>
-        <h4 class="font-display font-bold text-[17px] mt-3 text-zinc-950 dark:text-white">{{ $g[0] }}</h4>
-        <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-1.5">{{ $g[1] }}</p>
-      </div>
-      @endforeach
+      <p class="text-zinc-600 dark:text-zinc-400 mt-3">One package covers it all — nothing here costs extra: professional website, custom CMS, SEO foundations, niche prospects, business directories, tenders and opportunities, sales resources, plus accounting, CRM, inventory, POS and invoicing tools.</p>
     </div>
   </div>
 </section>
@@ -447,34 +455,6 @@
     </div>
     <div id="nicheGrid" class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     <p class="text-xs text-zinc-500 mt-8 max-w-3xl">Prospecting resources point you to potential customers, business contacts and opportunities relevant to your niche. Ttryy does not guarantee customers, contracts, grants or funding. You contact prospects and close the business.</p>
-  </div>
-</section>
-
-<!-- RESPONSIBILITIES -->
-<section class="py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012]">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="reveal max-w-2xl"><p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">How we can help &middot; Who does what</p>
-      <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">We Find the Market. You Close the Business.</h2>
-      <p class="text-zinc-600 dark:text-zinc-400 mt-3">No confusion about responsibilities. This is the full split:</p></div>
-    <div class="mt-10 grid md:grid-cols-2 gap-4">
-      <div class="reveal bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 rounded-xl p-6 shadow-xl shadow-zinc-950/20">
-        <p class="text-xs font-bold tracking-wide uppercase text-white/60 dark:text-zinc-500">Ttryy does</p>
-        <ul class="mt-5 space-y-3 text-[15px] font-medium">
-          @foreach(['Build your website','Make it SEO-ready','Identify potential customers','Organise business contacts','Identify relevant opportunities','Provide application resources','Provide sales resources'] as $t)
-          <li class="flex gap-2.5"><svg class="w-5 h-5 shrink-0 mt-0.5"><use href="#i-check"/></svg>{{ $t }}</li>
-          @endforeach
-        </ul>
-      </div>
-      <div class="reveal bg-white dark:bg-[#141416]   rounded-xl p-6">
-        <p class="text-xs font-bold tracking-wide uppercase text-zinc-500">You do</p>
-        <ul class="mt-5 space-y-3 text-[15px] font-medium text-zinc-800 dark:text-zinc-200">
-          @foreach(['Contact prospects','Build relationships','Send quotations','Attend meetings','Submit applications','Negotiate','Close the deal'] as $t)
-          <li class="flex gap-2.5"><svg class="w-5 h-5 shrink-0 mt-0.5 text-zinc-400 dark:text-zinc-500"><use href="#i-check"/></svg>{{ $t }}</li>
-          @endforeach
-        </ul>
-      </div>
-    </div>
-    <p class="reveal mt-6 text-zinc-600 dark:text-zinc-400 text-[15px] border-l-4 border-zinc-300 dark:border-zinc-600 pl-5 max-w-3xl">We don&rsquo;t promise that every lead becomes a customer. We give you a targeted starting point and the tools to pursue the opportunity.</p>
   </div>
 </section>
 
@@ -518,7 +498,7 @@
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">How we can help &middot; Pricing</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Choose Your Growth Package</h2>
       <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Every package pairs a professional website — from <strong class="text-zinc-950 dark:text-white">UGX 800/day</strong> — with the potential customers your business needs to close deals.</p>
-      <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pay in full, or spread it — daily, weekly, or monthly. Run your website for as low as <strong class="text-zinc-950 dark:text-white">UGX 800/day</strong>.</p>
+      <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pay in full, or spread it — daily, weekly, or monthly. Just need hosting? <strong class="text-zinc-950 dark:text-white">UGX 10,000</strong> covers hosting with a free subdomain. Startup idea, no budget? We build with you for <strong class="text-zinc-950 dark:text-white">10% of the company</strong> on discussed terms — standard sites include development.</p>
     </div>
     <div class="mt-8 reveal flex flex-col items-center text-center">
       <div class="inline-flex rounded-full bg-zinc-100 dark:bg-white/10 p-1" id="planTabs" role="tablist" aria-label="Billing period">
@@ -671,16 +651,7 @@
     <div class="max-w-2xl reveal">
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">In development &middot; Secondary preview</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">And We&rsquo;re Building the Tools to Run Your Business</h2>
-      <p class="text-zinc-600 dark:text-zinc-400 mt-3">A free business platform for day-to-day operations. Secondary to the website and prospecting packages above.</p>
-    </div>
-    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      @php $tools=[['Accounting',['Income','Expenses','P&L','Balance Sheet','Cash Flow']],['Sales',['Quotations','Invoices','Receipts','Sales Orders']],['CRM',['Customers','Leads','Follow-ups','Customer history']],['Inventory',['Products','Stock','Suppliers','Purchases']],['POS',['Point of sale','Receipts','Inventory updates','Sales tracking']],['Business Management',['Tasks','Documents','Projects','Reports']]]; @endphp
-      @foreach($tools as $t)
-      <div class="reveal bg-zinc-50 dark:bg-[#141416]   rounded-xl p-6 hover:shadow-lg transition">
-        <h3 class="font-display font-bold text-zinc-950 dark:text-white">{{ $t[0] }}</h3>
-        <div class="mt-3 flex flex-wrap gap-1.5 text-xs">@foreach($t[1] as $f)<span class="text-zinc-600 dark:text-zinc-400 bg-white dark:bg-[#17171A]   rounded-full px-2.5 py-1">{{ $f }}</span>@endforeach</div>
-      </div>
-      @endforeach
+      <p class="text-zinc-600 dark:text-zinc-400 mt-3">A free business platform for day-to-day operations — accounting, sales, CRM, inventory, POS and management. Secondary to the website and prospecting packages above.</p>
     </div>
     <p class="reveal mt-8 font-medium text-zinc-700 dark:text-zinc-300">Get customers. Manage customers. Get paid. Run your business.</p>
     <div class="mt-4 reveal"><button onclick="openLead('', 'Business tools early access')" class="border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold px-8 py-3 rounded-full transition">Explore Ttryy Business Tools</button></div>
@@ -693,7 +664,7 @@
     <div class="reveal"><p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Still unsure? &middot; FAQ</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Questions, Answered</h2></div>
     <div class="mt-8 space-y-3">
-      @php $faqs=[['Do I get a website?','Yes. Every package includes a professional website and custom CMS.'],['Do you use WordPress?','No. Ttryy websites use a custom CMS rather than WordPress.'],['Are the 5,000 contacts guaranteed customers?','No. They are potential customers and prospects relevant to your selected niche. Ttryy provides the prospecting resource. You contact and close the customers.'],['What kind of contacts do I receive?','It depends on your niche. They can include businesses, organisations, institutions, procurement contacts, potential buyers, donors, funders, partners and other relevant prospects.'],['Can you help me apply for opportunities?','Yes. Application and proposal support is available as an additional paid service.'],['Does Ttryy guarantee grants or tenders?','No. Ttryy helps identify relevant opportunities and can assist with applications, but final decisions belong to the funder, buyer or procuring organisation.'],['Can I manage my website myself?','Yes. Your website includes a CMS for managing supported content.'],['Is SEO included?','Yes. SEO foundations are included in all packages.'],['Can you build websites for any industry?','Yes. Tell us what your business does and we will create a niche-specific website and prospecting package.']]; @endphp
+      @php $faqs=[['Do I get a website?','Yes. Every package includes a professional website and custom CMS.'],['Do you use WordPress?','No. Ttryy websites use a custom CMS rather than WordPress.'],["I don't have UGX 350,000. Can I still launch?",'Yes. Hosting starts at UGX 10,000 with a free yourname.ttryy.com subdomain, and payment plans spread the rest daily, weekly or monthly from UGX 800/day.'],['I have a startup idea but no budget. How do we work?','We build it with you for a 10% company stake, with terms we discuss together — plus hosting to keep it running. For standard business websites, development is included in your hosting plan.'],['Are the 5,000 contacts guaranteed customers?','No. They are potential customers and prospects relevant to your selected niche. Ttryy provides the prospecting resource. You contact and close the customers.'],['What kind of contacts do I receive?','It depends on your niche. They can include businesses, organisations, institutions, procurement contacts, potential buyers, donors, funders, partners and other relevant prospects.'],['Can you help me apply for opportunities?','Yes. Application and proposal support is available as an additional paid service.'],['Does Ttryy guarantee grants or tenders?','No. Ttryy helps identify relevant opportunities and can assist with applications, but final decisions belong to the funder, buyer or procuring organisation.'],['Can I manage my website myself?','Yes. Your website includes a CMS for managing supported content.'],['Is SEO included?','Yes. SEO foundations are included in all packages.'],['Can you build websites for any industry?','Yes. Tell us what your business does and we will create a niche-specific website and prospecting package.']]; @endphp
       @foreach($faqs as $f)
       <details class="faq reveal group bg-white dark:bg-[#141416]   rounded-xl transition">
         <summary class="cursor-pointer list-none flex items-center justify-between gap-4 px-5 sm:px-6 py-4 font-semibold text-[15px] text-zinc-900 dark:text-zinc-100">{{ $f[0] }}<span class="w-8 h-8 shrink-0 grid place-items-center rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-lg leading-none transition-transform group-open:rotate-45">+</span></summary>
@@ -708,13 +679,13 @@
 <section class="relative overflow-hidden bg-zinc-950 dark:bg-black dark:border-t dark:border-white/10 text-white">
   <div class="absolute inset-0 sqgrid pointer-events-none" aria-hidden="true"></div>
   <div class="relative max-w-4xl mx-auto px-4 py-16 lg:py-24 text-center">
-    <h2 class="reveal font-display font-extrabold text-3xl sm:text-5xl leading-tight">Your Next Customer Is Already Out There.</h2>
-    <p class="reveal text-zinc-400 text-lg mt-4 max-w-2xl mx-auto">We help you get online, identify the right prospects and find opportunities. You focus on turning them into customers.</p>
+    <h2 class="reveal font-display font-extrabold text-3xl sm:text-5xl leading-tight">Launch This Week. Pay Small-Small.</h2>
+    <p class="reveal text-zinc-400 text-lg mt-4 max-w-2xl mx-auto">For UGX 10,000, get your idea or website up and running in 5 days — free domain plus hosting inclusive. We build it; you bring the customers.</p>
     <div class="reveal mt-8 flex flex-col sm:flex-row justify-center gap-3">
-      <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-xl shadow-[#9e005d]/30 text-center">Get My Website</a>
+      <a href="/dashboard/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-xl shadow-[#9e005d]/30 text-center">Launch My Website</a>
       <a href="https://wa.me/256700000000?text=Hi%20Ttryy!%20I%20want%20to%20talk%20about%20growing%20my%20business." target="_blank" class="border border-white/25 hover:bg-white/10 font-bold px-8 py-3 rounded-full transition">Talk to Ttryy</a>
     </div>
-    <p class="reveal mt-5 text-sm text-zinc-500">Websites from <strong class="text-white">UGX 800/day</strong> · customers included</p>
+    <p class="reveal mt-5 text-sm text-zinc-500">Hosting from <strong class="text-white">UGX 10,000</strong> · live in <strong class="text-white">5 days</strong> · startups: <strong class="text-white">10% build terms</strong></p>
   </div>
 </section>
 

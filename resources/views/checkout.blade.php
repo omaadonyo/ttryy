@@ -129,8 +129,8 @@
       <div class="wiz-step hidden" data-step="2">
       <section>
         <h2 class="font-display font-bold text-lg text-zinc-950 dark:text-white">2. Your domain <span class="text-xs font-semibold text-zinc-500">— one-time fee, never billed again</span></h2>
-        @php $domAccents = ['none' => 'black', 'budget' => 'brand', 'premium' => 'black']; @endphp
-        <div class="mt-3 grid sm:grid-cols-3 gap-3">
+        @php $domAccents = ['none' => 'black', 'subdomain' => 'brand', 'budget' => 'black', 'premium' => 'black']; @endphp
+        <div class="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           @foreach($domains as $key => $d)
           <label class="opt cursor-pointer" data-accent="{{ $domAccents[$key] ?? 'zinc' }}">
             <input type="radio" name="domain" value="{{ $key }}" class="sr-only" {{ $selectedDomain === $key ? 'checked' : '' }}>
@@ -142,10 +142,18 @@
                 </span>
               </div>
               <p class="mt-1 text-xl font-extrabold text-zinc-950 dark:text-white">{{ $d['fee'] === 0 ? 'Free' : 'UGX '.number_format($d['fee']).' once' }}</p>
-              <p class="text-xs text-zinc-500 mt-1">{{ $key === 'none' ? 'Use a domain you already own' : ($key === 'budget' ? '.xyz, .online or .shop — we register it for you' : '.com or .org — we register it for you') }}</p>
+              <p class="text-xs text-zinc-500 mt-1">{{ $key === 'none' ? 'Use a domain you already own' : ($key === 'subdomain' ? 'Free forever · we set it up on our server' : ($key === 'budget' ? '.xyz, .online or .shop — we register it for you' : '.com or .org — we register it for you')) }}</p>
             </div>
           </label>
           @endforeach
+        </div>
+        <div id="subdomain-row" class="mt-3 hidden max-w-md">
+          <label class="text-xs font-semibold">Your free subdomain *</label>
+          <div class="flex items-stretch gap-0">
+            <input id="f-subdomain" name="subdomain_label" value="{{ old('subdomain_label') }}" placeholder="mybusiness" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-lg rounded-r-none! px-4 py-2 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white">
+            <span class="mt-1 grid shrink-0 place-items-center rounded-r-lg border border-l-0 border-zinc-200 dark:border-white/15 bg-zinc-50 dark:bg-white/5 px-3 text-sm text-zinc-500">.{{ config('hosting.base_domain') }}</span>
+          </div>
+          <p class="mt-1 text-xs text-zinc-500">Letters, numbers and hyphens. Reserved names and taken subdomains are rejected.</p>
         </div>
       </section>
       <div class="mt-6 flex justify-end"><button type="button" data-next class="btn-dark">Continue →</button></div>
@@ -292,7 +300,8 @@ function save(){
     const c = cur();
     localStorage.setItem(LS_KEY, JSON.stringify({ ...c,
       business: document.getElementById('f-business').value, phone: document.getElementById('f-phone').value,
-      niche: document.getElementById('f-niche').value, notes: document.getElementById('f-notes').value }));
+      niche: document.getElementById('f-niche').value, notes: document.getElementById('f-notes').value,
+      subdomain: document.getElementById('f-subdomain').value }));
     const q = new URLSearchParams({ package: c.pkg, billing: c.freq, domain: c.dom, duration: String(c.months) });
     const niche = document.getElementById('f-niche').value;
     if(niche) q.set('niche', niche);
@@ -312,8 +321,14 @@ function restore(){
   if(s.phone) document.getElementById('f-phone').value = s.phone;
   if(s.niche) document.getElementById('f-niche').value = s.niche;
   if(s.notes) document.getElementById('f-notes').value = s.notes;
+  if(s.subdomain) document.getElementById('f-subdomain').value = s.subdomain;
   syncCo(durationSel); syncCo(document.getElementById('f-niche'));
+  syncSubdomainRow();
   return true;
+}
+function syncSubdomainRow(){
+  const show = ((domInputs.find(i => i.checked) || {}).value || 'none') === 'subdomain';
+  document.getElementById('subdomain-row').classList.toggle('hidden', !show);
 }
 function refresh(){
   const { pkg, freq, dom } = cur(), d = DATA[pkg], q = calc();
@@ -458,7 +473,8 @@ function initCheckout(){
   enhanceCoSelect(document.getElementById('f-niche'));
   restore();
   refresh();
-  [...pkgInputs, ...freqInputs, ...domInputs].forEach(i => i.addEventListener('change', () => { refresh(); save(); }));
+  [...pkgInputs, ...freqInputs, ...domInputs].forEach(i => i.addEventListener('change', () => { refresh(); save(); syncSubdomainRow(); }));
+  syncSubdomainRow();
   durationSel.addEventListener('change', () => { refresh(); save(); });
   ['f-business','f-phone','f-niche','f-notes'].forEach(id => {
     const el = document.getElementById(id);
@@ -468,7 +484,7 @@ function initCheckout(){
   const pLogin = document.getElementById('panel-login'), pReg = document.getElementById('panel-register');
   const paintTabs = login => {
     const on = 'rounded-full px-4 py-2 text-sm font-bold transition bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow';
-    const off = 'rounded-full px-4 py-2 text-sm font-bold transition text-zinc-500';
+    const off = 'rounded-full px-4 py-2 text-sm font-bold transition text-zinc-500 bg-zinc-100 hover:text-zinc-900 dark:bg-white/5 dark:hover:text-white';
     if(!tabLogin) return;
     tabLogin.className = login ? on : off;
     tabReg.className = login ? off : on;

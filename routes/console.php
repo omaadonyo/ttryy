@@ -127,3 +127,12 @@ Artisan::command('hosting:aggregate-analytics {--date=}', function () {
 
 Schedule::command('hosting:health-check')->everyThirtyMinutes();
 Schedule::command('hosting:aggregate-analytics')->dailyAt('01:30');
+
+Artisan::command('hosting:check-renewals', function () {
+    $queued = App\Services\Hosting\HostingSubscription::suspendOverdue();
+    $this->info("Queued {$queued} overdue suspension(s).");
+
+    return 0;
+})->purpose('Suspend hosting accounts past renewal with balance outstanding');
+
+Schedule::command('hosting:check-renewals')->dailyAt('02:00');

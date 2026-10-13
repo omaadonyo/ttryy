@@ -346,7 +346,7 @@ function mktFill(tpl, c){
 function paintMtabs(active){
   document.querySelectorAll('[data-mtab]').forEach(b => {
     const on = b.dataset.mtab === active;
-    b.className = 'mtab rounded-full px-4 py-2 text-[13px] font-bold whitespace-nowrap transition ' + (on ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white');
+    b.className = 'mtab rounded-full px-4 py-2 text-[13px] font-bold whitespace-nowrap transition ' + (on ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 bg-white/60 hover:text-zinc-900 dark:bg-transparent dark:hover:text-white');
   });
   document.querySelectorAll('[data-mtab-panel]').forEach(p => {
     const on = p.dataset.mtabPanel === active;

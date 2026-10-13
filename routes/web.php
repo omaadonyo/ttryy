@@ -52,6 +52,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('hosting/websites/{website}/service-url', [AdminHostingController::class, 'updateServiceUrl'])->name('hosting.websites.service-url');
     Route::post('hosting/websites/{website}/credentials', [AdminHostingController::class, 'issueCredential'])->name('hosting.websites.credentials');
     Route::delete('hosting/websites/{website}/credentials/{credential}', [AdminHostingController::class, 'revokeCredential'])->name('hosting.websites.credentials.revoke');
+    Route::post('hosting/websites/{website}/domains/subdomain', [AdminHostingController::class, 'adminStoreSubdomain'])->name('hosting.domains.subdomain');
+    Route::post('hosting/websites/{website}/domains', [AdminHostingController::class, 'adminStoreDomain'])->name('hosting.domains.custom');
+    Route::post('hosting/websites/{website}/domains/{domain}/verify', [AdminHostingController::class, 'adminVerifyDomain'])->name('hosting.domains.verify');
+    Route::post('hosting/websites/{website}/domains/{domain}/primary', [AdminHostingController::class, 'adminSetPrimary'])->name('hosting.domains.primary');
+    Route::delete('hosting/websites/{website}/domains/{domain}', [AdminHostingController::class, 'adminDestroyDomain'])->name('hosting.domains.destroy');
+    Route::post('hosting/websites/{website}/link-order', [AdminHostingController::class, 'linkOrder'])->name('hosting.websites.link-order');
     Route::get('hosting/clients', [AdminHostingController::class, 'clients'])->name('hosting.clients');
     Route::get('hosting/clients/{user}', [AdminHostingController::class, 'clientShow'])->name('hosting.clients.show');
     Route::get('hosting/domains', [AdminHostingController::class, 'domains'])->name('hosting.domains');

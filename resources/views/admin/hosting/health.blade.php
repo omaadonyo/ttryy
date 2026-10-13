@@ -15,7 +15,7 @@
 
         <div class="seg self-start" role="tablist" aria-label="Health filter">
             @foreach(['all' => 'All', 'failures' => 'Failures', 'incidents' => 'Incidents'] as $f => $label)
-            <a href="{{ route('admin.hosting.health', ['filter' => $f]) }}" class="rounded-full px-4 py-2 text-[13px] font-bold whitespace-nowrap transition {{ $filter === $f || ($f === 'all' && $filter === '') ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white' }}">{{ $label }}</a>
+            <a href="{{ route('admin.hosting.health', ['filter' => $f]) }}" class="rounded-full px-4 py-2 text-[13px] font-bold whitespace-nowrap transition {{ $filter === $f || ($f === 'all' && $filter === '') ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 bg-white/60 hover:text-zinc-900 dark:bg-transparent dark:hover:text-white' }}">{{ $label }}</a>
             @endforeach
         </div>
 

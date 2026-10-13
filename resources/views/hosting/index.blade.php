@@ -1,5 +1,6 @@
 <x-layouts::app :title="__('Hosting')">
     @include('partials.toast')
+    @include('partials.custom-select')
     @php
         $statusPill = fn($s) => match($s) {
             'active' => 'pill-green', 'suspended', 'failed' => 'pill-red',
@@ -56,6 +57,9 @@
                 <button type="submit" class="btn-brand">Filter</button>
             </form>
         </div>
+<script>
+['status', 'sort'].forEach(n => enhanceSelect(document.querySelector('select[name="' + n + '"]')));
+</script>
 
         <div id="tour-htable" class="card card-pad">
             @if($websites->isEmpty())

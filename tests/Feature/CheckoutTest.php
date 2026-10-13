@@ -101,8 +101,7 @@ test('authenticated users can place a monthly package order', function () {
     $response->assertRedirect(route('checkout.success', $order));
 });
 
-test('placing an order notifies the buyer and admins', function () {
-    $buyer = User::factory()->create();
+test('placing an order notifies the buyer and admins', function () {    $buyer = User::factory()->create();
     $admin = User::factory()->create(['is_admin' => true]);
 
     $this->actingAs($buyer)->post('/dashboard/checkout', [
@@ -414,4 +413,49 @@ test('owners can download their invoice, strangers cannot', function () {
     $response = $this->actingAs($owner)->get(route('orders.invoice', $order));
     $response->assertOk();
     expect($response->headers->get('content-type'))->toContain('application/pdf');
+});
+
+test('checkout offers a free subdomain captured on the order', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get('/dashboard/checkout')
+        ->assertOk()
+        ->assertSee('Free yourname.ttryy.com subdomain', false)
+        ->assertSee('id="f-subdomain"', false);
+
+    $this->actingAs($user)->post('/dashboard/checkout', [
+        'package' => 'START',
+        'billing_frequency' => 'monthly',
+        'domain' => 'subdomain',
+        'subdomain_label' => 'mybiz-123',
+        'duration_months' => 12,
+        'business_name' => 'Sub Biz',
+        'phone' => '+256 700 000031',
+    ])->assertRedirect();
+
+    $order = PackageOrder::where('user_id', $user->id)->first();
+    expect($order->subdomain)->toBe('mybiz-123')
+        ->and($order->domain_fee)->toBe(0);
+});
+
+test('checkout rejects taken and reserved subdomain labels', function () {
+    $user = User::factory()->create();
+    App\Models\WebsiteDomain::create([
+        'hosted_website_id' => makeWebsite($user)->id,
+        'user_id' => $user->id,
+        'domain' => 'claimed.'.config('hosting.base_domain'),
+        'type' => 'subdomain',
+        'verification' => 'verified',
+    ]);
+
+    $base = [
+        'package' => 'START', 'billing_frequency' => 'monthly', 'domain' => 'subdomain',
+        'duration_months' => 12, 'business_name' => 'Sub Biz 2', 'phone' => '+256 700 000032',
+    ];
+
+    $this->actingAs($user)->post('/dashboard/checkout', $base + ['subdomain_label' => 'claimed'])
+        ->assertSessionHasErrors('subdomain_label');
+
+    $this->actingAs($user)->post('/dashboard/checkout', $base + ['subdomain_label' => 'admin'])
+        ->assertSessionHasErrors('subdomain_label');
 });

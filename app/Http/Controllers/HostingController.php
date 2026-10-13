@@ -14,6 +14,7 @@ use App\Notifications\SiteAlert;
 use App\Services\Hosting\AnalyticsRecorder;
 use App\Services\Hosting\ServiceCommander;
 use App\Services\Hosting\SubdomainGenerator;
+use App\Services\Hosting\SubdomainProvisioner;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -61,7 +62,7 @@ class HostingController extends Controller
             'plan' => $request->user()->packageOrders()->where('status', 'paid')->latest()->first()?->package,
             'outstanding' => (int) $request->user()->packageOrders()->whereIn('status', ['pending', 'submitted'])
                 ->sum('total_amount'),
-            'nextRenewal' => $request->user()->hostedWebsites()->whereNotNull('next_renewal_at')->min('next_renewal_at'),
+            'nextRenewal' => ($min = $request->user()->hostedWebsites()->whereNotNull('next_renewal_at')->min('next_renewal_at')) ? \Carbon\Carbon::parse($min) : null,
         ]);
     }
 
@@ -139,6 +140,8 @@ class HostingController extends Controller
             ]);
 
             $website->forceFill(['primary_domain_id' => $primary->id])->save();
+
+            SubdomainProvisioner::provision($primary->fresh());
 
             if (! empty($validated['custom_domain'])) {
                 $website->domains()->create([
@@ -285,16 +288,18 @@ class HostingController extends Controller
             $website->forceFill(['primary_domain_id' => $record->id])->save();
         }
 
+        $provision = SubdomainProvisioner::provision($record->fresh());
+
         HostingAuditLog::log('domain.subdomain_added', [
             'actor_type' => $request->user()->is_admin ? 'admin' : 'user',
             'actor_id' => $request->user()->id,
             'hosted_website_id' => $website->id,
             'client_id' => $website->user_id,
-            'meta' => ['domain' => $domain],
+            'meta' => ['domain' => $domain, 'provision' => $provision['mode']],
             'ip' => $request->ip(),
         ]);
 
-        return back()->with('status', "Subdomain {$domain} added.");
+        return back()->with('status', "Subdomain {$domain} added. {$provision['message']}");
     }
 
     public function updateSubdomain(Request $request, HostedWebsite $website, WebsiteDomain $domain)
@@ -438,8 +443,10 @@ class HostingController extends Controller
         }
 
         DB::transaction(function () use ($website, $domain, $request) {
+            // Direct queries: in-memory models may already read is_primary
+            // as true, which would make save() a dirty-check no-op.
             $website->domains()->update(['is_primary' => false]);
-            $domain->forceFill(['is_primary' => true])->save();
+            $website->domains()->where('id', $domain->id)->update(['is_primary' => true]);
             $website->forceFill(['primary_domain_id' => $domain->id])->save();
 
             HostingAuditLog::log('domain.primary_changed', [

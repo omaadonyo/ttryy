@@ -11,10 +11,10 @@ class PackageOrder extends Model
     protected $fillable = [
         'user_id',
         'hosted_website_id',
-        'reference',
-        'package',
+        'reference',        'package',
         'billing_frequency',
         'domain',
+        'subdomain',
         'duration_months',
         'periods',
         'amount_per_period',

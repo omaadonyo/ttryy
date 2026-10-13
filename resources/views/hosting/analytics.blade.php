@@ -10,7 +10,7 @@
 
         <div class="seg self-start" role="tablist" aria-label="Date range">
             @foreach([7 => '7 days', 30 => '30 days', 90 => '90 days'] as $r => $label)
-            <a href="{{ route('hosting.analytics', [$website, 'range' => $r]) }}" class="rounded-full px-4 py-2 text-[13px] font-bold whitespace-nowrap transition {{ $range === $r ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white' }}">{{ $label }}</a>
+            <a href="{{ route('hosting.analytics', [$website, 'range' => $r]) }}" class="rounded-full px-4 py-2 text-[13px] font-bold whitespace-nowrap transition {{ $range === $r ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 bg-white/60 hover:text-zinc-900 dark:bg-transparent dark:hover:text-white' }}">{{ $label }}</a>
             @endforeach
         </div>
 

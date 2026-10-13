@@ -31,6 +31,7 @@
 
         <div class="flex flex-wrap gap-2">
             <a href="{{ route('admin.orders') }}" class="btn-brand btn-sm">Manage orders</a>
+            <a href="{{ route('admin.hosting.dashboard') }}" class="btn-ghost btn-sm">Hosting control</a>
             <a href="{{ route('admin.payments') }}" class="btn-ghost btn-sm">Payments</a>
             <a href="{{ route('admin.users') }}" class="btn-ghost btn-sm">Users</a>
             <a href="{{ route('admin.packages') }}" class="btn-ghost btn-sm">Packages</a>

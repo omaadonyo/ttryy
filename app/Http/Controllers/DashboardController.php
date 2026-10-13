@@ -71,6 +71,12 @@ class DashboardController extends Controller
             ],
             'activityChart' => $activityChart,
             'activity' => $user->notifications()->latest()->take(6)->get(),
+            'hosting' => [
+                'total' => $user->hostedWebsites()->count(),
+                'active' => $user->hostedWebsites()->where('status', \App\Models\HostedWebsite::STATUS_ACTIVE)->count(),
+                'attention' => $user->hostedWebsites()->whereIn('status', [\App\Models\HostedWebsite::STATUS_SUSPENDED, \App\Models\HostedWebsite::STATUS_FAILED])->count(),
+                'renewal' => $user->hostedWebsites()->whereNotNull('next_renewal_at')->min('next_renewal_at'),
+            ],
             'checklist' => $checklist,
             'checklistDone' => collect($checklist)->every(fn ($s) => $s['done']),
             'isNewUser' => $orders->isEmpty() && $campaigns->isEmpty() && ! $user->savedContacts()->exists(),

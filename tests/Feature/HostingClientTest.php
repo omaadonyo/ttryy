@@ -21,8 +21,7 @@ function makeWebsite(User $user, array $overrides = []): HostedWebsite
     ], $overrides));
 }
 
-test('clients can view their own websites but not others', function () {
-    $mine = User::factory()->create();
+test('clients can view their own websites but not others', function () {    $mine = User::factory()->create();
     $theirs = User::factory()->create();
     $site = makeWebsite($mine, ['name' => 'Mine Site']);
     $other = makeWebsite($theirs, ['name' => 'Other Site']);
@@ -147,4 +146,11 @@ test('all client website pages render for the owner', function () {
     $this->actingAs($user)->get(route('hosting.billing', $site))->assertOk();
     $this->actingAs($user)->get(route('hosting.reports', $site))->assertOk();
     $this->actingAs($user)->get(route('hosting.reports.pdf', $site))->assertOk();
+});
+
+test('hosting index renders with renewal dates set', function () {
+    $user = User::factory()->create();
+    makeWebsite($user, ['next_renewal_at' => now()->addMonth()]);
+
+    $this->actingAs($user)->get(route('hosting.index'))->assertOk();
 });

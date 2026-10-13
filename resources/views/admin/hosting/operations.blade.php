@@ -1,5 +1,6 @@
 <x-layouts::app :title="__('Operations')">
     @include('partials.toast')
+    @include('partials.custom-select')
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Service operations" sub="Every suspend, restore, provision and check command — with explicit states. Status changes only on acknowledgment.">
             <x-slot:actions>
@@ -24,6 +25,9 @@
                 <button type="submit" class="btn-brand">Filter</button>
             </form>
         </div>
+<script>
+['state', 'action'].forEach(n => enhanceSelect(document.querySelector('select[name="' + n + '"]')));
+</script>
 
         <div class="card card-pad">
             <div class="tbl-wrap rounded-none! border-0! shadow-none!">

@@ -126,6 +126,72 @@
         </div>
 
         <div class="card card-pad">
+            <h2 class="section-title">Domain operations</h2>
+            <p class="page-sub">You set everything up here — clients see read-only status.</p>
+            <div class="mt-3 grid gap-3 md:grid-cols-2">
+                <form method="POST" action="{{ route('admin.hosting.domains.subdomain', $website) }}" class="rounded-xl border border-zinc-200/80 p-4 dark:border-white/10">
+                    @csrf
+                    <p class="text-sm font-extrabold">Add free subdomain</p>
+                    <div class="mt-2 flex gap-2">
+                        <input name="label" placeholder="label (empty = auto)" class="field">
+                        <button type="submit" class="btn-brand btn-sm shrink-0">Add</button>
+                    </div>
+                </form>
+                <form method="POST" action="{{ route('admin.hosting.domains.custom', $website) }}" class="rounded-xl border border-zinc-200/80 p-4 dark:border-white/10">
+                    @csrf
+                    <p class="text-sm font-extrabold">Add custom domain</p>
+                    <div class="mt-2 flex gap-2">
+                        <input name="domain" placeholder="example.co.ug" class="field">
+                        <button type="submit" class="btn-brand btn-sm shrink-0">Add</button>
+                    </div>
+                </form>
+            </div>
+            <ul class="mt-3 space-y-2 text-sm">
+                @foreach($website->domains as $d)
+                <li class="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-zinc-200/70 px-3.5 py-2.5 dark:border-white/10">
+                    <span class="font-mono text-xs">{{ $d->domain }} @if($d->is_primary)<span class="pill-brand ml-1">primary</span>@endif
+                        <span class="ml-1 text-zinc-400">{{ $d->verification }} · SSL {{ $d->ssl_status }}</span></span>
+                    <span class="flex shrink-0 items-center gap-2">
+                        @if($d->type === 'custom' && $d->verification !== 'verified')
+                        <form method="POST" action="{{ route('admin.hosting.domains.verify', [$website, $d]) }}" class="inline">
+                            @csrf
+                            <button type="submit" class="text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Check DNS</button>
+                        </form>
+                        @endif
+                        @if($d->isVerified() && ! $d->is_primary)
+                        <form method="POST" action="{{ route('admin.hosting.domains.primary', [$website, $d]) }}" class="inline">
+                            @csrf
+                            <button type="submit" class="text-xs font-bold text-zinc-600 hover:underline dark:text-zinc-300">Make primary</button>
+                        </form>
+                        @endif
+                        @if(! $d->is_primary)
+                        <form method="POST" action="{{ route('admin.hosting.domains.destroy', [$website, $d]) }}" class="inline" onsubmit="return confirm('Remove {{ $d->domain }}?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-xs font-semibold text-zinc-400 hover:text-red-600">Remove</button>
+                        </form>
+                        @endif
+                    </span>
+                </li>
+                @endforeach
+            </ul>
+            <div class="mt-4 border-t border-zinc-100 pt-4 dark:border-white/10">
+                <p class="text-sm font-extrabold">Link a package order</p>
+                <p class="page-sub">Billing runs off the linked order's rhythm (daily / weekly / monthly).</p>
+                <form method="POST" action="{{ route('admin.hosting.websites.link-order', $website) }}" class="mt-2 flex gap-2">
+                    @csrf
+                    <select name="order_id" class="field" required>
+                        <option value="">Choose {{ $website->user?->name }}'s order…</option>
+                        @foreach($linkableOrders as $o)
+                        <option value="{{ $o->id }}">{{ $o->reference }} · {{ $o->package }} · {{ ucfirst($o->billing_frequency) }} · {{ $o->status }}</option>
+                        @endforeach
+                    </select>
+                    <button type="submit" class="btn-brand btn-sm shrink-0">Link</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card card-pad">
             <h2 class="section-title">Operations</h2>
             <ul class="mt-3 space-y-2 text-sm">
                 @forelse($commands as $c)

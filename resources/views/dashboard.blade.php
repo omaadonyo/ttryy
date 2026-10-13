@@ -72,9 +72,23 @@
             </div>
         </div>
 
-        @if($spotlight)
-        <div id="tour-spot" class="card card-pad">
+        @if($hosting['total'] > 0)
+        <div class="card card-pad">
             <div class="flex items-center justify-between gap-3 flex-wrap">
+                <div class="flex items-center gap-5 flex-wrap text-sm">
+                    <span class="inline-flex items-center gap-1.5"><strong class="font-display text-lg font-extrabold">{{ $hosting['active'] }}/{{ $hosting['total'] }}</strong><span class="text-zinc-500">sites live</span></span>
+                    @if($hosting['attention'] > 0)
+                    <span class="pill-red">{{ $hosting['attention'] }} need attention</span>
+                    @endif
+                    <span class="text-[13px] text-zinc-500">Next renewal {{ $hosting['renewal'] ? \Carbon\Carbon::parse($hosting['renewal'])->format('d M Y') : '—' }}</span>
+                </div>
+                <a href="{{ route('hosting.index') }}" class="btn-ghost btn-sm">Manage hosting</a>
+            </div>
+        </div>
+        @endif
+
+        @if($spotlight)
+        <div id="tour-spot" class="card card-pad">            <div class="flex items-center justify-between gap-3 flex-wrap">
                 <div class="min-w-0">
                     <h2 class="section-title">{{ $spotlight->package }} subscription</h2>
                     <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">

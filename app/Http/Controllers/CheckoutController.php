@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Mail\OrderPlaced;
 use App\Models\PackageOrder;
 use App\Models\User;
+use App\Models\WebsiteDomain;
 use App\Notifications\SiteAlert;
+use App\Services\Hosting\HostingSubscription;
+use App\Services\Hosting\SubdomainGenerator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -68,7 +71,28 @@ class CheckoutController extends Controller
             'phone' => ['required', 'string', 'max:50'],
             'niche' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string', 'max:2000'],
+            'subdomain_label' => ['nullable', 'string', 'max:63'],
         ]);
+
+        $subdomainLabel = null;
+
+        if (($validated['domain'] ?? null) === 'subdomain') {
+            $label = strtolower(trim((string) ($validated['subdomain_label'] ?? '')));
+
+            if (! SubdomainGenerator::validLabel($label)) {
+                return back()->withErrors(['subdomain_label' => 'Use letters, numbers and hyphens only.'])->withInput();
+            }
+
+            if (SubdomainGenerator::isReserved($label)) {
+                return back()->withErrors(['subdomain_label' => 'That subdomain is reserved.'])->withInput();
+            }
+
+            if (WebsiteDomain::where('domain', SubdomainGenerator::fullDomain($label))->exists()) {
+                return back()->withErrors(['subdomain_label' => 'That subdomain is already taken.'])->withInput();
+            }
+
+            $subdomainLabel = $label;
+        }
 
         $method = $validated['payment_method'] ?? 'online';
 
@@ -89,6 +113,7 @@ class CheckoutController extends Controller
             'package' => $validated['package'],
             'billing_frequency' => $validated['billing_frequency'],
             'domain' => $validated['domain'],
+            'subdomain' => $subdomainLabel,
             'duration_months' => $quote['duration_months'],
             'periods' => $quote['periods'],
             'amount_per_period' => $quote['amount_per_period'],
@@ -183,6 +208,8 @@ class CheckoutController extends Controller
                 'tx_ref' => (string) ($tx['id'] ?? $data['transaction_id']),
                 'payment_method' => 'flutterwave',
             ]);
+
+            HostingSubscription::recordPayment($order->fresh());
 
             return response()->json(['redirect' => route('checkout.success', $order)]);
         }

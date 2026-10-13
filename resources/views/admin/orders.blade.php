@@ -64,7 +64,7 @@
                         @forelse($orders as $order)
                         <tr>
                             <td class="font-mono text-xs">{{ $order->reference }}</td>
-                            <td><p class="font-semibold">{{ $order->business_name }}</p><p class="text-xs text-zinc-500">{{ $order->user->name }} · {{ $order->phone }}</p></td>
+                            <td><p class="font-semibold">{{ $order->business_name }}</p><p class="text-xs text-zinc-500">{{ $order->user->name }} · {{ $order->phone }}</p>@if($order->subdomain)<p class="font-mono text-[11px] text-brand-700 dark:text-brand-300">wants: {{ $order->subdomain }}.{{ config('hosting.base_domain') }}</p>@endif</td>
                             <td>{{ $order->package }} · {{ ucfirst($order->billing_frequency) }}</td>
                             <td class="font-semibold">UGX {{ number_format($order->due_today) }}</td>
                             <td class="font-semibold">UGX {{ number_format($order->total_amount) }}</td>

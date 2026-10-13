@@ -19,6 +19,7 @@ use App\Models\WebsiteDomain;
 use App\Models\WebsiteHealthCheck;
 use App\Models\WhatsappGroup;
 use App\Notifications\SiteAlert;
+use App\Services\Hosting\DomainManager;
 use App\Services\Hosting\HealthChecker;
 use App\Services\Hosting\ServiceAuthenticator;
 use App\Services\Hosting\ServiceCommander;
@@ -116,6 +117,7 @@ class AdminHostingController extends Controller
             'commands' => $website->commands()->latest()->take(15)->get(),
             'audit' => HostingAuditLog::where('hosted_website_id', $website->id)->latest()->take(20)->get(),
             'newSecret' => session('new_service_secret'),
+            'linkableOrders' => $website->user->packageOrders()->whereNull('hosted_website_id')->latest()->take(10)->get(),
         ]);
     }
 
@@ -295,6 +297,98 @@ class AdminHostingController extends Controller
         ]);
 
         return back()->with('status', "Credential {$credential->key_id} revoked.");
+    }
+
+    // ---------- Admin domain management (clients are read-only) ----------
+
+    protected function auditDomain(Request $request, HostedWebsite $website, string $action, array $meta = [], string $outcome = 'success', ?string $reason = null): void
+    {
+        HostingAuditLog::log($action, [
+            'actor_type' => 'admin',
+            'actor_id' => $request->user()->id,
+            'hosted_website_id' => $website->id,
+            'client_id' => $website->user_id,
+            'outcome' => $outcome,
+            'reason' => $reason,
+            'meta' => $meta,
+            'ip' => $request->ip(),
+        ]);
+    }
+
+    public function adminStoreSubdomain(Request $request, HostedWebsite $website)
+    {
+        $validated = $request->validate(['label' => ['nullable', 'string', 'max:63']]);
+
+        $record = DomainManager::addSubdomain($website, $website->user_id, $validated['label'] ?? null);
+        $this->auditDomain($request, $website, 'domain.subdomain_added', ['domain' => $record->domain]);
+
+        return back()->with('status', "Subdomain {$record->domain} added and provisioning attempted.");
+    }
+
+    public function adminStoreDomain(Request $request, HostedWebsite $website)
+    {
+        $validated = $request->validate(['domain' => ['required', 'string', 'max:253']]);
+
+        $record = DomainManager::addCustomDomain($website, $website->user_id, $validated['domain']);
+        $this->auditDomain($request, $website, 'domain.added', ['domain' => $record->domain]);
+
+        return back()->with('status', "Domain {$record->domain} added — verify it with Check DNS.");
+    }
+
+    public function adminVerifyDomain(Request $request, HostedWebsite $website, WebsiteDomain $domain)
+    {
+        abort_if($domain->hosted_website_id !== $website->id, 404);
+
+        $found = DomainManager::verify($domain);
+        $this->auditDomain($request, $website, 'domain.verification_checked', ['domain' => $domain->domain], $found ? 'success' : 'failure', $found ? null : 'txt_not_found');
+
+        return back()->with('status', $found ? "Domain {$domain->domain} verified." : 'TXT record not found yet — DNS may still be propagating.');
+    }
+
+    public function adminSetPrimary(Request $request, HostedWebsite $website, WebsiteDomain $domain)
+    {
+        abort_if($domain->hosted_website_id !== $website->id, 404);
+
+        DomainManager::setPrimary($website, $domain);
+        $this->auditDomain($request, $website, 'domain.primary_changed', ['domain' => $domain->domain]);
+
+        return back()->with('status', "Primary domain set to {$domain->domain}.");
+    }
+
+    public function adminDestroyDomain(Request $request, HostedWebsite $website, WebsiteDomain $domain)
+    {
+        abort_if($domain->hosted_website_id !== $website->id, 404);
+
+        $name = DomainManager::destroy($website, $domain);
+
+        if ($website->primary_domain_id === $domain->id) {
+            $replacement = $website->domains()->first();
+            $website->forceFill(['primary_domain_id' => $replacement?->id])->save();
+            $replacement?->forceFill(['is_primary' => true])->save();
+        }
+
+        $this->auditDomain($request, $website, 'domain.removed', ['domain' => $name]);
+
+        return back()->with('status', "Domain {$name} removed.");
+    }
+
+    public function linkOrder(Request $request, HostedWebsite $website)
+    {
+        $validated = $request->validate(['order_id' => ['required', 'exists:package_orders,id']]);
+
+        $order = PackageOrder::where('id', $validated['order_id'])
+            ->where('user_id', $website->user_id)
+            ->firstOrFail();
+
+        $order->forceFill(['hosted_website_id' => $website->id])->save();
+
+        if (! $website->next_renewal_at) {
+            $website->forceFill(['next_renewal_at' => now()->addMonth()])->save();
+        }
+
+        $this->auditDomain($request, $website, 'order.linked', ['reference' => $order->reference]);
+
+        return back()->with('status', "Order {$order->reference} linked — billing now runs off its {$order->billing_frequency} rhythm.");
     }
 
     // ---------- Clients ----------

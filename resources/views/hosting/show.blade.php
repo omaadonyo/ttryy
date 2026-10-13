@@ -36,7 +36,7 @@
 
         <div class="seg self-start" role="navigation" aria-label="Website sections">
             @foreach($tabs as [$label, $url, $on])
-            <a href="{{ $url }}" class="rounded-full px-4 py-2 text-[13px] font-bold whitespace-nowrap transition {{ $on ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white' }}">{{ $label }}</a>
+            <a href="{{ $url }}" class="rounded-full px-4 py-2 text-[13px] font-bold whitespace-nowrap transition {{ $on ? 'bg-white text-zinc-950 shadow dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 bg-white/60 hover:text-zinc-900 dark:bg-transparent dark:hover:text-white' }}">{{ $label }}</a>
             @endforeach
         </div>
 
@@ -60,6 +60,26 @@
             <p class="mt-1 text-[13px] text-zinc-500">Reason: {{ $website->suspension_reason ?? '—' }}. Request reactivation above; access returns only after the service acknowledges.</p>
         </div>
         @endif
+
+        <div class="card card-pad">
+            <div class="flex items-center justify-between gap-2">
+                <h2 class="section-title">Domains</h2>
+                <a href="{{ route('hosting.domains', $website) }}" class="btn-ghost btn-sm">All domains</a>
+            </div>
+            <ul class="mt-3 space-y-2 text-sm">
+                @forelse($website->domains as $d)
+                <li class="flex items-center justify-between gap-2">
+                    <span class="font-mono text-xs">{{ $d->domain }} @if($d->is_primary)<span class="pill-brand ml-1">primary</span>@endif</span>
+                    <span class="flex shrink-0 items-center gap-2">
+                        <span class="{{ $d->isVerified() ? 'pill-green' : 'pill-amber' }}">{{ $d->verification }}</span>
+                        <span class="text-xs text-zinc-400">SSL {{ $d->ssl_status }}</span>
+                    </span>
+                </li>
+                @empty
+                <li class="text-sm text-zinc-500">No domains yet — our team sets these up during provisioning.</li>
+                @endforelse
+            </ul>
+        </div>
 
         <div class="grid gap-4 xl:grid-cols-2">
             <div class="card card-pad">

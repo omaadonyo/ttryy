@@ -19,6 +19,13 @@ return [
         'driver' => env('HOSTING_PROVISION_DRIVER', 'manual'),
     ],
 
+    // cPanel UAPI driver for real on-server subdomain creation.
+    'cpanel' => [
+        'host' => env('HOSTING_CPANEL_HOST'),
+        'user' => env('HOSTING_CPANEL_USER'),
+        'token' => env('HOSTING_CPANEL_TOKEN'),
+    ],
+
     // Optional infrastructure integrations. Null = not configured; the UI
     // reports this honestly instead of simulating success.
     'dns' => [

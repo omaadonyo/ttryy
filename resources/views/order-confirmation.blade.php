@@ -95,6 +95,7 @@
         <div class="flex justify-between py-2.5"><dt class="text-zinc-500">Rate</dt><dd class="font-bold text-zinc-950 dark:text-white">UGX {{ number_format($order->amount_per_period) }}</dd></div>
         <div class="flex justify-between py-2.5"><dt class="text-zinc-500">Domain · one-time fee</dt><dd class="font-bold text-zinc-950 dark:text-white">UGX {{ number_format($order->domain_fee) }} ({{ $order->domain }})</dd></div>
         <div class="flex justify-between py-2.5"><dt class="text-zinc-500">Business</dt><dd class="font-bold text-zinc-950 dark:text-white">{{ $order->business_name }}</dd></div>
+        @if($order->subdomain)<div class="flex justify-between py-2.5"><dt class="text-zinc-500">Free subdomain</dt><dd class="font-bold font-mono text-zinc-950 dark:text-white">{{ $order->subdomain }}.{{ config('hosting.base_domain') }}</dd></div>@endif
         @if($order->niche)<div class="flex justify-between py-2.5"><dt class="text-zinc-500">Niche</dt><dd class="font-bold text-zinc-950 dark:text-white">{{ $order->niche }}</dd></div>@endif
         <div class="flex justify-between py-2.5"><dt class="text-zinc-500">Total over term</dt><dd class="font-bold text-zinc-950 dark:text-white">UGX {{ number_format($order->total_amount) }}</dd></div>
       </dl>

@@ -7,43 +7,29 @@
         };
     @endphp
     <div class="flex w-full flex-col gap-5">
-        <x-page-head :title="'Domains · '.$website->name" sub="Subdomains are verified by definition. Custom domains need DNS proof.">
+        <x-page-head :title="'Domains · '.$website->name" sub="Managed for you by the Ttryy team.">
             <x-slot:actions>
                 <a href="{{ route('hosting.show', $website) }}" class="btn-ghost btn-sm">← Website</a>
             </x-slot:actions>
         </x-page-head>
 
-        <div class="grid gap-4 xl:grid-cols-2">
-            <div class="card card-pad">
-                <h2 class="section-title">New Ttryy subdomain</h2>
-                <p class="page-sub">Free, instant, auto-verified. Suggested: <strong>{{ $suggested }}.{{ $baseDomain }}</strong></p>
-                @if($errors->has('label'))
-                <p class="mt-2 text-sm font-semibold text-red-600">{{ $errors->first('label') }}</p>
-                @endif
-                <form method="POST" action="{{ route('hosting.subdomains.store', $website) }}" class="mt-3 flex gap-2">
-                    @csrf
-                    <input name="label" value="{{ old('label') }}" placeholder="leave empty to auto-generate" class="field">
-                    <button type="submit" class="btn-brand shrink-0">Add</button>
-                </form>
-            </div>
-            <div class="card card-pad">
-                <h2 class="section-title">Custom domain you own</h2>
-                <p class="page-sub">Added as unverified — ownership is proven with a DNS TXT record, never assumed.</p>
-                @if($errors->has('domain'))
-                <p class="mt-2 text-sm font-semibold text-red-600">{{ $errors->first('domain') }}</p>
-                @endif
-                <form method="POST" action="{{ route('hosting.domains.store', $website) }}" class="mt-3 flex gap-2">
-                    @csrf
-                    <input name="domain" value="{{ old('domain') }}" placeholder="example.co.ug" class="field">
-                    <button type="submit" class="btn-brand shrink-0">Add</button>
-                </form>
+        <div data-onboard-banner="domains-client" class="hidden card card-pad border-brand-600/25 bg-brand-50/60 dark:border-brand-500/25 dark:bg-brand-500/10">
+            <div class="flex items-start gap-3">
+                <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-brand-600 text-white">
+                    <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                </span>
+                <div class="min-w-0 flex-1">
+                    <p class="text-sm font-extrabold">We handle domains for you</p>
+                    <p class="mt-0.5 text-[13px] text-zinc-600 dark:text-zinc-400">Subdomains, custom domains, DNS and SSL are set up and monitored by our team. Need a change? Message us on WhatsApp and it gets done.</p>
+                </div>
+                <button data-onboard-dismiss="domains-client" class="grid size-8 shrink-0 place-items-center rounded-full text-zinc-400 transition hover:bg-zinc-950/5 hover:text-zinc-700 dark:hover:bg-white/10 dark:hover:text-white" aria-label="Dismiss">✕</button>
             </div>
         </div>
 
         <div class="card card-pad">
             <h2 class="section-title">All domains</h2>
             @if($domains->isEmpty())
-            <p class="py-4 text-center text-sm text-zinc-500">No domains yet.</p>
+            <p class="py-4 text-center text-sm text-zinc-500">No domains yet — our team sets these up during provisioning.</p>
             @else
             <div class="tbl-wrap mt-3 rounded-none! border-0! shadow-none!">
                 <table class="tbl">
@@ -53,7 +39,7 @@
                             <th>Type</th>
                             <th>Verification</th>
                             <th>DNS / SSL</th>
-                            <th class="text-right!">Actions</th>
+                            <th>Expires</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,40 +48,11 @@
                             <td class="font-mono text-xs">{{ $d->domain }}
                                 @if($d->is_primary)<span class="pill-brand ml-1">primary</span>@endif
                             </td>
-                            <td class="text-xs">{{ $d->type === 'subdomain' ? 'Ttryy subdomain' : 'Custom' }}</td>
+                            <td class="text-xs">{{ $d->type === 'subdomain' ? 'Free Ttryy subdomain' : 'Custom domain' }}</td>
                             <td><span class="{{ $verifyPill($d) }}">{{ $d->verification }}</span></td>
-                            <td class="text-xs text-zinc-500">DNS {{ $d->dns_ok ? 'ok' : '—' }} · <span class="{{ $sslPill($d->ssl_status) }}">SSL {{ $d->ssl_status }}</span></td>
-                            <td class="text-right whitespace-nowrap">
-                                @if($d->type === 'custom' && $d->verification !== 'verified')
-                                <form method="POST" action="{{ route('hosting.domains.verify', [$website, $d]) }}" class="inline">
-                                    @csrf
-                                    <button type="submit" class="text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Check DNS</button>
-                                </form>
-                                @endif
-                                @if($d->isVerified() && ! $d->is_primary)
-                                <form method="POST" action="{{ route('hosting.domains.primary', [$website, $d]) }}" class="inline ml-2">
-                                    @csrf
-                                    <button type="submit" class="text-xs font-bold text-zinc-600 hover:underline dark:text-zinc-300">Make primary</button>
-                                </form>
-                                @endif
-                                @if(! $d->is_primary)
-                                <form method="POST" action="{{ route('hosting.domains.destroy', [$website, $d]) }}" class="inline ml-2" onsubmit="return confirm('Remove {{ $d->domain }}?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-xs font-semibold text-zinc-400 hover:text-red-600">Remove</button>
-                                </form>
-                                @endif
-                            </td>
+                            <td class="text-xs text-zinc-500">DNS {{ $d->dns_ok ? 'ok' : 'pending' }} · <span class="{{ $sslPill($d->ssl_status) }}">SSL {{ $d->ssl_status }}</span></td>
+                            <td class="text-xs text-zinc-500">{{ $d->expires_at?->format('d M Y') ?? '—' }}</td>
                         </tr>
-                        @if($d->type === 'custom' && $d->verification !== 'verified')
-                        <tr>
-                            <td colspan="5" class="!pt-0 text-xs text-zinc-500">
-                                Add this TXT record at <strong>_ttryy-challenge.{{ $d->domain }}</strong> with value
-                                <code class="rounded bg-zinc-100 px-1.5 py-0.5 font-mono dark:bg-white/10">{{ $d->verification_token }}</code>
-                                then press Check DNS. Last checked {{ $d->dns_checked_at?->diffForHumans() ?? 'never' }}.
-                            </td>
-                        </tr>
-                        @endif
                         @endforeach
                     </tbody>
                 </table>

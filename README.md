@@ -134,16 +134,18 @@ php artisan app:test-mail you@example.com
 
 Three integrated panels share one codebase, one design system and one billing model:
 
-- **Client panel** (`/dashboard/hosting`): website register/manage, subdomain
-  generation (`‹label›.ttryy.com` via `HOSTING_BASE_DOMAIN`), custom domains
-  with DNS-TXT verification, per-website analytics (first-party beacon +
-  daily aggregates, CSV/PDF export), health history, billing from linked
-  `package_orders`, and suspension/reactivation requests.
+- **Client panel** (`/dashboard/hosting`): website register/manage, read-only
+  domain visibility (subdomains, verification, DNS/SSL states), per-website
+  analytics (first-party beacon + daily aggregates, CSV/PDF export), health
+  history, billing from linked `package_orders`, and suspension/reactivation
+  requests. Clients never add domains — the team does that in admin.
 - **Admin panel** (`/admin/hosting`): estate overview with usage tracking
   (tokens, email volume, growth), website/client/domain/operation/health/
-  audit management, suspend/restore with confirmations, manual provisioning
-  confirmation, service credentials (secret shown once), and an honest
-  **integrations status screen**.
+  audit management, full domain operations (add subdomains and custom
+  domains, DNS checks, primary switches, removal), package-order linking so
+  billing follows the order's daily/weekly/monthly rhythm, suspend/restore
+  with confirmations, manual provisioning confirmation, service credentials
+  (secret shown once), and an honest **integrations status screen**.
 - **Service backend**: `App\Services\Hosting\Service\ServiceCommandProcessor`
   (v1.0.0) embeds into any hosted Laravel site and exposes
   `POST /hosting-service/commands`, `GET /hosting-service/status` and
@@ -172,10 +174,25 @@ php artisan hosting:aggregate-analytics --date=2026-10-12
 
 Env: `HOSTING_BASE_DOMAIN` (default `ttryy.com`),
 `HOSTING_PROVISION_DRIVER` (default `manual`),
+`HOSTING_CPANEL_HOST/USER/TOKEN` (only for the cPanel driver),
 `HOSTING_DNS_DRIVER` / `HOSTING_SSL_DRIVER` (unset = honestly unconfigured),
 `HOSTING_SERVICE_TOLERANCE` (default 300s),
 `HOSTING_HEALTH_TIMEOUT`, `HOSTING_HEARTBEAT_STALE_MINUTES` (default 60),
 `HOSTING_ANALYTICS_ENABLED`.
+
+Subdomains: the recommended setup is a wildcard DNS A record
+(`*.ttryy.com`) plus a wildcard virtual host — database records then resolve
+instantly and the provisioner only verifies DNS. Set the cPanel driver only
+with tested `HOSTING_CPANEL_*` credentials for real on-server creation.
+
+Billing rhythm: verified payments extend `next_renewal_at` by the order's
+daily/weekly/monthly period (`HostingSubscription::recordPayment`, hooked
+into manual and online confirmations); `hosting:check-renewals` runs daily
+and queues one suspension per overdue site with a real balance (never
+duplicates, never flips status before acknowledgment).
+
+Checkout captures an optional free `yourname.ttryy.com` subdomain on the
+order (validated reserved/unique server-side) for the team to provision.
 
 ### Still requiring infrastructure
 

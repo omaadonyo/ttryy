@@ -1,5 +1,6 @@
 <x-layouts::app :title="__('Hosted websites')">
     @include('partials.toast')
+    @include('partials.custom-select')
     @php
         $statusPill = fn($s) => match($s) {
             'active' => 'pill-green', 'suspended', 'failed' => 'pill-red',
@@ -37,6 +38,9 @@
                 <button type="submit" class="btn-brand">Filter</button>
             </form>
         </div>
+<script>
+['status', 'health', 'plan'].forEach(n => enhanceSelect(document.querySelector('select[name="' + n + '"]')));
+</script>
 
         <div class="card card-pad">
             @if($websites->isEmpty())

@@ -93,6 +93,8 @@ class AdminController extends Controller
             'payment_method' => $order->payment_method === 'pending' ? 'momo_manual' : $order->payment_method,
         ]);
 
+        \App\Services\Hosting\HostingSubscription::recordPayment($order->fresh());
+
         $order->user->notify(new SiteAlert(
             "Payment confirmed for {$order->reference}",
             'UGX '.number_format($order->paid_amount).' received. Website work is underway.',

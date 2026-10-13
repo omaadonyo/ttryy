@@ -1,5 +1,6 @@
 <x-layouts::app :title="__('All domains')">
     @include('partials.toast')
+    @include('partials.custom-select')
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="All domains" sub="Subdomains and custom domains across every website.">
             <x-slot:actions>
@@ -24,6 +25,9 @@
                 <button type="submit" class="btn-brand">Filter</button>
             </form>
         </div>
+<script>
+['type', 'verification'].forEach(n => enhanceSelect(document.querySelector('select[name="' + n + '"]')));
+</script>
 
         <div class="card card-pad">
             <div class="mb-3 flex flex-wrap gap-2">
