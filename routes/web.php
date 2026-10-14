@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminHostingController;
+use App\Http\Controllers\BusinessToolsController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HostingController;
@@ -9,10 +10,14 @@ use App\Http\Controllers\IotecPaymentController;
 use App\Http\Controllers\LaunchController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\WalletController;
+use App\Models\BtContact;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
 Route::get('launch', [LaunchController::class, 'index'])->name('launch');
+
+// Public document authenticity check — the QR code on Business Tools PDFs lands here.
+Route::get('tools/verify/{doc}', [BusinessToolsController::class, 'verify'])->name('tools.verify');
 
 Route::post('launch', [LaunchController::class, 'store'])->name('launch.store');
 Route::post('launch/iotec/pay', [IotecPaymentController::class, 'payLaunch'])->middleware('throttle:20,1')->name('launch.iotec.pay');
@@ -133,6 +138,40 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('hosting/{website}/reports/pdf', [HostingController::class, 'reportPdf'])->name('hosting.reports.pdf');
     Route::post('hosting/{website}/suspend', [HostingController::class, 'requestSuspend'])->name('hosting.suspend');
     Route::post('hosting/{website}/reactivate', [HostingController::class, 'requestReactivate'])->name('hosting.reactivate');
+    Route::prefix('tools')->name('tools.')->group(function () {
+        Route::get('/', [BusinessToolsController::class, 'index'])->name('index');
+        Route::get('reports', [BusinessToolsController::class, 'index'])->name('reports');
+        Route::patch('settings', [BusinessToolsController::class, 'updateSettings'])->name('settings.update');
+        Route::get('cashflow', [BusinessToolsController::class, 'cashflow'])->name('cashflow');
+        Route::get('pnl', [BusinessToolsController::class, 'pnl'])->name('pnl');
+        Route::get('balance-sheet', [BusinessToolsController::class, 'balancesheet'])->name('balancesheet');
+        Route::get('customers', fn () => app(BusinessToolsController::class)->contacts(request(), BtContact::CUSTOMER))->name('customers');
+        Route::get('suppliers', fn () => app(BusinessToolsController::class)->contacts(request(), BtContact::SUPPLIER))->name('suppliers');
+        Route::post('contacts', [BusinessToolsController::class, 'storeContact'])->name('contacts.store');
+        Route::patch('contacts/{contact}', [BusinessToolsController::class, 'updateContact'])->name('contacts.update');
+        Route::delete('contacts/{contact}', [BusinessToolsController::class, 'destroyContact'])->name('contacts.destroy');
+        Route::get('inventory', [BusinessToolsController::class, 'inventory'])->name('inventory');
+        Route::post('items', [BusinessToolsController::class, 'storeItem'])->name('items.store');
+        Route::patch('items/{item}', [BusinessToolsController::class, 'updateItem'])->name('items.update');
+        Route::delete('items/{item}', [BusinessToolsController::class, 'destroyItem'])->name('items.destroy');
+        Route::post('items/{item}/adjust', [BusinessToolsController::class, 'adjustStock'])->name('items.adjust');
+        Route::get('quotations', [BusinessToolsController::class, 'quotations'])->name('quotations');
+        Route::get('invoices', [BusinessToolsController::class, 'invoices'])->name('invoices');
+        Route::get('receipts', [BusinessToolsController::class, 'receipts'])->name('receipts');
+        Route::get('{type}/create', [BusinessToolsController::class, 'createDoc'])->whereIn('type', ['quotations', 'invoices', 'receipts'])->name('doc.create');
+        Route::post('{type}', [BusinessToolsController::class, 'storeDoc'])->whereIn('type', ['quotations', 'invoices', 'receipts'])->name('doc.store');
+        Route::get('documents/{doc}', [BusinessToolsController::class, 'showDoc'])->name('doc.show');
+        Route::get('documents/{doc}/pdf', [BusinessToolsController::class, 'docPdf'])->name('doc.pdf');
+        Route::delete('documents/{doc}', [BusinessToolsController::class, 'destroyDoc'])->name('doc.destroy');
+        Route::patch('quotations/{doc}/status', [BusinessToolsController::class, 'updateDocStatus'])->name('doc.status');
+        Route::post('quotations/{doc}/convert', [BusinessToolsController::class, 'convertQuote'])->name('doc.convert');
+        Route::get('pos', [BusinessToolsController::class, 'pos'])->name('pos');
+        Route::post('pos/checkout', [BusinessToolsController::class, 'posCheckout'])->name('pos.checkout');
+        Route::get('expenses', [BusinessToolsController::class, 'expenses'])->name('expenses');
+        Route::post('expenses', [BusinessToolsController::class, 'storeExpense'])->name('expenses.store');
+        Route::patch('expenses/{expense}', [BusinessToolsController::class, 'updateExpense'])->name('expenses.update');
+        Route::delete('expenses/{expense}', [BusinessToolsController::class, 'destroyExpense'])->name('expenses.destroy');
+    });
 });
 
 // Guests may browse checkout and sign in inline; placing an order needs an account.

@@ -20,6 +20,7 @@
                 ['label' => 'Analytics', 'icon' => 'presentation-chart-line', 'href' => route('analytics.index'), 'active' => request()->routeIs('analytics.*')],
             ],
             'Business' => [
+                ['label' => 'Business Tools', 'icon' => 'calculator', 'href' => route('tools.index'), 'active' => request()->routeIs('tools.*')],
                 ['label' => 'New order', 'icon' => 'plus', 'href' => route('checkout'), 'active' => request()->routeIs('checkout*')],
                 ['label' => 'My packages', 'icon' => 'shopping-bag', 'href' => route('packages.index'), 'active' => request()->routeIs('packages.*')],
                 ['label' => 'Hosting', 'icon' => 'server-stack', 'href' => route('hosting.index'), 'active' => request()->routeIs('hosting.*')],
@@ -225,6 +226,7 @@
             @endforeach
             @endforeach
             { group: 'Actions', label: 'Start a new order', href: @json(route('checkout')) },
+            { group: 'Actions', label: 'Record a sale in POS', href: @json(route('tools.pos')) },
             { group: 'Actions', label: 'Send an email campaign', href: @json(route('marketing.index')) },
             { group: 'Actions', label: 'Scrape new prospects', href: @json(route('scraper.index')) },
             { group: 'Actions', label: 'Top up token wallet', href: @json(route('wallet.index')) },
