@@ -349,24 +349,31 @@
     <div class="max-w-2xl reveal">
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Part 2 &middot; Why Ttryy</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">A Website Alone Doesn&rsquo;t Bring You Business.</h2>
-      <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Many business websites sit online and generate nothing. The questions that actually matter:</p>
+      <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Most business websites sit online and generate nothing — because a website never answers the questions that actually bring money:</p>
     </div>
     <ol class="mt-8 divide-y divide-zinc-200 dark:divide-white/10 border-y border-zinc-200 dark:border-white/10 max-w-3xl reveal">
-      @foreach(['Who are your potential customers?','Where can you find them?','Which organisations buy your services?','Which tenders and funding opportunities exist?','What should your sales team approach this week?','What can you apply for right now?'] as $i=>$q)
+      @foreach(['Who exactly are your potential customers?','Where do you find them?','Which organisations buy what you sell?','Which tenders and grants fit you?','Who should you contact this week?','What can you apply for right now?'] as $i=>$q)
       <li class="flex gap-4 py-3.5 text-[15px]"><span class="font-display font-bold text-zinc-300 dark:text-zinc-600 w-6 shrink-0">{{ sprintf('%02d', $i+1) }}</span><span class="font-medium text-zinc-700 dark:text-zinc-300">{{ $q }}</span></li>
       @endforeach
     </ol>
-    <p class="reveal mt-6 text-lg text-zinc-700 dark:text-zinc-300 max-w-3xl">A typical web designer answers none of these. They hand over a website and leave. <strong class="text-zinc-950 dark:text-white">Ttryy pairs the website with the market intelligence to go after.</strong></p>
+    <p class="reveal mt-6 text-lg text-zinc-700 dark:text-zinc-300 max-w-3xl">A typical web designer answers none of these. They hand over a website and disappear. <strong class="text-zinc-950 dark:text-white">Ttryy pairs your website with the market intelligence to go after.</strong></p>
 
     <!-- Comparison -->
-    <div class="reveal mt-10 bg-white dark:bg-[#141416] rounded-xl   overflow-hidden max-w-4xl">
-      <p class="px-6 sm:px-8 pt-6 font-display font-bold text-lg text-zinc-950 dark:text-white">Ttryy vs. a typical website designer</p>
+    <div class="reveal mt-10 bg-white dark:bg-[#141416] rounded-xl overflow-hidden max-w-4xl">
+      <p class="px-6 sm:px-8 pt-6 font-display font-bold text-lg text-zinc-950 dark:text-white">What Ttryy adds that a typical designer doesn&rsquo;t</p>
       <div class="overflow-x-auto mt-2">
       <table class="w-full text-sm min-w-[520px]">
+        <thead>
+          <tr class="text-left text-[11px] uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+            <th class="px-6 sm:px-8 py-3 font-bold">What you get</th>
+            <th class="px-6 py-3 font-bold text-[#9e005d] dark:text-[#ff4d9a]">Ttryy</th>
+            <th class="px-6 py-3 font-bold">Typical designer</th>
+          </tr>
+        </thead>
         <tbody class="divide-y divide-zinc-100 dark:divide-white/10">
-          @php $cmp=[['Professional website','Yes','Yes'],['Manage it yourself (CMS)','Yes, custom CMS','Sometimes'],['SEO foundations','Included','Sometimes'],['List of potential customers','5,000, niche-specific','No'],['Tenders and opportunity resources','Included','No'],['Proposal and quotation templates','Included','No']]; @endphp
+          @php $cmp=[['Professional website','Yes','Yes'],['Custom CMS — edit it yourself','Included','Sometimes'],['SEO foundations','Included','Sometimes'],['5,000 niche prospects with contacts','Included','Not included'],['Tenders, grants & opportunity resources','Included','Not included'],['Proposal & quotation templates','Included','Not included']]; @endphp
           @foreach($cmp as $r)
-          <tr><td class="px-6 sm:px-8 py-3.5 text-zinc-700 dark:text-zinc-300">{{ $r[0] }}</td><td class="px-6 py-3.5 font-bold text-zinc-950 dark:text-white">Ttryy: {{ $r[1] }}</td><td class="px-6 py-3.5 text-zinc-500">Typical: {{ $r[2] }}</td></tr>
+          <tr><td class="px-6 sm:px-8 py-3.5 text-zinc-700 dark:text-zinc-300">{{ $r[0] }}</td><td class="px-6 py-3.5 font-bold text-zinc-950 dark:text-white"><span class="text-emerald-600 dark:text-emerald-400">✓</span> {{ $r[1] }}</td><td class="px-6 py-3.5 text-zinc-500">{{ $r[2] === 'Not included' ? '✗ ' : '' }}{{ $r[2] }}</td></tr>
           @endforeach
         </tbody>
       </table>
@@ -375,8 +382,8 @@
     <p class="reveal mt-6 text-zinc-600 dark:text-zinc-400 max-w-3xl">Your website is the front door. Your prospect database is where the business starts.</p>
 
     <div class="reveal mt-10 max-w-3xl">
-      <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-zinc-950 dark:text-white">Watch It Find Customers Live</h3>
-      <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pick a niche and hit Scrape — this is the same engine that maps 5,000 prospects for your package.</p>
+      <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-zinc-950 dark:text-white">Watch it find customers — live</h3>
+      <p class="text-zinc-600 dark:text-zinc-400 mt-2">Pick your niche and hit Scrape. Same engine, same data shape as the 5,000-prospect list inside your package — this demo shows 10 sample records.</p>
     </div>
     <div class="reveal mt-6 max-w-3xl">
     <!-- SCRAPER DEMO -->
@@ -832,8 +839,10 @@ function renderNiches(filter=''){
 renderNiches();
 document.getElementById('nicheSearch').addEventListener('input', e=>renderNiches(e.target.value));
 const sel = document.getElementById('leadNiche');
+if(sel.options.length<=1){
 NICHES.forEach(n=>{ const o=document.createElement('option'); o.textContent=n.name; sel.appendChild(o); });
 const other=document.createElement('option'); other.textContent='Other / Not listed'; sel.appendChild(other);
+}
 
 /* ---------- SCRAPER DEMO ---------- */
 const FIRST=['Brian','Sarah','David','Grace','Moses','Anita','Peter','Ruth','James','Faith','Daniel','Sharon','Patrick','Mercy','Tom','Lilian','Andrew','Harriet','Paul','Esther'];
@@ -843,19 +852,24 @@ const BIZ_B=['Ltd','Enterprises','Group','Uganda','Ventures','Solutions','Servic
 const DIST=['Kampala','Wakiso','Entebbe','Jinja','Mbarara','Gulu','Mbale','Arua','Lira','Fort Portal','Masaka','Soroti'];
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
-function makePhone(){ const d=()=>Math.floor(Math.random()*10); return `+256 7${ri(0,7)}${d()}${d()} ${d()}${d()}${d()} ${d()}${d()}${d()}`; }
+function makePhone(){ const d=()=>Math.floor(Math.random()*10); return `+256 7${d()}${d()} ${d()}${d()}${d()} ${d()}${d()}${d()}`; }
+let usedBizNames=new Set();
 function makeRecord(n){
-  return { name:`${rnd(BIZ_A)} ${rnd(n.biz)} ${rnd(BIZ_B)}`, type:rnd(n.prospects), need:rnd(n.opps),
+  let name='', tries=0;
+  do{ name=`${rnd(BIZ_A)} ${rnd(n.biz)} ${rnd(BIZ_B)}`; tries++; }while(usedBizNames.has(name)&&tries<60);
+  usedBizNames.add(name);
+  return { name, type:rnd(n.prospects), need:rnd(n.opps),
     district:rnd(DIST), contact:`${rnd(FIRST)} ${rnd(LAST)}`, phone:makePhone() };
 }
 const scrapeSel=document.getElementById('scrapeNiche');
-NICHES.forEach(n=>{ const o=document.createElement('option'); o.value=n.code; o.textContent=n.name; scrapeSel.appendChild(o); });
+if(!scrapeSel.options.length) NICHES.forEach(n=>{ const o=document.createElement('option'); o.value=n.code; o.textContent=n.name; scrapeSel.appendChild(o); });
 let scraping=false, scrapeTimers=[], currentNiche=null, currentTotal=0, currentRecords=[];
 function scrapeFinishedName(){ const b=document.getElementById('scrapeBiz').value.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); return 'prospects-'+currentNiche.code.toLowerCase()+(b?'-'+b.slice(0,24):'')+'.pdf'; }
 function runScrape(){
   if(scraping) return; scraping=true;
   scrapeTimers.forEach(clearTimeout); scrapeTimers=[];
   currentNiche=NICHES.find(n=>n.code===scrapeSel.value)||NICHES[0];
+  usedBizNames=new Set();
   const rowsEl=document.getElementById('scrapeRows'), statusEl=document.getElementById('scrapeStatus'),
         bar=document.getElementById('scrapeBar'), label=document.getElementById('scrapeLabel'),
         pct=document.getElementById('scrapePct'), locked=document.getElementById('lockedZone'),
@@ -873,7 +887,7 @@ function runScrape(){
       const div=document.createElement('div');
       div.className='record-in flex items-center justify-between gap-3 px-4 py-2';
       div.innerHTML=`<div class="min-w-0"><p class="text-[13px] font-bold text-zinc-900 dark:text-white truncate">${i+1}. ${r.name}</p>`
-        +`<p class="text-[11px] text-zinc-500 truncate">${r.type} &middot; ${r.district} &middot; needs: ${r.need}</p></div>`
+        +`<p class="text-[11px] text-zinc-500 truncate">${r.type} &middot; ${r.district} &middot; ${r.need}</p></div>`
         +`<div class="text-right shrink-0"><p class="text-[12px] font-semibold text-zinc-800 dark:text-zinc-200">${r.contact}</p><p class="text-[11px] text-zinc-500">${r.phone}</p></div>`;
       rowsEl.appendChild(div);
       document.getElementById('pdfCount').textContent=(i+1)+' of 10 free records';
