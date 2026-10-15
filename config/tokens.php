@@ -13,5 +13,8 @@ return [
     'costs' => [
         'ai_message' => 10,
         'group_unlock' => 10,
+        // Pro scraping tool: charged per search that returns records.
+        // Empty or failed searches are always free.
+        'scraper_search' => 5,
     ],
 ];

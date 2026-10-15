@@ -198,7 +198,7 @@
         <div data-mtab-panel="community" class="hidden flex-col gap-4">
             <div id="tour-comms" class="card card-pad">
             <h2 class="section-title">WhatsApp growth communities</h2>
-            <p class="page-sub">Active Ugandan business groups by niche. Unlock a join link once with tokens — it is yours forever.</p>
+            <p class="page-sub">Active Ugandan business groups by niche. Unlock a join link once with tokens — it is yours forever. Community-listed links change without notice — verify a group before paying anyone inside it.</p>
             <div class="mt-3 grid gap-2 sm:grid-cols-[1fr_200px_160px]">
                 <input id="grp-search" type="text" placeholder="Search groups…" class="field">
                 <select id="grp-niche" class="field">
@@ -218,10 +218,11 @@
                     <div class="rounded-xl border border-zinc-200/80 bg-zinc-50 p-4 dark:border-white/10 dark:bg-white/5" data-group="{{ $g->id }}" data-members="{{ $g->member_count }}" data-search="{{ strtolower($g->name.' '.$g->niche.' '.($g->description ?? '')) }}" data-niche="{{ $g->niche }}">
                         <div class="flex items-center justify-between gap-2">
                             <p class="text-sm font-bold">{{ $g->name }}</p>
-                            <span class="pill-zinc">{{ number_format($g->member_count) }} members</span>
+                            @if($g->member_count > 0)<span class="pill-zinc">{{ number_format($g->member_count) }} members</span>@endif
                         </div>
                         <p class="mt-1 text-xs font-semibold text-brand-700 dark:text-brand-300">{{ $g->niche }}</p>
                         <p class="mt-1 text-[13px] text-zinc-600 dark:text-zinc-400">{{ $g->description }}</p>
+                        @if($g->source)<p class="mt-1 text-[11px] text-zinc-400">Listed via community directory</p>@endif
                         <div class="mt-3 group-action">
                             @if($unlocked)
                             <a target="_blank" href="{{ $g->invite_link }}" class="btn-brand btn-sm inline-flex">Join group →</a>

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class WhatsappGroup extends Model
 {
     protected $fillable = [
-        'name', 'niche', 'description', 'invite_link',
+        'name', 'niche', 'description', 'invite_link', 'source',
         'member_count', 'token_cost', 'is_active',
     ];
 

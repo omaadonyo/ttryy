@@ -1,8 +1,10 @@
 <x-layouts::app :title="__('Prospect scraper')">
     @include('partials.toast')
     <div class="flex w-full flex-col gap-5">
-        <x-page-head title="Prospect scraper" sub="Pull a sample of potential customers in your niche. Full contact details unlock for UGX 10,000.">
+        <x-page-head title="Prospect scraper" sub="Pro tool — fresh directory pulls cost {{ $searchCost }} tokens each. Repeats served from your index are free.">
             <x-slot:actions>
+                <span class="pill-zinc">{{ number_format($tokenBalance) }} tokens</span>
+                <a href="{{ route('wallet.index') }}" class="btn-ghost btn-sm">Top up</a>
                 <button onclick="startTour_scraper()" class="btn-ghost btn-sm">Take tour</button>
             </x-slot:actions>
         </x-page-head>
@@ -10,10 +12,10 @@
         @include('partials.tour', ['key' => 'scraper', 'steps' => [
             ['target' => '#tour-controls', 'title' => 'Start a search', 'body' => 'Pick your niche, describe what you sell, hit Scrape. The local index answers first; fresh directory pulls follow.'],
             ['target' => '#tour-stats', 'title' => 'The index, live', 'body' => 'Businesses indexed, verified records, niches covered — and how many you have saved.'],
-            ['target' => '#tour-results', 'title' => 'Your sample', 'body' => 'Uniform rows, first 10 free. Save contacts in one click, or unlock deeper pulls from UGX 10,000.'],
+            ['target' => '#tour-results', 'title' => 'Your sample', 'body' => 'Uniform rows with directory sources. Save contacts in one click, or unlock deeper pulls from UGX 10,000.'],
         ]])
 
-        @include('partials.onboard', ['key' => 'scraper', 'title' => 'How prospecting works', 'body' => 'Every search checks the local index first, then pulls fresh businesses from web directories. The first 10 records are free — unlock deeper pulls from UGX 10,000, and everything you save lands in Saved contacts.', 'link' => route('contacts.index'), 'linkLabel' => 'View saved contacts →'])
+        @include('partials.onboard', ['key' => 'scraper', 'title' => 'How prospecting works', 'body' => 'Every search checks the local index first, then pulls fresh businesses from Yellow Pages Uganda. Fresh pulls cost a few tokens — repeats from the index are free. Everything you save lands in Saved contacts.', 'link' => route('contacts.index'), 'linkLabel' => 'View saved contacts →'])
 
         <div id="tour-stats" class="grid auto-rows-min grid-cols-2 gap-4 xl:grid-cols-4">
             <div class="card card-pad">
@@ -67,7 +69,7 @@
                 </div>
             </div>
         </div>
-        <p class="text-[11px] text-zinc-400">Demo uses sample data. Paid unlocks deliver real, niche-specific prospect lists.</p>
+        <p class="text-[11px] text-zinc-400">Live records from Yellow Pages Uganda — each row links its source listing. Verify details before you market.</p>
     </div>
 
 <script>
@@ -160,13 +162,23 @@ async function dscRun(){
     const res=await fetch("{{ route('scraper.search') }}",{method:'POST',
       headers:{'Accept':'application/json','Content-Type':'application/json','X-CSRF-TOKEN':token,'X-Requested-With':'XMLHttpRequest'},
       body:JSON.stringify({niche:nicheName,keyword})});
+    if(res.status===402){
+      const j=await res.json().catch(()=>({}));
+      rows.innerHTML='<p class="px-4 py-8 text-center text-sm text-zinc-500">Not enough tokens — this search needs '+(j.cost||5)+' tokens.</p>';
+      label.textContent='Top up to keep scraping.';
+      document.getElementById('dsc-count').textContent='0 records';
+      toast((j.message||'Insufficient tokens.'), 'warning');
+      setTimeout(()=>{window.location.href=j.topup_url||"{{ route('wallet.index') }}";},1400);
+      btn.disabled=false; btn.classList.remove('opacity-50'); dscBusy=false;
+      return;
+    }
     if(!res.ok) throw new Error('search failed');
     const j=await res.json();
     dscCurrent={niche:nicheName,source:j.source||'yellow-pages',cached:!!j.cached,fetched_at:j.fetched_at||null};
     dscRecords=j.records||[]; dscTotal=j.total_found||dscRecords.length;
     bar.style.width='100%'; pct.textContent='100%';
     renderDscResults();
-    label.textContent='Done — Yellow Pages Uganda'+(dscCurrent.cached?' (from local index)':' (fresh pull)')+'.';
+    label.textContent='Done — Yellow Pages Uganda'+(dscCurrent.cached?' (from local index · free)':' (fresh pull · '+(j.cost||5)+' tokens)')+'.';
   }catch(e){
     rows.innerHTML='<p class="px-4 py-8 text-center text-sm text-zinc-400">Directory unreachable right now — please try again in a minute.</p>';
     label.textContent='Search failed.';
@@ -180,7 +192,8 @@ function renderDscResults(){
   rows.innerHTML='';
   const shown=dscRecords.slice(0,10), rest=dscRecords.slice(10);
   const rowHtml=(r,i)=>`<div class="min-w-0"><p class="text-[13px] font-bold truncate">${i+1}. ${r.name}</p>`
-    +`<p class="text-[11px] text-zinc-500 truncate">${r.category||''} &middot; ${r.district||''}${r.verified?' &middot; verified':''}</p></div>`
+    +`<p class="text-[11px] text-zinc-500 truncate">${r.category||''} &middot; ${r.district||''}${r.verified?' &middot; verified':''}</p>`
+    +((r.source_url||r.source_label)?`<p class="text-[11px] truncate"><a target="_blank" href="${r.source_url||'#'}" class="font-semibold text-brand-700 hover:underline dark:text-brand-300">${r.source_label||r.source||'Directory'} ↗</a></p>`:'')+`</div>`
     +`<div class="text-right shrink-0"><p class="text-[12px] font-semibold font-mono">${r.phone||'—'}</p><p class="text-[11px] text-zinc-500 truncate">${r.address||''}</p></div>`;
   shown.forEach((r,i)=>{
     const div=document.createElement('div');
@@ -210,7 +223,7 @@ document.getElementById('dsc-save').addEventListener('click',async()=>{
   btn.disabled=true; btn.textContent='Saving…';
   try{
     const token=document.querySelector('meta[name="csrf-token"]')?.content||'';
-    const contacts=dscRecords.map(r=>({name:r.name,type:r.category||null,district:r.district||null,contact:null,phone:r.phone||null,need:null}));
+    const contacts=dscRecords.map(r=>({name:r.name,type:r.category||null,district:r.district||null,contact:null,phone:r.phone||null,need:null,source_url:r.source_url||null}));
     const res=await fetch("{{ route('scraper.save') }}",{method:'POST',
       headers:{'Accept':'application/json','Content-Type':'application/json','X-CSRF-TOKEN':token,'X-Requested-With':'XMLHttpRequest'},
       body:JSON.stringify({niche:dscCurrent.niche,source:'web',contacts})});

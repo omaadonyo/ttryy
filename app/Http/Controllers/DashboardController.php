@@ -41,7 +41,7 @@ class DashboardController extends Controller
 
         $checklist = [
             ['label' => 'Order your website', 'blurb' => 'Pick a package and pay a deposit. We confirm on WhatsApp and your site goes live in about 5 days.', 'done' => $orders->isNotEmpty(), 'url' => route('checkout')],
-            ['label' => 'Find customers', 'blurb' => 'Scrape real businesses in your niche — the first 10 records of every search are free.', 'done' => $user->savedContacts()->exists(), 'url' => route('scraper.index')],
+            ['label' => 'Find customers', 'blurb' => 'Scrape real businesses in your niche with the Pro tool — fresh pulls cost a few tokens, repeats from the index are free.', 'done' => $user->savedContacts()->exists(), 'url' => route('scraper.index')],
             ['label' => 'Send your first campaign', 'blurb' => 'Reach saved contacts on WhatsApp or email, then watch opens land on the report.', 'done' => $campaigns->isNotEmpty(), 'url' => route('marketing.index')],
             ['label' => 'Top up your wallet', 'blurb' => 'Tokens power AI messages and community access. Top up with Mobile Money or card.', 'done' => $user->tokenTopups()->where('status', 'paid')->exists(), 'url' => route('wallet.index')],
         ];
@@ -174,6 +174,8 @@ class DashboardController extends Controller
                 'niches' => \App\Models\ScrapedProspect::select('niche')->distinct()->count(),
                 'saved' => request()->user()->savedContacts()->count(),
             ],
+            'searchCost' => (int) config('tokens.costs.scraper_search', 5),
+            'tokenBalance' => (int) request()->user()->token_balance,
         ]);
     }
 
@@ -248,6 +250,7 @@ class DashboardController extends Controller
             'contacts.*.phone' => ['nullable', 'string', 'max:50'],
             'contacts.*.email' => ['nullable', 'email', 'max:255'],
             'contacts.*.need' => ['nullable', 'string', 'max:255'],
+            'contacts.*.source_url' => ['nullable', 'url', 'max:500'],
         ]);
 
         $rows = collect($validated['contacts'])->map(fn ($c) => [
@@ -261,6 +264,7 @@ class DashboardController extends Controller
             'email' => $c['email'] ?? null,
             'need' => $c['need'] ?? null,
             'source' => $validated['source'] ?? 'yellow-pages',
+            'source_url' => $c['source_url'] ?? null,
             'created_at' => now(),
             'updated_at' => now(),
         ])->all();
@@ -280,13 +284,13 @@ class DashboardController extends Controller
 
     public function exportContacts(Request $request)
     {
-        $contacts = $request->user()->savedContacts()->latest()->get(['name', 'type', 'district', 'contact', 'phone', 'need', 'niche', 'created_at']);
+        $contacts = $request->user()->savedContacts()->latest()->get(['name', 'type', 'district', 'contact', 'phone', 'need', 'niche', 'source', 'source_url', 'created_at']);
 
-        $csv = "Name,Type,District,Contact,Phone,Need,Niche,Saved\n";
+        $csv = "Name,Type,District,Contact,Phone,Need,Niche,Source,Source URL,Saved\n";
         foreach ($contacts as $c) {
             $csv .= implode(',', array_map(
                 fn ($v) => '"'.str_replace('"', '""', (string) $v).'"',
-                [$c->name, $c->type, $c->district, $c->contact, $c->phone, $c->need, $c->niche, $c->created_at?->format('Y-m-d')]
+                [$c->name, $c->type, $c->district, $c->contact, $c->phone, $c->need, $c->niche, $c->source, $c->source_url, $c->created_at?->format('Y-m-d')]
             ))."\n";
         }
 

@@ -2,8 +2,9 @@
     @include('partials.custom-select')
     @include('partials.toast')
     <div class="flex w-full flex-col gap-5">
-        <x-page-head title="Prospect catalogue" sub="Every business indexed from web directories. Filter, then save what you want to market to.">
+        <x-page-head title="Prospect catalogue" sub="Every business indexed from web directories — each row links its source. NEW marks records fetched in the last 7 days.">
             <x-slot:actions>
+                <a href="{{ route('scraper.index') }}" class="btn-brand btn-sm">Scrape more</a>
                 <button onclick="startTour_prospects()" class="btn-ghost btn-sm">Take tour</button>
             </x-slot:actions>
         </x-page-head>
@@ -81,6 +82,7 @@
                             <th>Phone</th>
                             <th>District</th>
                             <th>Niche</th>
+                            <th>Source</th>
                             <th class="text-right!">Actions</th>
                         </tr>
                     </thead>
@@ -89,13 +91,21 @@
                         <tr>
                             <td class="font-semibold">{{ $p->name }}
                                 @if($p->verified)<span class="ml-1 text-[10px] font-bold text-emerald-700 uppercase dark:text-emerald-400">· verified</span>@endif
+                                @if($p->fetched_at && $p->fetched_at->gte(now()->subDays(7)))<span class="ml-1 rounded-full bg-brand-600 px-2 py-0.5 text-[10px] font-extrabold text-white uppercase" title="Fetched in the last 7 days">New</span>@endif
                             </td>
                             <td>{{ $p->category ?? '—' }}</td>
                             <td class="font-mono text-xs">{{ $p->phone ?? '—' }}</td>
                             <td>{{ $p->district ?? '—' }}</td>
                             <td class="text-xs text-zinc-500">{{ $p->niche }}</td>
+                            <td class="text-xs">
+                                @if($p->sourceLink())
+                                <a target="_blank" href="{{ $p->sourceLink() }}" class="font-semibold text-brand-700 hover:underline dark:text-brand-300" title="Where this record was found">{{ $p->sourceLabel() }} ↗</a>
+                                @else
+                                <span class="text-zinc-500">{{ $p->sourceLabel() }}</span>
+                                @endif
+                            </td>
                             <td class="text-right whitespace-nowrap">
-                                <button data-save-row="{{ $p->id }}" class="text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Save</button>
+                                <button data-save-row="{{ $p->id }}" data-name="{{ $p->name }}" data-type="{{ $p->category ?? '' }}" data-district="{{ $p->district ?? '' }}" data-phone="{{ $p->phone ?? '' }}" data-niche="{{ $p->niche }}" data-source-url="{{ $p->sourceLink() ?? '' }}" class="text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Save</button>
                             </td>
                         </tr>
                         @endforeach
@@ -110,18 +120,18 @@
 <script>
 enhanceSelect(document.getElementById('flt-niche'));
 document.querySelectorAll('[data-save-row]').forEach(btn => btn.addEventListener('click', async () => {
-  const row = btn.closest('tr');
-  const cells = row.querySelectorAll('td');
+  const d = btn.dataset;
   const token = document.querySelector('meta[name="csrf-token"]')?.content || '';
   btn.disabled = true; btn.textContent = 'Saving…';
   try {
     const res = await fetch("{{ route('scraper.save') }}", { method: 'POST',
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'X-Requested-With': 'XMLHttpRequest' },
-      body: JSON.stringify({ niche: cells[4].textContent.trim(), source: 'web', contacts: [{
-        name: cells[0].childNodes[0].textContent.trim(),
-        type: cells[1].textContent.trim() === '—' ? null : cells[1].textContent.trim(),
-        district: cells[3].textContent.trim() === '—' ? null : cells[3].textContent.trim(),
-        phone: cells[2].textContent.trim() === '—' ? null : cells[2].textContent.trim(),
+      body: JSON.stringify({ niche: d.niche, source: 'web', contacts: [{
+        name: d.name,
+        type: d.type || null,
+        district: d.district || null,
+        phone: d.phone || null,
+        source_url: d.sourceUrl || null,
       }]}) });
     if(!res.ok) throw new Error('save failed');
     const j = await res.json().catch(() => ({}));

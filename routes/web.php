@@ -113,7 +113,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::post('marketing/campaigns', [MarketingController::class, 'sendCampaign'])->name('marketing.campaigns.send');
     Route::get('marketing/campaigns/{campaign}', [MarketingController::class, 'showCampaign'])->name('marketing.campaigns.show');
     Route::post('marketing/groups/suggest', [MarketingController::class, 'suggestGroup'])->name('marketing.groups.suggest');
-    Route::post('scraper/search', [MarketingController::class, 'scraperSearch'])->name('scraper.search');
+    Route::post('scraper/search', [MarketingController::class, 'scraperSearch'])->middleware('throttle:20,1')->name('scraper.search');
     Route::post('groups/{group}/unlock', [MarketingController::class, 'unlockGroup'])->name('groups.unlock');
     Route::get('wallet', [WalletController::class, 'index'])->name('wallet.index');
     Route::post('wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');

@@ -10,24 +10,28 @@ class MarketingSeeder extends Seeder
 {
     public function run(): void
     {
+        // Curated Ugandan business communities (join pages resolve to live
+        // invites in a real browser). Source: GroupSor public directory.
         $groups = [
-            ['Uganda SME Network', 'SMEs', 'Buyers, suppliers and partners trading across Uganda.', 2400],
-            ['Kampala Construction Deals', 'Construction', 'Tenders, plots, materials and contractor hookups.', 1800],
-            ['NGO & Grants Hub Africa', 'NGOs & Charities', 'Grant alerts, partnerships and funding talk.', 3100],
-            ['Agribusiness Marketplace UG', 'Agriculture & Agribusiness', 'Buyers, inputs and farmgate prices daily.', 1500],
-            ['Solar & Energy Pros UG', 'Solar & Renewable Energy', 'Installers, importers and institutional buyers.', 900],
-            ['Kampala Real Estate Wire', 'Construction', 'Plots, rentals and property investors.', 2700],
+            ['UGANDAN BUSINESS', 'SMEs', 'Ugandan traders marketplace — buy and sell with traders countrywide.', 'H0pulTXntJeGWm3B5Xktpv'],
+            ['NEW BUSINESS LOADING', 'SMEs', 'Online business ideas and earning opportunities.', 'BSRPC4lztVm5Pnzx765vRf'],
+            ['Jahaz SMM Hub', 'Marketing & Advertising', 'Social media marketing services hub.', 'Isz3bSUsae5ESOQGxPKPU3'],
+            ["Hajjat's Restaurant 24/7", 'Catering & Food Services', 'Restaurant and food community.', 'LxmwbjVae5fEv3S9jNPZNX'],
+            ['AIRPORT PICKUP', 'Logistics & Transport', 'Airport pickup and travel services.', 'EtXafbc5SUX1NTJS449hX2'],
+            ['Digital Marketing & AI', 'Marketing & Advertising', 'Digital marketing and AI talk.', 'KAsiLRysci2BqmvHvscmkK'],
+            ['THE TEACHERS STAFFROOM', 'Education', 'Teachers staffroom community.', 'HJAObnQqdWX88RdAb2uJtw'],
+            ['Business Plug & Sell', 'SMEs', 'Buy-and-sell plug.', 'DfbVnQxJmeAJAQEo3FifQl'],
         ];
 
-        foreach ($groups as [$name, $niche, $description, $members]) {
+        foreach ($groups as [$name, $niche, $description, $code]) {
             WhatsappGroup::firstOrCreate(
                 ['name' => $name],
                 [
                     'niche' => $niche,
                     'description' => $description,
-                    // Replace with the real invite link in production.
-                    'invite_link' => 'https://chat.whatsapp.com/REPLACE-WITH-REAL-LINK',
-                    'member_count' => $members,
+                    'invite_link' => 'https://groupsor.link/group/join/'.$code,
+                    'source' => 'groupsor.directory',
+                    'member_count' => 0,
                     'token_cost' => 10,
                     'is_active' => true,
                 ]
@@ -35,10 +39,10 @@ class MarketingSeeder extends Seeder
         }
 
         $templates = [
-            ['Cold opener', "Hi {name}, I work with businesses like {business} in Uganda. We build professional websites and hand you ready-to-contact prospects for {need} — from UGX 700/day. Open to a quick look at sample prospects for your niche?"],
-            ['Value first', "Hi {name}, quick question: how is {business} currently finding new customers for {need}? I can send 3 sample prospects today, free — no strings. Want them?"],
-            ['Follow-up nudge', "Hi {name}, just floating this back up — businesses like {business} usually reply fastest in the first week. We help with {need} and can start small. Worth a 10-minute chat?"],
-            ['Direct closer', "Hi {name}, here is the simple version: first payment gets {business} online plus your first prospects, then small scheduled payments after that. No hidden fees. Shall I prepare the order?"],
+            ['Cold opener', 'Hi {name}, I work with businesses like {business} in Uganda. We build professional websites and hand you ready-to-contact prospects for {need} — from UGX 700/day. Open to a quick look at sample prospects for your niche?'],
+            ['Value first', 'Hi {name}, quick question: how is {business} currently finding new customers for {need}? I can send 3 sample prospects today, free — no strings. Want them?'],
+            ['Follow-up nudge', 'Hi {name}, just floating this back up — businesses like {business} usually reply fastest in the first week. We help with {need} and can start small. Worth a 10-minute chat?'],
+            ['Direct closer', 'Hi {name}, here is the simple version: first payment gets {business} online plus your first prospects, then small scheduled payments after that. No hidden fees. Shall I prepare the order?'],
         ];
 
         foreach ($templates as [$name, $body]) {

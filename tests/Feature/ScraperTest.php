@@ -97,6 +97,7 @@ test('live scrape results are persisted and deduplicated', function () {
     ]);
 
     $user = App\Models\User::factory()->create();
+    App\Services\Wallet::credit($user, 100, 'Test top-up');
 
     $first = $this->actingAs($user)->postJson(route('scraper.search'), [
         'niche' => 'Construction',
@@ -205,7 +206,8 @@ test('marketing page lists whatsapp groups with search and filter', function () 
     $this->actingAs($user)->get(route('marketing.index'))
         ->assertOk()
         ->assertSee('WhatsApp growth communities', false)
-        ->assertSee('Uganda SME Network', false);
+        ->assertSee('UGANDAN BUSINESS', false)
+        ->assertSee('Listed via community directory', false);
 });
 
 test('group suggestions validate input and accept valid ones', function () {

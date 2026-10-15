@@ -54,6 +54,7 @@
                             <th>Contact</th>
                             <th>Phone</th>
                             <th>Niche</th>
+                            <th>Source</th>
                             <th class="text-right!">Actions</th>
                         </tr>
                     </thead>
@@ -65,6 +66,13 @@
                             <td>{{ $c->contact }}</td>
                             <td class="font-mono text-xs">{{ $c->phone }}</td>
                             <td class="text-xs text-zinc-500">{{ $c->niche }}</td>
+                            <td class="text-xs">
+                                @if($c->source_url)
+                                <a target="_blank" href="{{ $c->source_url }}" class="font-semibold text-brand-700 hover:underline dark:text-brand-300" title="Where this contact was found">{{ $c->source === 'yellow-pages' ? 'Yellow Pages Uganda' : ucfirst($c->source ?? 'saved') }} ↗</a>
+                                @else
+                                <span class="text-zinc-500">{{ $c->source === 'yellow-pages' ? 'Yellow Pages Uganda' : ucfirst($c->source ?? 'saved') }}</span>
+                                @endif
+                            </td>
                             <td class="text-right whitespace-nowrap">
                                 @if($c->waNumber())
                                 <a target="_blank" href="https://wa.me/{{ $c->waNumber() }}" class="mr-3 text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">WhatsApp</a>

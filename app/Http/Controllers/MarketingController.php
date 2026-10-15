@@ -156,6 +156,11 @@ class MarketingController extends Controller
     /**
      * Live directory search: local index first, Yellow Pages live-scrape
      * when the index is empty or stale. Everything found is persisted.
+     *
+     * Pro tool: fresh pulls that return records cost scraper_search
+     * tokens. Repeats served from the local index, and empty or failed
+     * searches, are always free — so the balance is checked after the
+     * search, never before.
      */
     public function scraperSearch(Request $request)
     {
@@ -163,6 +168,8 @@ class MarketingController extends Controller
             'niche' => ['required', 'string', 'max:255'],
             'keyword' => ['nullable', 'string', 'max:255'],
         ]);
+
+        $cost = (int) config('tokens.costs.scraper_search', 5);
 
         set_time_limit(120);
 
@@ -177,6 +184,22 @@ class MarketingController extends Controller
 
             return response()->json(['message' => 'Directory search failed. Please try again in a minute.'], 422);
         }
+
+        if (($result['total_found'] ?? 0) > 0 && !($result['cached'] ?? false)) {
+            if (! Wallet::canAfford($request->user(), $cost)) {
+                return response()->json([
+                    'message' => "Scraping is a Pro tool — this fresh pull needs {$cost} tokens. Top up your wallet to see the results.",
+                    'topup_url' => route('wallet.index'),
+                    'cost' => $cost,
+                    'balance' => (int) $request->user()->fresh()->token_balance,
+                ], 402);
+            }
+
+            Wallet::debit($request->user(), $cost, "Prospect search: {$validated['niche']}");
+        }
+
+        $result['cost'] = $cost;
+        $result['balance'] = (int) $request->user()->fresh()->token_balance;
 
         return response()->json($result);
     }

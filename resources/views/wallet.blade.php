@@ -51,6 +51,7 @@
                 <ul class="mt-3 space-y-2 text-sm">
                     <li class="flex justify-between gap-2"><span class="text-zinc-500">AI sales message</span><strong>{{ $costs['ai_message'] }} tokens</strong></li>
                     <li class="flex justify-between gap-2"><span class="text-zinc-500">WhatsApp group access</span><strong>{{ $costs['group_unlock'] }} tokens each</strong></li>
+                    <li class="flex justify-between gap-2"><span class="text-zinc-500">Pro prospect search (fresh pull)</span><strong>{{ $costs['scraper_search'] }} tokens</strong></li>
                 </ul>
             </div>
             <div class="card card-pad">
