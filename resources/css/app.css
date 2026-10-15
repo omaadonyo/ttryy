@@ -153,7 +153,7 @@ select:focus[data-flux-control] {
 .py-2\.5 { padding-block: calc(var(--spacing) * 1.5); }
 
 /* Guided tour spotlight */
-.tour-hl { outline: 2px solid #9e005d !important; outline-offset: 3px; }
+.tour-hl { outline: 3px solid #9e005d !important; outline-offset: 3px; border-radius: 5px; }
 
 /* Borderless cards in dark mode */
 .dark .card, .dark .tbl-wrap { border-color: transparent; }

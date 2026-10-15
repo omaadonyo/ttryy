@@ -16,6 +16,9 @@ test('landing header has profile menu, no whatsapp link, and legal pages exist',
         ->assertSee('For UGX 10,000, get your idea up and running in 5 days.', false)
         ->assertSee('What ttryy adds', false)
         ->assertSee('Typical designer</th>', false)
+        ->assertSee('id="edge-rails"', false)
+        ->assertSee('edge-hline', false)
+        ->assertSee('lg:grid-cols-2 lg:items-start', false)
         ->assertDontSee('ttryy: Yes', false)
         ->assertDontSee('Who does what', false);
 

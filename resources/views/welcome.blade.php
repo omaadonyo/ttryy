@@ -90,6 +90,8 @@
   .reveal.bg-white{ box-shadow:0 12px 32px -12px rgba(10,10,12,.28); }
   .dark .reveal.bg-white{ box-shadow:0 8px 28px -10px rgba(0,0,0,.8); }
   .record-in{ animation:fadeSlide .45s cubic-bezier(.22,.61,.36,1) both; }
+  body > section{ border-top:1px solid rgba(24,24,27,.08); }
+  .dark body > section{ border-top-color:rgba(255,255,255,.08); }
   .scan-pulse{ animation:scanPulse 1.1s ease-in-out infinite; }
   @keyframes scanPulse{ 0%,100%{ opacity:1;} 50%{ opacity:.35;} }
 </style>
@@ -265,7 +267,15 @@
           <div class="launch-float absolute left-[88%] top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5 text-center" style="animation-delay:-2.2s">
             <span class="text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">UGX / day</span>
             <span class="grid size-16 place-items-center rounded-full text-white" style="background:radial-gradient(circle at 32% 28%, #34d399, #059669 72%);box-shadow:0 12px 30px -8px rgba(16,185,129,.55)">
-              <svg class="size-7" fill="currentColor" viewBox="0 0 24 24"><path d="M5 20V12h3v8H5zm5.5 0V7h3v13h-3zM16 20V4h3v16h-3z"/></svg>
+              <svg class="size-8" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3.2" y="4.4" width="18" height="12.6" rx="1.8" fill="rgba(0,0,0,.22)"/>
+                <rect x="2.5" y="3.5" width="18" height="12.6" rx="1.8" fill="#ffffff"/>
+                <path d="M4.6 5.4l4.6-1.2 1.1 9.4-5.7 1.4z" fill="#059669" opacity=".12"/>
+                <path d="M5.5 12.5l3-3 2.3 2.3 4.2-4.6" stroke="#059669" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="15.2" cy="6.9" r="1.1" fill="#059669"/>
+                <rect x="10.8" y="16.1" width="2.4" height="2.4" fill="#e7e7e9"/>
+                <rect x="8" y="18.5" width="8" height="1.6" rx=".8" fill="#e7e7e9"/>
+              </svg>
             </span>
             <span class="text-xs font-extrabold text-zinc-700 dark:text-zinc-200">revenue online</span>
           </div>
@@ -1123,13 +1133,23 @@ document.addEventListener('click',e=>{
 })();
 paintThemeIcons();
 (function(){
-  // Joint squares where the edge rails meet each section + the footer.
+  // Horizontal rules at every section boundary + joint squares
+  // where they meet the edge rails.
   const layer = document.getElementById('edge-dots');
   if(!layer) return;
   function paint(){
     layer.innerHTML = '';
-    document.querySelectorAll('body > section[id], body > footer').forEach(el => {
-      const top = el.offsetTop;
+    const bounds = [];
+    document.querySelectorAll('body > section, body > footer').forEach(el => bounds.push(el.offsetTop));
+    bounds.push(document.body.scrollHeight);
+    const seen = new Set();
+    bounds.forEach(top => {
+      if(seen.has(top)) return;
+      seen.add(top);
+      const line = document.createElement('span');
+      line.className = 'edge-hline absolute h-px left-[4%] right-[4%] md:left-[10%] md:right-[10%] bg-zinc-200/80 dark:bg-white/10';
+      line.style.top = top + 'px';
+      layer.appendChild(line);
       [['left-[4%] md:left-[10%]', '-translate-x-1/2'], ['right-[4%] md:right-[10%]', 'translate-x-1/2']].forEach(([pos, tx]) => {
         const d = document.createElement('span');
         d.className = 'absolute size-[7px] -translate-y-1/2 ' + tx + ' border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-[#0A0A0B] ' + pos;
