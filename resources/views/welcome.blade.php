@@ -113,9 +113,9 @@
 </svg>
 
 <!-- EDGE RAILS (laravel-style container lines with joint squares) -->
-<div id="edge-rails" class="pointer-events-none absolute inset-y-0 left-0 right-0 z-0" aria-hidden="true">
-  <span class="absolute top-0 bottom-0 left-[4%] md:left-[10%] w-px bg-zinc-200/80 dark:bg-white/10"></span>
-  <span class="absolute top-0 bottom-0 right-[4%] md:right-[10%] w-px bg-zinc-200/80 dark:bg-white/10"></span>
+<div id="edge-rails" class="pointer-events-none absolute inset-y-0 left-0 right-0 z-10" aria-hidden="true">
+  <span class="absolute top-0 bottom-0 left-[4%] md:left-[10%] w-px bg-zinc-300/90 dark:bg-white/20"></span>
+  <span class="absolute top-0 bottom-0 right-[4%] md:right-[10%] w-px bg-zinc-300/90 dark:bg-white/20"></span>
   <span id="edge-dots" class="absolute inset-0"></span>
 </div>
 
@@ -382,7 +382,7 @@
     <div class="reveal bg-white dark:bg-[#141416] rounded-xl overflow-hidden">
       <p class="px-6 sm:px-8 pt-6 font-display font-bold text-lg text-zinc-950 dark:text-white">What ttryy adds that a typical designer doesn&rsquo;t</p>
       <div class="overflow-x-auto mt-2">
-      <table class="w-full text-sm min-w-[520px]">
+      <table class="w-full text-sm">
         <thead>
           <tr class="text-left text-[11px] uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
             <th class="px-6 sm:px-8 py-3 font-bold">What you get</th>
@@ -1147,7 +1147,7 @@ paintThemeIcons();
       if(seen.has(top)) return;
       seen.add(top);
       const line = document.createElement('span');
-      line.className = 'edge-hline absolute h-px left-[4%] right-[4%] md:left-[10%] md:right-[10%] bg-zinc-200/80 dark:bg-white/10';
+      line.className = 'edge-hline absolute h-px left-[4%] right-[4%] md:left-[10%] md:right-[10%] bg-zinc-300/90 dark:bg-white/20';
       line.style.top = top + 'px';
       layer.appendChild(line);
       [['left-[4%] md:left-[10%]', '-translate-x-1/2'], ['right-[4%] md:right-[10%]', 'translate-x-1/2']].forEach(([pos, tx]) => {
