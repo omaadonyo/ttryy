@@ -114,8 +114,8 @@
 
 <!-- EDGE RAILS (laravel-style container lines with joint squares) -->
 <div id="edge-rails" class="pointer-events-none absolute inset-y-0 left-0 right-0 z-10" aria-hidden="true">
-  <span class="absolute top-0 bottom-0 left-[4%] md:left-[10%] w-px bg-zinc-300/90 dark:bg-white/20"></span>
-  <span class="absolute top-0 bottom-0 right-[4%] md:right-[10%] w-px bg-zinc-300/90 dark:bg-white/20"></span>
+  <span class="absolute top-0 bottom-0 left-[4%] md:left-[10%] w-px bg-zinc-200/70 dark:bg-white/10"></span>
+  <span class="absolute top-0 bottom-0 right-[4%] md:right-[10%] w-px bg-zinc-200/70 dark:bg-white/10"></span>
   <span id="edge-dots" class="absolute inset-0"></span>
 </div>
 
@@ -1147,12 +1147,12 @@ paintThemeIcons();
       if(seen.has(top)) return;
       seen.add(top);
       const line = document.createElement('span');
-      line.className = 'edge-hline absolute h-px left-[4%] right-[4%] md:left-[10%] md:right-[10%] bg-zinc-300/90 dark:bg-white/20';
+      line.className = 'edge-hline absolute h-px left-[4%] right-[4%] md:left-[10%] md:right-[10%] bg-zinc-200/70 dark:bg-white/10';
       line.style.top = top + 'px';
       layer.appendChild(line);
       [['left-[4%] md:left-[10%]', '-translate-x-1/2'], ['right-[4%] md:right-[10%]', 'translate-x-1/2']].forEach(([pos, tx]) => {
         const d = document.createElement('span');
-        d.className = 'absolute size-[7px] -translate-y-1/2 ' + tx + ' border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-[#0A0A0B] ' + pos;
+        d.className = 'absolute size-[7px] -translate-y-1/2 ' + tx + ' border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-[#0A0A0B] ' + pos;
         d.style.top = top + 'px';
         layer.appendChild(d);
       });
