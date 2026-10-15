@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Invoice {{ $order->reference }} — Ttryy</title>
+<title>Invoice {{ $order->reference }} — ttryy</title>
 <style>
   body{ font-family:Helvetica,Arial,sans-serif; color:#18181b; font-size:12px; margin:0; padding:0; }
   .wrap{ padding:36px 40px; }
@@ -62,10 +62,10 @@
 
   <div class="box">
     <strong>How to pay</strong>
-    <div style="margin-top:6px;">MTN Mobile Money → merchant payment → code <strong>{{ $momoCode }}</strong> (Ttryy), amount <strong>UGX {{ number_format($order->due_today) }}</strong>, narration <strong>{{ $order->reference }}</strong>. Card and mobile-money payments are also accepted online at checkout.</div>
+    <div style="margin-top:6px;">MTN Mobile Money → merchant payment → code <strong>{{ $momoCode }}</strong> (ttryy), amount <strong>UGX {{ number_format($order->due_today) }}</strong>, narration <strong>{{ $order->reference }}</strong>. Card and mobile-money payments are also accepted online at checkout.</div>
   </div>
 
-  <div class="footer">Thank you for choosing Ttryy. This invoice was generated automatically — please quote {{ $order->reference }} in all correspondence.</div>
+  <div class="footer">Thank you for choosing ttryy. This invoice was generated automatically — please quote {{ $order->reference }} in all correspondence.</div>
 </div>
 </body>
 </html>

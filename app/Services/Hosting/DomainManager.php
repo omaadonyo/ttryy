@@ -58,11 +58,11 @@ class DomainManager
         }
 
         if ($domain === config('hosting.base_domain') || str_ends_with($domain, '.'.config('hosting.base_domain'))) {
-            throw ValidationException::withMessages(['domain' => 'That belongs to Ttryy — use subdomain generation instead.']);
+            throw ValidationException::withMessages(['domain' => 'That belongs to ttryy — use subdomain generation instead.']);
         }
 
         if (WebsiteDomain::where('domain', $domain)->exists()) {
-            throw ValidationException::withMessages(['domain' => 'That domain is already registered on Ttryy.']);
+            throw ValidationException::withMessages(['domain' => 'That domain is already registered on ttryy.']);
         }
 
         return $website->domains()->create([

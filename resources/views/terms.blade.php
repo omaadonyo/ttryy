@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Terms of Service — Ttryy</title>
-<meta name="description" content="The terms governing Ttryy website packages, payments, delivery and acceptable use.">
+<title>Terms of Service — ttryy</title>
+<meta name="description" content="The terms governing ttryy website packages, payments, delivery and acceptable use.">
 <link rel="canonical" href="{{ route('terms') }}">
 <meta name="robots" content="index, follow">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -17,7 +17,7 @@
   <nav class="mx-auto w-[92%] md:w-[80%] flex items-center justify-between h-16">
     <a href="{{ route('home') }}" class="flex items-center gap-2">
       <span class="w-9 h-9 rounded-full bg-[#9e005d] text-white grid place-items-center font-black text-xl">T</span>
-      <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">Ttryy</span>
+      <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">ttryy</span>
     </a>
     <a href="{{ route('home') }}" class="text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">← Home</a>
   </nav>
@@ -26,7 +26,7 @@
   <p class="text-xs font-bold uppercase tracking-[0.14em] text-zinc-500">Legal · Updated October 2026</p>
   <h1 class="font-display font-extrabold text-3xl sm:text-4xl tracking-tight mt-3 text-zinc-950 dark:text-white">Terms of Service</h1>
   <div class="mt-8 space-y-8 text-[15px] leading-relaxed">
-    <section><h2 class="font-display font-bold text-xl text-zinc-950 dark:text-white">1. What Ttryy provides</h2>
+    <section><h2 class="font-display font-bold text-xl text-zinc-950 dark:text-white">1. What ttryy provides</h2>
       <p class="mt-2 text-zinc-600 dark:text-zinc-400">Website design, hosting and maintenance on installment plans, business prospect data, and marketing tools (WhatsApp outreach, email campaigns, templates, communities, token wallet). Package prices, deposits and billing rhythms are shown on the pricing page and locked in your order summary at checkout.</p></section>
     <section><h2 class="font-display font-bold text-xl text-zinc-950 dark:text-white">2. Payments & ownership</h2>
       <p class="mt-2 text-zinc-600 dark:text-zinc-400">You pay a deposit plus daily, weekly or monthly installments until the plan completes, or the full amount upfront. Your website stays running while your plan is active. Domain registration fees are one-time and non-recurring. cPanel and credentials are handed over once your account is in good standing. Manual Mobile Money payments must quote your order reference and are confirmed by our team, usually within a few hours.</p></section>
@@ -48,7 +48,7 @@
   </div>
 </main>
 <footer class="mx-auto w-[92%] md:w-[80%] max-w-3xl pb-10 text-xs text-zinc-500 flex flex-col sm:flex-row justify-between gap-2">
-  <p>© 2026 Ttryy. All rights reserved.</p>
+  <p>© 2026 ttryy. All rights reserved.</p>
   <p><a href="{{ route('privacy') }}" class="hover:underline">Privacy Policy</a> · <a href="{{ route('sitemap.page') }}" class="hover:underline">Sitemap</a></p>
 </footer>
 </body>

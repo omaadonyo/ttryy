@@ -110,7 +110,7 @@ document.querySelectorAll('[data-topup]').forEach(b => b.addEventListener('click
     FlutterwaveCheckout({
       public_key: j.public_key, tx_ref: j.reference + '-' + Date.now(), amount: j.amount_ugx, currency: 'UGX',
       payment_options: 'mobilemoney,card', customer: { email: j.email, name: j.name },
-      customizations: { title: 'Ttryy', description: j.tokens + ' tokens top-up ' + j.reference },
+      customizations: { title: 'ttryy', description: j.tokens + ' tokens top-up ' + j.reference },
       callback: async resp => {
         try{
           const v = await fetch("{{ route('wallet.verify') }}", { method: 'POST',
@@ -124,8 +124,8 @@ document.querySelectorAll('[data-topup]').forEach(b => b.addEventListener('click
       onclose: () => location.reload(),
     });
     @else
-    status.textContent = 'Online top-up is not connected yet — contact Ttryy on WhatsApp to top up manually.';
-    toast('Online top-up is not connected yet — contact Ttryy on WhatsApp.', 'warning');
+    status.textContent = 'Online top-up is not connected yet — contact ttryy on WhatsApp to top up manually.';
+    toast('Online top-up is not connected yet — contact ttryy on WhatsApp.', 'warning');
     @endif
   }catch(e){ status.textContent = e.message || 'Top-up failed.'; toast(e.message || 'Top-up failed.', 'danger'); }
   b.disabled = false;

@@ -78,7 +78,7 @@ select:focus[data-flux-control] {
     @apply size-4;
 } */
 
-/* ============ Ttryy dashboard design system ============ */
+/* ============ ttryy dashboard design system ============ */
 @layer components {
     .card {
         @apply rounded-md border border-zinc-200/90 bg-white shadow-[0_1px_2px_rgba(16,16,20,.05)] dark:border-white/10 dark:bg-zinc-900 dark:shadow-none;

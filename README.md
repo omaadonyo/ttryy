@@ -1,14 +1,14 @@
-# Ttryy — African Business Technology Platform
+# ttryy — African Business Technology Platform
 
 > **We build your website. We find your potential customers. You close the deals.**
 
-Ttryy helps African businesses get online with a professional website **plus**
+ttryy helps African businesses get online with a professional website **plus**
 niche-specific prospecting resources: potential customers, business directories,
 and tender / grant / procurement opportunity resources. The customer contacts
-prospects and closes the deal — Ttryy provides the website, the market
+prospects and closes the deal — ttryy provides the website, the market
 intelligence, and the business tools.
 
-This repository contains the Ttryy marketing landing page, built on
+This repository contains the ttryy marketing landing page, built on
 [Laravel](https://laravel.com) with Blade + Tailwind CSS + Vite.
 
 ## What the landing page includes
@@ -24,16 +24,16 @@ This repository contains the Ttryy marketing landing page, built on
 - **Niche Lead Engine** — searchable grid covering 14 industries
   (NGOs, Construction, IT, Marketing, Cleaning, Security, Catering, Printing,
   Furniture, Accounting, Logistics, Agriculture, Solar, Medical)
-- **Business Development Model** — what Ttryy does vs. what you do
+- **Business Development Model** — what ttryy does vs. what you do
 - **Pricing** — Start (UGX 250,000) / Grow (UGX 350,000) / Business (UGX 650,000)
   + comparison table
-- **Application Support**, **Portfolio**, **Why Ttryy**, **Business Tools preview**,
+- **Application Support**, **Portfolio**, **Why ttryy**, **Business Tools preview**,
   **FAQ**, final CTA, and a full ecosystem **footer**
 - **Lead-capture modal** on every package CTA, WhatsApp CTAs throughout,
   sticky mobile CTA bar, scroll-reveal animations
 
 All prospecting copy deliberately uses "potential customers / prospects /
-opportunities" — Ttryy never guarantees customers, contracts, grants, or funding.
+opportunities" — ttryy never guarantees customers, contracts, grants, or funding.
 
 ## Tech stack
 
@@ -97,7 +97,7 @@ with `php artisan app:make-admin you@example.com`.
 popup, amount = first payment due today, verified server-side before an
 order is marked `paid`) with a manual fallback: direct MTN Mobile Money to
 merchant code **236512** (order reference as narration), after which the
-customer marks the order `submitted` for Ttryy to confirm.
+customer marks the order `submitted` for ttryy to confirm.
 
 ```bash
 php artisan migrate                 # creates package_orders (use XAMPP's PHP on Windows: C:\xampp\php\php.exe)
@@ -281,4 +281,4 @@ public URL still works: the checkout and launch pages poll
 
 ## License
 
-MIT. © 2026 Ttryy. All rights reserved.
+MIT. © 2026 ttryy. All rights reserved.

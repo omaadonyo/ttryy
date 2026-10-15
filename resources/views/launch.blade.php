@@ -3,26 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Launch Your Startup for UGX 10,000 — Free Domain, Built in 5 Days | Ttryy</title>
-<meta name="description" content="Have an app idea? Ttryy builds it with Laravel and AI, gives you a free myapp.ttryy.com domain, and puts you online in 5 days for UGX 10,000. Runs on UGX 800/day to day 365.">
+<title>Launch Your Startup for UGX 10,000 — Free Domain, Built in 5 Days | ttryy</title>
+<meta name="description" content="Have an app idea? ttryy builds it with Laravel and AI, gives you a free myapp.ttryy.com domain, and puts you online in 5 days for UGX 10,000. Runs on UGX 800/day to day 365.">
 <link rel="canonical" href="{{ route('launch') }}">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Ttryy">
-<meta property="og:title" content="Launch Your Startup for UGX 10,000 — Ttryy">
+<meta property="og:site_name" content="ttryy">
+<meta property="og:title" content="Launch Your Startup for UGX 10,000 — ttryy">
 <meta property="og:description" content="Free domain, free development setup, online in 5 days. Built with Laravel and AI. Runs on UGX 800/day.">
 <meta property="og:url" content="{{ route('launch') }}">
 <meta property="og:image" content="{{ url('/favicon.svg') }}">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Launch Your Startup for UGX 10,000 — Ttryy">
+<meta name="twitter:title" content="Launch Your Startup for UGX 10,000 — ttryy">
 <meta name="twitter:description" content="Your app idea, online in 5 days. Free domain. Built with Laravel + AI.">
 <script type="application/ld+json">
 {!! json_encode([
     '@context' => 'https://schema.org',
     '@type' => 'Product',
-    'name' => 'Ttryy Startup Launch (10K campaign)',
+    'name' => 'ttryy Startup Launch (10K campaign)',
     'description' => 'Startup website built with Laravel and AI, free subdomain, online in 5 days, runs on UGX 800/day to day 365.',
-    'brand' => ['@type' => 'Brand', 'name' => 'Ttryy'],
+    'brand' => ['@type' => 'Brand', 'name' => 'ttryy'],
     'offers' => ['@type' => 'Offer', 'price' => 10000, 'priceCurrency' => 'UGX', 'availability' => 'https://schema.org/InStock'],
 ], JSON_UNESCAPED_SLASHES) !!}
 </script>
@@ -48,7 +48,7 @@
   <nav class="mx-auto w-[92%] md:w-[80%] flex items-center justify-between h-16">
     <a href="{{ route('home') }}" class="flex items-center gap-2">
       <span class="w-9 h-9 rounded-full bg-[#9e005d] text-white grid place-items-center font-black text-xl font-display">T</span>
-      <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">Ttryy</span>
+      <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">ttryy</span>
     </a>
     <div class="flex items-center gap-1.5">
       <button onclick="toggleTheme()" class="w-10 h-10 grid place-items-center rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-300" aria-label="Toggle dark mode">
@@ -173,7 +173,7 @@
 <section class="py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012]">
   <div class="mx-auto w-[92%] md:w-[80%] grid lg:grid-cols-2 gap-10">
     <div>
-      <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Why Ttryy</p>
+      <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Why ttryy</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">We launch ideas for a living.</h2>
       <p class="text-zinc-600 dark:text-zinc-400 mt-3">We run a real hosting platform — websites, domains, payments, monitoring — so your launch sits on infrastructure, not promises. You get a team that answers on WhatsApp, a dashboard to watch everything, and humans who want your idea to win.</p>
       <ul class="mt-5 space-y-2.5 text-[15px] text-zinc-700 dark:text-zinc-300">
@@ -197,36 +197,6 @@
   </div>
 </section>
 
-<!-- PAYMENTS -->
-<section class="py-16 lg:py-24 bg-white dark:bg-[#0A0A0B]">
-  <div class="mx-auto w-[92%] md:w-[80%]">
-    <div class="max-w-2xl">
-      <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Pay your way</p>
-      <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Two ways to pay. Zero excuses.</h2>
-    </div>
-    <div class="mt-10 grid md:grid-cols-2 gap-4">
-      <div class="rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 p-6 sm:p-8">
-        <p class="text-xs font-bold tracking-wide uppercase opacity-60">MTN Mobile Money</p>
-        <p class="font-display font-extrabold text-4xl tracking-widest mt-3">768665</p>
-        <ol class="mt-4 space-y-1.5 text-sm opacity-80 list-decimal ml-4">
-          <li>Dial *165# → Payments → Merchant payment</li>
-          <li>Merchant code <strong>768665</strong> (Ttryy)</li>
-          <li>Amount: <strong>UGX 10,000</strong></li>
-          <li>Reference: <strong>LAUNCH + your phone number</strong></li>
-        </ol>
-        <p class="mt-4 text-xs opacity-60">Apply below first, then pay — we match payment to your application by phone number.</p>
-      </div>
-      <div class="rounded-xl bg-zinc-50 dark:bg-[#141416] p-6 sm:p-8">
-        <p class="text-xs font-bold tracking-wide uppercase text-zinc-500">Card & online</p>
-        <p class="font-display font-extrabold text-3xl mt-3 text-zinc-950 dark:text-white">Secure online checkout</p>
-        <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-2">Pay the launch fee online with card or Mobile Money through our secure checkout — or pay instantly in the application form below.</p>
-        <a href="{{ route('checkout') }}" class="mt-5 inline-block bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full transition">Pay UGX 10,000 online</a>
-        <p class="mt-3 text-xs text-zinc-500">Select any package at checkout — mention LAUNCH in the notes and we align it to the 10K campaign.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- TERMS -->
 <section id="launch-terms" class="py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012]">
   <div class="mx-auto w-[92%] md:w-[80%] max-w-3xl">
@@ -236,7 +206,7 @@
       <li><strong class="text-zinc-950 dark:text-white">UGX 10,000 launch fee</strong> covers design and build setup, your free myapp.ttryy.com subdomain, and the first 10 days running. It becomes non-refundable once build work starts.</li>
       <li><strong class="text-zinc-950 dark:text-white">5-day delivery</strong> counts from when you provide your content (name, logo if any, text, photos). Missing content pauses the clock fairly.</li>
       <li><strong class="text-zinc-950 dark:text-white">UGX 800/day continuation</strong> keeps the site live from day 11 to day 365. Pause any time; resume when ready. After day 365 we discuss a long-term plan together.</li>
-      <li><strong class="text-zinc-950 dark:text-white">Startup equity option:</strong> zero-budget startup ideas may be built for 10% of the company, on terms discussed and signed by both sides before work begins. Standard business websites include development in hosting — no equity involved.</li>
+      <li><strong class="text-zinc-950 dark:text-white">Startup equity option:</strong> zero-budget startup ideas may be built for 10% of the company, on terms discussed and signed by both sides before work begins. Otherwise, you own the full source code to your app idea upon full payment, based on your selected budget. Standard business websites include development in hosting — no equity involved.</li>
       <li><strong class="text-zinc-950 dark:text-white">Your content, your responsibility:</strong> you own the rights to text, images and ideas you submit, and your site must respect the law — no fraud, spam or harassment.</li>
       <li><strong class="text-zinc-950 dark:text-white">Fair review:</strong> every application is reviewed personally. If your idea is not a fit, we tell you why within 2 working days — no silence.</li>
     </ol>
@@ -330,7 +300,7 @@
 </main>
 
 <footer class="mx-auto w-[92%] md:w-[80%] pb-10 text-xs text-zinc-500 flex flex-col sm:flex-row justify-between gap-2">
-  <p>© 2026 Ttryy. All rights reserved.</p>
+  <p>© 2026 ttryy. All rights reserved.</p>
   <p><a href="{{ route('home') }}" class="hover:underline">Home</a> · <a href="{{ route('privacy') }}" class="hover:underline">Privacy</a> · <a href="{{ route('terms') }}" class="hover:underline">Terms</a></p>
 </footer>
 

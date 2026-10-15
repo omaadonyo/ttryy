@@ -122,7 +122,7 @@
         <div data-onboard-banner="welcome" class="card card-pad border-brand-600/25 bg-brand-50/50 dark:border-brand-500/25 dark:bg-brand-500/10">
             <div class="flex items-start justify-between gap-3">
                 <div>
-                    <p class="text-[11px] font-bold tracking-[0.14em] text-brand-700 uppercase dark:text-brand-300">Welcome to Ttryy — here's what to expect</p>
+                    <p class="text-[11px] font-bold tracking-[0.14em] text-brand-700 uppercase dark:text-brand-300">Welcome to ttryy — here's what to expect</p>
                     <h2 class="section-title mt-1">{{ $isNewUser ? 'Your first 4 steps' : 'Almost there — finish setup' }}</h2>
                 </div>
                 <button data-onboard-dismiss="welcome" class="btn-ghost btn-sm shrink-0">Skip tour</button>

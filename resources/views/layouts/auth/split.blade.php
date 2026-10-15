@@ -10,7 +10,7 @@
                 <div class="absolute inset-0 bg-zinc-950"></div>
                 <a href="{{ route('home') }}" class="relative z-20 flex items-center text-lg font-medium" wire:navigate>
                     <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[#9e005d] text-white font-black text-xl mr-2">T</span>
-                    Ttryy
+                    ttryy
                 </a>
 
                 <div class="relative z-20 mt-auto">

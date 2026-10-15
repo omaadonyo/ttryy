@@ -222,7 +222,7 @@ document.getElementById('dsc-save').addEventListener('click',async()=>{
   }catch(e){ btn.disabled=false; btn.textContent='Save contacts'; toast('Could not save. Please try again.', 'danger'); }
 });
 document.getElementById('dsc-unlock').addEventListener('click',()=>{
-  const msg='Hi Ttryy! I want to unlock the full prospect list (UGX 10,000) for '+(dscCurrent?dscCurrent.niche:'my niche')+(dscTotal?' — '+dscTotal+' records found.':'');
+  const msg='Hi ttryy! I want to unlock the full prospect list (UGX 10,000) for '+(dscCurrent?dscCurrent.niche:'my niche')+(dscTotal?' — '+dscTotal+' records found.':'');
   toast('Opening WhatsApp — send the message to unlock your list.');
   window.open('https://wa.me/256700000000?text='+encodeURIComponent(msg),'_blank');
 });

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    // Public base domain used for Ttryy-managed subdomains
+    // Public base domain used for ttryy-managed subdomains
     // (e.g. business-name.ttryy.com). Never hardcode it elsewhere.
     'base_domain' => env('HOSTING_BASE_DOMAIN', 'ttryy.com'),
 
@@ -13,7 +13,7 @@ return [
     ],
 
     // Provisioning driver: 'manual' means websites are provisioned by the
-    // Ttryy team and confirmed in the admin panel. Set to a real driver name
+    // ttryy team and confirmed in the admin panel. Set to a real driver name
     // only when automated server provisioning is implemented and tested.
     'provisioning' => [
         'driver' => env('HOSTING_PROVISION_DRIVER', 'manual'),

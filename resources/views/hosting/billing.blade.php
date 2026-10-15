@@ -1,7 +1,7 @@
 <x-layouts::app :title="__('Billing')">
     @include('partials.toast')
     <div class="flex w-full flex-col gap-5">
-        <x-page-head :title="'Billing · '.$website->name" sub="Uses your existing Ttryy orders — no separate billing system.">
+        <x-page-head :title="'Billing · '.$website->name" sub="Uses your existing ttryy orders — no separate billing system.">
             <x-slot:actions>
                 <a href="{{ route('hosting.show', $website) }}" class="btn-ghost btn-sm">← Website</a>
                 <a href="{{ route('checkout') }}" class="btn-brand btn-sm">New order</a>

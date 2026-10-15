@@ -78,8 +78,8 @@ Artisan::command('app:scrape-catalogue {--limit=5000}', function () {
 
 Artisan::command('app:test-mail {email}', function (string $email) {
     try {
-        Mail::raw('Ttryy mail test — if you read this, sending works.', function ($message) use ($email) {
-            $message->to($email)->subject('Ttryy mail test');
+        Mail::raw('ttryy mail test — if you read this, sending works.', function ($message) use ($email) {
+            $message->to($email)->subject('ttryy mail test');
         });
     } catch (Throwable $e) {
         $this->error('Send failed: '.$e->getMessage());

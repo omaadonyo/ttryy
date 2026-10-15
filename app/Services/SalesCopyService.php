@@ -55,7 +55,7 @@ class SalesCopyService
                     'temperature' => 0.8,
                     'messages' => [
                         ['role' => 'system', 'content' => 'You write short WhatsApp sales messages for Ugandan small businesses. Under 60 words. Friendly, direct, one clear call to action. No hashtags, no emojis overload (max one). Plain text only.'],
-                        ['role' => 'user', 'content' => "Write a {$tone} sales message. Goal: ".str_replace('_', ' ', $goal).". Recipient first name: {$first}. Their business: {$business}. What we can help with: {$need}. Sign off as a Ttryy business partner."],
+                        ['role' => 'user', 'content' => "Write a {$tone} sales message. Goal: ".str_replace('_', ' ', $goal).". Recipient first name: {$first}. Their business: {$business}. What we can help with: {$need}. Sign off as a ttryy business partner."],
                     ],
                 ]
             );

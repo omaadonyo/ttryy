@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sitemap — Ttryy</title>
-<meta name="description" content="Every page on Ttryy: packages, tools, account, legal and machine-readable sitemap.">
+<title>Sitemap — ttryy</title>
+<meta name="description" content="Every page on ttryy: packages, tools, account, legal and machine-readable sitemap.">
 <link rel="canonical" href="{{ route('sitemap.page') }}">
 <meta name="robots" content="index, follow">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -17,7 +17,7 @@
   <nav class="mx-auto w-[92%] md:w-[80%] flex items-center justify-between h-16">
     <a href="{{ route('home') }}" class="flex items-center gap-2">
       <span class="w-9 h-9 rounded-full bg-[#9e005d] text-white grid place-items-center font-black text-xl">T</span>
-      <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">Ttryy</span>
+      <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">ttryy</span>
     </a>
     <a href="{{ route('home') }}" class="text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white px-3 py-2">← Home</a>
   </nav>
@@ -68,7 +68,7 @@
   </div>
 </main>
 <footer class="mx-auto w-[92%] md:w-[80%] max-w-3xl pb-10 text-xs text-zinc-500 flex flex-col sm:flex-row justify-between gap-2">
-  <p>© 2026 Ttryy. All rights reserved.</p>
+  <p>© 2026 ttryy. All rights reserved.</p>
   <p><a href="{{ route('privacy') }}" class="hover:underline">Privacy</a> · <a href="{{ route('terms') }}" class="hover:underline">Terms</a></p>
 </footer>
 </body>

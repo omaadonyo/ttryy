@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ttryy — Get Your Website for UGX 800/Day. We Find Customers. You Close Them.</title>
+<title>ttryy — Get Your Website for UGX 800/Day. We Find Customers. You Close Them.</title>
 <meta name="description" content="Get a professional, SEO-ready business website plus targeted potential customers and business opportunities specific to your niche. Run your website for as low as UGX 800/day.">
 <link rel="canonical" href="{{ url('/') }}">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Ttryy">
-<meta property="og:title" content="Ttryy — Get Your Website for UGX 800/Day">
+<meta property="og:site_name" content="ttryy">
+<meta property="og:title" content="ttryy — Get Your Website for UGX 800/Day">
 <meta property="og:description" content="Professional, SEO-ready business websites plus targeted potential customers. Pay a small deposit, then daily, weekly or monthly.">
 <meta property="og:url" content="{{ url('/') }}">
 <meta property="og:image" content="{{ url('/favicon.svg') }}">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ttryy — Get Your Website for UGX 800/Day">
+<meta name="twitter:title" content="ttryy — Get Your Website for UGX 800/Day">
 <meta name="twitter:description" content="Professional websites plus customers, from UGX 800/day. We find customers. You close them.">
 <script type="application/ld+json">
 {!! json_encode([
@@ -22,7 +22,7 @@
     '@graph' => [
         [
             '@type' => 'Organization',
-            'name' => 'Ttryy',
+            'name' => 'ttryy',
             'url' => url('/'),
             'logo' => url('/favicon.svg'),
             'email' => config('packages.admin_email'),
@@ -30,14 +30,14 @@
         ],
         [
             '@type' => 'WebSite',
-            'name' => 'Ttryy',
+            'name' => 'ttryy',
             'url' => url('/'),
         ],
         [
             '@type' => 'Product',
-            'name' => 'Ttryy Website Packages',
+            'name' => 'ttryy Website Packages',
             'description' => 'Professional business websites with daily, weekly or monthly payment plans from UGX 800/day.',
-            'brand' => ['@type' => 'Brand', 'name' => 'Ttryy'],
+            'brand' => ['@type' => 'Brand', 'name' => 'ttryy'],
             'offers' => collect(config('packages.packages'))->map(fn ($p, $name) => [
                 '@type' => 'Offer',
                 'name' => $name.' package',
@@ -94,7 +94,7 @@
   @keyframes scanPulse{ 0%,100%{ opacity:1;} 50%{ opacity:.35;} }
 </style>
 </head>
-<body class="bg-white text-zinc-900 dark:bg-[#0A0A0B] dark:text-zinc-300 overflow-x-clip">
+<body class="relative bg-white text-zinc-900 dark:bg-[#0A0A0B] dark:text-zinc-300 overflow-x-clip">
 
 <!-- ICON SYSTEM -->
 <svg xmlns="http://www.w3.org/2000/svg" class="hidden" aria-hidden="true">
@@ -110,6 +110,13 @@
   <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></symbol>
 </svg>
 
+<!-- EDGE RAILS (laravel-style container lines with joint squares) -->
+<div id="edge-rails" class="pointer-events-none absolute inset-y-0 left-0 right-0 z-0" aria-hidden="true">
+  <span class="absolute top-0 bottom-0 left-[4%] md:left-[10%] w-px bg-zinc-200/80 dark:bg-white/10"></span>
+  <span class="absolute top-0 bottom-0 right-[4%] md:right-[10%] w-px bg-zinc-200/80 dark:bg-white/10"></span>
+  <span id="edge-dots" class="absolute inset-0"></span>
+</div>
+
 <!-- TOP BAR -->
 <div class="bg-zinc-950 dark:bg-black dark:border-b dark:border-white/10 text-white text-xs sm:text-[13px]">
   <div class="mx-auto w-[92%] md:w-[80%] px-4 py-2 flex items-center justify-between gap-3">
@@ -123,7 +130,7 @@
   <nav class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6 flex items-center justify-between h-16 lg:h-[72px]">
     <a href="#home" class="flex items-center gap-2">
       <span class="w-9 h-9 rounded-full bg-[#9e005d] text-white grid place-items-center font-black text-xl font-display">T</span>
-      <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">Ttryy</span>
+      <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">ttryy</span>
     </a>
     <div class="hidden lg:flex items-center gap-6 text-[15px] font-medium text-zinc-600 dark:text-zinc-400">
       <a href="#home" data-navspy="home" class="hover:text-zinc-950 dark:hover:text-white">Home</a>
@@ -203,7 +210,7 @@
         No Big Budget. <span class="text-[#9e005d]">No Waiting.</span>
       </h1>
       <p class="mt-5 text-zinc-600 dark:text-zinc-400 text-base sm:text-lg leading-relaxed max-w-xl">
-        Ttryy builds and hosts your website — from <strong class="text-zinc-900 dark:text-white">UGX 10,000 with a free subdomain</strong>, live in 5 days. Can't raise UGX 350,000 upfront? Don't wait till you have the money. Pay small-small while your site works for you.
+        ttryy builds and hosts your website — from <strong class="text-zinc-900 dark:text-white">UGX 10,000 with a free subdomain</strong>, live in 5 days. Can't raise UGX 350,000 upfront? Don't wait till you have the money. Pay small-small while your site works for you.
       </p>
       <div class="mt-8 flex flex-col sm:flex-row gap-3">
         <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-7 py-3 rounded-full text-base transition shadow-xl shadow-[#9e005d]/25 text-center">Launch My Website</a>
@@ -306,7 +313,7 @@
     <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6 py-2.5 flex items-center gap-2 overflow-x-auto">
       <span class="hidden md:inline text-xs font-semibold text-zinc-500 shrink-0 mr-1">New here? Read in order:</span>
       <a href="#what" data-spy="what" class="spy-link shrink-0 text-[13px] font-semibold rounded-full border border-zinc-200 dark:border-white/15 px-4 py-1.5 text-zinc-600 dark:text-zinc-300 hover:border-zinc-950 dark:hover:border-white transition">1 &middot; What we do</a>
-      <a href="#why" data-spy="why" class="spy-link shrink-0 text-[13px] font-semibold rounded-full border border-zinc-200 dark:border-white/15 px-4 py-1.5 text-zinc-600 dark:text-zinc-300 hover:border-zinc-950 dark:hover:border-white transition">2 &middot; Why Ttryy</a>
+      <a href="#why" data-spy="why" class="spy-link shrink-0 text-[13px] font-semibold rounded-full border border-zinc-200 dark:border-white/15 px-4 py-1.5 text-zinc-600 dark:text-zinc-300 hover:border-zinc-950 dark:hover:border-white transition">2 &middot; Why ttryy</a>
       <a href="#help" data-spy="help" class="spy-link shrink-0 text-[13px] font-semibold rounded-full border border-zinc-200 dark:border-white/15 px-4 py-1.5 text-zinc-600 dark:text-zinc-300 hover:border-zinc-950 dark:hover:border-white transition">3 &middot; How we can help</a>
     </div>
 </div>
@@ -317,7 +324,7 @@
     <div class="max-w-2xl reveal">
       <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Part 1 &middot; What we do</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Three Things, Clearly Divided</h2>
-      <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Ttryy handles the first two. You handle the third, where the money is.</p>
+      <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">ttryy handles the first two. You handle the third, where the money is.</p>
     </div>
     <div class="mt-10 grid md:grid-cols-3 gap-4">
       <div class="reveal rounded-xl   bg-zinc-50 dark:bg-[#141416] p-6">
@@ -333,7 +340,7 @@
       <div class="reveal rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 p-6 shadow-xl shadow-zinc-950/20">
         <p class="font-display font-extrabold text-5xl text-white/30 dark:text-zinc-950/10">03</p>
         <h3 class="font-display font-bold text-xl mt-4">You close the deals</h3>
-        <p class="text-[15px] mt-2 text-white/80 dark:text-zinc-950/70">You contact the prospects, send quotations, attend meetings, submit applications and negotiate. Ttryy does not close deals for you, and we do not guarantee customers, contracts, grants or funding.</p>
+        <p class="text-[15px] mt-2 text-white/80 dark:text-zinc-950/70">You contact the prospects, send quotations, attend meetings, submit applications and negotiate. ttryy does not close deals for you, and we do not guarantee customers, contracts, grants or funding.</p>
       </div>
     </div>
     <div class="mt-8 reveal flex flex-col sm:flex-row gap-3">
@@ -347,26 +354,29 @@
 <section id="why" class="py-16 lg:py-24 bg-zinc-50 dark:bg-[#101012]">
   <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6">
     <div class="max-w-2xl reveal">
-      <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Part 2 &middot; Why Ttryy</p>
+      <p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Part 2 &middot; Why ttryy</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">A Website Alone Doesn&rsquo;t Bring You Business.</h2>
       <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Most business websites sit online and generate nothing — because a website never answers the questions that actually bring money:</p>
     </div>
-    <ol class="mt-8 divide-y divide-zinc-200 dark:divide-white/10 border-y border-zinc-200 dark:border-white/10 max-w-3xl reveal">
+    <div class="mt-10 grid gap-10 lg:grid-cols-2 lg:items-start">
+      <div class="reveal">
+    <ol class="divide-y divide-zinc-200 dark:divide-white/10 border-y border-zinc-200 dark:border-white/10">
       @foreach(['Who exactly are your potential customers?','Where do you find them?','Which organisations buy what you sell?','Which tenders and grants fit you?','Who should you contact this week?','What can you apply for right now?'] as $i=>$q)
       <li class="flex gap-4 py-3.5 text-[15px]"><span class="font-display font-bold text-zinc-300 dark:text-zinc-600 w-6 shrink-0">{{ sprintf('%02d', $i+1) }}</span><span class="font-medium text-zinc-700 dark:text-zinc-300">{{ $q }}</span></li>
       @endforeach
     </ol>
-    <p class="reveal mt-6 text-lg text-zinc-700 dark:text-zinc-300 max-w-3xl">A typical web designer answers none of these. They hand over a website and disappear. <strong class="text-zinc-950 dark:text-white">Ttryy pairs your website with the market intelligence to go after.</strong></p>
+    <p class="reveal mt-6 text-lg text-zinc-700 dark:text-zinc-300">A typical web designer answers none of these. They hand over a website and disappear. <strong class="text-zinc-950 dark:text-white">ttryy pairs your website with the market intelligence to go after.</strong></p>
+      </div>
 
     <!-- Comparison -->
-    <div class="reveal mt-10 bg-white dark:bg-[#141416] rounded-xl overflow-hidden max-w-4xl">
-      <p class="px-6 sm:px-8 pt-6 font-display font-bold text-lg text-zinc-950 dark:text-white">What Ttryy adds that a typical designer doesn&rsquo;t</p>
+    <div class="reveal bg-white dark:bg-[#141416] rounded-xl overflow-hidden">
+      <p class="px-6 sm:px-8 pt-6 font-display font-bold text-lg text-zinc-950 dark:text-white">What ttryy adds that a typical designer doesn&rsquo;t</p>
       <div class="overflow-x-auto mt-2">
       <table class="w-full text-sm min-w-[520px]">
         <thead>
           <tr class="text-left text-[11px] uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
             <th class="px-6 sm:px-8 py-3 font-bold">What you get</th>
-            <th class="px-6 py-3 font-bold text-[#9e005d] dark:text-[#ff4d9a]">Ttryy</th>
+            <th class="px-6 py-3 font-bold text-[#9e005d] dark:text-[#ff4d9a]">ttryy</th>
             <th class="px-6 py-3 font-bold">Typical designer</th>
           </tr>
         </thead>
@@ -378,6 +388,7 @@
         </tbody>
       </table>
       </div>
+    </div>
     </div>
     <p class="reveal mt-6 text-zinc-600 dark:text-zinc-400 max-w-3xl">Your website is the front door. Your prospect database is where the business starts.</p>
 
@@ -444,12 +455,12 @@
       <p class="text-zinc-600 dark:text-zinc-400 mt-3 text-lg">Here is exactly what happens after you request a package. Four steps, in order.</p>
     </div>
     <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      @php $steps=[['01','Tell Us Your Niche','Tell us what your business sells and who you want to reach.','You'],['02','We Build Your Website','A professional, mobile-friendly website with a custom CMS and SEO foundation.','Ttryy'],['03','We Identify Your Market','Niche-specific potential customers, business contacts, directories and opportunities.','Ttryy'],['04','You Close the Deal','Use the website, prospect database and opportunity resources to contact buyers, apply and win work.','You']]; @endphp
+      @php $steps=[['01','Tell Us Your Niche','Tell us what your business sells and who you want to reach.','You'],['02','We Build Your Website','A professional, mobile-friendly website with a custom CMS and SEO foundation.','ttryy'],['03','We Identify Your Market','Niche-specific potential customers, business contacts, directories and opportunities.','ttryy'],['04','You Close the Deal','Use the website, prospect database and opportunity resources to contact buyers, apply and win work.','You']]; @endphp
       @foreach($steps as $s)
       <div class="reveal bg-white dark:bg-[#141416] rounded-xl p-6  ">
         <div class="flex items-center justify-between">
           <span class="font-display font-extrabold text-2xl text-zinc-300 dark:text-zinc-600">{{ $s[0] }}</span>
-          <span class="text-[11px] font-semibold px-3 py-1 rounded-full {{ $s[3]==='Ttryy' ? 'bg-zinc-950 dark:bg-white text-white dark:text-zinc-950' : 'bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-zinc-300' }}">{{ $s[3] }}</span>
+          <span class="text-[11px] font-semibold px-3 py-1 rounded-full {{ $s[3]==='ttryy' ? 'bg-zinc-950 dark:bg-white text-white dark:text-zinc-950' : 'bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-zinc-300' }}">{{ $s[3] }}</span>
         </div>
         <h3 class="font-display font-bold text-lg mt-3 text-zinc-950 dark:text-white">{{ $s[1] }}</h3>
         <p class="text-zinc-600 dark:text-zinc-400 text-[15px] mt-2">{{ $s[2] }}</p>
@@ -484,7 +495,7 @@
       </div>
     </div>
     <div id="nicheGrid" class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-    <p class="text-xs text-zinc-500 mt-8 max-w-3xl">Prospecting resources point you to potential customers, business contacts and opportunities relevant to your niche. Ttryy does not guarantee customers, contracts, grants or funding. You contact prospects and close the business.</p>
+    <p class="text-xs text-zinc-500 mt-8 max-w-3xl">Prospecting resources point you to potential customers, business contacts and opportunities relevant to your niche. ttryy does not guarantee customers, contracts, grants or funding. You contact prospects and close the business.</p>
   </div>
 </section>
 
@@ -684,7 +695,7 @@
       <p class="text-zinc-600 dark:text-zinc-400 mt-3">A free business platform for day-to-day operations — accounting, sales, CRM, inventory, POS and management. Secondary to the website and prospecting packages above.</p>
     </div>
     <p class="reveal mt-8 font-medium text-zinc-700 dark:text-zinc-300">Get customers. Manage customers. Get paid. Run your business.</p>
-    <div class="mt-4 reveal"><button onclick="openLead('', 'Business tools early access')" class="border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold px-8 py-3 rounded-full transition">Explore Ttryy Business Tools</button></div>
+    <div class="mt-4 reveal"><button onclick="openLead('', 'Business tools early access')" class="border border-zinc-300 dark:border-white/20 hover:border-zinc-950 dark:hover:border-white font-bold px-8 py-3 rounded-full transition">Explore ttryy Business Tools</button></div>
   </div>
 </section>
 
@@ -694,7 +705,7 @@
     <div class="reveal"><p class="text-xs font-semibold tracking-wide uppercase text-zinc-500">Still unsure? &middot; FAQ</p>
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl mt-3 text-zinc-950 dark:text-white">Questions, Answered</h2></div>
     <div class="mt-8 space-y-3">
-      @php $faqs=[['Do I get a website?','Yes. Every package includes a professional website and custom CMS.'],['Do you use WordPress?','No. Ttryy websites use a custom CMS rather than WordPress.'],["I don't have UGX 350,000. Can I still launch?",'Yes. Hosting starts at UGX 10,000 with a free yourname.ttryy.com subdomain, and payment plans spread the rest daily, weekly or monthly from UGX 800/day.'],['I have a startup idea but no budget. How do we work?','We build it with you for a 10% company stake, with terms we discuss together — plus hosting to keep it running. For standard business websites, development is included in your hosting plan.'],['Are the 5,000 contacts guaranteed customers?','No. They are potential customers and prospects relevant to your selected niche. Ttryy provides the prospecting resource. You contact and close the customers.'],['What kind of contacts do I receive?','It depends on your niche. They can include businesses, organisations, institutions, procurement contacts, potential buyers, donors, funders, partners and other relevant prospects.'],['Can you help me apply for opportunities?','Yes. Application and proposal support is available as an additional paid service.'],['Does Ttryy guarantee grants or tenders?','No. Ttryy helps identify relevant opportunities and can assist with applications, but final decisions belong to the funder, buyer or procuring organisation.'],['Can I manage my website myself?','Yes. Your website includes a CMS for managing supported content.'],['Is SEO included?','Yes. SEO foundations are included in all packages.'],['Can you build websites for any industry?','Yes. Tell us what your business does and we will create a niche-specific website and prospecting package.']]; @endphp
+      @php $faqs=[['Do I get a website?','Yes. Every package includes a professional website and custom CMS.'],['Do you use WordPress?','No. ttryy websites use a custom CMS rather than WordPress.'],["I don't have UGX 350,000. Can I still launch?",'Yes. Hosting starts at UGX 10,000 with a free yourname.ttryy.com subdomain, and payment plans spread the rest daily, weekly or monthly from UGX 800/day.'],['I have a startup idea but no budget. How do we work?','We build it with you for a 10% company stake, with terms we discuss together — plus hosting to keep it running. For standard business websites, development is included in your hosting plan.'],['Are the 5,000 contacts guaranteed customers?','No. They are potential customers and prospects relevant to your selected niche. ttryy provides the prospecting resource. You contact and close the customers.'],['What kind of contacts do I receive?','It depends on your niche. They can include businesses, organisations, institutions, procurement contacts, potential buyers, donors, funders, partners and other relevant prospects.'],['Can you help me apply for opportunities?','Yes. Application and proposal support is available as an additional paid service.'],['Does ttryy guarantee grants or tenders?','No. ttryy helps identify relevant opportunities and can assist with applications, but final decisions belong to the funder, buyer or procuring organisation.'],['Can I manage my website myself?','Yes. Your website includes a CMS for managing supported content.'],['Is SEO included?','Yes. SEO foundations are included in all packages.'],['Can you build websites for any industry?','Yes. Tell us what your business does and we will create a niche-specific website and prospecting package.']]; @endphp
       @foreach($faqs as $f)
       <details class="faq reveal group bg-white dark:bg-[#141416]   rounded-xl transition">
         <summary class="cursor-pointer list-none flex items-center justify-between gap-4 px-5 sm:px-6 py-4 font-semibold text-[15px] text-zinc-900 dark:text-zinc-100">{{ $f[0] }}<span class="w-8 h-8 shrink-0 grid place-items-center rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-lg leading-none transition-transform group-open:rotate-45">+</span></summary>
@@ -713,7 +724,7 @@
     <p class="reveal text-zinc-400 text-lg mt-4 max-w-2xl mx-auto">For UGX 10,000, get your idea or website up and running in 5 days — free domain plus hosting inclusive. We build it; you bring the customers.</p>
     <div class="reveal mt-8 flex flex-col sm:flex-row justify-center gap-3">
       <a href="/checkout" class="bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold px-8 py-3 rounded-full transition shadow-xl shadow-[#9e005d]/30 text-center">Launch My Website</a>
-      <a href="https://wa.me/256700000000?text=Hi%20Ttryy!%20I%20want%20to%20talk%20about%20growing%20my%20business." target="_blank" class="border border-white/25 hover:bg-white/10 font-bold px-8 py-3 rounded-full transition">Talk to Ttryy</a>
+      <a href="https://wa.me/256700000000?text=Hi%20ttryy!%20I%20want%20to%20talk%20about%20growing%20my%20business." target="_blank" class="border border-white/25 hover:bg-white/10 font-bold px-8 py-3 rounded-full transition">Talk to ttryy</a>
     </div>
     <p class="reveal mt-5 text-sm text-zinc-500">Hosting from <strong class="text-white">UGX 10,000</strong> · live in <strong class="text-white">5 days</strong> · startups: <strong class="text-white">10% build terms</strong></p>
   </div>
@@ -724,7 +735,7 @@
   <div class="mx-auto w-[92%] md:w-[80%] px-4 sm:px-6 py-14">
     <div class="grid md:grid-cols-2 lg:grid-cols-6 gap-10">
       <div class="lg:col-span-1">
-        <div class="flex items-center gap-2"><span class="w-9 h-9 rounded-full bg-[#9e005d] text-white grid place-items-center font-black text-xl">T</span><span class="font-display font-extrabold text-2xl text-white">Ttryy</span></div>
+        <div class="flex items-center gap-2"><span class="w-9 h-9 rounded-full bg-[#9e005d] text-white grid place-items-center font-black text-xl">T</span><span class="font-display font-extrabold text-2xl text-white">ttryy</span></div>
         <p class="text-sm mt-4 leading-relaxed">Websites, customers, opportunities and business tools, built for businesses that want to grow.</p>
         <div class="mt-5 space-y-2.5 text-sm">
           <a href="https://wa.me/256700000000" target="_blank" class="flex items-center gap-2.5 hover:text-white"><svg class="w-4 h-4"><use href="#i-chat"/></svg>+256 700 000000</a>
@@ -739,18 +750,18 @@
       <div><p class="text-white font-bold text-sm">Find Business</p><ul class="mt-4 space-y-2.5 text-sm">@foreach(['Potential Customers','Business Directories','Tenders','Grants','Procurement Opportunities','Funding Opportunities','Business Opportunities'] as $l)<li><a href="#niches" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul></div>
       <div><p class="text-white font-bold text-sm">Business Tools</p><ul class="mt-4 space-y-2.5 text-sm">@php $toolLinks=['Accounting'=>'tools.reports','CRM'=>'tools.customers','Quotations'=>'tools.quotations','Invoicing'=>'tools.invoices','Receipts'=>'tools.receipts','POS'=>'tools.pos','Inventory'=>'tools.inventory','Customers'=>'tools.customers','Suppliers'=>'tools.suppliers','Expenses'=>'tools.expenses','Reports'=>'tools.reports','Cash Flow'=>'tools.cashflow','P&L'=>'tools.pnl','Balance Sheet'=>'tools.balancesheet']; @endphp@foreach($toolLinks as $l=>$r)<li><a href="{{ route($r) }}" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul></div>
       <div><p class="text-white font-bold text-sm">Resources</p><ul class="mt-4 space-y-2.5 text-sm">@foreach(['Business Templates','Proposal Templates','Company Profiles','Tender Resources','Grant Resources','Business Plans','Marketing Resources','PDF Tools','Business Guides'] as $l)<li><a href="#" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul>
-        <p class="text-white font-bold text-sm mt-6">Company</p><ul class="mt-3 space-y-2.5 text-sm"><li><a href="#home" class="hover:text-white">About Ttryy</a></li><li><a href="{{ route('launch') }}" class="hover:text-white">Startup 10K campaign</a></li><li><a href="#launch" class="hover:text-white">Launch 10K deal</a></li><li><a href="mailto:hello@ttryy.com" class="hover:text-white">Contact</a></li><li><a href="#faq" class="hover:text-white">FAQ</a></li><li><a href="{{ route('terms') }}" class="hover:text-white">Terms</a></li><li><a href="{{ route('privacy') }}" class="hover:text-white">Privacy Policy</a></li><li><a href="{{ route('sitemap.page') }}" class="hover:text-white">Sitemap</a></li></ul></div>
+        <p class="text-white font-bold text-sm mt-6">Company</p><ul class="mt-3 space-y-2.5 text-sm"><li><a href="#home" class="hover:text-white">About ttryy</a></li><li><a href="{{ route('launch') }}" class="hover:text-white">Startup 10K campaign</a></li><li><a href="#launch" class="hover:text-white">Launch 10K deal</a></li><li><a href="mailto:hello@ttryy.com" class="hover:text-white">Contact</a></li><li><a href="#faq" class="hover:text-white">FAQ</a></li><li><a href="{{ route('terms') }}" class="hover:text-white">Terms</a></li><li><a href="{{ route('privacy') }}" class="hover:text-white">Privacy Policy</a></li><li><a href="{{ route('sitemap.page') }}" class="hover:text-white">Sitemap</a></li></ul></div>
       <div><p class="text-white font-bold text-sm">Industries</p><ul class="mt-4 space-y-2.5 text-sm">@foreach(['NGOs & Charities','Construction','IT & Software','Marketing','Cleaning','Security','Catering','Printing','Furniture','Accounting','Logistics','Agriculture','Solar','Medical','Retail','Professional Services'] as $l)<li><a href="#niches" class="hover:text-white">{{ $l }}</a></li>@endforeach</ul></div>
     </div>
     <div class="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-3 text-xs text-zinc-500">
-      <p>&copy; 2026 Ttryy. All rights reserved.</p>
+      <p>&copy; 2026 ttryy. All rights reserved.</p>
       <p>Get online. Find opportunities. Win customers. Run your business.</p>
     </div>
   </div>
 </footer>
 
 <!-- WhatsApp float + sticky mobile CTA -->
-<a href="https://wa.me/256700000000?text=Hi%20Ttryy!%20I%20want%20a%20website%20for%20my%20business." target="_blank" class="fixed bottom-20 sm:bottom-6 right-4 z-40 w-14 h-14 grid place-items-center rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow-2xl hover:scale-105 transition" aria-label="Chat on WhatsApp">
+<a href="https://wa.me/256700000000?text=Hi%20ttryy!%20I%20want%20a%20website%20for%20my%20business." target="_blank" class="fixed bottom-20 sm:bottom-6 right-4 z-40 w-14 h-14 grid place-items-center rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow-2xl hover:scale-105 transition" aria-label="Chat on WhatsApp">
   <svg class="w-6 h-6"><use href="#i-chat"/></svg>
 </a>
 <div class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-[#0A0A0B]/95 backdrop-blur border-t border-zinc-200 dark:border-white/10 px-4 py-3 flex gap-2">
@@ -764,7 +775,7 @@
   <div class="absolute inset-0 bg-zinc-950/70 dark:bg-black/80" onclick="closeLead()"></div>
   <div class="relative bg-white dark:bg-[#141416] text-zinc-900 dark:text-zinc-200 rounded-xl w-full max-w-2xl max-h-[92vh] overflow-y-auto shadow-2xl">
     <div class="sticky top-0 bg-white dark:bg-[#141416] px-6 sm:px-8 pt-6 pb-4 border-b border-zinc-100 dark:border-white/10 flex items-start justify-between rounded-t-xl">
-      <div><h3 class="font-display font-extrabold text-2xl">Get Started</h3><p class="text-sm text-zinc-500 mt-1">Request your Ttryy package. We reply fast on WhatsApp.</p></div>
+      <div><h3 class="font-display font-extrabold text-2xl">Get Started</h3><p class="text-sm text-zinc-500 mt-1">Request your ttryy package. We reply fast on WhatsApp.</p></div>
       <button onclick="closeLead()" class="w-9 h-9 grid place-items-center rounded-full bg-zinc-100 dark:bg-white/10 hover:bg-zinc-200 dark:hover:bg-white/20 text-xl" aria-label="Close">&times;</button>
     </div>
     <form id="leadForm" class="px-6 sm:px-8 py-6 grid sm:grid-cols-2 gap-4">
@@ -779,13 +790,13 @@
       <div><label class="text-xs font-semibold">Preferred package</label><select name="package" id="leadPackage" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] dark:text-white"><option value="">Not sure yet</option><option>START — UGX 250,000</option><option>GROW — UGX 350,000</option><option>BUSINESS — UGX 650,000</option></select></div>
       <div class="sm:col-span-2"><label class="text-xs font-semibold">Website / social media (if existing)</label><input name="existing" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-full px-5 py-3 text-sm outline-none focus:border-[#9e005d] dark:text-white" placeholder="https://"></div>
       <div class="sm:col-span-2"><label class="text-xs font-semibold">Message</label><textarea name="message" id="leadMsg" rows="3" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-xl px-5 py-3 text-sm outline-none focus:border-[#9e005d] dark:text-white" placeholder="Tell us about your goals."></textarea></div>
-      <button class="sm:col-span-2 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Request My Ttryy Package</button>
+      <button class="sm:col-span-2 bg-[#9e005d] hover:bg-[#7e0049] text-white font-bold py-3 rounded-full transition shadow-lg shadow-[#9e005d]/25">Request My ttryy Package</button>
       <p class="sm:col-span-2 text-center text-xs text-zinc-400">Prefer chat? <a class="text-zinc-900 dark:text-white font-semibold underline" target="_blank" href="https://wa.me/256700000000">Message us on WhatsApp</a></p>
     </form>
     <div id="leadSuccess" class="hidden px-8 py-12 text-center">
       <div class="w-16 h-16 mx-auto grid place-items-center rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950"><svg class="w-8 h-8"><use href="#i-check"/></svg></div>
       <h3 class="font-display font-extrabold text-2xl mt-4">Request received.</h3>
-      <p class="text-zinc-600 dark:text-zinc-400 mt-2">Thanks. A Ttryy representative will contact you to confirm your niche, website requirements and package.</p>
+      <p class="text-zinc-600 dark:text-zinc-400 mt-2">Thanks. A ttryy representative will contact you to confirm your niche, website requirements and package.</p>
       <button onclick="closeLead()" class="mt-6 bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 font-bold px-8 py-3 rounded-full">Done</button>
     </div>
   </div>
@@ -932,9 +943,9 @@ function downloadSamplePdf(){
   let y=(doc.lastAutoTable?doc.lastAutoTable.finalY:60)+10;
   doc.setFontSize(9); doc.setTextColor(110,110,110);
   doc.text('This sample shows 10 of '+total+' records mapped for '+n.name+'.',14,y);
-  doc.text('Unlock the full PDF for UGX 10,000 — request it via the Ttryy website or WhatsApp.',14,y+6);
+  doc.text('Unlock the full PDF for UGX 10,000 — request it via the ttryy website or WhatsApp.',14,y+6);
   const pages=doc.getNumberOfPages();
-  for(let i=1;i<=pages;i++){ doc.setPage(i); doc.setFontSize(8); doc.setTextColor(160,160,160); doc.text('Page '+i+' of '+pages+'  ·  Ttryy sample PDF — sample data for demonstration',14,287); }
+  for(let i=1;i<=pages;i++){ doc.setPage(i); doc.setFontSize(8); doc.setTextColor(160,160,160); doc.text('Page '+i+' of '+pages+'  ·  ttryy sample PDF — sample data for demonstration',14,287); }
   doc.save(scrapeFinishedName());
 }
 function unlockPdf(){
@@ -1111,6 +1122,31 @@ document.addEventListener('click',e=>{
   }
 })();
 paintThemeIcons();
+(function(){
+  // Joint squares where the edge rails meet each section + the footer.
+  const layer = document.getElementById('edge-dots');
+  if(!layer) return;
+  function paint(){
+    layer.innerHTML = '';
+    document.querySelectorAll('body > section[id], body > footer').forEach(el => {
+      const top = el.offsetTop;
+      [['left-[4%] md:left-[10%]', '-translate-x-1/2'], ['right-[4%] md:right-[10%]', 'translate-x-1/2']].forEach(([pos, tx]) => {
+        const d = document.createElement('span');
+        d.className = 'absolute size-[7px] -translate-y-1/2 ' + tx + ' border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-[#0A0A0B] ' + pos;
+        d.style.top = top + 'px';
+        layer.appendChild(d);
+      });
+    });
+  }
+  let t = null;
+  const later = () => { clearTimeout(t); t = setTimeout(paint, 150); };
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paint);
+  else paint();
+  window.addEventListener('load', paint);
+  window.addEventListener('resize', later);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(paint);
+  setTimeout(paint, 1200);
+})();
 </script>
 </body>
 </html>

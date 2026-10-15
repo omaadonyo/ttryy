@@ -12,7 +12,7 @@
     <p>A new package order was placed and needs follow-up (payment confirmation + onboarding).</p>
     @else
     <p>Hi {{ $order->user->name }},</p>
-    <p>Thanks for choosing Ttryy! Your order is received. A representative will contact you on <strong>{{ $order->phone }}</strong> to confirm and collect payment.</p>
+    <p>Thanks for choosing ttryy! Your order is received. A representative will contact you on <strong>{{ $order->phone }}</strong> to confirm and collect payment.</p>
     @endif
     <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:12px;">
       <tr><td style="padding:6px 0;color:#71717a;">Reference</td><td style="padding:6px 0;text-align:right;"><strong>{{ $order->reference }}</strong></td></tr>

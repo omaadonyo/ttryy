@@ -7,7 +7,7 @@
         };
     @endphp
     <div class="flex w-full flex-col gap-5">
-        <x-page-head :title="'Domains · '.$website->name" sub="Managed for you by the Ttryy team.">
+        <x-page-head :title="'Domains · '.$website->name" sub="Managed for you by the ttryy team.">
             <x-slot:actions>
                 <a href="{{ route('hosting.show', $website) }}" class="btn-ghost btn-sm">← Website</a>
             </x-slot:actions>
@@ -48,7 +48,7 @@
                             <td class="font-mono text-xs">{{ $d->domain }}
                                 @if($d->is_primary)<span class="pill-brand ml-1">primary</span>@endif
                             </td>
-                            <td class="text-xs">{{ $d->type === 'subdomain' ? 'Free Ttryy subdomain' : 'Custom domain' }}</td>
+                            <td class="text-xs">{{ $d->type === 'subdomain' ? 'Free ttryy subdomain' : 'Custom domain' }}</td>
                             <td><span class="{{ $verifyPill($d) }}">{{ $d->verification }}</span></td>
                             <td class="text-xs text-zinc-500">DNS {{ $d->dns_ok ? 'ok' : 'pending' }} · <span class="{{ $sslPill($d->ssl_status) }}">SSL {{ $d->ssl_status }}</span></td>
                             <td class="text-xs text-zinc-500">{{ $d->expires_at?->format('d M Y') ?? '—' }}</td>

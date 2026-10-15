@@ -233,7 +233,7 @@ class AdminHostingController extends Controller
 
         $website->user->notify(new SiteAlert(
             "Website {$website->name} is live",
-            'Confirmed by the Ttryy team.',
+            'Confirmed by the ttryy team.',
             route('hosting.show', $website),
             'hosting'
         ));

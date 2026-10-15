@@ -22,7 +22,7 @@ class OrderPlaced extends Mailable
     {
         $subject = $this->toAdmin
             ? 'New order '.$this->order->reference.' — '.$this->order->package.' (UGX '.number_format($this->order->total_amount).')'
-            : 'Your Ttryy order '.$this->order->reference.' is received';
+            : 'Your ttryy order '.$this->order->reference.' is received';
 
         return new Envelope(subject: $subject);
     }

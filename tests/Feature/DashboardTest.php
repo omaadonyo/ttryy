@@ -29,7 +29,7 @@ test('dashboard shows kpis, checklist, activity chart and feed', function () {
 
     $this->actingAs($user)->get(route('dashboard'))
         ->assertOk()
-        ->assertSee('Welcome to Ttryy', false)
+        ->assertSee('Welcome to ttryy', false)
         ->assertSee('id="dash-activity-chart"', false)
         ->assertSee('Recent activity', false)
         ->assertSee('vs prior 30 days', false);
@@ -96,7 +96,7 @@ test('new users get a skippable onboarding tour of what to expect', function () 
 
     $this->actingAs($user)->get(route('dashboard'))
         ->assertOk()
-        ->assertSee('Welcome to Ttryy', false)
+        ->assertSee('Welcome to ttryy', false)
         ->assertSee('Skip tour', false)
         ->assertSee('Order your website', false)
         ->assertSee('Top up your wallet', false);

@@ -313,7 +313,7 @@ class MarketingController extends Controller
         return "<div style=\"font-family:Arial,sans-serif;max-width:560px;\">"
             ."<h2 style=\"margin:0 0 12px;\">".e($subject).'</h2>'
             .'<div>'.nl2br($text).'</div>'
-            ."<p style=\"color:#71717a;font-size:12px;\">Sent via Ttryy Marketing</p>"
+            ."<p style=\"color:#71717a;font-size:12px;\">Sent via ttryy Marketing</p>"
             ."<img src=\"{$pixel}\" width=\"1\" height=\"1\" alt=\"\" />"
             .'</div>';
     }

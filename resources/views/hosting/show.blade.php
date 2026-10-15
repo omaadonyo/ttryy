@@ -43,7 +43,7 @@
         @if(! $website->service_connected)
         <div class="card card-pad border-amber-500/30 bg-amber-500/5">
             <p class="text-sm font-bold">Service backend not connected</p>
-            <p class="mt-1 text-[13px] text-zinc-500 dark:text-zinc-400">This record exists in Ttryy, but no website service has connected yet{{ $website->service_url ? '' : ' and no service endpoint is configured' }}. Remote suspend/restore and live health reports activate once the service backend is embedded and heartbeats arrive. Ask support if you need help.</p>
+            <p class="mt-1 text-[13px] text-zinc-500 dark:text-zinc-400">This record exists in ttryy, but no website service has connected yet{{ $website->service_url ? '' : ' and no service endpoint is configured' }}. Remote suspend/restore and live health reports activate once the service backend is embedded and heartbeats arrive. Ask support if you need help.</p>
         </div>
         @endif
 

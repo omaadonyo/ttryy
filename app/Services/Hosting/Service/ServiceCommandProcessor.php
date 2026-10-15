@@ -3,10 +3,10 @@
 namespace App\Services\Hosting\Service;
 
 /**
- * Ttryy Hosted Website Service Backend (embeddable component, version 1.0.0).
+ * ttryy Hosted Website Service Backend (embeddable component, version 1.0.0).
  *
  * Drop this directory into any hosted Laravel website to give it a secure
- * service integration with the central Ttryy platform:
+ * service integration with the central ttryy platform:
  *
  *   1. Copy this file (and nothing else) into the hosted app, e.g.
  *      app/Services/TtryyService/ServiceCommandProcessor.php (keep namespace sane).

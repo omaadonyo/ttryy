@@ -445,7 +445,7 @@ document.getElementById('ai-generate')?.addEventListener('click', async () => {
     const j = await res.json();
     if(!res.ok) throw new Error(j.message || 'Generation failed.');
     out.textContent = j.message;
-    src.textContent = (j.source === 'ai' ? 'Written by AI' : 'From the Ttryy sales library') + ' · 10 tokens used';
+    src.textContent = (j.source === 'ai' ? 'Written by AI' : 'From the ttryy sales library') + ' · 10 tokens used';
     box.classList.remove('hidden');
     status.textContent = '';
     toast('Message ready — 10 tokens used.');

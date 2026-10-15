@@ -41,7 +41,7 @@ class IotecPaymentController extends Controller
                 (int) $order->due_today,
                 $order->reference,
                 $request->user()->name,
-                substr("Ttryy {$order->package} — {$order->reference}", 0, 100),
+                substr("ttryy {$order->package} — {$order->reference}", 0, 100),
                 substr("{$order->business_name} · {$order->package}", 0, 100),
             );
 
@@ -119,7 +119,7 @@ class IotecPaymentController extends Controller
                 $order->reference,
                 route('payments.iotec.card-return'),
                 $request->user()->name,
-                substr("Ttryy {$order->package} — {$order->reference}", 0, 100),
+                substr("ttryy {$order->package} — {$order->reference}", 0, 100),
             );
 
             $order->update(['payment_method' => 'iotec', 'gateway_tx_id' => $tx['id']]);
@@ -209,7 +209,7 @@ class IotecPaymentController extends Controller
                 $fee,
                 'LAUNCH-'.$signup->id,
                 $validated['name'],
-                substr("Ttryy Launch 10K — {$validated['idea_name']}", 0, 100),
+                substr("ttryy Launch 10K — {$validated['idea_name']}", 0, 100),
                 substr("LaunchSignup #{$signup->id}", 0, 100),
             );
 

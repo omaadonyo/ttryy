@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Order {{ $order->reference }} — Ttryy</title>
+<title>Order {{ $order->reference }} — ttryy</title>
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0B">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%239e005d'/><text x='50' y='70' font-size='54' font-family='Arial Black' font-weight='900' fill='white' text-anchor='middle'>T</text></svg>">
@@ -27,7 +27,7 @@
   <nav class="max-w-3xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
     <a href="{{ route('home') }}" class="flex items-center gap-2">
       <span class="w-9 h-9 rounded-full bg-[#9e005d] text-white grid place-items-center font-black text-xl font-display">T</span>
-      <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">Ttryy</span>
+      <span class="font-display font-extrabold text-2xl tracking-tight text-zinc-950 dark:text-white">ttryy</span>
     </a>
     <div class="flex items-center gap-1.5">
       <button onclick="toggleTheme()" class="w-10 h-10 grid place-items-center rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-300" aria-label="Toggle dark mode">
@@ -58,7 +58,7 @@
         @if($order->status === 'paid')
         Your first payment went through. Our team starts on your website right away.
         @else
-        A Ttryy representative will contact <strong class="text-zinc-900 dark:text-white">{{ $order->phone }}</strong> shortly to confirm and collect payment.
+        A ttryy representative will contact <strong class="text-zinc-900 dark:text-white">{{ $order->phone }}</strong> shortly to confirm and collect payment.
         @endif
       </p>
       <button onclick="navigator.clipboard.writeText('{{ $order->reference }}');this.querySelector('span').textContent='Copied!';setTimeout(()=>this.querySelector('span').textContent='Copy reference',1500)" class="mt-4 inline-flex items-center gap-2 rounded-full bg-zinc-100 dark:bg-white/10 hover:bg-zinc-200 dark:hover:bg-white/20 px-5 py-2.5 font-mono text-sm font-bold text-zinc-900 dark:text-white transition">
@@ -106,14 +106,14 @@
         </div>
         <a href="{{ route('orders.invoice', $order) }}" class="shrink-0 text-xs font-bold px-4 py-2.5 rounded-full {{ $order->status === 'paid' ? 'bg-white/20 hover:bg-white/30 text-white' : 'bg-white/10 hover:bg-white/20 dark:bg-zinc-950/5 dark:hover:bg-zinc-950/10 text-white dark:text-zinc-950' }} transition">Download invoice</a>
       </div>
-      <a target="_blank" href="https://wa.me/256700000000?text={{ urlencode('Hi Ttryy! I just placed order '.$order->reference.' ('.$order->package.', '.ucfirst($order->billing_frequency).', due today UGX '.number_format($order->due_today).'). How do I pay?') }}" class="btn-brand mt-4 w-full">Confirm on WhatsApp</a>
+      <a target="_blank" href="https://wa.me/256700000000?text={{ urlencode('Hi ttryy! I just placed order '.$order->reference.' ('.$order->package.', '.ucfirst($order->billing_frequency).', due today UGX '.number_format($order->due_today).'). How do I pay?') }}" class="btn-brand mt-4 w-full">Confirm on WhatsApp</a>
       @if($order->status !== 'paid')
       <div class="mt-4 rounded-xl border border-zinc-200/80 bg-zinc-50 p-5 text-sm dark:border-white/10 dark:bg-white/5">
         <p class="font-bold text-zinc-950 dark:text-white">Pay with MTN Mobile Money</p>
         <p class="font-display font-extrabold text-3xl tracking-widest mt-2 text-zinc-950 dark:text-white">{{ config('services.momo.merchant_code') }}</p>
         <ol class="mt-2 space-y-1 text-[13px] text-zinc-600 dark:text-zinc-400 list-decimal ml-4">
           <li>Dial *165# → Payments → Merchant payment</li>
-          <li>Enter merchant code <strong>{{ config('services.momo.merchant_code') }}</strong> (Ttryy)</li>
+          <li>Enter merchant code <strong>{{ config('services.momo.merchant_code') }}</strong> (ttryy)</li>
           <li>Amount: <strong>UGX {{ number_format($order->due_today) }}</strong> (your first payment)</li>
           <li>Reference / narration: <strong class="font-mono">{{ $order->reference }}</strong></li>
         </ol>
@@ -128,7 +128,7 @@
 </main>
 
 <footer class="max-w-3xl mx-auto px-4 sm:px-6 pb-10 text-xs text-zinc-500 flex flex-col sm:flex-row justify-between gap-2">
-  <p>© 2026 Ttryy. All rights reserved.</p>
+  <p>© 2026 ttryy. All rights reserved.</p>
   <p>Please quote <strong>{{ $order->reference }}</strong> in all correspondence.</p>
 </footer>
 

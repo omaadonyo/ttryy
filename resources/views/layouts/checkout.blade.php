@@ -7,11 +7,11 @@
     <body class="min-h-screen bg-[#f4f4f5] font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100">
         <header class="sticky top-0 z-20 border-b border-zinc-200/90 bg-[#f4f4f5]/85 backdrop-blur-md dark:border-white/10 dark:bg-zinc-950/85">
             <div class="mx-auto flex h-[68px] w-[92%] items-center gap-2 md:w-[80%]">
-                <a href="{{ url('/') }}" class="flex min-w-0 items-center gap-2.5" title="Ttryy home">
+                <a href="{{ url('/') }}" class="flex min-w-0 items-center gap-2.5" title="ttryy home">
                     <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-brand-600 text-white shadow-[0_8px_16px_-8px_rgba(158,0,93,.8)]">
                         <x-app-logo-icon class="size-5 fill-current" />
                     </span>
-                    <span class="font-display block truncate text-[17px] font-extrabold tracking-tight">Ttryy</span>
+                    <span class="font-display block truncate text-[17px] font-extrabold tracking-tight">ttryy</span>
                 </a>
                 <div class="ml-auto flex shrink-0 items-center gap-1.5">
                     <button onclick="toggleTheme()" class="grid size-10 place-items-center rounded-full hover:bg-zinc-950/5 dark:hover:bg-white/10" aria-label="Toggle dark mode">

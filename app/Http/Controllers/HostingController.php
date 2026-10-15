@@ -108,7 +108,7 @@ class HostingController extends Controller
                 return back()->withErrors(['custom_domain' => 'Enter a valid domain you own (not a '.config('hosting.base_domain').' subdomain).'])->withInput();
             }
             if (WebsiteDomain::where('domain', $domain)->exists()) {
-                return back()->withErrors(['custom_domain' => 'That domain is already registered on Ttryy.'])->withInput();
+                return back()->withErrors(['custom_domain' => 'That domain is already registered on ttryy.'])->withInput();
             }
         }
 
@@ -306,7 +306,7 @@ class HostingController extends Controller
     {
         $this->authorize('update', $domain);
         abort_if($domain->hosted_website_id !== $website->id, 404);
-        abort_if($domain->type !== WebsiteDomain::TYPE_SUBDOMAIN, 422, 'Only Ttryy subdomains can be renamed here.');
+        abort_if($domain->type !== WebsiteDomain::TYPE_SUBDOMAIN, 422, 'Only ttryy subdomains can be renamed here.');
 
         $validated = $request->validate(['label' => ['required', 'string', 'max:63']]);
         $label = strtolower(trim($validated['label']));
@@ -351,11 +351,11 @@ class HostingController extends Controller
         }
 
         if ($domain === config('hosting.base_domain') || str_ends_with($domain, '.'.config('hosting.base_domain'))) {
-            return back()->withErrors(['domain' => 'That belongs to Ttryy — use subdomain generation instead.']);
+            return back()->withErrors(['domain' => 'That belongs to ttryy — use subdomain generation instead.']);
         }
 
         if (WebsiteDomain::where('domain', $domain)->exists()) {
-            return back()->withErrors(['domain' => 'That domain is already registered on Ttryy.']);
+            return back()->withErrors(['domain' => 'That domain is already registered on ttryy.']);
         }
 
         $website->domains()->create([
@@ -385,7 +385,7 @@ class HostingController extends Controller
         abort_if($domain->hosted_website_id !== $website->id, 404);
 
         if ($domain->type === WebsiteDomain::TYPE_SUBDOMAIN) {
-            return back()->with('status', 'Ttryy subdomains are verified by definition.');
+            return back()->with('status', 'ttryy subdomains are verified by definition.');
         }
 
         if ($domain->verification === 'verified') {

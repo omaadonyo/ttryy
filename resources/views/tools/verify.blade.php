@@ -9,7 +9,7 @@
 <body class="bg-zinc-100 min-h-screen grid place-items-center p-6">
   <div class="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl text-center">
     <p class="inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-4 py-1.5 text-xs font-bold text-emerald-700"><span class="size-2 rounded-full bg-emerald-500"></span>VERIFIED DOCUMENT</p>
-    <p class="mt-4 text-xs font-bold uppercase tracking-widest text-zinc-400">{{ $business?->business_name ?? 'Ttryy Business Tools' }}</p>
+    <p class="mt-4 text-xs font-bold uppercase tracking-widest text-zinc-400">{{ $business?->business_name ?? 'ttryy Business Tools' }}</p>
     <h1 class="mt-1 text-3xl font-extrabold">{{ $doc->label() }} {{ $doc->number }}</h1>
     <dl class="mt-6 space-y-2 text-left text-sm">
       <div class="flex justify-between border-b border-zinc-100 pb-2"><dt class="text-zinc-500">Issued to</dt><dd class="font-bold">{{ $doc->contact?->name ?? 'Walk-in customer' }}</dd></div>
@@ -21,7 +21,7 @@
       @endif
       <div class="flex justify-between"><dt class="text-zinc-500">Status</dt><dd class="font-bold uppercase">{{ $doc->status }}</dd></div>
     </dl>
-    <p class="mt-6 text-xs text-zinc-400">This page confirms the document above is genuine and was issued through Ttryy Business Tools.</p>
+    <p class="mt-6 text-xs text-zinc-400">This page confirms the document above is genuine and was issued through ttryy Business Tools.</p>
   </div>
 </body>
 </html>
