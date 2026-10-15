@@ -1,5 +1,6 @@
 <x-layouts::app :title="__('Business Tools — POS')">
     @include('partials.toast')
+    @include('partials.custom-select')
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Point of Sale" sub="Tap items, take cash or MoMo, print the receipt. Stock deducts instantly." />
         @include('tools._tabs', ['active' => $active])
@@ -30,8 +31,8 @@
             <form method="POST" action="{{ route('tools.pos.checkout') }}" id="pos-form" class="card card-pad lg:sticky lg:top-24">
                 @csrf
                 <h2 class="section-title">Current sale</h2>
-                <div class="mt-3"><label class="lbl">Customer (optional)</label><select name="contact_id" class="field"><option value="">Walk-in</option>@foreach($customers as $c)<option value="{{ $c->id }}">{{ $c->name }}</option>@endforeach</select></div>
-                <div class="mt-3"><label class="lbl">Payment method</label><select name="payment_method" class="field"><option value="cash">Cash</option><option value="momo">Mobile Money</option><option value="card">Card</option><option value="bank">Bank</option></select></div>
+                <div class="mt-3"><label class="lbl">Customer (optional)</label><select name="contact_id" id="pos-customer" class="field"><option value="">Walk-in</option>@foreach($customers as $c)<option value="{{ $c->id }}">{{ $c->name }}</option>@endforeach</select></div>
+                <div class="mt-3"><label class="lbl">Payment method</label><select name="payment_method" id="pos-method" class="field"><option value="cash">Cash</option><option value="momo">Mobile Money</option><option value="card">Card</option><option value="bank">Bank</option></select></div>
                 <div id="cart" class="mt-3 space-y-2"></div>
                 <p id="cart-empty" class="mt-3 text-sm text-zinc-500">Tap items to add them.</p>
                 <div class="mt-3 border-t border-zinc-200 pt-3 dark:border-white/10">
@@ -46,6 +47,12 @@
     </div>
 <script>
 (function(){
+    if(typeof enhanceSelect === 'function'){
+        ['pos-customer', 'pos-method'].forEach(id => {
+            const s = document.getElementById(id);
+            if(s) enhanceSelect(s);
+        });
+    }
     const cart = new Map();
     const fmt = n => 'UGX ' + Number(n || 0).toLocaleString('en-US');
     const box = document.getElementById('cart');

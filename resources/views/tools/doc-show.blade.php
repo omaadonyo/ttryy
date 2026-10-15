@@ -1,5 +1,6 @@
 <x-layouts::app :title="__('Business Tools — '.$doc->number)">
     @include('partials.toast')
+    @include('partials.custom-select')
     <div class="flex w-full flex-col gap-5">
         <x-page-head :title="$doc->label().' '.$doc->number" :sub="($doc->contact?->name ?? 'Walk-in customer').' · issued '.$doc->issue_date->format('d M Y')">
             <x-slot:actions>
@@ -69,9 +70,15 @@
                 @if($doc->type === 'quotation')
                 <form method="POST" action="{{ route('tools.doc.status', $doc) }}" class="flex gap-2">
                     @csrf @method('PATCH')
-                    <select name="status" class="field"><option value="sent" {{ $doc->status === 'sent' ? 'selected' : '' }}>Sent</option><option value="accepted" {{ $doc->status === 'accepted' ? 'selected' : '' }}>Accepted</option><option value="declined" {{ $doc->status === 'declined' ? 'selected' : '' }}>Declined</option><option value="draft" {{ $doc->status === 'draft' ? 'selected' : '' }}>Draft</option></select>
+                    <select name="status" id="quote-status" class="field"><option value="sent" {{ $doc->status === 'sent' ? 'selected' : '' }}>Sent</option><option value="accepted" {{ $doc->status === 'accepted' ? 'selected' : '' }}>Accepted</option><option value="declined" {{ $doc->status === 'declined' ? 'selected' : '' }}>Declined</option><option value="draft" {{ $doc->status === 'draft' ? 'selected' : '' }}>Draft</option></select>
                     <button class="btn-ghost btn-sm shrink-0">Set</button>
                 </form>
+                <script>
+                (function(){
+                    const s = document.getElementById('quote-status');
+                    if(s && typeof enhanceSelect === 'function') enhanceSelect(s);
+                })();
+                </script>
                 @endif
                 @if($doc->type === 'invoice' && $doc->balance() > 0)
                 <form method="POST" action="{{ route('tools.doc.store', ['type' => 'receipts']) }}">

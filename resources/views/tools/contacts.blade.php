@@ -1,7 +1,11 @@
 <x-layouts::app :title="__('Business Tools — '.ucfirst($kind).'s')">
     @include('partials.toast')
     <div class="flex w-full flex-col gap-5">
-        <x-page-head :title="ucfirst($kind).'s'" :sub="$kind === 'customer' ? 'Everyone you sell to — balances update live.' : 'Everyone you buy from — unpaid bills show on your balance sheet.'" />
+        <x-page-head :title="ucfirst($kind).'s'" :sub="$kind === 'customer' ? 'Everyone you sell to — balances update live.' : 'Everyone you buy from — unpaid bills show on your balance sheet.'">
+            <x-slot:actions>
+                <button type="button" onclick="document.getElementById('contact-modal').showModal()" class="btn-brand btn-sm">Add {{ $kind }}</button>
+            </x-slot:actions>
+        </x-page-head>
         @include('tools._tabs', ['active' => $active])
 
         @if($errors->any())
@@ -18,22 +22,27 @@
             </form>
         </div>
 
-        <div class="grid gap-4 lg:grid-cols-[320px_1fr]">
-            <div class="card card-pad h-fit">
+        <dialog id="contact-modal" class="m-auto max-h-[92vh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-xl bg-white p-4 backdrop:bg-zinc-950/60 sm:p-6 dark:bg-[#141416]">
+            <div class="mb-3 flex items-center justify-between gap-2">
                 <h2 class="section-title">Add {{ $kind }}</h2>
-                <form method="POST" action="{{ route('tools.contacts.store') }}" class="mt-3 space-y-3">
-                    @csrf
-                    <input type="hidden" name="kind" value="{{ $kind }}">
-                    <div><label class="lbl">Name *</label><input name="name" required class="field" placeholder="Full name or business"></div>
-                    <div><label class="lbl">Phone</label><input name="phone" class="field" placeholder="+256 700 000000"></div>
-                    <div><label class="lbl">Email</label><input name="email" type="email" class="field"></div>
-                    <div><label class="lbl">Address</label><input name="address" class="field"></div>
-                    <div><label class="lbl">Notes</label><textarea name="notes" rows="2" class="field"></textarea></div>
-                    <button class="btn-brand w-full">Save {{ $kind }}</button>
-                </form>
+                <button type="button" onclick="document.getElementById('contact-modal').close()" class="grid size-8 shrink-0 place-items-center rounded-full text-zinc-400 transition hover:bg-zinc-950/5 hover:text-zinc-700 dark:hover:bg-white/10 dark:hover:text-white" aria-label="Close">✕</button>
             </div>
+            <form method="POST" action="{{ route('tools.contacts.store') }}" class="space-y-3">
+                @csrf
+                <input type="hidden" name="kind" value="{{ $kind }}">
+                <div><label class="lbl">Name *</label><input name="name" required class="field" placeholder="Full name or business"></div>
+                <div><label class="lbl">Phone</label><input name="phone" class="field" placeholder="+256 700 000000"></div>
+                <div><label class="lbl">Email</label><input name="email" type="email" class="field"></div>
+                <div><label class="lbl">Address</label><input name="address" class="field"></div>
+                <div><label class="lbl">Notes</label><textarea name="notes" rows="2" class="field"></textarea></div>
+                <button class="btn-brand w-full">Save {{ $kind }}</button>
+            </form>
+        </dialog>
+        @if($errors->any())
+        <script>document.getElementById('contact-modal')?.showModal();</script>
+        @endif
 
-            <div class="card card-pad">
+        <div class="card card-pad">
                 @if($contacts->isEmpty())
                 <x-empty-state icon="users" :title="'No '.$kind.'s yet'" :message="'Add your first '. $kind .' to start billing.'" />
                 @else
@@ -64,7 +73,6 @@
                 </div>
                 <div class="mt-4">{{ $contacts->links() }}</div>
                 @endif
-            </div>
         </div>
     </div>
 </x-layouts::app>

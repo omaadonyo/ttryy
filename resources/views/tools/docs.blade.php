@@ -1,16 +1,18 @@
 @php
 $titles = ['quotation' => ['Quotations', 'Quote a customer — convert to invoice in one tap when they accept.'], 'invoice' => ['Invoicing', 'Bill customers. Stock deducts automatically.'], 'receipt' => ['Receipts', 'Proof of every shilling received.']];
 [$title, $sub] = $titles[$type];
+$singular = ['quotation' => 'Quotation', 'invoice' => 'Invoice', 'receipt' => 'Receipt'][$type];
 $createRoute = route('tools.doc.create', ['type' => str($type)->plural()]);
 $statuses = $type === 'quotation' ? ['draft', 'sent', 'accepted', 'declined'] : ($type === 'invoice' ? ['unpaid', 'partial', 'paid'] : ['posted']);
 @endphp
 <x-layouts::app :title="__('Business Tools — '.$title)">
     @include('partials.toast')
+    @include('partials.custom-select')
     <div class="flex w-full flex-col gap-5">
         <x-page-head :title="$title" :sub="$sub">
             <x-slot:actions>
                 @if($type === 'invoice')<span class="pill-amber">UGX {{ number_format($totals['outstanding']) }} outstanding</span>@endif
-                <a href="{{ $createRoute }}" class="btn-brand btn-sm">New {{ rtrim($title, 's') }}</a>
+                <button type="button" onclick="document.getElementById('doc-modal').showModal()" class="btn-brand btn-sm">New {{ $singular }}</button>
             </x-slot:actions>
         </x-page-head>
         @include('tools._tabs', ['active' => $active])
@@ -64,4 +66,21 @@ $statuses = $type === 'quotation' ? ['draft', 'sent', 'accepted', 'declined'] : 
             @endif
         </div>
     </div>
+
+    <dialog id="doc-modal" class="m-auto max-h-[92vh] w-[calc(100%-2rem)] max-w-3xl overflow-y-auto rounded-xl bg-white p-4 backdrop:bg-zinc-950/60 sm:p-6 dark:bg-[#141416]">
+        <div class="mb-3 flex items-center justify-between gap-2">
+            <h2 class="section-title">New {{ $singular }}</h2>
+            <button type="button" onclick="document.getElementById('doc-modal').close()" class="grid size-8 shrink-0 place-items-center rounded-full text-zinc-400 transition hover:bg-zinc-950/5 hover:text-zinc-700 dark:hover:bg-white/10 dark:hover:text-white" aria-label="Close">✕</button>
+        </div>
+        @include('tools._doc-form', ['formTitle' => $singular])
+    </dialog>
+    @if($errors->any())
+    <script>document.getElementById('doc-modal')?.showModal();</script>
+    @endif
+    <script>
+    (function(){
+        const s = document.querySelector('select[name="status"]');
+        if(s && typeof enhanceSelect === 'function') enhanceSelect(s);
+    })();
+    </script>
 </x-layouts::app>

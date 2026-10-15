@@ -424,9 +424,24 @@ class BusinessToolsController extends Controller
                 : 0,
         ];
 
+        $userId = $request->user()->id;
+        $items = BtItem::where('user_id', $userId)->orderBy('name')->get();
+
         return view('tools.docs', [
             'active' => $active, 'type' => $type, 'docs' => $docs,
             'status' => $status, 'q' => $q, 'totals' => $totals,
+            // Data for the in-page "New" modal (same form as the create page).
+            'titles' => ['quotation' => 'New Quotation', 'invoice' => 'New Invoice', 'receipt' => 'New Receipt'],
+            'settings' => $this->settings(),
+            'customers' => BtContact::where('user_id', $userId)->where('kind', BtContact::CUSTOMER)->orderBy('name')->get(),
+            'itemsJson' => $items->map(fn ($i) => [
+                'id' => $i->id, 'name' => $i->name, 'price' => $i->sale_price,
+                'stock' => $i->stock, 'unit' => $i->unit,
+            ])->values()->all(),
+            'invoices' => $type === BtDocument::RECEIPT
+                ? BtDocument::where('user_id', $userId)->where('type', BtDocument::INVOICE)
+                    ->whereIn('status', [BtDocument::UNPAID, BtDocument::PARTIAL])->orderByDesc('issue_date')->get()
+                : collect(),
         ]);
     }
 
@@ -450,13 +465,20 @@ class BusinessToolsController extends Controller
         $type = str($type)->singular()->toString();
         abort_unless(in_array($type, [BtDocument::QUOTATION, BtDocument::INVOICE, BtDocument::RECEIPT], true), 404);
 
+        $items = BtItem::where('user_id', $request->user()->id)->orderBy('name')->get();
+
         return view('tools.doc-form', [
             'active' => str($type)->plural()->toString(),
             'type' => $type,
             'settings' => $this->settings(),
             'customers' => BtContact::where('user_id', $request->user()->id)
                 ->where('kind', BtContact::CUSTOMER)->orderBy('name')->get(),
-            'items' => BtItem::where('user_id', $request->user()->id)->orderBy('name')->get(),
+            'items' => $items,
+            // Pre-encoded for the line-item picker (avoids Blade directive parsing limits).
+            'itemsJson' => $items->map(fn ($i) => [
+                'id' => $i->id, 'name' => $i->name, 'price' => $i->sale_price,
+                'stock' => $i->stock, 'unit' => $i->unit,
+            ])->values()->all(),
             'invoices' => $type === BtDocument::RECEIPT
                 ? BtDocument::where('user_id', $request->user()->id)->where('type', BtDocument::INVOICE)
                     ->whereIn('status', [BtDocument::UNPAID, BtDocument::PARTIAL])->orderByDesc('issue_date')->get()

@@ -313,3 +313,42 @@ test('users cannot open each others documents', function () {
     $this->actingAs(btUser())->get("/dashboard/tools/documents/{$doc->id}")->assertForbidden();
     $this->actingAs(btUser())->get("/dashboard/tools/documents/{$doc->id}/pdf")->assertForbidden();
 });
+
+test('all three create pages render without errors', function () {
+    $user = btUser();
+
+    foreach (['quotations', 'invoices', 'receipts'] as $type) {
+        $this->actingAs($user)->get("/dashboard/tools/{$type}/create")->assertOk();
+    }
+});
+
+test('tab carousel and create modals are present on every tab', function () {
+    $user = btUser();
+
+    foreach (['quotations', 'customers', 'inventory', 'expenses', 'pos'] as $tab) {
+        $this->actingAs($user)->get("/dashboard/tools/{$tab}")->assertOk()
+            ->assertSee('bt-tabs-prev', false)
+            ->assertSee('bt-tabs-fade', false);
+    }
+
+    $this->actingAs($user)->get('/dashboard/tools/quotations')->assertOk()
+        ->assertSee('id="doc-modal"', false);
+    $this->actingAs($user)->get('/dashboard/tools/customers')->assertOk()
+        ->assertSee('id="contact-modal"', false);
+    $this->actingAs($user)->get('/dashboard/tools/inventory')->assertOk()
+        ->assertSee('id="item-modal"', false);
+    $this->actingAs($user)->get('/dashboard/tools/expenses')->assertOk()
+        ->assertSee('id="expense-modal"', false);
+});
+
+test('custom dropdowns enhance every select on the tabs', function () {
+    $user = btUser();
+
+    foreach (['quotations', 'pos', 'expenses'] as $tab) {
+        $this->actingAs($user)->get("/dashboard/tools/{$tab}")->assertOk()
+            ->assertSee('enhanceSelect', false);
+    }
+
+    $this->actingAs($user)->get('/dashboard/tools/quotations/create')->assertOk()
+        ->assertSee('enhanceSelect', false);
+});

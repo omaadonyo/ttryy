@@ -2,7 +2,10 @@
     @include('partials.toast')
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Inventory" sub="Stock, costs and prices. Sales deduct stock automatically.">
-            <x-slot:actions><span class="pill-zinc">Stock value: UGX {{ number_format($stockValue) }}</span></x-slot:actions>
+            <x-slot:actions>
+                <span class="pill-zinc">Stock value: UGX {{ number_format($stockValue) }}</span>
+                <button type="button" onclick="document.getElementById('item-modal').showModal()" class="btn-brand btn-sm">Add item</button>
+            </x-slot:actions>
         </x-page-head>
         @include('tools._tabs', ['active' => $active])
 
@@ -13,29 +16,34 @@
         <div class="card card-pad border-emerald-500/40 bg-emerald-500/5 text-sm font-semibold text-emerald-700 dark:text-emerald-300">{{ session('status') }}</div>
         @endif
 
-        <div class="grid gap-4 lg:grid-cols-[320px_1fr]">
-            <div class="card card-pad h-fit">
+        <dialog id="item-modal" class="m-auto max-h-[92vh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-xl bg-white p-4 backdrop:bg-zinc-950/60 sm:p-6 dark:bg-[#141416]">
+            <div class="mb-3 flex items-center justify-between gap-2">
                 <h2 class="section-title">Add item</h2>
-                <form method="POST" action="{{ route('tools.items.store') }}" class="mt-3 space-y-3">
-                    @csrf
-                    <div><label class="lbl">Name *</label><input name="name" required class="field" placeholder="e.g. Cement 50kg"></div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="lbl">SKU</label><input name="sku" class="field"></div>
-                        <div><label class="lbl">Unit</label><input name="unit" value="pcs" class="field"></div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="lbl">Cost price *</label><input name="cost_price" type="number" min="0" required class="field"></div>
-                        <div><label class="lbl">Sale price *</label><input name="sale_price" type="number" min="0" required class="field"></div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="lbl">Opening stock *</label><input name="stock" type="number" min="0" value="0" required class="field"></div>
-                        <div><label class="lbl">Reorder at</label><input name="reorder_level" type="number" min="0" value="5" class="field"></div>
-                    </div>
-                    <button class="btn-brand w-full">Save item</button>
-                </form>
+                <button type="button" onclick="document.getElementById('item-modal').close()" class="grid size-8 shrink-0 place-items-center rounded-full text-zinc-400 transition hover:bg-zinc-950/5 hover:text-zinc-700 dark:hover:bg-white/10 dark:hover:text-white" aria-label="Close">✕</button>
             </div>
+            <form method="POST" action="{{ route('tools.items.store') }}" class="space-y-3">
+                @csrf
+                <div><label class="lbl">Name *</label><input name="name" required class="field" placeholder="e.g. Cement 50kg"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="lbl">SKU</label><input name="sku" class="field"></div>
+                    <div><label class="lbl">Unit</label><input name="unit" value="pcs" class="field"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="lbl">Cost price *</label><input name="cost_price" type="number" min="0" required class="field"></div>
+                    <div><label class="lbl">Sale price *</label><input name="sale_price" type="number" min="0" required class="field"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="lbl">Opening stock *</label><input name="stock" type="number" min="0" value="0" required class="field"></div>
+                    <div><label class="lbl">Reorder at</label><input name="reorder_level" type="number" min="0" value="5" class="field"></div>
+                </div>
+                <button class="btn-brand w-full">Save item</button>
+            </form>
+        </dialog>
+        @if($errors->any())
+        <script>document.getElementById('item-modal')?.showModal();</script>
+        @endif
 
-            <div class="card card-pad">
+        <div class="card card-pad">
                 <form method="GET" class="mb-3 flex flex-col gap-3 sm:flex-row">
                     <input name="q" value="{{ $q }}" placeholder="Search name or SKU…" class="field">
                     <button class="btn-brand">Search</button>
@@ -87,7 +95,6 @@
                 </div>
                 <div class="mt-4">{{ $items->links() }}</div>
                 @endif
-            </div>
         </div>
     </div>
 </x-layouts::app>
