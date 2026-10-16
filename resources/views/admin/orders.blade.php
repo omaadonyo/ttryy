@@ -82,10 +82,23 @@
                                 <span class="text-xs font-semibold text-emerald-700 dark:text-emerald-400">Handed over ✓</span>
                                 @else
                                 @if($order->status !== 'paid')
-                                <form method="POST" action="{{ route('admin.orders.paid', $order) }}" class="inline">
+                                <details class="inline-block text-left">
+                                    <summary class="btn-brand btn-sm cursor-pointer list-none">Record payment</summary>
+                                    <form method="POST" action="{{ route('admin.orders.payment', $order) }}" class="mt-2 flex items-center gap-1.5">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input name="amount" type="number" min="1" max="{{ max(0, $order->total_amount - $order->paid_amount) }}" value="{{ max(0, $order->total_amount - $order->paid_amount) }}" required class="field max-w-28 py-1.5! text-xs" aria-label="Amount received">
+                                        <select name="method" class="field max-w-28 py-1.5! text-xs" aria-label="Payment method">
+                                            <option value="momo_manual">MoMo</option>
+                                            <option value="cash">Cash</option>
+                                        </select>
+                                        <button type="submit" class="btn-dark btn-sm shrink-0">Save</button>
+                                    </form>
+                                </details>
+                                <form method="POST" action="{{ route('admin.orders.paid', $order) }}" class="ml-2 inline">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" class="btn-brand btn-sm">Mark paid</button>
+                                    <button type="submit" class="btn-ghost btn-sm">Mark paid</button>
                                 </form>
                                 @else
                                 <span class="text-xs text-zinc-400">UGX {{ number_format($order->paid_amount) }} ✓</span>

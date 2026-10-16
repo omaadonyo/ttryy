@@ -49,6 +49,7 @@ test('suspension takes effect immediately even when the service cannot be reache
 });
 
 test('failed operations keep the immediate status and can be retried', function () {
+
     $admin = User::factory()->create(['is_admin' => true]);
     $owner = User::factory()->create();
     $site = makeWebsite($owner);
@@ -81,4 +82,31 @@ test('audit log records admin actions with safe metadata', function () {
     $this->actingAs($admin)->get(route('admin.hosting.audit'))
         ->assertOk()
         ->assertSee('health.manual_check', false);
+});
+
+test('admins recover trashed websites or purge them forever', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    $owner = User::factory()->create();
+    $site = makeWebsite($owner, ['name' => 'Doomed Site']);
+    $site->delete();
+
+    $this->actingAs($admin)->get(route('admin.hosting.websites'))
+        ->assertOk()
+        ->assertDontSee('Doomed Site', false)
+        ->assertSee('Trash (1)', false);
+
+    $this->actingAs($admin)->get(route('admin.hosting.websites', ['show' => 'trash']))
+        ->assertOk()
+        ->assertSee('Doomed Site', false)
+        ->assertSee('Trash — deleted websites', false);
+
+    $this->actingAs($admin)->post(route('admin.hosting.websites.recover', $site->id))
+        ->assertRedirect();
+    expect(HostedWebsite::where('id', $site->id)->exists())->toBeTrue();
+
+    $site->fresh()->delete();
+
+    $this->actingAs($admin)->delete(route('admin.hosting.websites.purge', $site->id))
+        ->assertRedirect();
+    expect(HostedWebsite::withTrashed()->where('id', $site->id)->exists())->toBeFalse();
 });

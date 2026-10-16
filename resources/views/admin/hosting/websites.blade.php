@@ -8,8 +8,13 @@
         };
     @endphp
     <div class="flex w-full flex-col gap-5">
-        <x-page-head title="Hosted websites" sub="Every client website on the platform.">
+        <x-page-head :title="$trash ? 'Trash — deleted websites' : 'Hosted websites'" :sub="$trash ? 'Restore brings a website and its domains back. Purging is permanent.' : 'Every client website on the platform.'">
             <x-slot:actions>
+                @if($trash)
+                <a href="{{ route('admin.hosting.websites') }}" class="btn-ghost btn-sm">← All websites</a>
+                @else
+                <a href="{{ route('admin.hosting.websites', ['show' => 'trash']) }}" class="btn-ghost btn-sm">Trash ({{ $trashCount }})</a>
+                @endif
                 <a href="{{ route('admin.hosting.dashboard') }}" class="btn-ghost btn-sm">← Control</a>
             </x-slot:actions>
         </x-page-head>
@@ -44,7 +49,7 @@
 
         <div class="card card-pad">
             @if($websites->isEmpty())
-                <x-empty-state icon="search" title="No websites found" message="Try clearing the search or filters." />
+                <x-empty-state icon="search" :title="$trash ? 'Trash is empty' : 'No websites found'" :message="$trash ? 'Deleted websites land here and can be restored.' : 'Try clearing the search or filters.'" />
             @else
             <div class="tbl-wrap rounded-none! border-0! shadow-none!">
                 <table class="tbl">
@@ -71,6 +76,18 @@
                             <td class="text-xs text-zinc-500">{{ $w->health_status }}<p class="text-[11px] text-zinc-400">{{ $w->last_health_check_at?->diffForHumans() ?? 'never' }}</p></td>
                             <td class="text-xs">UGX {{ number_format($w->orders()->where('status', 'paid')->sum('paid_amount')) }} paid</td>
                             <td class="text-right whitespace-nowrap">
+                                @if($trash)
+                                <form method="POST" action="{{ route('admin.hosting.websites.recover', $w->id) }}" class="inline" onsubmit="return confirm('Restore {{ $w->name }} with its domains?')">
+                                    @csrf
+                                    <button class="text-xs font-bold text-emerald-600 hover:underline dark:text-emerald-400">Restore</button>
+                                </form>
+                                <span class="mx-1 text-zinc-300 dark:text-zinc-600">·</span>
+                                <form method="POST" action="{{ route('admin.hosting.websites.purge', $w->id) }}" class="inline" onsubmit="return confirm('PERMANENTLY delete {{ $w->name }}? This cannot be undone.')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="text-xs font-bold text-red-600 hover:underline dark:text-red-400">Delete forever</button>
+                                </form>
+                                @else
                                 @if($w->status === 'suspended')
                                 <form method="POST" action="{{ route('admin.hosting.websites.restore', $w) }}" class="inline" onsubmit="return confirm('Unsuspend {{ $w->name }}? It goes live immediately.')">
                                     @csrf
@@ -86,6 +103,7 @@
                                 <span class="mx-1 text-zinc-300 dark:text-zinc-600">·</span>
                                 @endif
                                 <a href="{{ route('admin.hosting.websites.show', $w) }}" class="text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Open →</a>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

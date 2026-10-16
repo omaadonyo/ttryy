@@ -95,6 +95,50 @@ test('admins manage launch signups and create accounts', function () {
     $user = App\Models\User::find($signup->user_id);
     expect($user->email)->toContain('hope');
 
-    $plain = App\Models\User::where('email', $user->email)->first();
-    expect($plain)->not->toBeNull();
+    $order = App\Models\PackageOrder::where('user_id', $user->id)->first();
+    expect($order)->not->toBeNull()
+        ->and($order->total_amount)->toBe(10000)
+        ->and($order->status)->toBe('pending')
+        ->and(str_contains($order->notes ?? '', 'Launch 10K'))->toBeTrue();
+});
+
+test('launch account creation carries an already-paid fee onto the order', function () {
+    $admin = App\Models\User::factory()->create(['is_admin' => true]);
+    $signup = App\Models\LaunchSignup::create([
+        'name' => 'Paid Founder', 'phone' => '+256700000098', 'email' => 'paid.founder@example.com',
+        'idea_name' => 'PaidFresh', 'idea' => 'An app connecting farmers directly to buyers in Kampala markets.',
+        'payment_status' => 'paid', 'paid_amount' => 10000, 'gateway_tx_id' => 'iotec-tx-1',
+    ]);
+
+    $this->actingAs($admin)->post(route('admin.launch.create-user', $signup))->assertRedirect();
+
+    $order = App\Models\PackageOrder::where('user_id', $signup->fresh()->user_id)->first();
+    expect($order->status)->toBe('paid')
+        ->and($order->paid_amount)->toBe(10000)
+        ->and($order->payment_method)->toBe('iotec');
+});
+
+test('admins credit cash and mobile money against orders', function () {
+    $admin = App\Models\User::factory()->create(['is_admin' => true]);
+    $owner = App\Models\User::factory()->create();
+    $order = makeOrder(['user_id' => $owner->id, 'status' => 'submitted', 'paid_amount' => 0]);
+
+    $this->actingAs($admin)->patch(route('admin.orders.payment', $order), [
+        'amount' => 9000, 'method' => 'cash',
+    ])->assertRedirect();
+
+    expect($order->fresh()->paid_amount)->toBe(9000)
+        ->and($order->fresh()->status)->toBe('submitted')
+        ->and($order->fresh()->payment_method)->toBe('cash');
+
+    $this->actingAs($admin)->patch(route('admin.orders.payment', $order), [
+        'amount' => 380000, 'method' => 'momo_manual',
+    ])->assertRedirect();
+
+    expect($order->fresh()->paid_amount)->toBe(389000)
+        ->and($order->fresh()->status)->toBe('paid');
+
+    $this->actingAs($admin)->patch(route('admin.orders.payment', $order), [
+        'amount' => 100, 'method' => 'cash',
+    ])->assertStatus(422);
 });

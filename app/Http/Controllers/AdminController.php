@@ -105,6 +105,46 @@ class AdminController extends Controller
         return back()->with('status', "Order {$order->reference} marked as paid.");
     }
 
+    /**
+     * Credit cash or Mobile Money received out-of-band. Amounts accumulate
+     * on paid_amount; the order flips paid once the total is covered and
+     * the subscription renews pro-rata via recordPayment.
+     */
+    public function recordPayment(Request $request, PackageOrder $order)
+    {
+        $remaining = max(0, $order->total_amount - $order->paid_amount);
+        abort_if($remaining <= 0, 422, 'This order is already fully paid.');
+
+        $data = $request->validate([
+            'amount' => ['required', 'integer', 'min:1', 'max:'.$remaining],
+            'method' => ['required', \Illuminate\Validation\Rule::in(['cash', 'momo_manual'])],
+        ]);
+
+        $newPaid = $order->paid_amount + $data['amount'];
+
+        $order->update([
+            'paid_amount' => min($order->total_amount, $newPaid),
+            'paid_at' => now(),
+            'payment_method' => $data['method'],
+            'status' => $newPaid >= $order->total_amount ? 'paid'
+                : ($order->status === 'pending' ? 'submitted' : $order->status),
+        ]);
+
+        \App\Services\Hosting\HostingSubscription::recordPayment($order->fresh(), $data['amount']);
+
+        $left = max(0, $order->fresh()->total_amount - $order->fresh()->paid_amount);
+
+        $order->user->notify(new SiteAlert(
+            "Payment received — {$order->reference}",
+            'UGX '.number_format($data['amount']).' received ('.($data['method'] === 'cash' ? 'cash' : 'Mobile Money').').'
+                .($left > 0 ? ' UGX '.number_format($left).' still to pay.' : ' Fully paid — thank you.'),
+            route('packages.index'),
+            'payment'
+        ));
+
+        return back()->with('status', "UGX ".number_format($data['amount'])." credited to {$order->reference}.");
+    }
+
     public function markHandedOver(PackageOrder $order)
     {
         $order->update([

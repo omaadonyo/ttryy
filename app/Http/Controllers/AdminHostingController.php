@@ -22,6 +22,7 @@ use App\Models\WhatsappGroup;
 use App\Notifications\SiteAlert;
 use App\Services\Hosting\DomainManager;
 use App\Services\Hosting\HealthChecker;
+use App\Services\Hosting\HostingSubscription;
 use App\Services\Hosting\ServiceAuthenticator;
 use App\Services\Hosting\ServiceCommander;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -82,7 +83,13 @@ class AdminHostingController extends Controller
 
     public function websites(Request $request)
     {
+        $trash = $request->query('show') === 'trash';
+
         $query = HostedWebsite::with(['user', 'primaryDomain', 'plan'])->latest();
+
+        if ($trash) {
+            $query->onlyTrashed();
+        }
 
         if ($request->filled('q')) {
             $q = '%'.$request->string('q').'%';
@@ -107,7 +114,49 @@ class AdminHostingController extends Controller
             'websites' => $query->paginate(15)->withQueryString(),
             'filters' => $request->only(['q', 'status', 'health', 'plan']),
             'plans' => HostingPlan::orderBy('price')->get(),
+            'trash' => $trash,
+            'trashCount' => HostedWebsite::onlyTrashed()->count(),
         ]);
+    }
+
+    public function recoverTrash(int $id)
+    {
+        $website = HostedWebsite::onlyTrashed()->findOrFail($id);
+
+        try {
+            $website->restore();
+        } catch (\Throwable $e) {
+            return back()->withErrors(['website' => 'Could not restore — one of its domains may already be in use.']);
+        }
+
+        HostingAuditLog::log('website.restored', [
+            'actor_type' => 'admin',
+            'actor_id' => request()->user()->id,
+            'hosted_website_id' => $website->id,
+            'client_id' => $website->user_id,
+            'ip' => request()->ip(),
+        ]);
+
+        return back()->with('status', "Website {$website->name} restored with its domains.");
+    }
+
+    public function purgeTrash(int $id)
+    {
+        $website = HostedWebsite::onlyTrashed()->findOrFail($id);
+        $name = $website->name;
+
+        HostingAuditLog::log('website.purged', [
+            'actor_type' => 'admin',
+            'actor_id' => request()->user()->id,
+            'hosted_website_id' => null,
+            'client_id' => $website->user_id,
+            'meta' => ['name' => $name],
+            'ip' => request()->ip(),
+        ]);
+
+        $website->forceDelete();
+
+        return back()->with('status', "Website {$name} permanently deleted.");
     }
 
     public function websiteShow(HostedWebsite $website)
@@ -661,17 +710,53 @@ class AdminHostingController extends Controller
 
         $signup->forceFill(['user_id' => $user->id, 'status' => 'converted'])->save();
 
+        // Assign the Launch 10K fee as an order on the new account so
+        // payments, renewals and hosting linking all flow from one place.
+        $fee = (int) config('packages.launch_fee', 10000);
+        $feePaid = $signup->payment_status === 'paid' ? min($fee, (int) ($signup->paid_amount ?? $fee)) : 0;
+
+        do {
+            $reference = 'TTRYY-'.strtoupper(Str::random(6));
+        } while (PackageOrder::where('reference', $reference)->exists());
+
+        $order = PackageOrder::create([
+            'user_id' => $user->id,
+            'reference' => $reference,
+            'package' => 'START',
+            'billing_frequency' => 'full',
+            'domain' => 'subdomain',
+            'duration_months' => 12,
+            'periods' => 1,
+            'amount_per_period' => $fee,
+            'domain_fee' => 0,
+            'total_amount' => $fee,
+            'due_today' => $fee,
+            'currency' => config('packages.currency'),
+            'status' => $feePaid >= $fee ? 'paid' : 'pending',
+            'payment_method' => $signup->gateway_tx_id ? 'iotec' : 'momo_manual',
+            'paid_amount' => $feePaid,
+            'paid_at' => $feePaid >= $fee ? now() : null,
+            'business_name' => $signup->idea_name,
+            'phone' => $signup->phone,
+            'niche' => $signup->niche,
+            'notes' => "Launch 10K campaign fee — build setup, free subdomain and first 10 days running (application #{$signup->id}).",
+        ]);
+
+        if ($feePaid >= $fee) {
+            HostingSubscription::recordPayment($order->fresh(), $feePaid);
+        }
+
         HostingAuditLog::log('launch.user_created', [
             'actor_type' => 'admin',
             'actor_id' => $request->user()->id,
             'client_id' => $user->id,
-            'meta' => ['signup_id' => $signup->id, 'email' => $email],
+            'meta' => ['signup_id' => $signup->id, 'email' => $email, 'order' => $order->reference, 'fee_paid' => $feePaid],
             'ip' => $request->ip(),
         ]);
 
         return back()->with('new_launch_user', [
             'email' => $email,
             'password' => $password,
-        ])->with('status', "Account created for {$signup->name} — copy the password now, it is never shown again.");
+        ])->with('status', "Account created for {$signup->name} with order {$order->reference} (UGX ".number_format($feePaid).' paid) — copy the password now, it is never shown again.');
     }
 }

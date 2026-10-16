@@ -134,7 +134,7 @@ class DomainManager
         abort_if($domain->is_primary, 422, 'The primary domain cannot be removed.');
 
         $name = $domain->domain;
-        $domain->delete();
+        $domain->forceDelete(); // explicit removal is permanent; website trash uses soft deletes
 
         return $name;
     }

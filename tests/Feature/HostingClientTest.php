@@ -154,3 +154,47 @@ test('hosting index renders with renewal dates set', function () {
 
     $this->actingAs($user)->get(route('hosting.index'))->assertOk();
 });
+
+test('deleting a website trashes it with domains and restores cleanly', function () {
+    $user = User::factory()->create();
+    $site = makeWebsite($user, ['name' => 'Trash Site', 'status' => App\Models\HostedWebsite::STATUS_FAILED]);
+    $domain = WebsiteDomain::create([
+        'hosted_website_id' => $site->id, 'user_id' => $user->id,
+        'domain' => 'trashme.'.config('hosting.base_domain'), 'type' => 'subdomain',
+        'verification' => 'verified',
+    ]);
+
+    $this->actingAs($user)->delete(route('hosting.destroy', $site))->assertRedirect();
+
+    expect(App\Models\HostedWebsite::where('id', $site->id)->exists())->toBeFalse();
+    $this->assertSoftDeleted('hosted_websites', ['id' => $site->id]);
+    $this->assertSoftDeleted('website_domains', ['id' => $domain->id]);
+
+    // Hidden from the main list (the flash toast still names it), listed under trash.
+    $this->actingAs($user)->get(route('hosting.index'))
+        ->assertOk()
+        ->assertSee('No websites yet', false)
+        ->assertSee('Trash — 1 deleted website', false);
+
+    // Another user's restore attempt is rejected.
+    $this->actingAs(User::factory()->create())->post(route('hosting.restore', $site->id))->assertForbidden();
+
+    $this->actingAs($user)->post(route('hosting.restore', $site->id))->assertRedirect();
+
+    expect(App\Models\HostedWebsite::where('id', $site->id)->exists())->toBeTrue();
+    expect(App\Models\WebsiteDomain::where('id', $domain->id)->exists())->toBeTrue();
+});
+
+test('explicit domain removal stays permanent', function () {
+    $user = User::factory()->create();
+    $site = makeWebsite($user);
+    $domain = WebsiteDomain::create([
+        'hosted_website_id' => $site->id, 'user_id' => $user->id,
+        'domain' => 'gone.'.config('hosting.base_domain'), 'type' => 'subdomain',
+        'verification' => 'verified',
+    ]);
+
+    $this->actingAs($user)->delete(route('hosting.domains.destroy', [$site, $domain]))->assertRedirect();
+
+    expect(App\Models\WebsiteDomain::withTrashed()->where('id', $domain->id)->exists())->toBeFalse();
+});

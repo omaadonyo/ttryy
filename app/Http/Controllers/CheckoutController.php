@@ -211,7 +211,7 @@ class CheckoutController extends Controller
                 'payment_method' => 'flutterwave',
             ]);
 
-            HostingSubscription::recordPayment($order->fresh());
+            HostingSubscription::recordPayment($order->fresh(), (int) $tx['amount']);
 
             return response()->json(['redirect' => route('checkout.success', $order)]);
         }

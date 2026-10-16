@@ -88,7 +88,7 @@
     @csrf
     <input type="hidden" name="payment_method" id="pay-method" value="iotec">
     <div class="space-y-6">
-      <div id="wiz-nav">
+      <div id="wiz-nav" class="max-lg:sticky max-lg:top-[68px] max-lg:z-30 max-lg:-mx-1 max-lg:rounded-xl max-lg:bg-[#f4f4f5]/95 max-lg:px-1 max-lg:py-2 max-lg:backdrop-blur max-lg:dark:bg-zinc-950/95">
         <div class="flex items-start gap-1 sm:gap-2" id="wiz-dots" role="tablist" aria-label="Checkout steps">
           @foreach([1 => 'Plan', 2 => 'Details', 3 => 'Pay'] as $n => $label)
           <button type="button" data-goto="{{ $n }}" class="wiz-dot flex-1 flex flex-col items-center gap-1.5" role="tab">
@@ -226,8 +226,13 @@
 
     </div>
 
-    <aside id="tour-summary" class="lg:sticky lg:top-24 rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 p-6 shadow-xl h-fit">
-      <p class="text-xs font-bold tracking-wide uppercase opacity-60">Order summary</p>
+    <aside id="tour-summary" class="lg:sticky lg:top-24 rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 p-6 shadow-xl h-fit max-lg:fixed max-lg:inset-x-3 max-lg:bottom-3 max-lg:z-40 max-lg:p-4 max-lg:max-h-[70vh] max-lg:overflow-y-auto">
+      <button type="button" id="sum-toggle" class="w-full items-center justify-between gap-2 hidden max-lg:flex" aria-expanded="false" aria-controls="sum-more">
+        <span class="text-xs font-bold tracking-wide uppercase opacity-60">Order summary · tap for details</span>
+        <span class="flex items-center gap-1.5"><span class="font-display font-extrabold text-lg" id="sumDueMini">—</span><svg id="sum-chev" class="size-4 opacity-60 transition-transform" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></span>
+      </button>
+      <div id="sum-more" class="max-lg:hidden lg:block">
+      <p class="text-xs font-bold tracking-wide uppercase opacity-60 max-lg:hidden">Order summary</p>
       <p class="font-display font-bold text-xl mt-2" id="sumPackage">GROW</p>
       <dl class="mt-4 space-y-2 text-sm">
         <div class="flex justify-between gap-2"><dt class="opacity-60">Package total</dt><dd class="font-semibold" id="sumPkgTotal">—</dd></div>
@@ -244,7 +249,9 @@
       </div>
 
       <p class="mt-5 text-[11px] opacity-60">You pay exactly what is shown here — no hidden fees. Pay on the last step with Mobile Money or card.</p>
+      </div>
     </aside>
+    <div class="h-24 lg:hidden" aria-hidden="true"></div>
   </form>
 </div>
 
@@ -321,6 +328,8 @@ function refresh(){
   document.getElementById('sumDomain').textContent = fmt((DOMAINS[dom] || {fee:0}).fee) + ' once';
   document.getElementById('sumRest').textContent = q.rest;
   document.getElementById('sumDue').textContent = fmt(q.due);
+  const sumDueMini = document.getElementById('sumDueMini');
+  if(sumDueMini) sumDueMini.textContent = fmt(q.due);
   document.getElementById('sumTotal').textContent = fmt(q.total);
   document.getElementById('monthlyLabel').textContent = fmt(d.monthly) + ' per month';
   document.getElementById('weeklyLabel').textContent = fmt(d.weekly) + ' per week';
@@ -409,11 +418,8 @@ function paintWiz(scroll){
     const isCur = n === W.step, isPast = n < W.step, seen = !!W.visited[n];
     const base = 'wiz-num w-8 h-8 grid place-items-center rounded-full text-xs font-extrabold border-2 ';
     num.className = base + (isCur ? 'bg-brand-600 border-brand-600 text-white shadow-lg'
-      : isPast ? 'border-brand-600 text-brand-700 dark:text-brand-300'
-      : seen ? 'border-zinc-400 dark:border-white/30 text-zinc-500 dark:text-zinc-300'
-      : 'border-zinc-300 dark:border-white/15 text-zinc-400');
+      : 'bg-zinc-950 border-zinc-950 text-white dark:bg-white dark:border-white dark:text-zinc-950');
     d.classList.toggle('cursor-pointer', seen && !isCur);
-    d.classList.toggle('opacity-60', !seen && !isCur);
   });
   const bar = document.getElementById('wiz-bar');
   if(bar) bar.style.width = Math.round(W.step / 3 * 100) + '%';
@@ -571,6 +577,14 @@ function initCheckout(){
     document.getElementById('pay-method').value = 'momo_manual';
     form.requestSubmit();
   }));
+  const sumToggle = document.getElementById('sum-toggle');
+  if(sumToggle) sumToggle.addEventListener('click', () => {
+    const more = document.getElementById('sum-more');
+    const hidden = more.classList.toggle('max-lg:hidden');
+    sumToggle.setAttribute('aria-expanded', hidden ? 'false' : 'true');
+    const chev = document.getElementById('sum-chev');
+    if(chev) chev.classList.toggle('rotate-180', !hidden);
+  });
 }
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCheckout);
 else initCheckout();

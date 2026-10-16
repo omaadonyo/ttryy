@@ -347,7 +347,7 @@ class IotecPaymentController extends Controller
             'payment_method' => 'iotec',
         ]);
 
-        HostingSubscription::recordPayment($order->fresh());
+        HostingSubscription::recordPayment($order->fresh(), (int) ($tx['amount'] ?? $order->due_today));
 
         if ($order->user) {
             $order->user->notify(new SiteAlert(

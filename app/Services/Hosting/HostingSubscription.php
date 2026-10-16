@@ -35,7 +35,7 @@ class HostingSubscription
      * after that buys whole periods at the plan rate, capped at the
      * periods remaining in the plan so overpayments never overshoot.
      */
-    public static function periodsCovered(PackageOrder $order): int
+    public static function periodsCovered(PackageOrder $order, ?int $payment = null): int
     {
         $planPeriods = max(1, (int) $order->periods);
         $remaining = max(1, $planPeriods - (int) $order->periods_covered);
@@ -45,7 +45,8 @@ class HostingSubscription
         }
 
         $rate = max(1, (int) $order->amount_per_period);
-        $effective = max(0, (int) $order->paid_amount - ((int) $order->periods_covered === 0 ? (int) $order->domain_fee : 0));
+        $paid = max(0, $payment ?? (int) $order->paid_amount);
+        $effective = max(0, $paid - ((int) $order->periods_covered === 0 ? (int) $order->domain_fee : 0));
 
         return min(max(1, (int) floor($effective / $rate)), $remaining);
     }
@@ -64,12 +65,13 @@ class HostingSubscription
 
     /**
      * Called whenever an order payment is verified (manual or online).
-     * The website status flips immediately; the service command is only
-     * a best-effort follow-up for backends that acknowledge.
+     * Pass the amount of THIS payment so multi-installment renewals
+     * pro-rate correctly; it defaults to the order's paid amount.
      */
-    public static function recordPayment(PackageOrder $order): void
+    public static function recordPayment(PackageOrder $order, ?int $amount = null): void
     {
-        $periods = self::periodsCovered($order);
+        $payment = max(0, $amount ?? (int) $order->paid_amount);
+        $periods = self::periodsCovered($order, $payment);
         $order->increment('periods_covered', $periods);
 
         $websites = $order->hosted_website_id
@@ -93,7 +95,7 @@ class HostingSubscription
                     'reference' => $order->reference,
                     'frequency' => $order->billing_frequency,
                     'periods' => $periods,
-                    'paid' => (int) $order->paid_amount,
+                    'paid' => $payment,
                     'renewal' => $website->fresh()->next_renewal_at->toDateString(),
                 ],
             ]);

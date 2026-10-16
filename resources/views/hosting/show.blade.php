@@ -133,10 +133,10 @@
             <div class="mt-4 flex items-center gap-3 flex-wrap">
                 <a href="{{ route('hosting.billing', $website) }}" class="btn-ghost btn-sm">Billing · UGX {{ number_format($totals['owed']) }} owed</a>
                 @can('delete', $website)
-                <form method="POST" action="{{ route('hosting.destroy', $website) }}" class="inline" onsubmit="return confirm('Cancel and permanently remove {{ $website->name }}? This cannot be undone.')">
+                <form method="POST" action="{{ route('hosting.destroy', $website) }}" class="inline" onsubmit="return confirm('Move {{ $website->name }} to trash? You can restore it anytime.')">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn-danger btn-sm">Cancel website</button>
+                    <button type="submit" class="btn-danger btn-sm">Delete website</button>
                 </form>
                 @endcan
             </div>

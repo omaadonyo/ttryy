@@ -392,6 +392,31 @@ test('checkout explains when online payments are not configured', function () {
         ->assertSee('Submit order manually', false);
 });
 
+test('checkout mobile has sticky progress and an expandable summary sheet', function () {
+    $this->actingAs(User::factory()->create())->get('/checkout')
+        ->assertOk()
+        ->assertSee('max-lg:sticky', false)
+        ->assertSee('id="sum-toggle"', false)
+        ->assertSee('id="sumDueMini"', false)
+        ->assertSee('id="sum-more"', false);
+});
+
+test('manual orders submit natively when the gateway is down', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->post('/dashboard/checkout', [
+        'package' => 'START',
+        'billing_frequency' => 'monthly',
+        'domain' => 'none',
+        'duration_months' => 3,
+        'payment_method' => 'momo_manual',
+        'business_name' => 'Manual Biz',
+        'phone' => '+256 700 000021',
+    ])->assertRedirect();
+
+    expect(PackageOrder::where('business_name', 'Manual Biz')->first()->status)->toBe('submitted');
+});
+
 test('placing an order emails the customer and the admin inbox', function () {
     Illuminate\Support\Facades\Mail::fake();
     $user = User::factory()->create();

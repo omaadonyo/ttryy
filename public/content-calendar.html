@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta name="theme-color" content="#0f2540">
+<title>Zymera Ventures — 90-Day Content Calendar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f2540; --navy2:#162f4d; --ink:#1c2530; --muted:#68788d; --line:#e2e8f0;
+  --bg:#eef2f7; --card:#ffffff; --accent:#c99a2b; --accent2:#f3e3b3;
+  --blue:#1d5aa8; --teal:#0f766e; --radius:10px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:13px;font-feature-settings:"cv11","ss01";-webkit-font-smoothing:antialiased}
+.app{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+.mob-switch{display:none;gap:6px}
+.mob-switch button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:7px 14px;font-size:12px;font-weight:800;color:#475569;cursor:pointer;font-family:"Inter",sans-serif}
+.mob-switch button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+/* TOP BAR */
+.topbar{height:56px;flex:0 0 56px;background:var(--navy);color:#fff;display:flex;align-items:center;gap:16px;padding:0 16px}
+.logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#f2b84b,#c99a2b);color:#0f2540;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:15px}
+.title-block{min-width:0}
+.title-block h1{margin:0;font-size:15px;font-weight:800;letter-spacing:.1px;white-space:nowrap}
+.title-block p{margin:1px 0 0;font-size:11px;color:#b9c8dc;white-space:nowrap}
+.top-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+.btn{border:1px solid #cbd5e1;background:#fff;color:var(--navy);border-radius:7px;padding:7px 11px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#f1f5f9}
+.btn.gold{background:var(--accent);border-color:var(--accent);color:#1a1405}
+.btn.dark{background:transparent;color:#fff;border-color:#3b5578}
+.search{background:#0b1c32;border:1px solid #33507a;color:#fff;border-radius:7px;padding:7px 10px;font-size:12px;width:210px;outline:none}
+.search::placeholder{color:#8ea3bd}
+/* KPI + TABS STRIP */
+.strip{flex:0 0 auto;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:8px 16px}
+.kpis{display:flex;gap:14px}
+.kpi{display:flex;align-items:baseline;gap:7px;white-space:nowrap}
+.kpi b{font-size:18px;color:var(--blue)}
+.kpi span{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:800}
+.progress{width:150px;height:7px;background:#e8edf3;border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),#22a699);width:0%}
+.tabs{display:flex;gap:6px;margin-left:auto}
+.tab{border:1px solid var(--line);background:#f8fafc;border-radius:99px;padding:6px 12px;font-size:12px;font-weight:700;color:#334155;cursor:pointer;white-space:nowrap}
+.tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+select.filter{border:1px solid var(--line);border-radius:99px;padding:6px 10px;font-size:12px;font-weight:700;color:#334155;background:#f8fafc}
+/* MAIN */
+.main{flex:1;min-height:0;display:grid;grid-template-columns:196px 1fr 300px;gap:12px;padding:12px 16px;overflow:hidden}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.card-h{padding:10px 12px;border-bottom:1px solid var(--line);background:#f8fafc;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card-h h2{margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--navy);font-weight:800}
+.card-h .count{font-size:11px;color:var(--muted);font-weight:700}
+/* sidebar */
+.side-nav{display:flex;flex-direction:column;gap:6px;padding:10px;overflow:hidden}
+.nav-item{border:1px solid var(--line);border-radius:8px;padding:9px 10px;cursor:pointer;background:#fff}
+.nav-item.active{border-color:var(--navy);background:#eef4fc;box-shadow:inset 3px 0 0 var(--accent)}
+.nav-item strong{display:block;font-size:12.5px;color:var(--navy)}
+.nav-item span{font-size:11px;color:var(--muted)}
+.legend{padding:10px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);line-height:1.6}
+.dot{display:inline-block;width:8px;height:8px;border-radius:99px;margin-right:6px;vertical-align:middle}
+/* board */
+.board-head{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);background:#fff}
+.board-head h2{margin:0;font-size:14px;color:var(--navy)}
+.board-head p{margin:0;font-size:11.5px;color:var(--muted)}
+.pager{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-weight:700}
+.pager button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 9px;font-weight:800;cursor:pointer}
+.table{flex:1;min-height:0;display:flex;flex-direction:column}
+.thead,.trow{display:grid;grid-template-columns:52px 1fr 168px 1fr 92px;gap:0;align-items:center}
+.thead{background:var(--navy);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.6px;font-weight:800}
+.thead div{padding:8px 10px}
+.tbody{flex:1;min-height:0;display:flex;flex-direction:column}
+.trow{border-bottom:1px solid var(--line);cursor:pointer;background:#fff;min-height:0;flex:1}
+.trow:nth-child(even){background:#f9fbfd}
+.trow:hover{background:#eef5ff}
+.trow.selected{background:#fff7dd;box-shadow:inset 3px 0 0 var(--accent)}
+.trow div{padding:6px 10px;font-size:12px;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.dayno{font-weight:900;color:var(--blue);font-size:13px!important}
+.pill{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;margin:1px 3px 1px 0;white-space:nowrap;vertical-align:middle}
+.pill svg{width:13px;height:13px;display:block}
+.p-fb{background:#e3edfb;color:#1d4fa3}.p-li{background:#dcebf7;color:#0b4a75}.p-tt{background:#e8e8ea;color:#111}.p-re{background:#fbe4ef;color:#be185d}.p-wa{background:#dcf5e5;color:#0d6b3a}
+.plat-toggle{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer;margin-right:6px;color:#94a3b8}
+.plat-toggle svg{width:16px;height:16px}
+.plat-toggle.on{border-color:var(--navy);box-shadow:0 0 0 1px var(--navy)}
+.plat-toggle.on.pt-Facebook{background:#e3edfb;color:#1d4fa3}.plat-toggle.on.pt-LinkedIn{background:#dcebf7;color:#0b4a75}.plat-toggle.on.pt-TikTok{background:#111;color:#fff}.plat-toggle.on.pt-Reels{background:#fbe4ef;color:#be185d}.plat-toggle.on.pt-WhatsApp{background:#dcf5e5;color:#0d6b3a}
+.sched-input{width:100%;border:1px solid var(--line);border-radius:7px;padding:7px 8px;font-size:12px;font-family:"Inter",sans-serif;background:#fff;color:var(--ink)}
+.sched-hint{font-size:10.5px;color:var(--muted);margin-top:4px}
+.sched-line{font-size:10px;color:#92400e;font-weight:700}
+.car{display:flex;align-items:center;gap:4px}
+.car-btn{border:1px solid var(--line);background:#f8fafc;border-radius:99px;width:26px;height:26px;font-weight:900;color:#334155;cursor:pointer;flex:0 0 auto;font-family:"Inter",sans-serif}
+.car-btn:hover{background:#eef2f7}
+#monthTabs{display:flex;gap:6px;overflow-x:auto;max-width:320px;scroll-behavior:smooth;scrollbar-width:none;padding:1px}
+#monthTabs::-webkit-scrollbar{display:none}
+#monthTabs .tab{flex:0 0 auto}
+.date-line{font-size:10px;color:var(--muted);font-weight:600}
+.hol-badge{display:inline-block;font-size:9.5px;font-weight:800;background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:99px;padding:1px 7px;margin-left:4px;white-space:nowrap}
+.today-badge{display:inline-block;font-size:9.5px;font-weight:900;background:var(--navy);color:#fff;border-radius:99px;padding:1px 7px;margin-left:4px;white-space:nowrap}
+.trow.is-today{box-shadow:inset 3px 0 0 #16a34a}
+.gcard.is-today{border-color:#16a34a;box-shadow:0 0 0 1px #16a34a}
+.hol-banner{background:#fffbeb;border:1px solid #fcd34d;border-radius:7px;padding:7px 8px;font-size:11.5px;color:#92400e;font-weight:600}
+.start-box{padding:8px 10px;border-bottom:1px solid var(--line);font-size:11px}
+.start-box label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:800;display:block;margin-bottom:4px}
+.start-box input{width:100%;border:1px solid var(--line);border-radius:7px;padding:6px 7px;font-size:12px;font-family:"Inter",sans-serif}
+.cta-cell{color:#2c4e7a}
+.status{font-size:10px;font-weight:800;padding:3px 7px;border-radius:99px;text-align:center;white-space:nowrap}
+.s-planned{background:#eef2f7;color:#475569;border:1px solid #cbd5e1}
+.s-scheduled{background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
+.s-posted{background:#dcfce7;color:#166534;border:1px solid #86efac}
+.board-foot{flex:0 0 30px;display:flex;align-items:center;gap:10px;padding:0 12px;border-top:1px solid var(--line);background:#f8fafc;font-size:11px;color:var(--muted)}
+/* grid view */
+.view-toggle{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.view-toggle button{border:0;background:#fff;padding:5px 10px;font-size:11px;font-weight:800;color:#64748b;cursor:pointer;font-family:"Inter",sans-serif}
+.view-toggle button.active{background:var(--navy);color:#fff}
+.grid-wrap{flex:1;min-height:0;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(2,1fr);gap:8px;padding:10px 12px;align-content:stretch}
+.gcard{border:1px solid var(--line);border-radius:9px;background:#fff;padding:8px 9px;cursor:pointer;display:flex;flex-direction:column;gap:5px;min-height:0;overflow:hidden}
+.gcard:hover{border-color:#93b4dd;background:#f3f8ff}
+.gcard.selected{border-color:var(--accent);background:#fff8dd;box-shadow:0 0 0 1px var(--accent)}
+.gcard .gd{display:flex;align-items:center;justify-content:space-between}
+.gcard .gd b{font-size:12px;color:var(--blue);font-weight:900}
+.gcard .gt{font-size:11.5px;line-height:1.35;font-weight:600;color:var(--ink);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;flex:1}
+.gcard .gp{line-height:1.2;min-height:20px}
+.gcard .gf{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.res-badge{font-size:9px;font-weight:800;background:#eef2ff;color:#3730a3;border-radius:99px;padding:1px 6px}
+.drag-handle{cursor:grab;color:#94a3b8;font-size:12px;user-select:none}
+.trow.dragging,.gcard.dragging{opacity:.45}
+.trow.drag-over{outline:2px dashed var(--accent);outline-offset:-2px;background:#fff8dd!important}
+.gcard.drag-over{outline:2px dashed var(--accent);outline-offset:-2px;background:#fff8dd!important}
+.rep-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:8px 0}
+.rep-stat{border:1px solid var(--line);border-radius:8px;padding:8px;background:#fff;text-align:center}
+.rep-stat b{display:block;font-size:17px;color:var(--navy)}
+.rep-stat span{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:800}
+.rep-weeks{display:grid;grid-template-columns:repeat(13,1fr);gap:5px;margin:8px 0}
+.rep-week{border:1px solid var(--line);border-radius:7px;padding:6px 4px;text-align:center;cursor:pointer;background:#fff;font-size:10px;font-weight:800;color:#475569}
+.rep-week.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.rep-week .bar{height:4px;background:#e8edf3;border-radius:99px;margin-top:4px;overflow:hidden}
+.rep-week .bar i{display:block;height:100%;background:var(--teal)}
+.rep-table{border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.rep-row{display:grid;grid-template-columns:44px 1fr 90px 70px;gap:0;font-size:11px;border-bottom:1px solid var(--line);background:#fff}
+.rep-row.head{background:var(--navy);color:#fff;font-weight:800;font-size:10px;text-transform:uppercase}
+.rep-row div{padding:5px 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media print{.topbar,.strip,.main section:first-child,.main section:last-child,.statusbar{display:none!important}.main{grid-template-columns:1fr}}
+/* detail */
+.detail-body{padding:11px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:9px;flex:1;min-height:0;scrollbar-width:thin}
+.res-box{border:1px dashed #b6c4d6;border-radius:8px;padding:8px;background:#fbfdff}
+.res-tabs{display:flex;gap:4px;margin-bottom:7px}
+.res-tabs button{flex:1;border:1px solid var(--line);background:#fff;border-radius:6px;font-size:10.5px;font-weight:800;padding:5px 2px;cursor:pointer;color:#475569;font-family:"Inter",sans-serif}
+.res-tabs button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.res-row{display:flex;gap:6px}
+.res-row input,.res-row textarea{flex:1;border:1px solid var(--line);border-radius:6px;padding:6px 7px;font-size:11.5px;font-family:"Inter",sans-serif;outline:none;min-width:0}
+.res-row input:focus,.res-row textarea:focus{border-color:var(--accent)}
+.res-add{border:0;background:var(--teal);color:#fff;border-radius:6px;font-weight:800;font-size:11px;padding:6px 10px;cursor:pointer;white-space:nowrap;font-family:"Inter",sans-serif}
+.res-item{border:1px solid var(--line);border-radius:7px;padding:6px;margin-top:6px;background:#fff;font-size:11px}
+.res-item img{width:100%;height:74px;object-fit:cover;border-radius:5px;display:block}
+.res-item .meta{display:flex;align-items:center;gap:6px;margin-top:5px}
+.res-item .meta span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#475569}
+.res-del{border:0;background:#fee2e2;color:#b91c1c;border-radius:5px;font-size:10px;font-weight:800;padding:3px 7px;cursor:pointer}
+.res-open{border:0;background:#e0e7ff;color:#3730a3;border-radius:5px;font-size:10px;font-weight:800;padding:3px 7px;cursor:pointer;text-decoration:none}
+.video-embed{width:100%;aspect-ratio:16/9;border:0;border-radius:5px;display:block}
+.field label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:800;display:block;margin-bottom:4px}
+.field .val{background:#f8fafc;border:1px solid var(--line);border-radius:7px;padding:7px 8px;font-size:12px;line-height:1.45;min-height:32px}
+.field .val:focus{outline:2px solid var(--accent);background:#fff}
+.detail-actions{display:flex;gap:6px;padding:10px 12px;border-top:1px solid var(--line)}
+.detail-actions .btn{flex:1;text-align:center;font-size:11px;padding:7px 4px}
+.view-pane{padding:12px;overflow:hidden;font-size:12px;line-height:1.6}
+.view-pane h3{margin:0 0 6px;color:var(--navy);font-size:13px}
+.view-pane ol,.view-pane ul{margin:6px 0;padding-left:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mini-card{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fbfcfe}
+.mini-card strong{color:var(--navy);font-size:12px}
+.mini-card p{margin:4px 0 0;color:var(--muted);font-size:11px;line-height:1.5}
+/* footer */
+.statusbar{flex:0 0 26px;background:#fff;border-top:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 16px;font-size:11px;color:var(--muted)}
+.statusbar b{color:var(--navy)}
+@media(max-width:1100px){.main{grid-template-columns:170px 1fr 260px}.search{width:140px}.thead,.trow{grid-template-columns:44px 1fr 130px 1fr 80px}}
+@media(max-width:860px){
+  html,body{overflow:hidden;position:fixed;width:100%}
+  .topbar{flex:0 0 auto;height:auto;min-height:56px;flex-wrap:wrap;padding:10px 12px;gap:8px}
+  .title-block h1{font-size:13px;white-space:normal}
+  .title-block p{display:none}
+  .top-actions{width:100%;margin-left:0;flex-wrap:wrap}
+  .search{flex:1;min-width:140px;width:auto}
+  .top-actions .btn{flex:1;text-align:center;padding:8px 6px}
+  .strip{flex-wrap:wrap;gap:8px;padding:8px 12px}
+  .kpis{gap:10px;flex-wrap:wrap}
+  .kpi b{font-size:15px}
+  .tabs{width:100%;margin-left:0;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab,select.filter{flex:0 0 auto}
+  .main{display:flex;flex-direction:column;gap:8px;padding:8px 10px}
+  .main .card.plan-card{flex:0 0 auto}
+  .main .card.plan-card .legend,.main .card.plan-card .card-h{display:none}
+  .side-nav{flex-direction:row;overflow-x:auto;padding:8px;scrollbar-width:none}
+  .side-nav::-webkit-scrollbar{display:none}
+  .nav-item{flex:0 0 auto;min-width:132px;padding:7px 9px}
+  .main #boardCard{flex:1;min-height:0}
+  .main:not(.show-detail) #detailCard{display:none}
+  .main.show-detail #boardCard{display:none}
+  .main.show-detail #detailCard{display:flex;flex:1;min-height:0}
+  .mob-switch{display:flex}
+  .board-head{flex-wrap:wrap}
+  .board-head h2{font-size:13px}
+  .board-head p{display:none}
+  .table{overflow-x:auto}
+  .thead,.trow{min-width:620px}
+  .tbody{overflow-y:auto}
+  .trow div{padding:8px 10px}
+  .drag-handle{display:none}
+  .grid-wrap{grid-template-columns:repeat(2,1fr);grid-template-rows:none;grid-auto-rows:minmax(148px,auto);overflow-y:auto;align-content:start}
+  .view-pane{overflow-y:auto}
+  .grid2{grid-template-columns:1fr}
+  .rep-grid{grid-template-columns:repeat(2,1fr)}
+  .rep-weeks{display:flex;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+  .rep-weeks::-webkit-scrollbar{display:none}
+  .rep-week{flex:0 0 62px}
+  .rep-row{grid-template-columns:40px 1fr 76px 52px}
+  .detail-actions{flex-wrap:wrap}
+  .detail-actions .btn{flex:1 1 30%;min-height:40px;font-size:12px}
+  .statusbar{font-size:10px;gap:8px;padding:0 10px;overflow:hidden;white-space:nowrap}
+  .statusbar span:nth-child(2){display:none}
+}
+/* dark mode — near black */
+html.dark{--bg:#0b0b0d;--card:#141416;--line:#26262b;--ink:#ececee;--muted:#9a9aa3;--blue:#e8b93e}
+html.dark body{background:var(--bg);color:var(--ink)}
+html.dark .topbar{background:#0b0b0d;border-bottom:1px solid var(--line)}
+html.dark .search{background:#17171a;border-color:#2e2e33;color:#ececee}
+html.dark .strip,html.dark .card-h,html.dark .board-foot,html.dark .board-head{background:#101012}
+html.dark .card{background:var(--card)}
+html.dark .btn{background:#1c1c1f;border-color:#2e2e33;color:#ececee}
+html.dark .btn:hover{background:#242428}
+html.dark .btn.gold{background:var(--accent);border-color:var(--accent);color:#1a1405}
+html.dark .btn.dark{border-color:#3a3a40}
+html.dark .tab,html.dark select.filter,html.dark .car-btn,html.dark .view-toggle button,html.dark .mob-switch button{background:#17171a;border-color:#2e2e33;color:#d7d7dc}
+html.dark .tab.active,html.dark .view-toggle button.active,html.dark .mob-switch button.active{background:#ededed;color:#111;border-color:#ededed}
+html.dark .pager button{background:#1c1c1f;border-color:#2e2e33;color:#ececee}
+html.dark .nav-item,html.dark .mini-card,html.dark .rep-stat,html.dark .rep-week,html.dark .chart-card{background:#17171a;border-color:#2e2e33}
+html.dark .nav-item strong,html.dark .mini-card strong,html.dark .rep-stat b,html.dark .chart-card h4,html.dark .view-pane h3,html.dark .chart-val{color:#f2f2f4}
+html.dark .nav-item.active{background:#1e1e21;border-color:#3a3a40}
+html.dark .thead{background:#0b0b0d}
+html.dark .trow{background:#141416}
+html.dark .trow:nth-child(even){background:#101012}
+html.dark .trow:hover{background:#1d1d20}
+html.dark .trow.selected{background:#2e250c}
+html.dark .trow.drag-over{background:#2e250c!important}
+html.dark .gcard{background:#141416}
+html.dark .gcard:hover{background:#1d1d20}
+html.dark .gcard.selected{background:#2e250c}
+html.dark .gcard .gt{color:#ececee}
+html.dark .dayno{color:#e8b93e}
+html.dark .cta-cell{color:#c9c9d1}
+html.dark .field .val,html.dark .sched-input,html.dark .res-row input,html.dark .res-row textarea,html.dark .start-box input,html.dark .modal input{background:#101013;border-color:#2e2e33;color:#ececee}
+html.dark .res-box{background:#101013;border-color:#2e2e33}
+html.dark .res-item,html.dark .rep-table,html.dark .rep-row{background:#141416;border-color:#2e2e33}
+html.dark .rep-row.head{background:#0b0b0d;color:#fff}
+html.dark .res-tabs button{background:#1c1c1f;border-color:#2e2e33;color:#d7d7dc}
+html.dark .res-tabs button.active{background:#ededed;color:#111;border-color:#ededed}
+html.dark .plat-toggle{background:#17171a;border-color:#2e2e33}
+html.dark .plat-toggle.on{box-shadow:0 0 0 1px #ededed;border-color:#ededed}
+html.dark .statusbar{background:#101012}
+html.dark .modal{background:#161618;border-color:#2e2e33}
+html.dark .modal h3{color:#f2f2f4}
+html.dark .hol-banner{background:#2e250c;border-color:#8a6d1f;color:#f5d67b}
+html.dark .lock-note{background:#1c1c1f;border-color:#2e2e33;color:#c9c9d1}
+html.dark .vcar-btn{background:#101012;color:#9a9aa3}
+html.dark .progress{background:#242428}
+html.dark .rep-week .bar,html.dark .bar-track,html.dark .seg-bar{background:#242428}
+html.dark .res-badge{background:#242428;color:#d7d7dc}
+@media print{html.dark{--bg:#fff;--card:#fff;--ink:#111;--muted:#555;--line:#ccc;--blue:#1d5aa8}}
+/* vertical month carousel */
+.vcar{display:flex;flex-direction:column;min-height:0;flex:1}
+.vcar-btn{border:0;background:#f1f5f9;color:#475569;font-weight:900;cursor:pointer;padding:4px 0;font-size:11px;font-family:"Inter",sans-serif}
+.vcar-btn:hover{background:#e2e8f0}
+html.dark .vcar-btn{background:#0d1730;color:#93a5c0}
+.side-nav{overflow-y:auto}
+@media(max-width:860px){.vcar-btn{display:none}}
+/* admin lock */
+.locked .drag-handle{visibility:hidden}
+.lock-note{display:none;background:#eef4fc;border:1px solid var(--line);border-radius:7px;padding:7px 8px;font-size:11.5px;color:#334155}
+.locked .lock-note{display:block}
+.lock-note button{margin-left:6px}
+.modal-ov{position:fixed;inset:0;background:rgba(8,15,30,.6);display:flex;align-items:center;justify-content:center;z-index:99;padding:16px}
+.modal{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;width:320px;max-width:100%}
+.modal h3{margin:0 0 6px;color:var(--navy);font-size:15px}
+html.dark .modal h3{color:#e7eefb}
+.modal p{margin:0 0 10px;font-size:12px;color:var(--muted)}
+.modal input{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px;font-size:13px;font-family:"Inter",sans-serif;margin-bottom:6px}
+.modal-err{display:none;font-size:11.5px;color:#b91c1c;font-weight:700;margin-bottom:6px}
+.modal-btns{display:flex;gap:8px}
+.modal-btns .btn{flex:1;text-align:center}
+.modal{max-height:92vh;overflow-y:auto}
+.modal-xl{width:680px}
+.lib-filters{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.lib-filters button{border:1px solid var(--line);background:#f8fafc;border-radius:99px;padding:5px 12px;font-size:11px;font-weight:800;color:#475569;cursor:pointer;font-family:"Inter",sans-serif}
+html.dark .lib-filters button{background:#17171a;border-color:#2e2e33;color:#d7d7dc}
+.lib-filters button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.lib-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:52vh;overflow-y:auto;padding:1px}
+@media(max-width:640px){.lib-grid{grid-template-columns:repeat(2,1fr)}}
+.lib-item{border:1px solid var(--line);border-radius:8px;padding:6px;background:#fff;font-size:10.5px;min-width:0}
+html.dark .lib-item{background:#17171a}
+.lib-item img{width:100%;height:90px;object-fit:cover;border-radius:5px;display:block}
+.lib-item .lt{font-weight:800;color:var(--navy);font-size:10.5px;margin:4px 0 2px}
+html.dark .lib-item .lt{color:#f2f2f4}
+.lib-item .ls{color:var(--muted);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lib-item .la{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
+.lib-count{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px}
+.modal-wide{width:440px}
+.plat-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line)}
+.plat-row:last-child{border-bottom:0}
+.plat-row b{font-size:12.5px}
+.plat-ic{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;flex:0 0 auto;border:0}
+.plat-ic svg{width:18px;height:18px}
+.plat-ic.pt-Facebook{background:#e3edfb;color:#1d4fa3}.plat-ic.pt-LinkedIn{background:#dcebf7;color:#0b4a75}.plat-ic.pt-TikTok{background:#111;color:#fff}.plat-ic.pt-Reels{background:#fbe4ef;color:#be185d}.plat-ic.pt-WhatsApp{background:#dcf5e5;color:#0d6b3a}
+.plat-linkrow{display:flex;gap:6px;align-items:center;margin-top:5px;flex-wrap:wrap}
+.link-input{width:100%;margin-top:5px;border:1px solid var(--line);border-radius:6px;padding:5px 7px;font-size:11px;font-family:"Inter",sans-serif}
+/* slim custom scrollbars */
+*{scrollbar-width:thin;scrollbar-color:#c3ccd8 transparent}
+*::-webkit-scrollbar{width:7px;height:7px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:#c3ccd8;border-radius:99px}
+html.dark *{scrollbar-color:#3a3a40 transparent}
+html.dark *::-webkit-scrollbar-thumb{background:#3a3a40}
+/* report charts */
+.chart-card{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;margin:8px 0}
+.chart-card h4{margin:0 0 7px;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--navy)}
+.chart{max-height:158px;overflow-y:auto}
+.chart-row{display:flex;align-items:center;gap:8px;font-size:11px;margin:4px 0}
+.chart-lbl{flex:0 0 92px;font-weight:700;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chart-val{flex:0 0 46px;text-align:right;font-weight:800;color:var(--navy)}
+.bar-track{flex:1;height:8px;background:#e8edf3;border-radius:99px;overflow:hidden;min-width:40px}
+.bar-track i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),#22a699);border-radius:99px}
+.seg-bar{display:flex;height:10px;border-radius:99px;overflow:hidden;background:#e8edf3;margin:6px 0}
+.seg-bar i{display:block;height:100%}
+.sg-posted{background:#16a34a}.sg-sched{background:#f59e0b}
+.seg-legend{display:flex;gap:10px;font-size:10.5px;color:var(--muted);font-weight:700;flex-wrap:wrap}
+.dot2{display:inline-block;width:8px;height:8px;border-radius:99px;margin-right:4px}
+.rep-weeks{overflow-x:auto}
+.rep-week{min-width:64px}
+/* day todo list */
+.todo-item{display:flex;align-items:center;gap:7px;padding:5px 2px;border-bottom:1px dashed var(--line);font-size:11.5px}
+.todo-item:last-child{border-bottom:0}
+.todo-item input{width:15px;height:15px;accent-color:var(--teal);flex:0 0 auto;cursor:pointer}
+.todo-done{text-decoration:line-through;color:var(--muted)}
+.todo-badge{display:inline-block;font-size:9px;font-weight:800;background:#e6f4ef;color:#0d6b3a;border-radius:99px;padding:1px 6px;margin-left:4px;white-space:nowrap}
+.link-btn{border:0;background:none;color:var(--blue);font-weight:800;font-size:10.5px;cursor:pointer;font-family:"Inter",sans-serif;padding:0 2px}
+.tab-gold{background:var(--accent)!important;border-color:var(--accent)!important;color:#1a1405!important;font-weight:900;box-shadow:0 1px 6px #c99a2b55}
+html.dark .todo-badge{background:#12312a;color:#6ee7b7}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="logo">ZV</div>
+    <div class="title-block">
+      <h1>90-Day Content &amp; Client Acquisition Plan</h1>
+      <p>Zymera Ventures · Roofing · Construction · Reliability &nbsp;—&nbsp; Facebook · LinkedIn · TikTok → WhatsApp</p>
+    </div>
+    <div class="top-actions">
+      <input class="search" id="q" placeholder="Search all 90 days…" oninput="state.q=this.value;state.page=1;render()">
+      <button class="btn dark" id="themeBtn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+      <button class="btn dark" id="lockBtn" onclick="toggleLock()" title="Admin lock">🔒</button>
+      <button class="btn dark" onclick="openGuide()" title="User guide">?</button>
+      <button class="btn dark" onclick="window.print()">Print / PDF</button>
+      <button class="btn dark" onclick="exportCSV()">Export CSV</button>
+      <button class="btn dark" onclick="openPlatforms()" title="View all social media platforms">Platforms</button>
+      <button class="btn dark" onclick="openLibrary()" title="All uploaded resources — download anything">Library</button>
+      <button class="btn gold" onclick="setView('reports')" title="Open weekly reports">Reports</button>
+      <button class="btn dark" onclick="backupData()" title="Download all statuses, edits, schedules & resources as JSON">Backup</button>
+      <label class="btn dark" style="cursor:pointer" title="Restore from a backup JSON file">Restore<input type="file" accept="application/json,.json" hidden onchange="restoreData(this)"></label>
+      <button class="btn gold" onclick="downloadHTML()">Download</button>
+    </div>
+  </header>
+
+  <div class="strip">
+    <div class="kpis">
+      <div class="kpi"><b>20</b><span>Enquiries / mo</span></div>
+      <div class="kpi"><b>10</b><span>Site visits / mo</span></div>
+      <div class="kpi"><b>1+</b><span>Contracts / mo</span></div>
+      <div class="kpi"><b>90</b><span>Days</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);font-weight:700">
+      <div class="progress"><i id="bar"></i></div><span id="pct">0% posted</span>
+    </div>
+    <div class="tabs">
+      <select class="filter" id="pf" onchange="state.platform=this.value;state.page=1;render()">
+        <option value="">All platforms</option><option>Facebook</option><option>LinkedIn</option><option>TikTok</option><option>Reels</option>
+      </select>
+      <span class="car"><button class="car-btn" onclick="carScroll(-1)" title="Scroll months">‹</button><span id="monthTabs"></span><button class="car-btn" onclick="carScroll(1)" title="Scroll months">›</button></span>
+      <button class="tab" onclick="addMonth()" title="Add another month">+ Month</button>
+      <button class="tab" data-v="queue" onclick="setView('queue')">Scheduled</button>
+      <button class="tab" data-v="play" onclick="setView('play')">Playbook</button>
+      <button class="tab" data-v="track" onclick="setView('track')">Tracker</button>
+    </div>
+  </div>
+
+  <div class="main" id="main">
+    <section class="card plan-card">
+      <div class="card-h"><h2>Plan</h2><span class="count" id="sideCount">30 days</span></div>
+      <div class="start-box"><label>Start date · Day 1</label><input type="date" id="startDate" onchange="setStart(this.value)"></div>
+      <div class="vcar"><button class="vcar-btn" onclick="vScroll(-1)" title="Scroll months up">▲</button><div class="side-nav" id="sideNav"></div><button class="vcar-btn" onclick="vScroll(1)" title="Scroll months down">▼</button></div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <section class="card" id="boardCard">
+      <div id="boardView" style="display:flex;flex-direction:column;flex:1;min-height:0">
+        <div class="board-head">
+          <div><h2 id="bTitle">Month 1 — Build trust &amp; visibility</h2><p id="bSub">Days 1–30 · Showcase real work, educate buyers, start outreach.</p></div>
+          <div class="mob-switch"><button id="mobCal" class="active" onclick="toggleMobile(false)">Calendar</button><button id="mobDet" onclick="toggleMobile(true)">Detail</button></div>
+          <div class="pager">
+            <div class="view-toggle"><button id="btnList" onclick="setLayout('list')">☰ List</button><button id="btnGrid" class="active" onclick="setLayout('grid')">▦ Grid</button></div>
+            <button onclick="prev()">‹ Prev</button><span id="pg">Page 1 / 3</span><button onclick="next()">Next ›</button><button onclick="goToday()" title="Jump to today">Today</button>
+          </div>
+        </div>
+        <div class="table" id="listWrap">
+          <div class="thead"><div>Day</div><div>Post topic</div><div>Platforms</div><div>CTA / next step</div><div>Status</div></div>
+          <div class="tbody" id="rows"></div>
+        </div>
+        <div class="grid-wrap" id="gridWrap" style="display:none"></div>
+        <div class="board-foot"><span id="showing">Showing 1–10 of 30</span><span style="margin-left:auto" id="selInfo">Drag a card onto another to swap days →</span></div>
+      </div>
+      <div id="altView" class="view-pane" style="display:none;flex:1;min-height:0"></div>
+    </section>
+
+    <section class="card" id="detailCard">
+      <div class="card-h"><h2><button class="btn" id="backBtn" style="display:none;padding:4px 9px;margin-right:6px" onclick="toggleMobile(false)">‹ Back</button>Day detail</h2><span class="count" id="dDay">Day —</span></div>
+      <div class="detail-body">
+        <div class="lock-note" id="lockNote">🔒 View-only mode.<button class="btn" style="padding:3px 9px;font-size:11px" onclick="toggleLock()">Unlock as admin</button></div>
+        <div id="dHol"></div>
+        <div class="field"><label>Post topic</label><div class="val" id="dTopic" contenteditable="true">—</div></div>
+        <div class="field"><label>Platforms — tap icons to toggle</label><div id="dPlat" style="display:flex;gap:2px"></div></div>
+        <div class="field"><label>CTA / next step</label><div class="val" id="dCta" contenteditable="true">—</div></div>
+        <div class="field"><label>Sales / production note</label><div class="val" id="dNote" contenteditable="true">—</div></div>
+        <div class="field"><label>Schedule post — date &amp; time</label>
+          <input type="datetime-local" class="sched-input" id="dWhen" onchange="setWhen(this.value)">
+          <div class="sched-hint" id="dWhenHint">Pick a date/time, then press Schedule. Works for any month.</div>
+        </div>
+        <div class="field"><label>Status</label>
+          <select class="filter" id="dStatus" style="width:100%" onchange="setStatus(this.value)">
+            <option value="planned">Planned</option><option value="scheduled">Scheduled</option><option value="posted">Posted</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Todo list · <span id="todoCount" style="color:var(--blue)">0/0 done</span> <button class="link-btn" onclick="regenTodos()" title="Regenerate tasks from the post topic">↻ regenerate</button></label>
+          <div class="res-box">
+            <div class="res-row"><input id="todoInput" placeholder="Add a task for this day…" onkeydown="if(event.key==='Enter')addTodo()"><button class="res-add" onclick="addTodo()">Add</button></div>
+            <div id="todoList"></div>
+            <div class="sched-hint">✓ Ticking every task auto-marks this post as <b>Posted</b> (unticking reverts it to Scheduled).</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Resources · <span id="resCount" style="color:var(--blue)">0</span> — text, images, video URLs</label>
+          <div class="res-box">
+            <div class="res-tabs">
+              <button id="rt-text" class="active" onclick="resTab('text')">Text</button>
+              <button id="rt-image" onclick="resTab('image')">Image</button>
+              <button id="rt-video" onclick="resTab('video')">Video URL</button>
+            </div>
+            <div id="resFormText" class="res-row"><textarea id="resText" rows="2" placeholder="Paste caption, script or shot list…"></textarea><button class="res-add" onclick="addTextRes()">Add</button></div>
+            <div id="resFormImage" class="res-row" style="display:none;flex-direction:column;gap:6px">
+              <div class="res-row"><input id="resImgUrl" placeholder="Paste image URL…"><button class="res-add" onclick="addImageUrl()">Add</button></div>
+              <div class="res-row"><label class="res-add" style="background:#fff;color:var(--navy);border:1px solid var(--line);cursor:pointer;text-align:center;flex:1">Upload image<input type="file" id="resFile" accept="image/*" style="display:none" onchange="uploadImage(this)"></label></div>
+            </div>
+            <div id="resFormVideo" class="res-row" style="display:none"><input id="resVidUrl" placeholder="Paste YouTube / TikTok / MP4 URL…"><button class="res-add" onclick="addVideoUrl()">Add</button></div>
+            <div id="resList"></div>
+          </div>
+        </div>
+      </div>
+      <div class="detail-actions">
+        <button class="btn" onclick="moveDay(-1)" title="Swap with previous day (touch-friendly reschedule)">◀ Move</button>
+        <button class="btn" onclick="mark('scheduled')">Schedule</button>
+        <button class="btn" onclick="mark('planned')">Reset</button>
+        <button class="btn" onclick="moveDay(1)" title="Swap with next day (touch-friendly reschedule)">Move ▶</button>
+      </div>
+    </section>
+  </div>
+
+  <footer class="statusbar">
+    <span><b id="fDone">0</b> / <b id="fTotal">90</b> posted</span><span>WhatsApp Business = conversion channel: catalogue · quick replies · site-visit booking · quote follow-up</span>
+    <span style="margin-left:auto">Zymera Ventures · Building Strong Roofs. Building Stronger Futures.</span>
+  </footer>
+</div>
+
+<div class="modal-ov" id="platModal" style="display:none">
+  <div class="modal modal-wide">
+    <h3>Social media platforms</h3>
+    <p>Every channel in this content plan and what it is for.</p>
+    <div id="platModalList"></div>
+    <div class="modal-btns" style="margin-top:10px"><button class="btn gold" onclick="closePlatforms()">Done</button></div>
+  </div>
+</div>
+<div class="modal-ov" id="guideModal" style="display:none">
+  <div class="modal modal-wide">
+    <h3>👋 Quick user guide</h3>
+    <p>Your 90-day content plan at a glance.</p>
+    <ol style="margin:0 0 10px;padding-left:20px;font-size:12px;line-height:1.75">
+      <li>It opens on <b>today</b> — tap any card to preview it on the right.</li>
+      <li>Use <b>List/Grid</b>, search and platform filter to find any post.</li>
+      <li>Month carousel, ‹ Prev / Next › and <b>Today</b> move you around.</li>
+      <li>Tap <b>🔒 Unlock</b> (admin password) before editing anything.</li>
+      <li>Per day: edit text, tap platform icons, set a time, add resources and todos — all autosaved.</li>
+      <li><b>Drag cards</b> onto each other (or Move ◀ ▶) to reschedule; finishing all todos auto-marks <b>Posted</b>.</li>
+      <li><b>Scheduled</b> tab is the timed queue; <b>Reports</b> has charts and CSV export.</li>
+      <li>Use <b>Backup</b> regularly to safeguard your data.</li>
+    </ol>
+    <div class="modal-btns"><button class="btn gold" onclick="closeGuide()">Got it, start</button></div>
+  </div>
+</div>
+<div class="modal-ov" id="libModal" style="display:none">
+  <div class="modal modal-xl">
+    <h3>📁 Resource library</h3>
+    <p>Every poster, video and note saved across all days. Download anything for reuse.</p>
+    <div class="lib-filters" id="libFilters"></div>
+    <div class="lib-count" id="libCount"></div>
+    <div class="lib-grid" id="libGrid"></div>
+    <div class="modal-btns" style="margin-top:10px"><button class="btn gold" onclick="closeLibrary()">Done</button></div>
+  </div>
+</div>
+<div class="modal-ov" id="adminModal" style="display:none">
+  <div class="modal">
+    <h3>🔒 Admin access</h3>
+    <p>Enter the admin password to unlock editing.</p>
+    <input type="password" id="adminPass" placeholder="Password" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="modal-err" id="adminErr">Incorrect password.</div>
+    <div class="modal-btns"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn gold" onclick="doLogin()">Unlock</button></div>
+  </div>
+</div>
+<script>
+const M1=[["1","Social media platform setup, website setup and webmail connection forwarded to Gmail company account","Facebook · LinkedIn","Confirm all accounts, logins and forwards","Create and secure all pages, set up the website, connect webmail forward to the Gmail company account and verify access."],["2","Design cover-photo graphics for all social media platforms","Facebook · LinkedIn · TikTok","Approve the cover designs","Design on-brand covers sized per platform; keep logos and contact details legible."],["3","Steel roofing versus aluminium roofing","Facebook · LinkedIn","Ask which option suits your project","Keep comparisons accurate and project-specific."],["4","Meet the team or introduce the project supervisor","Facebook · TikTok","Get to know our team","Use approved staff photos or a short interview."],["5","Before-and-after project photos","Facebook · LinkedIn","Request a project assessment","Use only authorized, genuine project images."],["6","Three common roofing mistakes","TikTok · Facebook Reels","Save and share this tip","Keep advice practical; avoid unsupported claims."],["7","Weekly project recap and lessons learned","Facebook · LinkedIn","Discuss your upcoming project","Review comments and identify FAQs."],["8","Showcase a completed roof, with permission","Facebook · LinkedIn","Request our project portfolio","Include scope and context if verified."],["9","Explain the roofing installation process","TikTok · Facebook Reels","Send us your project details","Use a short sequence of real work stages."],["10","Roofing checklist for new construction","Facebook · LinkedIn","Request a roofing consultation","Offer a concise checklist in the caption."],["11","Behind the scenes: site preparation","TikTok · Facebook Reels","Follow for more site insights","Show preparation and safe work practices."],["12","Explain how roof measurements affect quotations","Facebook · LinkedIn","Arrange a site assessment","Explain why drawings and site conditions matter."],["13","Common questions about roofing materials","TikTok · Facebook Reels","Ask a roofing question","Answer one question clearly."],["14","Weekly photo carousel of work in progress","Facebook · LinkedIn","Contact us about your build","Include a brief progress update."],["15","Introduce services for contractors and developers","LinkedIn · Facebook","Discuss subcontracting opportunities","Prepare a list of relevant contractor prospects."],["16","Video explaining roof-sheet installation stages","TikTok · Facebook Reels","Enquire about installation","Use a clear opening hook and captions."],["17","Five things to check before choosing a roofer","Facebook · LinkedIn","Request our service details","Focus on scope, references and workmanship."],["18","Detail shot of workmanship and roof finishing","Facebook · TikTok","View our project portfolio","Use close-ups from a real site."],["19","Explain how project planning helps control costs","LinkedIn · Facebook","Discuss your project scope","Avoid promising savings without evidence."],["20","Answer a frequently asked roofing question","TikTok · Facebook Reels","Leave a question below","Use actual questions from customers."],["21","Weekly progress report from an active site","Facebook · LinkedIn","Ask about our capabilities","Confirm client permission before posting."],["22","Introduce roofing solutions for institutions","LinkedIn · Facebook","Discuss an institutional project","List relevant schools, hospitals or churches as target segments."],["23","Show materials and explain their applications","TikTok · Facebook Reels","Tell us what you are building","Verify product specifications before publishing."],["24","Explain what a roofing quotation should cover","Facebook · LinkedIn","Request a quotation","Mention scope, assumptions and exclusions."],["25","Share a genuine client testimonial, if available","Facebook · LinkedIn","Speak with our team","If none is available, post a project FAQ instead."],["26","Show a roof inspection or quality-check process","TikTok · Facebook Reels","Arrange a site visit","Film only approved and safe activities."],["27","Explain risks of poor roof installation","Facebook · LinkedIn","Request a professional assessment","Keep claims factual and useful."],["28","Recap the month's best project images","Facebook · LinkedIn","Request our portfolio","Select the strongest authorized images."],["29","Short video: what Zymera looks for in every project","TikTok · Facebook Reels","Follow and contact us","Highlight quality, coordination and communication."],["30","Monthly showcase and invitation to discuss projects","Facebook · LinkedIn · TikTok","Book a consultation or site visit","Review enquiries, visits, quotations and source."]];
+const M2=[["31","Case study: project brief, scope and result","LinkedIn · Facebook","Request our capability profile","Use verified details and client approval."],["32","Short video: how a roofing site assessment works","TikTok · Facebook Reels","Book a site assessment","Show what the client should prepare."],["33","Roofing considerations for commercial buildings","LinkedIn · Facebook","Discuss your commercial project","Target developers and project managers."],["34","Information needed for an accurate quotation","Facebook · LinkedIn","Send your project specifications","Create a short list of required details."],["35","Show current installation progress","Facebook · TikTok","Ask about installation services","Use fresh site footage."],["36","Explain how contractors can engage Zymera","LinkedIn · Facebook","Discuss a subcontracting package","Contact relevant contractors directly."],["37","Weekly Q&A on roofing costs and planning","Facebook · TikTok","Send us your question","Use real enquiries to guide the topic."],["38","Roofing solutions for schools and institutions","LinkedIn · Facebook","Discuss upcoming construction works","Identify relevant administrators and project leads."],["39","Five questions to ask a roofing contractor","TikTok · Facebook Reels","Save this checklist","Keep advice neutral and useful."],["40","Project detail relevant to durability","Facebook · LinkedIn","Request a technical discussion","Make claims only where supported by specifications."],["41","How site measurements inform material estimates","TikTok · Facebook Reels","Arrange a site visit","Demonstrate process, not unverified quantities."],["42","Case study: challenge, approach and completed scope","LinkedIn · Facebook","Request relevant project examples","Include approved photos and accurate scope."],["43","Introduce Zymera's project coordination approach","LinkedIn · Facebook","Invite us to discuss your project","Explain communication and handoffs."],["44","Explain the quotation and approval process","Facebook · LinkedIn","Request a quotation","Set expectations on information and next steps."],["45","Genuine client review or project feedback","Facebook · LinkedIn","Speak to our team","If unavailable, publish a project walkthrough."],["46","Installation preparation and material handling","TikTok · Facebook Reels","Enquire about roofing installation","Show organized, safe site practices."],["47","Roofing considerations for warehouses","LinkedIn · Facebook","Discuss your building requirements","Target industrial developers and contractors."],["48","Showcase quality checks at a real site","TikTok · Facebook Reels","Arrange a site inspection","Explain the checks actually performed."],["49","Invite contractors to discuss upcoming projects","LinkedIn","Connect about a roofing package","Pair the post with personalized outreach."],["50","What affects roofing project timelines","Facebook · LinkedIn","Share your target project dates","Discuss scope, site readiness and material availability."],["51","Real roof transformation","Facebook · TikTok","Request a project assessment","Use before/after imagery only when genuine."],["52","Planning roofing in the construction schedule","LinkedIn · Facebook","Discuss project coordination","Offer early coordination with the main contractor."],["53","Answer a roofing FAQ from actual enquiries","TikTok · Facebook Reels","Message us your requirements","Use a concise answer and clear CTA."],["54","Roofing considerations for churches and community buildings","Facebook · LinkedIn","Discuss your institution's project","Tailor the post to relevant building needs."],["55","Invite qualified prospects to a site consultation","Facebook · LinkedIn","Book a site visit","Respond promptly and confirm logistics."],["56","Weekly project portfolio roundup","Facebook · LinkedIn","Request our capability profile","Choose work relevant to target clients."],["57","Material supply versus installation scope","LinkedIn · Facebook","Tell us the scope you need","Clarify exactly what Zymera can provide."],["58","Video answering a common buyer objection","TikTok · Facebook Reels","Ask us about your project","Use real objections and honest answers."],["59","Clear service enquiry post","Facebook · LinkedIn","Send project location and scope","Make contact instructions easy to find."],["60","Month 2 case-study compilation","Facebook · LinkedIn · TikTok","Request a site visit or quotation","Review lead sources and quotation progress."]];
+const M3=[["61","Present Zymera's capabilities and service scope","LinkedIn · Facebook","Request our company profile","Send the profile to qualified prospects."],["62","Installation video from start to finish","TikTok · Facebook Reels","Discuss your upcoming project","Use real footage; avoid implying all projects are identical."],["63","Case study focused on execution and workmanship","LinkedIn · Facebook","Invite us to quote","Show verified scope and project evidence."],["64","What to prepare before requesting a quote","Facebook · LinkedIn","Send your project brief","List drawings, location, scope and timeline if available."],["65","Genuine client testimonial or handover","Facebook · LinkedIn","Discuss a similar project","Use an approved testimonial or project recap."],["66","How Zymera coordinates with other contractors","LinkedIn · Facebook","Explore a subcontracting partnership","Contact project and contracts managers."],["67","Weekly portfolio highlights","Facebook · LinkedIn","Request relevant project references","Choose examples that match the prospect's sector."],["68","Roofing considerations for large or multi-unit buildings","LinkedIn · Facebook","Discuss your project scope","Target commercial decision-makers."],["69","Video about installation quality concerns","TikTok · Facebook Reels","Arrange a technical discussion","Show the actual quality process."],["70","Steps from enquiry to site visit to quotation","Facebook · LinkedIn","Start with a site assessment","Explain how to move forward."],["71","Show quality checks using genuine site footage","TikTok · Facebook Reels","Ask about our work process","Use approved, accurate footage."],["72","Case study for a commercial or institutional project","LinkedIn · Facebook","Invite Zymera to a project discussion","Use relevant verified project references."],["73","How to compare roofing quotations fairly","Facebook · LinkedIn","Request a clearly scoped quotation","Discuss comparable scope and exclusions."],["74","Approved client success story","Facebook · LinkedIn","Request our portfolio","If no story is approved, publish an educational case breakdown."],["75","Direct invitation to main contractors and developers","LinkedIn","Discuss upcoming roofing packages","Send tailored introductions to target accounts."],["76","How roofing installation is coordinated on site","TikTok · Facebook Reels","Share your project timeline","Show communication and work sequencing."],["77","Completed work and relevant project scope","Facebook · LinkedIn","Request a project consultation","Include verified project details."],["78","What to expect during a roofing site visit","Facebook · TikTok","Schedule an assessment","Clarify access, measurements and requirements."],["79","Documentation and project communication practices","LinkedIn · Facebook","Request our capability profile","Mention only practices Zymera actually follows."],["80","Answer a common pricing or scope objection","Facebook · LinkedIn","Discuss your project requirements","Be transparent about variables and assumptions."],["81","Invite qualified prospects to submit project details","LinkedIn · Facebook","Request a quotation","Prioritize opportunities with clear scope and timing."],["82","Installation or handover milestone","TikTok · Facebook Reels","Discuss your roofing needs","Publish only with site/client approval."],["83","Contractor partnership value proposition","LinkedIn","Arrange a business introduction","Explain the fit for the contractor's pipeline."],["84","Roofing solutions for a specific building type","Facebook · LinkedIn","Discuss a similar project","Choose one target segment and tailor the message."],["85","Planning procurement and material lead times","LinkedIn · Facebook","Share your construction schedule","Verify lead-time details with suppliers."],["86","Real customer review or approved case study","Facebook · LinkedIn","Speak to our team","Never fabricate testimonials."],["87","Follow-up invitation for prospects with active projects","Facebook · LinkedIn","Continue your quotation discussion","Pair with individual follow-up, not only a public post."],["88","Portfolio of the most relevant projects","LinkedIn · Facebook","Request a capability meeting","Prepare sector-specific portfolio examples."],["89","Lessons from the 90-day project and education series","Facebook · LinkedIn · TikTok","Contact us about future work","Summarize useful insights and invite questions."],["90","Company capability summary and enquiry invitation","Facebook · LinkedIn · TikTok","Book a meeting or site visit","Report leads, visits, quotes, contracts and lessons."]];
+const ALL=[...M1,...M2,...M3].map(r=>({day:r[0],topic:r[1],plat:r[2],cta:r[3],note:r[4]}));
+const EXTRA_TOPICS=["Site progress update — film this week's work","Client Q&A — answer one real enquiry","Before-and-after project photos","Material spotlight and application guide","Meet the team / supervisor intro","Roofing checklist for new builds","Case study: scope and result","Quotation explainer — what good scope covers","Quality-check walkthrough on site","Testimonial or project handover","Commercial / institutional roofing angle","Call for site assessments and quotes"];
+const EXTRA_PLATS=["Facebook · LinkedIn","TikTok · Facebook Reels","LinkedIn · Facebook","Facebook · TikTok"];
+/* real-date engine: Day 1 = campaign start date (default Oct 1, 2026) */
+function startISO(){return store.__start||"2026-10-19"}
+function startDate(){const[a,b,c]=startISO().split("-").map(Number);return new Date(a,b-1,c)}
+function dateOfDay(n){const d=startDate();d.setDate(d.getDate()+(+n-1));return d}
+function dayNumOfDate(dt){const s=startDate();s.setHours(0,0,0,0);const t=new Date(dt);t.setHours(0,0,0,0);return Math.floor((t-s)/86400000)+1}
+function monthOfDay(n){const s=startDate(),d=dateOfDay(n);return (d.getFullYear()-s.getFullYear())*12+(d.getMonth()-s.getMonth())+1}
+const MON=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const WD=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+function fmtD(dt){return `${MON[dt.getMonth()].slice(0,3)} ${dt.getDate()}, ${dt.getFullYear()}`}
+function fmtLong(dt){return `${WD[dt.getDay()]}, ${MON[dt.getMonth()]} ${dt.getDate()}, ${dt.getFullYear()}`}
+function fmtRange(a,b){const sameMo=a.getMonth()===b.getMonth()&&a.getFullYear()===b.getFullYear();if(sameMo)return `${MON[a.getMonth()].slice(0,3)} ${a.getDate()} – ${b.getDate()}, ${a.getFullYear()}`;return `${MON[a.getMonth()].slice(0,3)} ${a.getDate()} – ${MON[b.getMonth()].slice(0,3)} ${b.getDate()}, ${b.getFullYear()}`}
+function setStart(v){if(!v)return;if(!guardAdmin()){syncStartInput();return}store.__start=v;const t=totalDays();if(+state.sel>t)state.sel=String(t);save();syncStartInput();render()}
+function syncStartInput(){const el=document.getElementById("startDate");if(el)el.value=startISO()}
+function isTodayNum(n){const t=new Date();return dayNumOfDate(t)===+n}
+function goToday(){const t=new Date();let n=dayNumOfDate(t);if(n<1)return;while(n>totalDays()&&monthCount()<24){store.__maxMonth=monthCount()+1}save();if(n>totalDays())return;setView("m"+monthOfDay(n));const idx=monthDays(monthOfDay(n)).findIndex(r=>+r.day===n);if(idx>=0){state.page=Math.floor(idx/state.per)+1;render()}select(String(n))}
+function carScroll(dir){document.getElementById("monthTabs").scrollBy({left:dir*220,behavior:"smooth"})}
+function openGuide(){document.getElementById("guideModal").style.display="flex"}
+function closeGuide(){document.getElementById("guideModal").style.display="none";try{localStorage.setItem("zv-guide-seen","1")}catch(e){}}
+function openPlatforms(){renderPlatModal();document.getElementById("platModal").style.display="flex"}
+function closePlatforms(){document.getElementById("platModal").style.display="none"}
+let lastLib=[];
+function openLibrary(f){state.libFilter=f||state.libFilter||"all";renderLibrary();document.getElementById("libModal").style.display="flex"}
+function closeLibrary(){document.getElementById("libModal").style.display="none"}
+function libraryItems(){const out=[];for(let d=1;d<=totalDays();d++){const day=String(d);getRes(day).forEach((r,i)=>out.push({day,i,r}))}return out}
+function renderLibrary(){
+  const f=state.libFilter||"all";
+  document.getElementById("libFilters").innerHTML=["all","image","video","text"].map(k=>`<button class="${f===k?"active":""}" onclick="openLibrary('${k}')">${k==="all"?"All":k==="image"?"Images":k==="video"?"Videos":"Text notes"}</button>`).join("");
+  const all=libraryItems();
+  lastLib=all.filter(x=>f==="all"||x.r.t===f);
+  document.getElementById("libCount").textContent=lastLib.length+" of "+all.length+" resource(s)";
+  document.getElementById("libGrid").innerHTML=lastLib.map((x,i)=>{
+    const lbl=`Day ${x.day} · ${fmtD(dateOfDay(x.day))}`;
+    let prev="";
+    if(x.r.t==="image")prev=`<img src="${x.r.v.startsWith("data:")?x.r.v:esc(x.r.v)}" loading="lazy" onerror="this.style.display='none'">`;
+    else if(x.r.t==="video"){const emb=videoEmbed(x.r.v);prev=emb?`<iframe class="video-embed" src="${emb}" loading="lazy"></iframe>`:`<div style="font-size:26px;text-align:center">🎬</div>`}
+    else prev=`<div style="font-size:11px;line-height:1.5;max-height:90px;overflow:hidden">${esc(x.r.v).slice(0,140)}${x.r.v.length>140?"…":""}</div>`;
+    const nm=x.r.t==="text"?"note":(x.r.name||x.r.v.split("/").pop().split("?")[0]||x.r.t);
+    return `<div class="lib-item">${prev}<div class="lt">${lbl}</div><div class="ls" title="${esc(x.r.v)}">${esc(nm)}</div><div class="la"><button class="res-open" onclick="dlLibItem(${i})">⬇ Download</button><button class="res-del" onclick="delLibItem(${i})">Delete</button></div></div>`;
+  }).join("")||`<div style="grid-column:1/-1;padding:16px;color:var(--muted);font-size:12px">No resources yet — add posters, videos or notes from any day's detail panel.</div>`;
+}
+function dlFile(href,name){const a=document.createElement("a");a.href=href;a.download=name;a.click()}
+function dlLibItem(i){
+  const x=lastLib[i];if(!x)return;const r=x.r;
+  if(r.t==="text"){const b=new Blob([r.v],{type:"text/plain"});const u=URL.createObjectURL(b);dlFile(u,`day-${x.day}-note-${x.i+1}.txt`);setTimeout(()=>URL.revokeObjectURL(u),4000);return}
+  if(r.v.startsWith("data:")){const m=r.v.match(/^data:(.*?);/);let ext=(m&&m[1].split("/")[1])||"bin";if(ext==="jpeg")ext="jpg";dlFile(r.v,`day-${x.day}-${r.t}-${x.i+1}.${ext}`);return}
+  fetch(r.v).then(b=>{if(!b.ok)throw 0;return b.blob()}).then(b=>{const u=URL.createObjectURL(b);const ext=(b.type.split("/")[1]||"bin").split("+")[0];dlFile(u,`day-${x.day}-${r.t}-${x.i+1}.${ext}`);setTimeout(()=>URL.revokeObjectURL(u),4000)}).catch(()=>window.open(r.v,"_blank"));
+}
+function delLibItem(i){const x=lastLib[i];if(!x)return;const keep=state.sel;state.sel=x.day;delRes(x.i);state.sel=keep;renderLibrary();render(false)}
+function getPlatLink(k){return store["__link_"+k]||""}
+function savePlatLink(k,v){if(!guardAdmin()){renderPlatModal();return}store["__link_"+k]=String(v||"").trim();save();renderPlatModal()}
+function fixUrl(u){u=String(u||"").trim();if(!u)return"";if(!/^https?:\/\//i.test(u))u="https://"+u;return u}
+function renderPlatModal(){
+  const info={Facebook:["Local reach","Homeowner audiences, project albums, before/after posts and Reels."],LinkedIn:["B2B pipeline","Contractors, developers, quantity surveyors and procurement decision-makers."],TikTok:["Site video","Installations, demos, material comparisons and roofing education."],Reels:["Short recuts","Repurpose strong TikTok videos as Reels for extra reach."],WhatsApp:["Conversion channel","Catalogue, quick replies, site-visit booking and quotation follow-up."]};
+  const name=k=>k==="Reels"?"Reels (Instagram)":k==="WhatsApp"?"WhatsApp Business":k;
+  const adm=isAdmin();
+  document.getElementById("platModalList").innerHTML=PLATS.map(k=>{
+    const link=getPlatLink(k),href=fixUrl(link);
+    const open=href?`<a class="res-open" href="${esc(href)}" target="_blank" rel="noopener">Open ↗</a>`:`<span style="font-size:11px;color:var(--muted)">No link yet${adm?" — paste it below":""}</span>`;
+    const edit=adm?`<input class="link-input" value="${esc(link)}" placeholder="Paste ${esc(name(k))} page URL…" onchange="savePlatLink('${k}',this.value)">`:"";
+    return `<div class="plat-row"><span class="plat-ic pt-${k}">${ICONS[k]}</span><div style="flex:1;min-width:0"><b>${name(k)}</b><div style="font-size:11.5px;color:var(--muted)">${esc(info[k][0])} — ${esc(info[k][1])}</div><div class="plat-linkrow">${open}</div>${edit}</div></div>`;
+  }).join("");
+}
+function vScroll(dir){document.getElementById("sideNav").scrollBy({top:dir*160,behavior:"smooth"})}
+/* dark mode */
+function toggleTheme(){const d=document.documentElement.classList.toggle("dark");try{localStorage.setItem("zv-theme",d?"dark":"light")}catch(e){}document.getElementById("themeBtn").textContent=d?"☀️":"🌙"}
+/* admin gate */
+const ADMIN_PASS="Zymera@123";
+let pendingFn=null;
+function isAdmin(){try{return sessionStorage.getItem("zv-admin")==="1"}catch(e){return false}}
+function guardAdmin(fn){if(isAdmin())return true;pendingFn=typeof fn==="function"?fn:null;document.getElementById("adminModal").style.display="flex";document.getElementById("adminErr").style.display="none";setTimeout(()=>document.getElementById("adminPass").focus(),50);return false}
+function closeModal(){document.getElementById("adminModal").style.display="none";document.getElementById("adminPass").value="";pendingFn=null}
+function doLogin(){if(document.getElementById("adminPass").value===ADMIN_PASS){try{sessionStorage.setItem("zv-admin","1")}catch(e){}closeModal();syncEditAccess();const f=pendingFn;pendingFn=null;if(f)f()}else{document.getElementById("adminErr").style.display="block"}}
+function toggleLock(){if(isAdmin()){try{sessionStorage.removeItem("zv-admin")}catch(e){}syncEditAccess()}else guardAdmin()}
+function syncEditAccess(){const a=isAdmin();document.body.classList.toggle("locked",!a);document.getElementById("lockBtn").textContent=a?"🔓":"🔒";document.getElementById("lockBtn").title=a?"Lock editing (admin unlocked)":"Unlock as admin";renderDetail();render(false)}
+/* Uganda public holidays */
+const UG_FIXED={"1-1":"New Year's Day","1-26":"NRM Liberation Day","2-16":"Archbishop Janani Luwum Day","3-8":"International Women's Day","5-1":"Labour Day","6-3":"Martyrs' Day","6-9":"National Heroes' Day","10-9":"Independence Day","12-25":"Christmas Day","12-26":"Boxing Day"};
+const EID_FITR={2026:[2026,3,20],2027:[2027,3,10],2028:[2028,2,28]};
+const EID_ADHA={2026:[2026,5,27],2027:[2027,5,17],2028:[2028,5,5]};
+function easterSunday(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;return new Date(y,mo-1,da)}
+function sameYMD(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
+function ugHoliday(dt){const key=(dt.getMonth()+1)+"-"+dt.getDate();if(UG_FIXED[key])return UG_FIXED[key];
+const es=easterSunday(dt.getFullYear());const gf=new Date(es);gf.setDate(gf.getDate()-2);const em=new Date(es);em.setDate(em.getDate()+1);
+if(sameYMD(dt,gf))return"Good Friday";if(sameYMD(dt,em))return"Easter Monday";
+const y=dt.getFullYear();if(EID_FITR[y]&&sameYMD(dt,new Date(EID_FITR[y][0],EID_FITR[y][1]-1,EID_FITR[y][2])))return"Eid al-Fitr (tentative)";if(EID_ADHA[y]&&sameYMD(dt,new Date(EID_ADHA[y][0],EID_ADHA[y][1]-1,EID_ADHA[y][2])))return"Eid al-Adha (tentative)";return null}
+function holOfDay(n){return ugHoliday(dateOfDay(n))}
+function totalDays(){const s=startDate();const endM=(s.getMonth()+(monthCount()-1));const last=new Date(s.getFullYear(),endM+1,0);return dayNumOfDate(last)}
+function getDay(n){n=String(n);const b=ALL.find(x=>x.day===n);if(b)return{day:n,topic:getOverride(n,"t",b.topic),plat:effPlat(n,b.plat),cta:getOverride(n,"c",b.cta),note:getOverride(n,"n",b.note)};
+const i=(+n-91)%EXTRA_TOPICS.length;return{day:n,topic:getOverride(n,"t",EXTRA_TOPICS[i]),plat:effPlat(n,EXTRA_PLATS[(+n)%EXTRA_PLATS.length]),cta:getOverride(n,"c","Book a consultation or site visit"),note:getOverride(n,"n","Open slot — plan content for this day.")}}
+function monthCal(n){const s=startDate();const first=new Date(s.getFullYear(),s.getMonth()+(n-1),1);const last=new Date(first.getFullYear(),first.getMonth()+1,0);return{first,last}}
+function monthDays(n){const{first,last}=monthCal(n);const out=[];for(let d=new Date(first);d<=last;d.setDate(d.getDate()+1)){const num=dayNumOfDate(d);if(num>=1)out.push(getDay(num))}return out}
+function monthCount(){return store.__maxMonth||3}
+function monthMeta(n){const{first,last}=monthCal(n);const d0=dayNumOfDate(first),d1=dayNumOfDate(last);const phases={1:" · Build trust & visibility",2:" · Generate leads",3:" · Convert to contracts"};return{t:`${MON[first.getMonth()]} ${first.getFullYear()}${phases[n]||""}`,s:`${fmtRange(first,last)} · Days ${d0}–${d1} · Plan, publish and convert.`}}
+function isMonthView(v){return/^m\d+$/.test(v||"")}
+function monthNum(v){return+String(v).slice(1)}
+function addMonth(){if(!guardAdmin(addMonth))return;store.__maxMonth=monthCount()+1;save();setView("m"+store.__maxMonth)}
+function allDays(){const out=[];for(let d=1;d<=totalDays();d++)out.push(getDay(d));return out}
+function getWhen(d){return store[d+"__dt"]||""}
+function setWhen(v){if(!guardAdmin())return;store[state.sel+"__dt"]=v;if(v&&getStatus(state.sel)==="planned")store[state.sel+"__s"]="scheduled";save();renderDetail();render(false)}
+function fmtWhen(v){if(!v)return"";try{const d=new Date(v);return d.toLocaleString([],{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})}catch(e){return v}}
+let store={}; try{store=JSON.parse(localStorage.getItem("zv-cal-v1")||"{}")}catch(e){store={}}
+const state={view:"m1",page:1,per:10,q:"",platform:"",sel:"1",layout:"grid",resTab:"text",week:1};
+function setLayout(l){state.layout=l;document.getElementById("btnList").classList.toggle("active",l==="list");document.getElementById("btnGrid").classList.toggle("active",l==="grid");render(false)}
+function resTab(t){state.resTab=t;["text","image","video"].forEach(k=>{document.getElementById("rt-"+k).classList.toggle("active",k===t);document.getElementById("resForm"+k[0].toUpperCase()+k.slice(1)).style.display=t===k?(k==="image"?"flex":"flex"):"none"})}
+function getRes(d){try{return JSON.parse(store[d+"__res"]||"[]")}catch(e){return[]}}
+function saveRes(d,arr){try{store[d+"__res"]=JSON.stringify(arr);save()}catch(e){alert("Storage full — image too large. Try an image URL instead.")}}
+function addTextRes(){if(!guardAdmin(addTextRes))return;const v=document.getElementById("resText").value.trim();if(!v)return;const a=getRes(state.sel);a.push({t:"text",v,at:Date.now()});saveRes(state.sel,a);document.getElementById("resText").value="";renderRes();render(false)}
+function addImageUrl(){if(!guardAdmin(addImageUrl))return;const v=document.getElementById("resImgUrl").value.trim();if(!v)return;const a=getRes(state.sel);a.push({t:"image",v,at:Date.now()});saveRes(state.sel,a);document.getElementById("resImgUrl").value="";renderRes();render(false)}
+function addVideoUrl(){if(!guardAdmin(addVideoUrl))return;const v=document.getElementById("resVidUrl").value.trim();if(!v)return;const a=getRes(state.sel);a.push({t:"video",v,at:Date.now()});saveRes(state.sel,a);document.getElementById("resVidUrl").value="";renderRes();render(false)}
+function uploadImage(inp){if(!isAdmin()){inp.value="";guardAdmin();return}const f=inp.files[0];if(!f)return;if(f.size>900000){alert("Image > ~900KB — it may exceed browser storage. Consider compressing or using a URL.")}const r=new FileReader();r.onload=()=>{const a=getRes(state.sel);a.push({t:"image",v:r.result,name:f.name,at:Date.now()});saveRes(state.sel,a);renderRes();render(false)};r.readAsDataURL(f);inp.value=""}
+function delRes(i){if(!guardAdmin(()=>delRes(i)))return;const a=getRes(state.sel);a.splice(i,1);saveRes(state.sel,a);renderRes();render(false)}
+function videoEmbed(url){const m=String(url).match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{6,})/);if(m)return `https://www.youtube.com/embed/${m[1]}`;if(/\.mp4($|\?)/i.test(url))return url;return null}
+const PRESET_TODOS={
+"1":["Create and secure the Facebook, LinkedIn and TikTok business pages","Set up the website and verify every page loads","Connect webmail forward to the Gmail company account and send a test email","Record all logins and passwords in the company store","Confirm the Day 2 graphics brief (sizes, brand assets, contacts)"],
+"2":["Gather brand assets: logo, colors, fonts and contact details","Design the Facebook cover photo in the correct size","Design the LinkedIn banner and TikTok cover graphics","Get approval on all cover designs","Upload the approved covers to each platform"]};
+function genTodosFor(day){
+  if(PRESET_TODOS[String(day)])return PRESET_TODOS[String(day)].slice(0,6);
+  const r=getDay(day);
+  const t=((r.topic||"")+" "+(r.note||"")).toLowerCase();
+  const has=(...ws)=>ws.some(w=>t.includes(w));
+  const tasks=[];
+  if(has("video","reel","tiktok","film","footage","walkthrough","demonstration"))tasks.push("Capture raw site footage (hook in first 3 seconds)","Edit video, add captions and on-screen CTA");
+  if(has("photo","before-and-after","before/after","carousel","portfolio","showcase","transformation","detail shot","close-up","imagery","images","roundup","recap"))tasks.push("Collect authorized site photos (before + after)","Select and order the strongest images");
+  if(has("case study","testimonial","review","client","handover","success story","feedback"))tasks.push("Get client approval to publish names and photos","Draft the story: brief, scope and result");
+  if(has("checklist","mistake","tip","faq","question","education","explain","guide","versus","comparison","consideration","risk","cost","pricing","timeline","planning","mistakes"))tasks.push("Draft the teaching points in plain language","Verify every technical claim before posting");
+  if(has("contractor","developer","institution","school","church","warehouse","commercial","subcontract","partnership","capability","profile","outreach","prospect","lead","developers"))tasks.push("Attach capability pack and relevant references","Send 5 personalized prospect messages");
+  if(has("quote","quotation","measurement","assessment","site visit","consultation","enquir","book","invite","request","schedule"))tasks.push("Confirm booking contact and site-visit checklist","Prepare reply template for incoming enquiries");
+  const plats=String(r.plat||"").split("·").map(x=>x.trim()).filter(Boolean).join(", ");
+  tasks.push("Confirm permissions for people, site and client details");
+  tasks.push("Write caption with CTA: "+(r.cta||"Contact us"));
+  tasks.push("Publish on "+(plats||"all channels")+" and log the outcome");
+  const seen=new Set(),out=[];
+  for(const x of tasks){const k=x.toLowerCase();if(!seen.has(k)){seen.add(k);out.push(x)}}
+  return out.slice(0,6);
+}
+function seedTodos(day,force){
+  if(!force&&store[day+"__seeded"])return false;
+  if(!force&&getTodos(day).length){store[day+"__seeded"]=1;save();return false}
+  saveTodos(day,genTodosFor(day).map(t=>({t,d:0})));
+  store[day+"__seeded"]=1;save();return true;
+}
+function regenTodos(){if(!guardAdmin(regenTodos))return;seedTodos(state.sel,true);renderTodos();render(false)}
+function canPost(d){
+  let td=getTodos(d);
+  if(!td.length){seedTodos(d,true);renderTodos();render(false);alert("Tasks auto-generated for this post — tick each one complete, then mark posted.");return false}
+  const open=td.filter(t=>!t.d).length;
+  if(open>0){alert(open+" task(s) still open — complete all todos before marking posted.");return false}
+  return true;
+}
+function syncPostStatus(){
+  const a=getTodos(state.sel);
+  const done=a.filter(t=>t.d).length;
+  if(a.length&&done===a.length){if(getStatus(state.sel)!=="posted")mark("posted")}
+  else if(getStatus(state.sel)==="posted")mark("scheduled");
+}
+function getTodos(d){try{const a=JSON.parse(store[d+"__todo"]||"[]");return Array.isArray(a)?a:[]}catch(e){return[]}}
+function saveTodos(d,a){store[d+"__todo"]=JSON.stringify(a);save()}
+function addTodo(){if(!guardAdmin(addTodo))return;const el=document.getElementById("todoInput");const v=el.value.trim();if(!v)return;const a=getTodos(state.sel);a.push({t:v,d:0});saveTodos(state.sel,a);el.value="";syncPostStatus();renderTodos();render(false)}
+function toggleTodo(i){if(!guardAdmin(()=>toggleTodo(i)))return;const a=getTodos(state.sel);if(!a[i])return;a[i].d=a[i].d?0:1;saveTodos(state.sel,a);syncPostStatus();renderTodos();render(false)}
+function delTodo(i){if(!guardAdmin(()=>delTodo(i)))return;const a=getTodos(state.sel);a.splice(i,1);saveTodos(state.sel,a);syncPostStatus();renderTodos();render(false)}
+function todoBadge(d){const a=getTodos(d);if(!a.length)return"";const n=a.filter(t=>t.d).length;return `<span class="todo-badge">☑${n}/${a.length}</span>`}
+function renderTodos(){const a=getTodos(state.sel);const n=a.filter(t=>t.d).length;document.getElementById("todoCount").textContent=n+"/"+a.length+" done";document.getElementById("todoList").innerHTML=a.map((t,i)=>`<div class="todo-item"><input type="checkbox" ${t.d?"checked":""} onchange="toggleTodo(${i})"><span style="flex:1" class="${t.d?"todo-done":""}">${esc(t.t)}</span><button class="res-del" onclick="delTodo(${i})">✕</button></div>`).join("")||`<div style="font-size:11px;color:var(--muted);margin-top:6px">No tasks for Day ${esc(state.sel)} yet.</div>`}
+function renderRes(){const a=getRes(state.sel);document.getElementById("resCount").textContent=a.length;document.getElementById("resList").innerHTML=a.map((r,i)=>{
+  if(r.t==="text")return `<div class="res-item">📝 ${esc(r.v)}<div class="meta"><span>text note</span><button class="res-del" onclick="delRes(${i})">Delete</button></div></div>`;
+  if(r.t==="image")return `<div class="res-item"><img src="${r.v.startsWith("data:")?r.v:esc(r.v)}" loading="lazy" onerror="this.style.display='none'"><div class="meta"><span>${esc(r.name||r.v)}</span>${r.v.startsWith("http")?`<a class="res-open" href="${esc(r.v)}" target="_blank">Open</a>`:""}<button class="res-del" onclick="delRes(${i})">Delete</button></div></div>`;
+  const emb=videoEmbed(r.v);const prev=emb?`<iframe class="video-embed" src="${emb}" allowfullscreen loading="lazy"></iframe>`:`<span>🎬 ${esc(r.v)}</span>`;
+  return `<div class="res-item">${prev}<div class="meta"><span>${esc(r.v)}</span><a class="res-open" href="${esc(r.v)}" target="_blank">Open</a><button class="res-del" onclick="delRes(${i})">Delete</button></div></div>`;
+}).join("")||`<div style="font-size:11px;color:var(--muted);margin-top:6px">No resources yet for Day ${esc(state.sel)}.</div>`}
+function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+const ICONS={
+Facebook:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7h2.4l.4-3h-2.8V9.1c0-.9.3-1.5 1.6-1.5h1.3V4.9c-.3 0-1.1-.1-2-.1-2 0-3.4 1.2-3.4 3.5V11H8.5v3H11v7h2.5z"/></svg>`,
+LinkedIn:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.9 8.6H4V20h2.9V8.6zM5.4 4a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 0 0 0-3.4zM10 20v-6c0-1.5.8-2.6 2.4-2.6 1.5 0 2.1 1 2.1 2.6v6h2.9v-6.4c0-2.9-1.6-4.4-3.9-4.4-1.8 0-2.7 1-3.2 1.7V8.6H7.4c0 .8 0 11.4 0 11.4H10z"/></svg>`,
+TikTok:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 4c.4 2.1 1.8 3.4 4 3.6v3c-1.6 0-3-.5-4-1.3v6.2c0 3.4-2.4 5.5-5.4 5.5-3 0-5.1-2.1-5.1-4.9 0-2.9 2.3-5 5.3-4.8v3.1c-1.2-.3-2.3.6-2.3 1.7 0 1 .8 1.8 1.9 1.8 1.2 0 2-1 2-2.4V4h3.6z"/></svg>`,
+Reels:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none"/></svg>`,
+WhatsApp:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4a8 8 0 0 0-6.9 12L4 20l4.1-1.1A8 8 0 1 0 12 4zm0 2a6 6 0 1 1-3 11.2l-.2-.1-2.4.6.6-2.3-.1-.2A6 6 0 0 1 12 6zm-2.5 3c-.2 0-.5 0-.7.3-.2.3-.9.9-.9 2.1s.9 2.4 1 2.6c.2.2 1.7 2.7 4.2 3.6 2 .8 2.5.6 2.9.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.2-1.9-.9c-.3-.1-.5-.2-.7.1l-.9 1.1c-.2.2-.3.2-.6.1-.9-.4-1.7-.8-2.4-1.5-.6-.6-1-1.4-1.1-1.6-.1-.2 0-.4.1-.5l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.5L9.9 9c-.2-.4-.3-.5-.4-.5z"/></svg>`};
+const PLATS=["Facebook","LinkedIn","TikTok","Reels","WhatsApp"];
+function platKey(p){p=p.trim();if(/LinkedIn/i.test(p))return"LinkedIn";if(/TikTok/i.test(p))return"TikTok";if(/Reel/i.test(p))return"Reels";if(/WhatsApp/i.test(p))return"WhatsApp";return"Facebook"}
+function pill(p){const k=platKey(p);const c={Facebook:"p-fb",LinkedIn:"p-li",TikTok:"p-tt",Reels:"p-re",WhatsApp:"p-wa"}[k];return `<span class="pill ${c}" title="${k}">${ICONS[k]}</span>`}
+function plats(s){return String(s||"").split("·").map(x=>x.trim()).filter(Boolean).map(pill).join("")}
+function platList(s){return String(s||"").split("·").map(x=>platKey(x)).filter((v,i,a)=>a.indexOf(v)===i)}
+function togglePlat(k){if(!guardAdmin(()=>togglePlat(k)))return;const cur=new Set(platList(effPlat(state.sel,baseDay(state.sel)?.plat||"Facebook")));if(cur.has(k)){if(cur.size===1)return;cur.delete(k)}else cur.add(k);store[state.sel+"__p"]=[...cur].join(" · ");save();renderDetail();render(false)}
+function renderPlatToggles(){const cur=new Set(platList(effPlat(state.sel,baseDay(state.sel)?.plat||"Facebook")));document.getElementById("dPlat").innerHTML=PLATS.map(k=>`<button class="plat-toggle pt-${k} ${cur.has(k)?"on":""}" title="${k}" onclick="togglePlat('${k}')">${ICONS[k]}</button>`).join("")}
+function renderLegend(){document.getElementById("legend").innerHTML=PLATS.map(k=>{const c={Facebook:"#1d4fa3",LinkedIn:"#0b4a75",TikTok:"#111",Reels:"#be185d",WhatsApp:"#0f766e"}[k];return `<div><span class="pill" style="background:${c}22;color:${c}" title="${k}">${ICONS[k]}</span><b>${k}</b> <span style="color:var(--muted)">— ${{Facebook:"local reach, albums",LinkedIn:"contractors, developers",TikTok:"site video, education",Reels:"short video recuts",WhatsApp:"enquiry → quote"}[k]}</span></div>`}).join("")+`<div style="margin-top:6px">Click to preview · <b>Drag cards to reschedule</b> · Tap icons in detail to change platforms · Edits autosaved.</div>`}
+function getStatus(d){return store[d+"__s"]||"planned"}
+function getOverride(d,k,fb){return store[d+"__"+k]??fb}
+function baseDay(d){return getDay(d)}
+function unsched(d){if(!guardAdmin(()=>unsched(d)))return;store[d+"__s"]="planned";delete store[d+"__dt"];save();renderAlt();updateProgress()}
+function exportQueueCSV(){const items=allDays().map(r=>({r,s:getStatus(r.day),dt:getWhen(r.day)})).filter(x=>x.s==="scheduled").sort((a,b)=>(a.dt||"9999").localeCompare(b.dt||"9999"));const rows=[["Day","Topic","Platforms","Scheduled for","CTA","Resources"],...items.map(x=>[x.r.day,x.r.topic,x.r.plat,x.dt||"",x.r.cta,getRes(x.r.day).length])];const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="zymera-scheduled-queue.csv";a.click()}
+function effPlat(d,fb){return store[d+"__p"]??fb}
+function effTopic(d){const b=baseDay(d);return getOverride(d,"t",b?b.topic:"")}
+function swapDays(a,b){a=String(a);b=String(b);if(a===b)return;
+const snap=d=>{const g=getDay(d);return{t:g.topic,c:g.cta,n:g.note,p:g.plat,s:getStatus(d),dt:getWhen(d)}};
+const sa=snap(a),sb=snap(b);
+const put=(d,s)=>{store[d+"__t"]=s.t;store[d+"__c"]=s.c;store[d+"__n"]=s.n;store[d+"__p"]=s.p;store[d+"__s"]=s.s;if(s.dt)store[d+"__dt"]=s.dt;else delete store[d+"__dt"]};
+put(a,sb);put(b,sa);
+try{const ra=getRes(a),rb=getRes(b);store[a+"__res"]=JSON.stringify(rb);store[b+"__res"]=JSON.stringify(ra)}catch(e){}
+try{const ta=getTodos(a),tb=getTodos(b);store[a+"__todo"]=JSON.stringify(tb);store[b+"__todo"]=JSON.stringify(ta)}catch(e){}
+store[a+"__seeded"]=1;store[b+"__seeded"]=1;
+save();state.sel=b;render();renderDetail()}
+let dragDay=null;
+function onDragStart(ev,d){dragDay=d;ev.dataTransfer.effectAllowed="move";try{ev.dataTransfer.setData("text/plain",String(d))}catch(e){}const el=ev.currentTarget;setTimeout(()=>el.classList.add("dragging"),0)}
+function onDragEnd(ev){ev.currentTarget.classList.remove("dragging");document.querySelectorAll(".drag-over").forEach(x=>x.classList.remove("drag-over"));dragDay=null}
+function onDragOver(ev){ev.preventDefault();ev.dataTransfer.dropEffect="move";const t=ev.currentTarget;if(t)t.classList.add("drag-over")}
+function onDragLeave(ev){ev.currentTarget.classList.remove("drag-over")}
+function onDrop(ev,d){ev.preventDefault();ev.currentTarget.classList.remove("drag-over");if(!guardAdmin())return;let src=dragDay;try{src=src||ev.dataTransfer.getData("text/plain")}catch(e){}if(src&&String(src)!==String(d))swapDays(src,d)}
+/* weekly reports */
+function weekCount(){return Math.ceil(totalDays()/7)}
+function weekRange(w){const s=(w-1)*7+1;let e=Math.min(s+6,totalDays());return[s,e]}
+function weekDays(w){const[s,e]=weekRange(w);return allDays().filter(r=>+r.day>=s&&+r.day<=e)}
+function weekStats(w){const days=weekDays(w);let posted=0,sched=0,res=0;const plat={Facebook:0,LinkedIn:0,TikTok:0,Reels:0};days.forEach(r=>{const s=getStatus(r.day);if(s==="posted")posted++;else if(s==="scheduled")sched++;res+=getRes(r.day).length;const p=effPlat(r.day,r.plat);if(/Facebook/i.test(p))plat.Facebook++;if(/LinkedIn/i.test(p))plat.LinkedIn++;if(/TikTok/i.test(p))plat.TikTok++;if(/Reel/i.test(p))plat.Reels++});return{days,posted,sched,planned:days.length-posted-sched,res,plat,pct:days.length?Math.round(posted/days.length*100):0}}
+function setWeek(w){state.week=w;renderAlt()}
+function weekMonths(w){const[s,e]=weekRange(w);const ms=[];for(let d=s;d<=e;d++){const m=MON[dateOfDay(d).getMonth()].slice(0,3);if(!ms.includes(m))ms.push(m)}return ms.join("–")}
+function fmtShort(a,b){const ma=MON[a.getMonth()].slice(0,3),mb=MON[b.getMonth()].slice(0,3);if(a.getMonth()===b.getMonth()&&a.getFullYear()===b.getFullYear())return `${ma} ${a.getDate()}–${b.getDate()}`;return `${ma} ${a.getDate()}–${mb} ${b.getDate()}`}
+function weekChartHTML(){const wc=weekCount();return `<div class="chart-card"><h4>Posting progress by week</h4><div class="chart">${Array.from({length:wc},(_,i)=>{const n=i+1;const q=weekStats(n);return `<div class="chart-row" onclick="setWeek(${n})" style="cursor:pointer" title="Open week ${n}"><span class="chart-lbl">W${n} · ${weekMonths(n)}</span><div class="bar-track"><i style="width:${q.pct}%"></i></div><span class="chart-val">${q.posted}/${q.days.length}</span></div>`}).join("")}</div></div>`}
+function mixChartHTML(w,st){const tot=Math.max(1,st.plat.Facebook+st.plat.LinkedIn+st.plat.TikTok+st.plat.Reels);const row=(k,c)=>{const v=st.plat[k];return `<div class="chart-row"><span class="chart-lbl">${k}</span><div class="bar-track"><i style="width:${Math.round(v/tot*100)}%;background:${c}"></i></div><span class="chart-val">${v}</span></div>`};const doneDays=st.days.filter(r=>getTodos(r.day).some(t=>t.d)).length;const open=st.days.reduce((a,r)=>a+getTodos(r.day).filter(t=>!t.d).length,0);
+return `<div class="chart-card"><h4>Week ${w} · status & platform mix</h4><div class="seg-bar"><i class="sg-posted" style="width:${st.posted/st.days.length*100}%"></i><i class="sg-sched" style="width:${st.sched/st.days.length*100}%"></i></div><div class="seg-legend"><span><span class="dot2" style="background:#16a34a"></span>Posted ${st.posted}</span><span><span class="dot2" style="background:#f59e0b"></span>Scheduled ${st.sched}</span><span><span class="dot2" style="background:#94a3b8"></span>Planned ${st.planned}</span><span>✓ Tasks: ${doneDays} day(s) touched · ${open} open</span></div><div style="height:6px"></div>${row("Facebook","#1d4fa3")}${row("LinkedIn","#0b4a75")}${row("TikTok","#64748b")}${row("Reels","#be185d")}</div>`}
+function exportWeekCSV(){const w=state.week||1;const[s,e]=weekRange(w);const rows=[["Day","Date","Topic","Platforms","CTA","Status","Resources"],...weekDays(w).map(r=>[r.day,fmtD(dateOfDay(r.day)),effTopic(r.day),effPlat(r.day,r.plat),getOverride(r.day,"c",r.cta),getStatus(r.day),getRes(r.day).length])];const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download=`zymera-week-${w}-days-${s}-${e}.csv`;a.click()}
+function copyReport(){const w=state.week||1;const[s,e]=weekRange(w);const st=weekStats(w);const txt=`Zymera Ventures — Week ${w} (Days ${s}–${e})%0APosted ${st.posted}/${st.days.length} (${st.pct}%) · Scheduled ${st.sched} · Planned ${st.planned} · Resources ${st.res}%0APlatforms: FB ${st.plat.Facebook} · LI ${st.plat.LinkedIn} · TT ${st.plat.TikTok} · Reels ${st.plat.Reels}`;navigator.clipboard&&navigator.clipboard.writeText(decodeURIComponent(txt.replace(/%0A/g,"\n"))).then(()=>alert("Weekly summary copied."))}
+function filtered(){let list=isMonthView(state.view)?monthDays(monthNum(state.view)):allDays();if(state.q){const q=state.q.toLowerCase();list=allDays().filter(r=>(r.topic+" "+r.plat+" "+r.cta).toLowerCase().includes(q))}if(state.platform){list=list.filter(r=>r.plat.toLowerCase().includes(state.platform.toLowerCase()))}return list}
+function renderMonthTabs(){document.getElementById("monthTabs").innerHTML=Array.from({length:monthCount()},(_,i)=>{const n=i+1;const{first}=monthCal(n);const lbl=`${MON[first.getMonth()].slice(0,3)} ${first.getFullYear()}`;return `<button class="tab ${state.view==="m"+n?"active":""}" onclick="setView('m${n}')" title="Days ${dayNumOfDate(first)}–${dayNumOfDate(new Date(first.getFullYear(),first.getMonth()+1,0))}">${lbl}</button>`}).join("")}
+function setView(v){state.view=v;state.page=1;document.querySelectorAll(".tab[data-v]").forEach(t=>t.classList.toggle("active",t.dataset.v===v));renderMonthTabs();document.querySelectorAll("#monthTabs .tab").forEach((t,i)=>t.classList.toggle("active",state.view==="m"+(i+1)));render()}
+function prev(){if(state.page>1){state.page--;render()}}
+function next(){const n=Math.ceil(filtered().length/state.per);if(state.page<n){state.page++;render()}}
+function select(d){state.sel=d;renderDetail();render(false);if(window.innerWidth<=860)toggleMobile(true)}
+function toggleMobile(det){document.getElementById("main").classList.toggle("show-detail",!!det);document.getElementById("mobCal").classList.toggle("active",!det);document.getElementById("mobDet").classList.toggle("active",!!det);document.getElementById("backBtn").style.display=(window.innerWidth<=860&&det)?"inline-block":"none"}
+function moveDay(dir){if(!guardAdmin(()=>moveDay(dir)))return;const n=+state.sel+dir;if(n<1)return;if(n>totalDays()){store.__maxMonth=monthCount()+1;save()}swapDays(String(state.sel),String(n))}
+window.addEventListener("resize",()=>{if(window.innerWidth>860){document.getElementById("main").classList.remove("show-detail")}toggleBack()});
+function toggleBack(){const det=document.getElementById("main").classList.contains("show-detail");document.getElementById("backBtn").style.display=(window.innerWidth<=860&&det)?"inline-block":"none"}
+function mark(s){if(!guardAdmin(()=>mark(s)))return;if(s==="posted"&&!canPost(state.sel))return;store[state.sel+"__s"]=s;if(s==="scheduled"&&!getWhen(state.sel)){const t=new Date();t.setDate(t.getDate()+1);t.setHours(9,0,0,0);const p=n=>String(n).padStart(2,"0");store[state.sel+"__dt"]=`${t.getFullYear()}-${p(t.getMonth()+1)}-${p(t.getDate())}T${p(t.getHours())}:${p(t.getMinutes())}`}if(s==="planned")delete store[state.sel+"__dt"];save();render();renderDetail()}
+function setStatus(s){mark(s)}
+function save(){localStorage.setItem("zv-cal-v1",JSON.stringify(store))}
+function render(rebuildSide=true){
+  const isBoard=isMonthView(state.view);
+  document.getElementById("boardView").style.display=isBoard?"flex":"none";
+  document.getElementById("altView").style.display=isBoard?"none":"block";
+  renderMonthTabs();
+  if(!isBoard){renderAlt();updateProgress();return}
+  const m=monthMeta(monthNum(state.view));
+  document.getElementById("bTitle").textContent=m.t;
+  document.getElementById("bSub").textContent=state.q?`Search across all ${totalDays()} days · “${state.q}”`:m.s;
+  let list=filtered();
+  const pages=Math.max(1,Math.ceil(list.length/state.per));
+  if(state.page>pages)state.page=pages;
+  const a=(state.page-1)*state.per, slice=list.slice(a,a+state.per);
+  document.getElementById("pg").textContent=`Page ${state.page} / ${pages}`;
+  document.getElementById("showing").textContent=list.length?`Showing ${a+1}–${a+slice.length} of ${list.length}`:"No results";
+  const isGrid=state.layout==="grid";
+  document.getElementById("listWrap").style.display=isGrid?"none":"flex";
+  document.getElementById("gridWrap").style.display=isGrid?"grid":"none";
+  if(!isGrid){
+  document.getElementById("rows").innerHTML=slice.map(r=>{
+    const s=getStatus(r.day);
+    const n=getRes(r.day).length; const dt=getWhen(r.day);
+    const dd=dateOfDay(r.day), hol=ugHoliday(dd), today=isTodayNum(r.day);
+    return `<div class="trow ${String(state.sel)===String(r.day)?"selected":""}${today?" is-today":""}" draggable="true" ondragstart="onDragStart(event,'${r.day}')" ondragend="onDragEnd(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'${r.day}')" onclick="select('${r.day}')" title="${esc(fmtLong(dd))} — drag onto another row to swap"><div class="dayno"><span class="drag-handle">⠿</span> ${esc(r.day)}${n?` <span class="res-badge">●${n}</span>`:""}</div><div title="${esc(r.topic)}">${esc(r.topic)}<br><span class="date-line">${esc(fmtD(dd))}</span>${todoBadge(r.day)}${today?`<span class="today-badge">TODAY</span>`:""}${hol?`<span class="hol-badge">🎉 ${esc(hol)}</span>`:""}${dt&&s==="scheduled"?`<br><span class="sched-line">⏰ ${esc(fmtWhen(dt))}</span>`:""}</div><div>${plats(r.plat)}</div><div class="cta-cell">${esc(r.cta)}</div><div><span class="status s-${s}">${s}</span></div></div>`
+  }).join("")||`<div style="padding:20px;color:var(--muted)">No days match the current search / filter.</div>`;
+  }else{
+  document.getElementById("gridWrap").innerHTML=slice.map(r=>{
+    const s=getStatus(r.day); const n=getRes(r.day).length;
+    const dt=getWhen(r.day);
+    const dd=dateOfDay(r.day), hol=ugHoliday(dd), today=isTodayNum(r.day);
+    const imgs=getRes(r.day).filter(x=>x.t==="image").slice(0,1);
+    return `<div class="gcard ${String(state.sel)===String(r.day)?"selected":""}${today?" is-today":""}" draggable="true" ondragstart="onDragStart(event,'${r.day}')" ondragend="onDragEnd(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'${r.day}')" onclick="select('${r.day}')" title="${esc(fmtLong(dd))} — drag onto another card to swap"><div class="gd"><b><span class="drag-handle">⠿</span> ${esc(fmtD(dd))}</b><span class="status s-${s}">${s}</span></div>${today?`<div><span class="today-badge">TODAY · Day ${esc(r.day)}</span></div>`:`<div style="font-size:10px;color:var(--muted);font-weight:700">Day ${esc(r.day)}</div>`}${hol?`<div><span class="hol-badge">🎉 ${esc(hol)}</span></div>`:""}${imgs.length?`<img src="${imgs[0].v.startsWith("data:")?imgs[0].v:esc(imgs[0].v)}" style="width:100%;height:56px;object-fit:cover;border-radius:6px" loading="lazy" onerror="this.style.display='none'">`:""}<div class="gt">${esc(r.topic)}</div><div class="gp">${plats(r.plat)}</div><div class="gf"><span style="font-size:10px;color:var(--muted)">📎 ${n} ${todoBadge(r.day)}${dt&&s==="scheduled"?` · ⏰ ${esc(fmtWhen(dt))}`:""}</span><span style="font-size:10px;color:var(--blue);font-weight:800">Open →</span></div></div>`
+  }).join("")||`<div style="grid-column:1/-1;padding:20px;color:var(--muted)">No days match the current search / filter.</div>`;
+  }
+  if(rebuildSide){
+    document.getElementById("sideNav").innerHTML=Array.from({length:monthCount()},(_,i)=>{const n=i+1;const{first,last}=monthCal(n);return `<div class="nav-item ${state.view==="m"+n?"active":""}" onclick="setView('m${n}')"><strong>${MON[first.getMonth()].slice(0,3)} ${first.getFullYear()}</strong><span>${fmtRange(first,last)} · Days ${dayNumOfDate(first)}–${dayNumOfDate(last)}</span></div>`}).join("");
+    document.getElementById("sideCount").textContent=monthCount()+" months · "+totalDays()+" days";
+  }
+  document.getElementById("selInfo").textContent="Selected: Day "+state.sel+" · "+fmtD(dateOfDay(state.sel));
+  renderDetail();updateProgress();
+}
+function renderDetail(){
+  const r=getDay(state.sel);
+  const dd=dateOfDay(r.day), hol=ugHoliday(dd);
+  document.getElementById("dDay").textContent="Day "+r.day+" · "+fmtD(dd);
+  document.getElementById("dHol").innerHTML=`<div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:2px">${esc(fmtLong(dd))}${isTodayNum(r.day)?' <span class="today-badge">TODAY</span>':""}</div>`+(hol?`<div class="hol-banner">🎉 Public holiday (Uganda): <b>${esc(hol)}</b> — consider a themed post or a pause.</div>`:"");
+  document.getElementById("dTopic").textContent=r.topic;
+  renderPlatToggles();
+  document.getElementById("dCta").textContent=r.cta;
+  document.getElementById("dNote").textContent=r.note;
+  document.getElementById("dStatus").value=getStatus(r.day);
+  document.getElementById("dWhen").value=getWhen(r.day);
+  const adm=isAdmin();
+  ["dTopic","dCta","dNote"].forEach(id=>document.getElementById(id).setAttribute("contenteditable",adm?"true":"false"));
+  document.getElementById("dStatus").disabled=!adm;
+  document.getElementById("dWhen").disabled=!adm;
+  const sd=document.getElementById("startDate");if(sd)sd.disabled=!adm;
+  const w=getWhen(r.day);
+  document.getElementById("dWhenHint").textContent=w?("Scheduled for "+fmtWhen(w)+". Change the time or press Reset to unschedule."):"Pick a date/time, then press Schedule. Works for any month.";
+  renderRes();
+  seedTodos(state.sel);
+  renderTodos();
+}
+function renderAlt(){
+  const el=document.getElementById("altView");
+  if(state.view==="play"){el.innerHTML=`<h3>Client acquisition playbook</h3><div class="grid2">
+    <div class="mini-card"><strong>1. Build a 100-prospect list</strong><p>40 contractors · 25 developers · 20 institutions · 15 commercial owners.</p></div>
+    <div class="mini-card"><strong>2. Decision-makers</strong><p>MDs, project / contracts managers, QS, facilities &amp; procurement.</p></div>
+    <div class="mini-card"><strong>3. Personalized outreach</strong><p>Steel / aluminium roofing + installation. Ask about live roofing packages.</p></div>
+    <div class="mini-card"><strong>4. Capability pack</strong><p>Profile, real photos, scope, references, quote template, compliance docs.</p></div></div>
+    <h3 style="margin-top:10px">Daily sales routine</h3><p style="margin:0;color:#475569">8:30 Review enquiries · 9:00 Contact 5 prospects · 10:00 Film + prep post · 11:00 Publish + reply · 14:00 5 follow-ups · 15:00 Site visits / quotes · 16:00 Update tracker.</p>
+    <h3 style="margin-top:10px">Outreach message (edit &amp; copy)</h3><div class="mini-card"><p>Hello [Name], I’m reaching out on behalf of Zymera Ventures, a Ugandan company specializing in steel and aluminium roofing systems and installation. We support contractors on current and upcoming roofing packages — may we share our profile and discuss any packages you need support with? Would next week work for a brief intro?</p></div>`}
+  else if(state.view==="track"){el.innerHTML=`<h3>Weekly performance tracker — log outcomes, not likes</h3><div class="grid2">${["Week 1","Week 2","Week 3","Week 4"].map(w=>`<div class="mini-card"><strong>${w}</strong><p>Enquiries: ___ · Visits: ___ · Quotes: ___ · Value (UGX): ___ · Contracts: ___<br>Source / next action: ___</p></div>`).join("")}</div><p style="color:#64748b">Rules: film real work weekly · repurpose TikTok → Reels, tailor LinkedIn copy · every post has a CTA · log source + stage + follow-up date · permission before posting · review weekly, scale what converts.</p>`}
+  else if(state.view==="queue"){
+    const items=allDays().map(r=>({r,s:getStatus(r.day),dt:getWhen(r.day)})).filter(x=>x.s==="scheduled").sort((a,b)=>(a.dt||"9999").localeCompare(b.dt||"9999"));
+    el.innerHTML=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><h3 style="margin:0">Scheduled queue — ${items.length} post(s)</h3>
+    <span style="margin-left:auto;display:flex;gap:6px"><button class="btn" onclick="setView('m1')">Back to calendar</button><button class="btn gold" onclick="exportQueueCSV()">Export CSV</button></span></div>
+    <p style="color:#64748b;font-size:11px">Everything with status Scheduled, sorted by date/time. Set the time in Day detail → Schedule post. Overdue items are highlighted.</p>
+    <div class="rep-table"><div class="rep-row head"><div>Day</div><div>Topic</div><div>Status</div><div>Res.</div></div>
+    ${items.map(x=>{const od=x.dt&&new Date(x.dt)<new Date();return `<div class="rep-row" style="${od?"background:#fef2f2":""}"><div><b>D${esc(x.r.day)}</b> <span class="date-line">${esc(fmtD(dateOfDay(x.r.day)))}</span></div><div>${esc(x.r.topic)}${x.dt?` <span class="sched-line">⏰ ${esc(fmtWhen(x.dt))}${od?" · OVERDUE":""}</span>`:" <span style='color:#94a3b8;font-size:10px'>no time set</span>"}</div><div><span style="display:flex;gap:4px">${plats(x.r.plat)}</span></div><div><button class="res-open" onclick="select('${x.r.day}');setView('m${monthOfDay(x.r.day)}')">Open</button> <button class="res-del" onclick="unsched('${x.r.day}')">Unsch.</button></div></div>`}).join("")||`<div style="padding:14px;color:var(--muted)">Nothing scheduled yet. Open a day → pick date/time → Schedule.</div>`}</div>`;
+  }
+  else{
+    const wc=weekCount(); if(state.week>wc)state.week=wc;
+    const w=state.week||1; const[s,e]=weekRange(w); const st=weekStats(w);
+    el.innerHTML=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><h3 style="margin:0">Week ${w} · ${fmtRange(dateOfDay(s),dateOfDay(e))} · Days ${s}–${e}</h3>
+    <span style="margin-left:auto;display:flex;gap:6px"><button class="btn" onclick="setWeek(${w>1?w-1:wc})">‹ Prev week</button><button class="btn" onclick="setWeek(${w<wc?w+1:1})">Next week ›</button><button class="btn" onclick="exportWeekCSV()">Export CSV</button><button class="btn" onclick="copyReport()">Copy summary</button><button class="btn gold" onclick="window.print()">Print</button></span></div>
+    <div class="rep-weeks" style="grid-template-columns:repeat(${wc},1fr)">${Array.from({length:wc},(_,i)=>{const n=i+1;const q=weekStats(n);const[qs,qe]=weekRange(n);return `<div class="rep-week ${n===w?"active":""}" onclick="setWeek(${n})">W${n} · ${weekMonths(n)}<br><span style="font-weight:500">${fmtShort(dateOfDay(qs),dateOfDay(qe))}</span><div class="bar"><i style="width:${q.pct}%"></i></div></div>`}).join("")}</div>
+    ${weekChartHTML()}${mixChartHTML(w,st)}
+    <div class="rep-grid">
+      <div class="rep-stat"><b>${st.posted}/${st.days.length}</b><span>Posted · ${st.pct}%</span></div>
+      <div class="rep-stat"><b>${st.sched}</b><span>Scheduled</span></div>
+      <div class="rep-stat"><b>${st.planned}</b><span>Planned</span></div>
+      <div class="rep-stat"><b>${st.res}</b><span>Resources</span></div>
+      <div class="rep-stat"><b>FB ${st.plat.Facebook} · LI ${st.plat.LinkedIn}</b><span>TT ${st.plat.TikTok} · Reels ${st.plat.Reels}</span></div>
+    </div>
+    <div class="rep-table"><div class="rep-row head"><div>Day</div><div>Topic</div><div>Status</div><div>Res.</div></div>
+    ${st.days.map(r=>{const dd=dateOfDay(r.day),hol=ugHoliday(dd);return `<div class="rep-row"><div><b>D${esc(r.day)}</b> <span class="date-line">${esc(fmtD(dd))}</span></div><div>${esc(effTopic(r.day))}${hol?` <span class="hol-badge">🎉 ${esc(hol)}</span>`:""}${isTodayNum(r.day)?' <span class="today-badge">TODAY</span>':""}</div><div><span class="status s-${getStatus(r.day)}">${getStatus(r.day)}</span></div><div>${getRes(r.day).length} file(s)</div></div>`}).join("")}</div>
+    <p style="color:#64748b;font-size:11px;margin:8px 0 0">Auto-generated from live statuses, edits and resources. Drag cards on the calendar to reschedule, then re-open this report — no extra data entry needed.</p>`;
+  }
+}
+function updateProgress(){const all=allDays();const d=all.filter(r=>getStatus(r.day)==="posted").length;const t=all.length;document.getElementById("bar").style.width=(d/t*100)+"%";document.getElementById("pct").textContent=Math.round(d/t*100)+"% posted";document.getElementById("fDone").textContent=d;document.getElementById("fTotal").textContent=t;const q=document.getElementById("q");if(q)q.placeholder=`Search all ${t} days…`}
+["dTopic","dCta","dNote"].forEach((id,i)=>{document.getElementById(id).addEventListener("input",e=>{const k=["t","c","n"][i];store[state.sel+"__"+k]=e.target.textContent;save()})});
+function exportCSV(){const rows=[["Day","Date","Topic","Platforms","CTA","Note","Status","Scheduled for","Resources"],...allDays().map(r=>[r.day,fmtD(dateOfDay(r.day)),r.topic,r.plat,r.cta,r.note,getStatus(r.day),getWhen(r.day),getRes(r.day).length])];const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="zymera-content-calendar.csv";a.click()}
+function downloadHTML(){const b=new Blob(["<!DOCTYPE html>\n"+document.documentElement.outerHTML],{type:"text/html"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="Zymera_Ventures_90_Day_Content_Calendar.html";a.click()}
+function backupData(){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(store)],{type:"application/json"}));a.download="zymera-calendar-backup.json";a.click()}
+function restoreData(inp){if(!guardAdmin()){inp.value="";return}const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(d&&typeof d==="object"){store=d;save();syncStartInput();if(+state.sel>totalDays())state.sel="1";render();renderDetail();alert("Backup restored: "+Object.keys(d).length+" saved item(s).")}else alert("Invalid backup file.")}catch(e){alert("Could not read backup file.")}};r.readAsText(f);inp.value=""}
+(function(){if((store.__seedV||0)<2){store.__seedV=2;["1","2"].forEach(d=>{saveTodos(d,PRESET_TODOS[d].map(t=>({t,d:0})));store[d+"__seeded"]=1});save()}const t=new Date();let n=dayNumOfDate(t);if(n>=1){while(n>totalDays()&&monthCount()<24){store.__maxMonth=monthCount()+1}if(n<=totalDays()){state.view="m"+monthOfDay(n);state.sel=String(n);const idx=monthDays(monthOfDay(n)).findIndex(r=>+r.day===n);if(idx>=0)state.page=Math.floor(idx/state.per)+1}}save()})();
+try{if(localStorage.getItem("zv-theme")==="dark"){document.documentElement.classList.add("dark");document.getElementById("themeBtn").textContent="☀️"}}catch(e){}
+syncStartInput();renderMonthTabs();renderLegend();syncEditAccess();render();
+try{if(!localStorage.getItem("zv-guide-seen"))openGuide()}catch(e){openGuide()}
+</script>
+</body>
+</html>

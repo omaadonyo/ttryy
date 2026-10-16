@@ -49,6 +49,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
     Route::get('orders', [AdminController::class, 'orders'])->name('orders');
     Route::patch('orders/{order}/paid', [AdminController::class, 'markPaid'])->name('orders.paid');
+    Route::patch('orders/{order}/payment', [AdminController::class, 'recordPayment'])->name('orders.payment');
     Route::patch('orders/{order}/handover', [AdminController::class, 'markHandedOver'])->name('orders.handover');
     Route::get('payments', [AdminController::class, 'payments'])->name('payments');
     Route::get('users', [AdminController::class, 'users'])->name('users');
@@ -56,6 +57,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('packages', [AdminController::class, 'packages'])->name('packages');
     Route::get('hosting', [AdminHostingController::class, 'dashboard'])->name('hosting.dashboard');
     Route::get('hosting/websites', [AdminHostingController::class, 'websites'])->name('hosting.websites');
+    Route::post('hosting/websites/trashed/{id}/recover', [AdminHostingController::class, 'recoverTrash'])->name('hosting.websites.recover');
+    Route::delete('hosting/websites/trashed/{id}/purge', [AdminHostingController::class, 'purgeTrash'])->name('hosting.websites.purge');
     Route::get('hosting/websites/{website}', [AdminHostingController::class, 'websiteShow'])->name('hosting.websites.show');
     Route::post('hosting/websites/{website}/suspend', [AdminHostingController::class, 'suspend'])->name('hosting.websites.suspend');
     Route::post('hosting/websites/{website}/restore', [AdminHostingController::class, 'restore'])->name('hosting.websites.restore');
@@ -123,6 +126,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::post('hosting', [HostingController::class, 'store'])->name('hosting.store');
     Route::get('hosting/{website}', [HostingController::class, 'show'])->name('hosting.show');
     Route::delete('hosting/{website}', [HostingController::class, 'destroy'])->name('hosting.destroy');
+    Route::post('hosting/trashed/{id}/restore', [HostingController::class, 'restoreTrash'])->name('hosting.restore');
     Route::get('hosting/{website}/domains', [HostingController::class, 'domains'])->name('hosting.domains');
     Route::post('hosting/{website}/domains', [HostingController::class, 'storeDomain'])->name('hosting.domains.store');
     Route::post('hosting/{website}/subdomains', [HostingController::class, 'storeSubdomain'])->name('hosting.subdomains.store');

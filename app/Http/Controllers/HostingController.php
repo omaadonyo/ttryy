@@ -52,6 +52,7 @@ class HostingController extends Controller
         return view('hosting.index', [
             'websites' => $query->paginate(12)->withQueryString(),
             'filters' => $request->only(['q', 'status', 'sort']),
+            'trashed' => $request->user()->hostedWebsites()->onlyTrashed()->latest()->get(),
             'stats' => [
                 'total' => (clone $base)->count(),
                 'active' => (clone $base)->where('status', HostedWebsite::STATUS_ACTIVE)->count(),
@@ -227,13 +228,31 @@ class HostingController extends Controller
             'actor_id' => request()->user()->id,
             'hosted_website_id' => $website->id,
             'client_id' => $website->user_id,
-            'meta' => ['status_before' => $website->status],
+            'meta' => ['status_before' => $website->status, 'soft_delete' => true],
             'ip' => request()->ip(),
         ]);
 
         $website->delete();
 
-        return redirect()->route('hosting.index')->with('status', "Website {$name} cancelled and removed.");
+        return redirect()->route('hosting.index')->with('status', "Website {$name} moved to trash — restore it anytime from your websites list.");
+    }
+
+    public function restoreTrash(int $id)
+    {
+        $website = HostedWebsite::onlyTrashed()->findOrFail($id);
+        $this->authorize('update', $website);
+
+        $website->restore();
+
+        HostingAuditLog::log('website.restored', [
+            'actor_type' => request()->user()->is_admin ? 'admin' : 'user',
+            'actor_id' => request()->user()->id,
+            'hosted_website_id' => $website->id,
+            'client_id' => $website->user_id,
+            'ip' => request()->ip(),
+        ]);
+
+        return redirect()->route('hosting.show', $website)->with('status', "Website {$website->name} restored with its domains.");
     }
 
     // ---------- Domains ----------
@@ -468,7 +487,7 @@ class HostingController extends Controller
         abort_if($domain->hosted_website_id !== $website->id, 404);
 
         $name = $domain->domain;
-        $domain->delete();
+        $domain->forceDelete(); // explicit removal is permanent; website trash uses soft deletes
 
         if ($website->primary_domain_id === $domain->id) {
             $replacement = $website->domains()->first();

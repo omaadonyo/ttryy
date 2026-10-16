@@ -96,5 +96,23 @@
             <div class="mt-4">{{ $websites->links() }}</div>
             @endif
         </div>
+
+        @if($trashed->isNotEmpty())
+        <div class="card card-pad">
+            <h2 class="section-title">Trash — {{ $trashed->count() }} deleted website{{ $trashed->count() === 1 ? '' : 's' }}</h2>
+            <p class="page-sub">Restore brings a website and its domains back exactly as they were.</p>
+            <div class="mt-3 space-y-2">
+                @foreach($trashed as $t)
+                <div class="flex items-center justify-between gap-3 rounded-xl bg-zinc-50 px-4 py-3 dark:bg-white/5">
+                    <p class="min-w-0 text-sm font-bold truncate">{{ $t->name }}<span class="block text-xs font-normal text-zinc-500">deleted {{ $t->deleted_at?->diffForHumans() }}</span></p>
+                    <form method="POST" action="{{ route('hosting.restore', $t->id) }}" class="shrink-0">
+                        @csrf
+                        <button class="btn-brand btn-sm">Restore</button>
+                    </form>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
     </div>
 </x-layouts::app>

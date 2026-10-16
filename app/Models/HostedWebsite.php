@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class HostedWebsite extends Model
 {
+    use SoftDeletes;
+
     public const STATUS_PENDING = 'pending_setup';
 
     public const STATUS_PROVISIONING = 'provisioning';
@@ -46,6 +49,21 @@ class HostedWebsite extends Model
     public const SERVICE_RESTORATION_PENDING = 'restoration_pending';
 
     public const SERVICE_ERROR = 'error';
+
+    protected static function booted(): void
+    {
+        // Trashing a website shelves its domains with it; restoring
+        // brings them back. Permanent deletion cascades at the database.
+        static::deleting(function (HostedWebsite $website) {
+            if (! $website->isForceDeleting()) {
+                $website->domains()->get()->each->delete();
+            }
+        });
+
+        static::restoring(function (HostedWebsite $website) {
+            $website->domains()->withTrashed()->get()->each->restore();
+        });
+    }
 
     protected $fillable = [
         'uuid', 'user_id', 'hosting_plan_id', 'name', 'site_type', 'description',
