@@ -70,7 +70,23 @@
                             <td><span class="{{ $statusPill($w->status) }}">{{ str_replace('_', ' ', $w->status) }}</span></td>
                             <td class="text-xs text-zinc-500">{{ $w->health_status }}<p class="text-[11px] text-zinc-400">{{ $w->last_health_check_at?->diffForHumans() ?? 'never' }}</p></td>
                             <td class="text-xs">UGX {{ number_format($w->orders()->where('status', 'paid')->sum('paid_amount')) }} paid</td>
-                            <td class="text-right"><a href="{{ route('admin.hosting.websites.show', $w) }}" class="text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Open →</a></td>
+                            <td class="text-right whitespace-nowrap">
+                                @if($w->status === 'suspended')
+                                <form method="POST" action="{{ route('admin.hosting.websites.restore', $w) }}" class="inline" onsubmit="return confirm('Unsuspend {{ $w->name }}? It goes live immediately.')">
+                                    @csrf
+                                    <button class="text-xs font-bold text-emerald-600 hover:underline dark:text-emerald-400">Unsuspend</button>
+                                </form>
+                                <span class="mx-1 text-zinc-300 dark:text-zinc-600">·</span>
+                                @elseif(in_array($w->status, ['active', 'failed'], true))
+                                <form method="POST" action="{{ route('admin.hosting.websites.suspend', $w) }}" class="inline" onsubmit="return confirm('Suspend {{ $w->name }}? It goes offline immediately.')">
+                                    @csrf
+                                    <input type="hidden" name="reason" value="Suspended by admin">
+                                    <button class="text-xs font-bold text-red-600 hover:underline dark:text-red-400">Suspend</button>
+                                </form>
+                                <span class="mx-1 text-zinc-300 dark:text-zinc-600">·</span>
+                                @endif
+                                <a href="{{ route('admin.hosting.websites.show', $w) }}" class="text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Open →</a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

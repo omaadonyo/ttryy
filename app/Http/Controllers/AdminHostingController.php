@@ -154,22 +154,62 @@ class AdminHostingController extends Controller
 
         abort_unless(in_array($website->status, [HostedWebsite::STATUS_ACTIVE, HostedWebsite::STATUS_FAILED], true), 422);
 
-        $command = $this->queueCommand($request, $website, HostingCommand::ACTION_SUSPEND, [
-            'reason' => $validated['reason'],
-        ]);
+        $website->forceFill([
+            'status' => HostedWebsite::STATUS_SUSPENDED,
+            'suspension_reason' => $validated['reason'],
+        ])->save();
 
-        return back()->with('status', "Suspension queued as operation {$command->uuid} — status changes only on service acknowledgment.");
+        try {
+            $command = $this->queueCommand($request, $website, HostingCommand::ACTION_SUSPEND, [
+                'reason' => $validated['reason'],
+            ]);
+
+            return back()->with('status', "Website suspended immediately; service operation {$command->uuid} queued as follow-up.");
+        } catch (\Throwable $e) {
+            report($e);
+
+            HostingAuditLog::log('suspension.requested', [
+                'actor_type' => 'admin',
+                'actor_id' => $request->user()->id,
+                'hosted_website_id' => $website->id,
+                'client_id' => $website->user_id,
+                'meta' => ['reason' => $validated['reason']],
+                'ip' => $request->ip(),
+            ]);
+
+            return back()->with('status', 'Website suspended immediately; the service follow-up could not be queued.');
+        }
     }
 
     public function restore(Request $request, HostedWebsite $website)
     {
         abort_unless($website->status === HostedWebsite::STATUS_SUSPENDED, 422);
 
-        $command = $this->queueCommand($request, $website, HostingCommand::ACTION_UNSUSPEND, [
-            'reason' => 'Administrative restoration',
-        ]);
+        $website->forceFill([
+            'status' => HostedWebsite::STATUS_ACTIVE,
+            'suspension_reason' => null,
+        ])->save();
 
-        return back()->with('status', "Restoration queued as operation {$command->uuid} — status changes only on service acknowledgment.");
+        try {
+            $command = $this->queueCommand($request, $website, HostingCommand::ACTION_UNSUSPEND, [
+                'reason' => 'Administrative restoration',
+            ]);
+
+            return back()->with('status', "Website restored immediately; service operation {$command->uuid} queued as follow-up.");
+        } catch (\Throwable $e) {
+            report($e);
+
+            HostingAuditLog::log('restoration.requested', [
+                'actor_type' => 'admin',
+                'actor_id' => $request->user()->id,
+                'hosted_website_id' => $website->id,
+                'client_id' => $website->user_id,
+                'meta' => ['reason' => 'Administrative restoration'],
+                'ip' => $request->ip(),
+            ]);
+
+            return back()->with('status', 'Website restored immediately; the service follow-up could not be queued.');
+        }
     }
 
     public function triggerHealthCheck(Request $request, HostedWebsite $website)

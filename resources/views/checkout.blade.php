@@ -212,8 +212,13 @@
           <button type="button" id="pay-card" class="btn-ghost">Pay by card</button>
         </div>
         <p class="mt-3 text-[11px] text-zinc-500">Secured by ioTec Pay. You pay exactly what is shown — no hidden fees.</p>
+        <details class="mt-3">
+          <summary class="cursor-pointer text-xs font-bold text-zinc-500 hover:underline">Gateway trouble? Place the order manually instead</summary>
+          @include('partials.manual-order')
+        </details>
         @else
-        <div class="mt-4 rounded-xl bg-amber-500/10 p-4 text-sm text-amber-800 dark:text-amber-200">Online payments are switching on soon. Place your order and confirm with us on WhatsApp — we will activate it immediately.</div>
+        <div class="mt-4 rounded-xl bg-amber-500/10 p-4 text-sm text-amber-800 dark:text-amber-200">Online payments are switching on soon. Place your order manually below and confirm with us on WhatsApp — we will activate it immediately.</div>
+        @include('partials.manual-order')
         @endif
       </section>
       <div class="mt-6 flex justify-start"><button type="button" data-back class="btn-ghost">← Back</button></div>
@@ -323,6 +328,7 @@ function refresh(){
   document.getElementById('fullLabel').textContent = fmt(d.price) + ' once · website runs 12 months';
   const payAmt = document.getElementById('pay-amount');
   if(payAmt) payAmt.textContent = fmt(q.due);
+  document.querySelectorAll('.manual-amount').forEach(el => { el.textContent = fmt(q.due); });
   const payPhone = document.getElementById('pay-phone');
   const detailPhone = document.getElementById('f-phone');
   if(payPhone && !payPhone.value && detailPhone && detailPhone.value) payPhone.value = detailPhone.value;
@@ -559,6 +565,12 @@ function initCheckout(){
       payCard.disabled = false; payCard.classList.remove('opacity-60');
     });
   }
+  document.querySelectorAll('.manual-submit').forEach(b => b.addEventListener('click', () => {
+    if(form.dataset.guest === '1'){ form.requestSubmit(); return; }
+    if(!form.checkValidity()){ form.reportValidity(); return; }
+    document.getElementById('pay-method').value = 'momo_manual';
+    form.requestSubmit();
+  }));
 }
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCheckout);
 else initCheckout();

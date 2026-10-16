@@ -176,3 +176,94 @@ test('payment history shows paid and outstanding totals', function () {
         ->assertSee('Payment history', false)
         ->assertSee('59,000', false);
 });
+
+test('renewal covers as many periods as the amount paid', function () {
+    $daily = makeOrder([
+        'billing_frequency' => 'daily', 'domain' => 'none', 'duration_months' => 12,
+        'periods' => 365, 'amount_per_period' => 700, 'domain_fee' => 0,
+        'total_amount' => 255500, 'due_today' => 700, 'paid_amount' => 2100,
+    ]);
+
+    expect(App\Services\Hosting\HostingSubscription::periodsCovered($daily))->toBe(3);
+
+    $first = makeOrder([
+        'billing_frequency' => 'monthly', 'domain' => 'budget',
+        'amount_per_period' => 30000, 'domain_fee' => 29000, 'paid_amount' => 59000,
+    ]);
+
+    // First payment consumes the one-time domain fee, then one month.
+    expect(App\Services\Hosting\HostingSubscription::periodsCovered($first))->toBe(1);
+
+    $second = makeOrder([
+        'billing_frequency' => 'monthly', 'domain' => 'budget', 'periods_covered' => 1,
+        'amount_per_period' => 30000, 'domain_fee' => 29000, 'paid_amount' => 90000,
+    ]);
+
+    // Later payments buy whole months with no fee haircut.
+    expect(App\Services\Hosting\HostingSubscription::periodsCovered($second))->toBe(3);
+
+    $full = makeOrder(['billing_frequency' => 'full', 'periods' => 1, 'paid_amount' => 250000]);
+
+    expect(App\Services\Hosting\HostingSubscription::periodsCovered($full))->toBe(1);
+
+    $capped = makeOrder([
+        'billing_frequency' => 'weekly', 'periods' => 52, 'periods_covered' => 51,
+        'amount_per_period' => 6700, 'domain_fee' => 0, 'paid_amount' => 67000,
+    ]);
+
+    // Never extends past the plan even when overpaid.
+    expect(App\Services\Hosting\HostingSubscription::periodsCovered($capped))->toBe(1);
+});
+
+test('recorded payments extend renewal by covered periods and restore overdue sites', function () {
+    $owner = User::factory()->create();
+    $site = makeWebsite($owner, [
+        'status' => App\Models\HostedWebsite::STATUS_SUSPENDED,
+        'suspension_reason' => 'Overdue payment',
+        'next_renewal_at' => now()->subDays(5),
+    ]);
+
+    $order = makeOrder([
+        'user_id' => $owner->id, 'hosted_website_id' => $site->id,
+        'billing_frequency' => 'daily', 'domain' => 'none', 'duration_months' => 12,
+        'periods' => 365, 'amount_per_period' => 700, 'domain_fee' => 0,
+        'total_amount' => 255500, 'due_today' => 700, 'paid_amount' => 2100,
+    ]);
+
+    App\Services\Hosting\HostingSubscription::recordPayment($order);
+
+    expect($site->fresh()->status)->toBe(App\Models\HostedWebsite::STATUS_ACTIVE)
+        ->and($site->fresh()->suspension_reason)->toBeNull()
+        ->and($site->fresh()->next_renewal_at->gt(now()->addDays(2)))->toBeTrue()
+        ->and($order->fresh()->periods_covered)->toBe(3);
+});
+
+test('admins suspend and restore websites with immediate effect', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    $owner = User::factory()->create();
+    $site = makeWebsite($owner);
+
+    $this->actingAs($admin)->post(route('admin.hosting.websites.suspend', $site), ['reason' => 'Test'])
+        ->assertRedirect();
+    expect($site->fresh()->status)->toBe(App\Models\HostedWebsite::STATUS_SUSPENDED);
+
+    $this->actingAs($admin)->post(route('admin.hosting.websites.restore', $site))
+        ->assertRedirect();
+    expect($site->fresh()->status)->toBe(App\Models\HostedWebsite::STATUS_ACTIVE)
+        ->and($site->fresh()->suspension_reason)->toBeNull();
+});
+
+test('orders page shows paid, remaining and progress', function () {
+    $user = User::factory()->create();
+    makeOrder(['user_id' => $user->id, 'status' => 'paid', 'paid_amount' => 59000]);
+
+    $total = 389000;
+    $left = $total - 59000;
+    $pct = (int) min(100, max(0, round(59000 / $total * 100)));
+
+    $this->actingAs($user)->get(route('packages.index'))
+        ->assertOk()
+        ->assertSee('Paid UGX 59,000', false)
+        ->assertSee('UGX '.number_format($left).' left', false)
+        ->assertSee('width:'.$pct.'%', false);
+});

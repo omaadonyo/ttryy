@@ -47,7 +47,7 @@ test('provisioning failure keeps the site out of active state', function () {
     expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_PROVISIONING);
 });
 
-test('suspend and restore flip status only on acknowledgment', function () {
+test('service acknowledgment flips status on delivery', function () {
     $owner = User::factory()->create();
     $site = makeWebsite($owner, ['status' => HostedWebsite::STATUS_ACTIVE]);
     $site->forceFill(['service_url' => 'https://site-three.example'])->save();
@@ -154,7 +154,7 @@ test('verified payments extend renewal on the payment rhythm', function () {
         ->and($renewal->gt(now()->addDays(6)))->toBeTrue();
 });
 
-test('overdue sweep queues one suspension and never duplicates', function () {
+test('overdue sweep suspends immediately and never duplicates', function () {
     $owner = User::factory()->create();
     $site = makeWebsite($owner, [
         'status' => App\Models\HostedWebsite::STATUS_ACTIVE,
@@ -171,9 +171,10 @@ test('overdue sweep queues one suspension and never duplicates', function () {
     ]);
 
     expect(App\Services\Hosting\HostingSubscription::suspendOverdue())->toBe(1);
+    expect($site->fresh()->status)->toBe(App\Models\HostedWebsite::STATUS_SUSPENDED)
+        ->and($site->fresh()->suspension_reason)->toBe('Overdue payment');
     expect(App\Services\Hosting\HostingSubscription::suspendOverdue())->toBe(0);
     expect(App\Models\HostingCommand::where('hosted_website_id', $site->id)->where('action', 'suspend')->count())->toBe(1);
-    expect($site->fresh()->status)->toBe(App\Models\HostedWebsite::STATUS_ACTIVE);
 });
 
 test('admins manage domains and link orders to websites', function () {

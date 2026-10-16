@@ -374,6 +374,8 @@ test('checkout shows a big continue button with the amount due', function () {
         ->assertOk()
         ->assertSee('id="pay-submit"', false)
         ->assertSee('id="pay-phone"', false)
+        ->assertSee('Gateway trouble?', false)
+        ->assertSee('Submit order manually', false)
         ->assertDontSee('id="pay-now"', false)
         ->assertDontSee('How do you want to pay?', false)
         ->assertDontSee('momo-continue', false);
@@ -386,7 +388,8 @@ test('checkout explains when online payments are not configured', function () {
     $this->actingAs(User::factory()->create())->get('/checkout')
         ->assertOk()
         ->assertDontSee('id="pay-submit"', false)
-        ->assertSee('switching on soon', false);
+        ->assertSee('switching on soon', false)
+        ->assertSee('Submit order manually', false);
 });
 
 test('placing an order emails the customer and the admin inbox', function () {

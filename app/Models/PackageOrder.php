@@ -17,6 +17,7 @@ class PackageOrder extends Model
         'subdomain',
         'duration_months',
         'periods',
+        'periods_covered',
         'amount_per_period',
         'domain_fee',
         'total_amount',
@@ -41,6 +42,7 @@ class PackageOrder extends Model
         return [
             'duration_months' => 'integer',
             'periods' => 'integer',
+            'periods_covered' => 'integer',
             'amount_per_period' => 'integer',
             'paid_amount' => 'integer',
             'paid_at' => 'datetime',

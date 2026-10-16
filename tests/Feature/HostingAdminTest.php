@@ -27,12 +27,13 @@ test('admins can view the whole hosting estate', function () {
         ->assertSee('Estate Site', false);
 });
 
-test('suspension is recorded but status waits for service acknowledgment', function () {
+test('suspension takes effect immediately even when the service cannot be reached', function () {
     $admin = User::factory()->create(['is_admin' => true]);
     $owner = User::factory()->create();
     $site = makeWebsite($owner);
 
-    // No service endpoint configured: command fails honestly, status untouched.
+    // No service endpoint configured: command fails honestly, but the
+    // website status flips right away so suspension always takes effect.
     $this->actingAs($admin)->post(route('admin.hosting.websites.suspend', $site), [
         'reason' => 'Overdue payment',
     ])->assertRedirect();
@@ -43,11 +44,11 @@ test('suspension is recorded but status waits for service acknowledgment', funct
         ->and($command->state)->toBe(HostingCommand::STATE_FAILED)
         ->and($command->error)->toContain('not configured');
 
-    expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_ACTIVE);
+    expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_SUSPENDED);
     expect(App\Models\HostingAuditLog::where('action', 'suspension.requested')->count())->toBe(1);
 });
 
-test('failed operations do not change confirmed status and can be retried', function () {
+test('failed operations keep the immediate status and can be retried', function () {
     $admin = User::factory()->create(['is_admin' => true]);
     $owner = User::factory()->create();
     $site = makeWebsite($owner);
@@ -58,10 +59,11 @@ test('failed operations do not change confirmed status and can be retried', func
     $command = HostingCommand::where('hosted_website_id', $site->id)->first();
     expect($command->state)->toBe(HostingCommand::STATE_FAILED);
 
-    // Retry re-queues; still no endpoint, still failed, status still active.
+    // Retry re-queues; still no endpoint, still failed — but the website
+    // stays suspended because the admin action took effect immediately.
     $this->actingAs($admin)->post(route('admin.hosting.operations.retry', $command))->assertRedirect();
     expect($command->fresh()->state)->toBe(HostingCommand::STATE_FAILED);
-    expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_ACTIVE);
+    expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_SUSPENDED);
 });
 
 test('audit log records admin actions with safe metadata', function () {
