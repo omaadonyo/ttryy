@@ -10,7 +10,7 @@ class BtStockMove extends Model
     protected $table = 'bt_stock_moves';
 
     protected $fillable = [
-        'user_id', 'item_id', 'qty_change', 'reason', 'ref_type', 'ref_id',
+        'user_id', 'business_id', 'item_id', 'qty_change', 'reason', 'ref_type', 'ref_id',
     ];
 
     protected function casts(): array

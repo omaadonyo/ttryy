@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\WebsiteDomain;
 use App\Notifications\SiteAlert;
 use App\Services\Hosting\HostingSubscription;
+use App\Services\Hosting\OrderProvisioner;
 use App\Services\Hosting\SubdomainGenerator;
 use App\Services\IotecPay;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -44,6 +45,26 @@ class CheckoutController extends Controller
             $niche = '';
         }
 
+        // Pre-compute every package/term/cadence breakdown server-side so the
+        // summary JS can never drift from the authoritative quote().
+        $quotes = [];
+        foreach ($packages as $code => $p) {
+            foreach (config('packages.durations') as $months) {
+                foreach (config('packages.frequencies') as $freq) {
+                    $q = self::quote($code, $freq, $months, 'none');
+                    $quotes[$code][$months][$freq] = [
+                        'periods' => $q['periods'],
+                        'rate' => $q['amount_per_period'],
+                        'total' => $q['package_total'],
+                        'due' => $q['due_today'],
+                        'per' => $q['per'],
+                        'freq_label' => $q['freq_label'],
+                        'term' => $q['duration_months'],
+                    ];
+                }
+            }
+        }
+
         return view('checkout', [
             'packages' => $packages,
             'selectedPackage' => $package,
@@ -56,6 +77,8 @@ class CheckoutController extends Controller
             'flwKey' => config('services.flutterwave.public_key'),
             'momoCode' => config('services.momo.merchant_code'),
             'iotecEnabled' => IotecPay::enabled(),
+            'quotes' => $quotes,
+            'dailyFrom' => collect($packages)->map(fn ($p, $code) => self::quote($code, 'daily', 12, 'none')['amount_per_period'])->all(),
         ]);
     }
 
@@ -74,9 +97,31 @@ class CheckoutController extends Controller
             'niche' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string', 'max:2000'],
             'subdomain_label' => ['nullable', 'string', 'max:63'],
+            'custom_domain' => ['nullable', 'string', 'max:253'],
         ]);
 
         $subdomainLabel = null;
+        $customDomain = null;
+
+        if (($validated['domain'] ?? null) === 'none') {
+            $raw = strtolower(trim((string) ($validated['custom_domain'] ?? '')));
+            $raw = preg_replace('#^https?://#', '', $raw) ?? '';
+            $raw = rtrim($raw, '/');
+
+            if ($raw !== '') {
+                if (! self::validHostname($raw)
+                    || $raw === config('hosting.base_domain')
+                    || str_ends_with($raw, '.'.config('hosting.base_domain'))) {
+                    return back()->withErrors(['custom_domain' => 'Enter a valid domain you own (not a '.config('hosting.base_domain').' subdomain).'])->withInput();
+                }
+
+                if (WebsiteDomain::where('domain', $raw)->exists()) {
+                    return back()->withErrors(['custom_domain' => 'That domain is already registered on ttryy.'])->withInput();
+                }
+
+                $customDomain = $raw;
+            }
+        }
 
         if (($validated['domain'] ?? null) === 'subdomain') {
             $label = strtolower(trim((string) ($validated['subdomain_label'] ?? '')));
@@ -116,6 +161,7 @@ class CheckoutController extends Controller
             'billing_frequency' => $validated['billing_frequency'],
             'domain' => $validated['domain'],
             'subdomain' => $subdomainLabel,
+            'custom_domain' => $customDomain,
             'duration_months' => $quote['duration_months'],
             'periods' => $quote['periods'],
             'amount_per_period' => $quote['amount_per_period'],
@@ -130,6 +176,14 @@ class CheckoutController extends Controller
             'niche' => $validated['niche'] ?? null,
             'notes' => $validated['notes'] ?? null,
         ]);
+
+        // Create the (pending) hosting record from what the customer gave us.
+        // It stays pending_setup until an admin activates it.
+        try {
+            OrderProvisioner::createForOrder($order);
+        } catch (\Throwable $e) {
+            Log::warning('Order hosting provisioning failed', ['order' => $order->reference, 'error' => $e->getMessage()]);
+        }
 
         $this->sendOrderEmails($order);
 
@@ -248,6 +302,7 @@ class CheckoutController extends Controller
             'activeCount' => $orders->filter(fn ($o) => $o->isActive())->count(),
             'paidSum' => (int) $orders->sum('paid_amount'),
             'remainingSum' => (int) $orders->sum(fn ($o) => max(0, $o->total_amount - $o->paid_amount)),
+            'walletBalance' => (int) request()->user()->balance_ugx,
         ]);
     }
 
@@ -268,52 +323,83 @@ class CheckoutController extends Controller
     /**
      * Server-side quote. Amounts are never trusted from the client.
      *
-     * The domain fee is a one-time payment, always due upfront together
-     * with the first installment (or the full price).
+     * The installment rate is DERIVED from the package price across the
+     * chosen term (price ÷ periods), so the whole package total is always
+     * covered inside the term — whether the customer pays per day, week or
+     * month. The first payment is at least `min_first_payment` and covers at
+     * least `min_first_days` at the package's per-day rate. The one-time
+     * domain fee rides on top and is always due upfront.
      *
-     * @return array{duration_months:int, periods:int, amount_per_period:int, domain_fee:int, package_total:int, total:int, due_today:int, remaining:int, period_label:string}
+     * @return array{duration_months:int, periods:int, amount_per_period:int, daily_rate:int, domain_fee:int, package_total:int, total:int, due_today:int, remaining:int, period_label:string, freq_label:string, per:string}
      */
     public static function quote(string $package, string $frequency, int $durationMonths, string $domain = 'none'): array
     {
         $packages = config('packages.packages');
-        $data = $packages[$package];
-        $domainFee = config('packages.domains')[$domain]['fee'] ?? 0;
+        $price = (int) $packages[$package]['price'];
+        $domainFee = (int) (config('packages.domains')[$domain]['fee'] ?? 0);
 
         if ($frequency === 'full') {
             return [
                 'duration_months' => 12,
                 'periods' => 1,
-                'amount_per_period' => $data['price'],
+                'amount_per_period' => $price,
+                'daily_rate' => $price,
                 'domain_fee' => $domainFee,
-                'package_total' => $data['price'],
-                'total' => $data['price'] + $domainFee,
-                'due_today' => $data['price'] + $domainFee,
+                'package_total' => $price,
+                'total' => $price + $domainFee,
+                'due_today' => $price + $domainFee,
                 'remaining' => 0,
                 'period_label' => 'one-time payment',
+                'freq_label' => 'One-time',
+                'per' => '',
             ];
         }
 
         $durations = config('packages.durations');
         $durationMonths = in_array($durationMonths, $durations, true) ? $durationMonths : 12;
 
-        [$periods, $rate, $label] = match ($frequency) {
-            'monthly' => [$durationMonths, $data['monthly'], 'per month'],
-            'weekly' => [(int) round($durationMonths * 52 / 12), $data['weekly'], 'per week'],
-            default => [(int) round($durationMonths * 365 / 12), $data['daily'], 'per day'],
+        $dailyPeriods = max(1, (int) round($durationMonths * 365 / 12));
+        $dailyRate = max(1, (int) ceil($price / $dailyPeriods));
+
+        [$periods, $per, $freqLabel] = match ($frequency) {
+            'monthly' => [$durationMonths, '/mo', 'Monthly'],
+            'weekly' => [max(1, (int) round($durationMonths * 52 / 12)), '/wk', 'Weekly'],
+            default => [$dailyPeriods, '/day', 'Daily'],
         };
 
-        $packageTotal = $rate * $periods;
+        $periods = max(1, (int) $periods);
+        $rate = max(1, (int) ceil($price / $periods));
+
+        $minFirst = max(
+            (int) config('packages.min_first_payment', 10000),
+            (int) config('packages.min_first_days', 10) * $dailyRate
+        );
+        $baseDue = min($price, max($minFirst, $rate));
+
+        $total = $price + $domainFee;
+        $dueToday = $baseDue + $domainFee;
 
         return [
             'duration_months' => $durationMonths,
             'periods' => $periods,
             'amount_per_period' => $rate,
+            'daily_rate' => $dailyRate,
             'domain_fee' => $domainFee,
-            'package_total' => $packageTotal,
-            'total' => $packageTotal + $domainFee,
-            'due_today' => $rate + $domainFee,
-            'remaining' => $packageTotal + $domainFee - ($rate + $domainFee),
-            'period_label' => $label,
+            'package_total' => $price,
+            'total' => $total,
+            'due_today' => $dueToday,
+            'remaining' => max(0, $total - $dueToday),
+            'period_label' => 'per '.ltrim($per, '/'),
+            'freq_label' => $freqLabel,
+            'per' => $per,
         ];
+    }
+
+    /**
+     * A registrable hostname the customer says they already own.
+     */
+    public static function validHostname(string $domain): bool
+    {
+        return (bool) preg_match('/^(?!-)[a-z0-9-]{1,63}(?<!-)(\.[a-z0-9-]{1,63})+$/i', $domain);
     }
 }

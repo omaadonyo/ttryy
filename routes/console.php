@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Services\DirectoryScraper;
 use App\Services\Hosting\AnalyticsRecorder;
 use App\Services\Hosting\HealthChecker;
+use App\Services\Hosting\HostingSubscription;
+use App\Services\IotecReconciler;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
@@ -129,10 +131,35 @@ Schedule::command('hosting:health-check')->everyThirtyMinutes();
 Schedule::command('hosting:aggregate-analytics')->dailyAt('01:30');
 
 Artisan::command('hosting:check-renewals', function () {
-    $queued = App\Services\Hosting\HostingSubscription::suspendOverdue();
+    $queued = HostingSubscription::suspendOverdue();
     $this->info("Queued {$queued} overdue suspension(s).");
 
     return 0;
 })->purpose('Suspend hosting accounts past renewal with balance outstanding');
 
 Schedule::command('hosting:check-renewals')->dailyAt('02:00');
+
+Artisan::command('hosting:remind-renewals', function () {
+    $sent = HostingSubscription::remindDue();
+    $this->info("Sent {$sent} renewal reminder(s).");
+
+    return 0;
+})->purpose('Notify customers whose hosting payment is due or overdue');
+
+Schedule::command('hosting:remind-renewals')->dailyAt('08:00');
+
+Artisan::command('payments:reconcile-iotec {--minutes=5}', function () {
+    $minutes = max(1, (int) $this->option('minutes'));
+
+    $orders = IotecReconciler::reconcileOrders($minutes);
+    $payments = IotecReconciler::reconcileOrderPayments($minutes);
+    $signups = IotecReconciler::reconcileSignups($minutes);
+
+    $this->info("Orders: checked {$orders['checked']}, paid {$orders['paid']}, failed {$orders['failed']}.");
+    $this->info("Order payments: checked {$payments['checked']}, paid {$payments['paid']}, failed {$payments['failed']}.");
+    $this->info("Launch signups: checked {$signups['checked']}, paid {$signups['paid']}, failed {$signups['failed']}.");
+
+    return 0;
+})->purpose('Re-read ioTec status for pending payments and finalize any that succeeded');
+
+Schedule::command('payments:reconcile-iotec')->everyTenMinutes();

@@ -89,19 +89,19 @@ class SalesCopyService
     {
         return match ($goal) {
             'follow_up' => [
-                "Hi {name}, just floating this back up — businesses like {business} usually reply fastest in the first week, so I wanted you to see this before Friday. We help with {need} and can start small. Worth a 10-minute chat?",
-                "Hi {name}, I know inboxes get busy. Quick one: we recently helped a business like {business} line up new work around {need}. If timing was the issue, what would make next week work for a short call?",
-                "Hi {name}, last nudge from me — I have two onboarding slots left this month for {need}. Want me to hold one for {business}, or should I close the loop?",
+                'Hi {name}, just floating this back up — businesses like {business} usually reply fastest in the first week, so I wanted you to see this before Friday. We help with {need} and can start small. Worth a 10-minute chat?',
+                'Hi {name}, I know inboxes get busy. Quick one: we recently helped a business like {business} line up new work around {need}. If timing was the issue, what would make next week work for a short call?',
+                'Hi {name}, last nudge from me — I have two onboarding slots left this month for {need}. Want me to hold one for {business}, or should I close the loop?',
             ],
             'closing' => [
-                "Hi {name}, great speaking. To lock this in for {business}: we start on {need} within 5 days of your first payment, and you can track everything from your dashboard. Shall I send the payment link now?",
-                "Hi {name}, here is the simple version: first payment gets {business} online plus your first prospects, then small scheduled payments after that. No hidden fees. Ready when you are — want me to prepare the order?",
-                "Hi {name}, most clients hesitate at the same point, then wish they had started a month earlier. For {need}, starting this week means {business} is visible before month-end. Shall we go ahead?",
+                'Hi {name}, great speaking. To lock this in for {business}: we start on {need} within 5 days of your first payment, and you can track everything from your dashboard. Shall I send the payment link now?',
+                'Hi {name}, here is the simple version: first payment gets {business} online plus your first prospects, then small scheduled payments after that. No hidden fees. Ready when you are — want me to prepare the order?',
+                'Hi {name}, most clients hesitate at the same point, then wish they had started a month earlier. For {need}, starting this week means {business} is visible before month-end. Shall we go ahead?',
             ],
             default => [
-                "Hi {name}, I work with businesses like {business} in Uganda. We build professional websites and hand you ready-to-contact prospects for {need} — from UGX 700/day. Open to a quick look at sample prospects for your niche?",
-                "Hi {name}, quick question: how is {business} currently finding new customers for {need}? We help businesses get online and line up real buyers to call. Can I send you 3 sample prospects, free?",
-                "Hi {name}, {business} caught my eye because demand for {need} is rising right now. We get businesses like yours online in 5 days with prospects included. Worth a 10-minute chat this week?",
+                'Hi {name}, I work with businesses like {business} in Uganda. We build professional websites and hand you ready-to-contact prospects for {need} — from UGX 700/day. Open to a quick look at sample prospects for your niche?',
+                'Hi {name}, quick question: how is {business} currently finding new customers for {need}? We help businesses get online and line up real buyers to call. Can I send you 3 sample prospects, free?',
+                'Hi {name}, {business} caught my eye because demand for {need} is rising right now. We get businesses like yours online in 5 days with prospects included. Worth a 10-minute chat this week?',
             ],
         };
     }

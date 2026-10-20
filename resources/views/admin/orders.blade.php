@@ -33,7 +33,7 @@
             <input type="text" name="search" value="{{ $filters['search'] ?? '' }}" placeholder="Search reference, business, phone…" class="field">
             <select name="status" class="field">
                 <option value="">All statuses</option>
-                @foreach(['pending','submitted','paid'] as $s)
+                @foreach(['pending','submitted','paid','refunded'] as $s)
                 <option value="{{ $s }}" {{ ($filters['status'] ?? '') === $s ? 'selected' : '' }}>{{ ucfirst($s) }}</option>
                 @endforeach
             </select>
@@ -73,6 +73,8 @@
                                 <span class="pill-green">{{ $order->status }}</span>
                                 @elseif($order->status === 'submitted')
                                 <span class="pill-amber">{{ $order->status }}</span>
+                                @elseif($order->status === 'refunded')
+                                <span class="pill-red">refunded</span>
                                 @else
                                 <span class="pill-zinc">{{ $order->status }}</span>
                                 @endif
@@ -109,6 +111,18 @@
                                     <button type="submit" class="btn-ghost btn-sm">Hand over</button>
                                 </form>
                                 @endif
+                                @if($order->status === 'paid' && !$order->isRefunded())
+                                <form method="POST" action="{{ route('admin.orders.refund', $order) }}" class="ml-2 inline" onsubmit="return confirm('Refund UGX {{ number_format($order->paid_amount) }} on {{ $order->reference }}? This closes the order.')">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn-ghost btn-sm">Refund</button>
+                                </form>
+                                @endif
+                                <form method="POST" action="{{ route('admin.orders.destroy', $order) }}" class="ml-2 inline" onsubmit="return confirm('Delete order {{ $order->reference }}? This cannot be undone.')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-ghost btn-sm">Delete</button>
+                                </form>
                             </td>
                         </tr>
                         @empty

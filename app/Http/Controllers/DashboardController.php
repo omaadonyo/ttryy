@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CampaignRecipient;
+use App\Models\EmailCampaign;
+use App\Models\HostedWebsite;
 use App\Models\SavedContact;
+use App\Models\ScrapedProspect;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class DashboardController extends Controller
 {
@@ -13,7 +16,7 @@ class DashboardController extends Controller
         $user = $request->user();
         $orders = $user->packageOrders()->latest()->get();
 
-        $campaigns = \App\Models\EmailCampaign::where('user_id', $user->id)
+        $campaigns = EmailCampaign::where('user_id', $user->id)
             ->withCount(['recipients as read_count' => fn ($q) => $q->whereNotNull('opened_at')])
             ->latest()->get();
         $mktSent = (int) $campaigns->sum('sent');
@@ -29,14 +32,14 @@ class DashboardController extends Controller
         $ordersPrev = $user->packageOrders()->where('created_at', '>=', $prevStart)->where('created_at', '<', $curStart)->count();
         $spendCur = (int) $user->packageOrders()->where('created_at', '>=', $curStart)->sum('total_amount');
         $spendPrev = (int) $user->packageOrders()->where('created_at', '>=', $prevStart)->where('created_at', '<', $curStart)->sum('total_amount');
-        $emailsCur = (int) \App\Models\EmailCampaign::where('user_id', $user->id)->where('created_at', '>=', $curStart)->sum('sent');
-        $emailsPrev = (int) \App\Models\EmailCampaign::where('user_id', $user->id)->where('created_at', '>=', $prevStart)->where('created_at', '<', $curStart)->sum('sent');
+        $emailsCur = (int) EmailCampaign::where('user_id', $user->id)->where('created_at', '>=', $curStart)->sum('sent');
+        $emailsPrev = (int) EmailCampaign::where('user_id', $user->id)->where('created_at', '>=', $prevStart)->where('created_at', '<', $curStart)->sum('sent');
 
         $days = collect(range(13, 0))->map(fn ($i) => $now->copy()->subDays($i));
         $activityChart = [
             'labels' => $days->map(fn ($d) => $d->format('d M'))->all(),
             'orders' => $days->map(fn ($d) => $user->packageOrders()->whereDate('created_at', $d->toDateString())->count())->all(),
-            'emails' => $days->map(fn ($d) => (int) \App\Models\EmailCampaign::where('user_id', $user->id)->whereDate('created_at', $d->toDateString())->sum('sent'))->all(),
+            'emails' => $days->map(fn ($d) => (int) EmailCampaign::where('user_id', $user->id)->whereDate('created_at', $d->toDateString())->sum('sent'))->all(),
         ];
 
         $checklist = [
@@ -73,8 +76,8 @@ class DashboardController extends Controller
             'activity' => $user->notifications()->latest()->take(6)->get(),
             'hosting' => [
                 'total' => $user->hostedWebsites()->count(),
-                'active' => $user->hostedWebsites()->where('status', \App\Models\HostedWebsite::STATUS_ACTIVE)->count(),
-                'attention' => $user->hostedWebsites()->whereIn('status', [\App\Models\HostedWebsite::STATUS_SUSPENDED, \App\Models\HostedWebsite::STATUS_FAILED])->count(),
+                'active' => $user->hostedWebsites()->where('status', HostedWebsite::STATUS_ACTIVE)->count(),
+                'attention' => $user->hostedWebsites()->whereIn('status', [HostedWebsite::STATUS_SUSPENDED, HostedWebsite::STATUS_FAILED])->count(),
                 'renewal' => $user->hostedWebsites()->whereNotNull('next_renewal_at')->min('next_renewal_at'),
             ],
             'checklist' => $checklist,
@@ -97,7 +100,7 @@ class DashboardController extends Controller
             return [$m->format('M') => (int) $sum];
         });
 
-        $campaigns = \App\Models\EmailCampaign::where('user_id', $user->id)
+        $campaigns = EmailCampaign::where('user_id', $user->id)
             ->withCount(['recipients as read_count' => fn ($q) => $q->whereNotNull('opened_at')])
             ->latest()->take(8)->get()->reverse()->values();
 
@@ -108,11 +111,11 @@ class DashboardController extends Controller
             return [$d => (int) abs($spent)];
         });
 
-        $savedByNiche = \App\Models\SavedContact::where('user_id', $user->id)
+        $savedByNiche = SavedContact::where('user_id', $user->id)
             ->selectRaw('niche, COUNT(*) as c')->groupBy('niche')->orderByDesc('c')->take(6)->get();
 
-        $totalSent = (int) \App\Models\EmailCampaign::where('user_id', $user->id)->sum('sent');
-        $totalOpened = (int) \App\Models\CampaignRecipient::whereHas('campaign', fn ($q) => $q->where('user_id', $user->id))
+        $totalSent = (int) EmailCampaign::where('user_id', $user->id)->sum('sent');
+        $totalOpened = (int) CampaignRecipient::whereHas('campaign', fn ($q) => $q->where('user_id', $user->id))
             ->whereNotNull('opened_at')->count();
 
         return view('analytics', [
@@ -169,9 +172,9 @@ class DashboardController extends Controller
     {
         return view('scraper', [
             'indexStats' => [
-                'indexed' => \App\Models\ScrapedProspect::count(),
-                'verified' => \App\Models\ScrapedProspect::where('verified', true)->count(),
-                'niches' => \App\Models\ScrapedProspect::select('niche')->distinct()->count(),
+                'indexed' => ScrapedProspect::count(),
+                'verified' => ScrapedProspect::where('verified', true)->count(),
+                'niches' => ScrapedProspect::select('niche')->distinct()->count(),
                 'saved' => request()->user()->savedContacts()->count(),
             ],
             'searchCost' => (int) config('tokens.costs.scraper_search', 5),
@@ -181,7 +184,7 @@ class DashboardController extends Controller
 
     public function prospects(Request $request)
     {
-        $query = \App\Models\ScrapedProspect::query()->latest('fetched_at');
+        $query = ScrapedProspect::query()->latest('fetched_at');
 
         if ($request->filled('q')) {
             $q = '%'.$request->string('q').'%';
@@ -203,7 +206,7 @@ class DashboardController extends Controller
             $query->where('verified', true);
         }
 
-        $categories = \App\Models\ScrapedProspect::selectRaw('category, COUNT(*) as c')
+        $categories = ScrapedProspect::selectRaw('category, COUNT(*) as c')
             ->whereNotNull('category')
             ->groupBy('category')
             ->orderBy('category')
@@ -212,13 +215,13 @@ class DashboardController extends Controller
 
         return view('prospects', [
             'prospects' => $query->paginate(20)->withQueryString(),
-            'niches' => \App\Models\ScrapedProspect::select('niche')->distinct()->orderBy('niche')->pluck('niche'),
+            'niches' => ScrapedProspect::select('niche')->distinct()->orderBy('niche')->pluck('niche'),
             'categories' => $categories,
             'filters' => $request->only(['q', 'niche', 'category', 'verified']),
             'totals' => [
-                'indexed' => \App\Models\ScrapedProspect::count(),
-                'categories' => \App\Models\ScrapedProspect::whereNotNull('category')->select('category')->distinct()->count(),
-                'verified' => \App\Models\ScrapedProspect::where('verified', true)->count(),
+                'indexed' => ScrapedProspect::count(),
+                'categories' => ScrapedProspect::whereNotNull('category')->select('category')->distinct()->count(),
+                'verified' => ScrapedProspect::where('verified', true)->count(),
                 'showing' => (clone $query)->count(),
             ],
         ]);
@@ -318,6 +321,7 @@ class DashboardController extends Controller
             'paidTotal' => $orders->where('status', 'paid')->sum('paid_amount'),
             'outstanding' => $orders->whereIn('status', ['pending', 'submitted'])->sum(fn ($o) => $o->total_amount - $o->paid_amount),
             'paidByMonth' => $paidByMonth,
+            'walletBalance' => (int) $request->user()->balance_ugx,
         ]);
     }
 }

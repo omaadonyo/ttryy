@@ -2,10 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CampaignRecipient;
+use App\Models\EmailCampaign;
 use App\Models\PackageOrder;
+use App\Models\SavedContact;
+use App\Models\ScrapedProspect;
+use App\Models\TokenTopup;
+use App\Models\TokenTransaction;
 use App\Models\User;
+use App\Models\WhatsappGroup;
 use App\Notifications\SiteAlert;
+use App\Services\Hosting\HostingSubscription;
+use App\Services\Wallet;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -14,8 +24,8 @@ class AdminController extends Controller
         $orders = PackageOrder::query();
         $months = collect(range(5, 0))->map(fn ($i) => now()->subMonths($i));
 
-        $emailSent = (int) \App\Models\EmailCampaign::sum('sent');
-        $emailOpened = (int) \App\Models\CampaignRecipient::whereNotNull('opened_at')->count();
+        $emailSent = (int) EmailCampaign::sum('sent');
+        $emailOpened = (int) CampaignRecipient::whereNotNull('opened_at')->count();
 
         return view('admin.dashboard', [
             'totalOrders' => (clone $orders)->count(),
@@ -36,17 +46,17 @@ class AdminController extends Controller
             'usage' => [
                 'signups' => $months->map(fn ($m) => User::whereYear('created_at', $m->year)->whereMonth('created_at', $m->month)->count())->all(),
                 'signupLabels' => $months->map(fn ($m) => $m->format('M'))->all(),
-                'tokensSold' => (int) \App\Models\TokenTopup::where('status', 'paid')->sum('tokens'),
-                'tokensUsed' => (int) abs(\App\Models\TokenTransaction::where('type', 'debit')->sum('amount')),
+                'tokensSold' => (int) TokenTopup::where('status', 'paid')->sum('tokens'),
+                'tokensUsed' => (int) abs(TokenTransaction::where('type', 'debit')->sum('amount')),
                 'tokensHeld' => (int) User::sum('token_balance'),
-                'topupRevenue' => (int) \App\Models\TokenTopup::where('status', 'paid')->sum('amount_ugx'),
-                'campaigns' => \App\Models\EmailCampaign::count(),
+                'topupRevenue' => (int) TokenTopup::where('status', 'paid')->sum('amount_ugx'),
+                'campaigns' => EmailCampaign::count(),
                 'emailSent' => $emailSent,
                 'emailOpened' => $emailOpened,
                 'emailRate' => $emailSent > 0 ? (int) round($emailOpened / $emailSent * 100) : 0,
-                'prospectsIndexed' => \App\Models\ScrapedProspect::count(),
-                'contactsSaved' => \App\Models\SavedContact::count(),
-                'groupsListed' => \App\Models\WhatsappGroup::where('is_active', true)->count(),
+                'prospectsIndexed' => ScrapedProspect::count(),
+                'contactsSaved' => SavedContact::count(),
+                'groupsListed' => WhatsappGroup::where('is_active', true)->count(),
             ],
         ]);
     }
@@ -93,7 +103,7 @@ class AdminController extends Controller
             'payment_method' => $order->payment_method === 'pending' ? 'momo_manual' : $order->payment_method,
         ]);
 
-        \App\Services\Hosting\HostingSubscription::recordPayment($order->fresh());
+        HostingSubscription::recordPayment($order->fresh());
 
         $order->user->notify(new SiteAlert(
             "Payment confirmed for {$order->reference}",
@@ -117,7 +127,7 @@ class AdminController extends Controller
 
         $data = $request->validate([
             'amount' => ['required', 'integer', 'min:1', 'max:'.$remaining],
-            'method' => ['required', \Illuminate\Validation\Rule::in(['cash', 'momo_manual'])],
+            'method' => ['required', Rule::in(['cash', 'momo_manual'])],
         ]);
 
         $newPaid = $order->paid_amount + $data['amount'];
@@ -130,7 +140,7 @@ class AdminController extends Controller
                 : ($order->status === 'pending' ? 'submitted' : $order->status),
         ]);
 
-        \App\Services\Hosting\HostingSubscription::recordPayment($order->fresh(), $data['amount']);
+        HostingSubscription::recordPayment($order->fresh(), $data['amount']);
 
         $left = max(0, $order->fresh()->total_amount - $order->fresh()->paid_amount);
 
@@ -142,7 +152,7 @@ class AdminController extends Controller
             'payment'
         ));
 
-        return back()->with('status', "UGX ".number_format($data['amount'])." credited to {$order->reference}.");
+        return back()->with('status', 'UGX '.number_format($data['amount'])." credited to {$order->reference}.");
     }
 
     public function markHandedOver(PackageOrder $order)
@@ -164,7 +174,7 @@ class AdminController extends Controller
 
     public function payments()
     {
-        $query = PackageOrder::with('user')->whereIn('status', ['paid', 'submitted'])->latest();
+        $query = PackageOrder::with('user')->whereIn('status', ['paid', 'submitted', 'refunded'])->latest();
 
         return view('admin.payments', [
             'orders' => $query->paginate(15)->withQueryString(),
@@ -177,7 +187,15 @@ class AdminController extends Controller
 
     public function users(Request $request)
     {
+        $show = (string) $request->string('show');
+
         $query = User::withCount('packageOrders')->withSum('packageOrders', 'total_amount')->latest();
+
+        if ($show === 'trash') {
+            $query->onlyTrashed();
+        } elseif ($show === 'suspended') {
+            $query->whereNotNull('suspended_at');
+        }
 
         if ($request->filled('search')) {
             $search = '%'.$request->string('search').'%';
@@ -189,9 +207,12 @@ class AdminController extends Controller
         return view('admin.users', [
             'users' => $query->paginate(15)->withQueryString(),
             'search' => (string) $request->string('search'),
+            'show' => $show,
             'totalUsers' => User::count(),
             'adminCount' => User::where('is_admin', true)->count(),
             'newCount' => User::where('created_at', '>=', now()->subDays(30))->count(),
+            'suspendedCount' => User::whereNotNull('suspended_at')->count(),
+            'trashCount' => User::onlyTrashed()->count(),
             'signupChart' => [
                 'labels' => collect(range(5, 0))->map(fn ($i) => now()->subMonths($i)->format('M'))->all(),
                 'values' => collect(range(5, 0))->map(fn ($i) => User::whereYear('created_at', now()->subMonths($i)->year)
@@ -207,6 +228,130 @@ class AdminController extends Controller
         $user->forceFill(['is_admin' => ! $user->is_admin])->save();
 
         return back()->with('status', "{$user->email} ".($user->is_admin ? 'is now' : 'is no longer').' an administrator.');
+    }
+
+    /**
+     * Credit tokens to a customer's wallet with an audit reason. The user
+     * is notified and the credit lands in their token ledger immediately.
+     */
+    public function creditTokens(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'amount' => ['required', 'integer', 'min:1', 'max:10000000'],
+            'reason' => ['nullable', 'string', 'max:120'],
+        ]);
+
+        $amount = (int) $validated['amount'];
+        $reason = trim((string) ($validated['reason'] ?? ''));
+
+        Wallet::credit($user, $amount, $reason !== '' ? $reason : 'Credited by ttryy team');
+
+        $user->notify(new SiteAlert(
+            'Tokens added to your wallet',
+            number_format($amount).' tokens were credited to your account'.($reason !== '' ? ': '.$reason : '.'),
+            route('wallet.index'),
+            'tokens'
+        ));
+
+        return back()->with('status', number_format($amount)." tokens credited to {$user->email}.");
+    }
+
+    /**
+     * Suspend an account: the user is signed out on their next request and
+     * cannot reach the dashboard until an administrator reactivates them.
+     */
+    public function suspendUser(User $user)
+    {
+        abort_if($user->id === request()->user()->id, 422, 'You cannot suspend your own account.');
+        abort_if($user->is_admin, 422, 'Remove administrator access before suspending this account.');
+
+        $user->forceFill(['suspended_at' => now()])->save();
+
+        $user->notify(new SiteAlert(
+            'Account suspended',
+            'Your ttryy account has been suspended. Contact support to have it reinstated.',
+            url('/'),
+            'order'
+        ));
+
+        return back()->with('status', "{$user->email} suspended.");
+    }
+
+    public function activateUser(User $user)
+    {
+        $user->forceFill(['suspended_at' => null])->save();
+
+        $user->notify(new SiteAlert(
+            'Account reinstated',
+            'Your ttryy account is active again. Welcome back.',
+            route('dashboard'),
+            'order'
+        ));
+
+        return back()->with('status', "{$user->email} reactivated.");
+    }
+
+    public function destroyUser(User $user)
+    {
+        abort_if($user->id === request()->user()->id, 422, 'You cannot delete your own account.');
+        abort_if($user->is_admin, 422, 'Remove administrator access before deleting this account.');
+
+        $email = $user->email;
+        $user->delete();
+
+        return back()->with('status', "{$email} moved to trash — restore from the Trash tab.");
+    }
+
+    public function restoreUser(int $id)
+    {
+        $user = User::onlyTrashed()->findOrFail($id);
+        $user->forceFill(['suspended_at' => null])->save();
+        $user->restore();
+
+        return back()->with('status', "{$user->email} restored.");
+    }
+
+    public function purgeUser(int $id)
+    {
+        $user = User::onlyTrashed()->findOrFail($id);
+        $email = $user->email;
+
+        $user->forceDelete();
+
+        return back()->with('status', "{$email} permanently deleted with all its data.");
+    }
+
+    public function destroyOrder(PackageOrder $order)
+    {
+        $reference = $order->reference;
+        $order->delete();
+
+        return back()->with('status', "Order {$reference} deleted.");
+    }
+
+    /**
+     * Record a refund against everything paid on the order, mark it refunded
+     * and tell the customer. The order drops off active billing immediately.
+     */
+    public function refundOrder(PackageOrder $order)
+    {
+        abort_if($order->paid_amount <= 0, 422, 'Nothing has been paid on this order.');
+        abort_if($order->isRefunded(), 422, 'This order has already been refunded.');
+
+        $order->forceFill([
+            'status' => 'refunded',
+            'refunded_at' => now(),
+            'refund_amount' => $order->paid_amount,
+        ])->save();
+
+        $order->user->notify(new SiteAlert(
+            "Refund issued — {$order->reference}",
+            'UGX '.number_format($order->refund_amount).' refunded to you. The order is now closed.',
+            route('packages.index'),
+            'payment'
+        ));
+
+        return back()->with('status', 'UGX '.number_format($order->refund_amount)." refunded on {$order->reference}.");
     }
 
     public function packages()

@@ -140,6 +140,28 @@ class AdminHostingController extends Controller
         return back()->with('status', "Website {$website->name} restored with its domains.");
     }
 
+    /**
+     * Move a live website to the trash (soft delete). Its domains are
+     * shelved with it and everything comes back on restore.
+     */
+    public function destroyWebsite(Request $request, HostedWebsite $website)
+    {
+        $name = $website->name;
+
+        $website->delete();
+
+        HostingAuditLog::log('website.trashed', [
+            'actor_type' => 'admin',
+            'actor_id' => $request->user()->id,
+            'hosted_website_id' => null,
+            'client_id' => $website->user_id,
+            'meta' => ['name' => $name],
+            'ip' => $request->ip(),
+        ]);
+
+        return back()->with('status', "Website {$name} moved to trash — restore it any time.");
+    }
+
     public function purgeTrash(int $id)
     {
         $website = HostedWebsite::onlyTrashed()->findOrFail($id);

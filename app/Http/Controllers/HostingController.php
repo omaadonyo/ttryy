@@ -16,6 +16,7 @@ use App\Services\Hosting\ServiceCommander;
 use App\Services\Hosting\SubdomainGenerator;
 use App\Services\Hosting\SubdomainProvisioner;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -63,7 +64,7 @@ class HostingController extends Controller
             'plan' => $request->user()->packageOrders()->where('status', 'paid')->latest()->first()?->package,
             'outstanding' => (int) $request->user()->packageOrders()->whereIn('status', ['pending', 'submitted'])
                 ->sum('total_amount'),
-            'nextRenewal' => ($min = $request->user()->hostedWebsites()->whereNotNull('next_renewal_at')->min('next_renewal_at')) ? \Carbon\Carbon::parse($min) : null,
+            'nextRenewal' => ($min = $request->user()->hostedWebsites()->whereNotNull('next_renewal_at')->min('next_renewal_at')) ? Carbon::parse($min) : null,
         ]);
     }
 
@@ -255,7 +256,7 @@ class HostingController extends Controller
         return redirect()->route('hosting.show', $website)->with('status', "Website {$website->name} restored with its domains.");
     }
 
-    // ---------- Domains ----------
+    // ---------- Domains (clients are read-only; admins manage domains) ----------
 
     public function domains(HostedWebsite $website)
     {
@@ -267,244 +268,6 @@ class HostingController extends Controller
             'baseDomain' => config('hosting.base_domain'),
             'suggested' => SubdomainGenerator::generate($website->name, $website->id),
         ]);
-    }
-
-    public function storeSubdomain(Request $request, HostedWebsite $website)
-    {
-        $this->authorize('update', $website);
-
-        $validated = $request->validate([
-            'label' => ['nullable', 'string', 'max:63'],
-        ]);
-
-        $label = $validated['label'] ?? null
-            ? strtolower(trim($validated['label']))
-            : SubdomainGenerator::generate($website->name, $website->id);
-
-        if (! SubdomainGenerator::validLabel($label)) {
-            return back()->withErrors(['label' => 'Use letters, numbers and hyphens only (no leading/trailing hyphen).']);
-        }
-
-        if (SubdomainGenerator::isReserved($label)) {
-            return back()->withErrors(['label' => 'That subdomain is reserved for system use.']);
-        }
-
-        $domain = SubdomainGenerator::fullDomain($label);
-
-        if (WebsiteDomain::where('domain', $domain)->exists()) {
-            return back()->withErrors(['label' => 'That subdomain is already taken. Try another.']);
-        }
-
-        $record = $website->domains()->create([
-            'user_id' => $request->user()->id,
-            'domain' => $domain,
-            'type' => WebsiteDomain::TYPE_SUBDOMAIN,
-            'is_primary' => $website->domains()->count() === 0,
-            'verification' => 'verified',
-        ]);
-
-        if ($website->domains()->count() === 1) {
-            $website->forceFill(['primary_domain_id' => $record->id])->save();
-        }
-
-        $provision = SubdomainProvisioner::provision($record->fresh());
-
-        HostingAuditLog::log('domain.subdomain_added', [
-            'actor_type' => $request->user()->is_admin ? 'admin' : 'user',
-            'actor_id' => $request->user()->id,
-            'hosted_website_id' => $website->id,
-            'client_id' => $website->user_id,
-            'meta' => ['domain' => $domain, 'provision' => $provision['mode']],
-            'ip' => $request->ip(),
-        ]);
-
-        return back()->with('status', "Subdomain {$domain} added. {$provision['message']}");
-    }
-
-    public function updateSubdomain(Request $request, HostedWebsite $website, WebsiteDomain $domain)
-    {
-        $this->authorize('update', $domain);
-        abort_if($domain->hosted_website_id !== $website->id, 404);
-        abort_if($domain->type !== WebsiteDomain::TYPE_SUBDOMAIN, 422, 'Only ttryy subdomains can be renamed here.');
-
-        $validated = $request->validate(['label' => ['required', 'string', 'max:63']]);
-        $label = strtolower(trim($validated['label']));
-
-        if (! SubdomainGenerator::validLabel($label) || SubdomainGenerator::isReserved($label)) {
-            return back()->withErrors(['label' => 'That subdomain label is not allowed.']);
-        }
-
-        $new = SubdomainGenerator::fullDomain($label);
-
-        if ($new !== $domain->domain && WebsiteDomain::where('domain', $new)->exists()) {
-            return back()->withErrors(['label' => 'That subdomain is already taken.']);
-        }
-
-        $old = $domain->domain;
-        $domain->forceFill(['domain' => $new, 'dns_ok' => false, 'ssl_status' => 'pending'])->save();
-
-        HostingAuditLog::log('domain.subdomain_changed', [
-            'actor_type' => $request->user()->is_admin ? 'admin' : 'user',
-            'actor_id' => $request->user()->id,
-            'hosted_website_id' => $website->id,
-            'client_id' => $website->user_id,
-            'meta' => ['from' => $old, 'to' => $new],
-            'ip' => $request->ip(),
-        ]);
-
-        return back()->with('status', "Subdomain changed to {$new}. DNS and SSL re-checks are pending.");
-    }
-
-    public function storeDomain(Request $request, HostedWebsite $website)
-    {
-        $this->authorize('update', $website);
-
-        $validated = $request->validate([
-            'domain' => ['required', 'string', 'max:253'],
-        ]);
-
-        $domain = strtolower(trim($validated['domain']));
-
-        if (! self::validHostname($domain)) {
-            return back()->withErrors(['domain' => 'Enter a valid domain name.']);
-        }
-
-        if ($domain === config('hosting.base_domain') || str_ends_with($domain, '.'.config('hosting.base_domain'))) {
-            return back()->withErrors(['domain' => 'That belongs to ttryy — use subdomain generation instead.']);
-        }
-
-        if (WebsiteDomain::where('domain', $domain)->exists()) {
-            return back()->withErrors(['domain' => 'That domain is already registered on ttryy.']);
-        }
-
-        $website->domains()->create([
-            'user_id' => $request->user()->id,
-            'domain' => $domain,
-            'type' => WebsiteDomain::TYPE_CUSTOM,
-            'is_primary' => false,
-            'verification' => 'pending',
-            'verification_token' => 'ttryy-verification='.Str::random(32),
-        ]);
-
-        HostingAuditLog::log('domain.added', [
-            'actor_type' => $request->user()->is_admin ? 'admin' : 'user',
-            'actor_id' => $request->user()->id,
-            'hosted_website_id' => $website->id,
-            'client_id' => $website->user_id,
-            'meta' => ['domain' => $domain],
-            'ip' => $request->ip(),
-        ]);
-
-        return back()->with('status', "Domain {$domain} added — verify ownership with the DNS TXT record below.");
-    }
-
-    public function verifyDomain(Request $request, HostedWebsite $website, WebsiteDomain $domain)
-    {
-        $this->authorize('update', $domain);
-        abort_if($domain->hosted_website_id !== $website->id, 404);
-
-        if ($domain->type === WebsiteDomain::TYPE_SUBDOMAIN) {
-            return back()->with('status', 'ttryy subdomains are verified by definition.');
-        }
-
-        if ($domain->verification === 'verified') {
-            return back()->with('status', 'Domain is already verified.');
-        }
-
-        $found = false;
-
-        try {
-            $records = dns_get_record('_ttryy-challenge.'.$domain->domain, DNS_TXT);
-
-            foreach ($records ?: [] as $record) {
-                if (isset($record['txt']) && str_contains($record['txt'], (string) $domain->verification_token)) {
-                    $found = true;
-                    break;
-                }
-            }
-        } catch (\Throwable) {
-            $found = false;
-        }
-
-        $domain->forceFill([
-            'verification' => $found ? 'verified' : 'pending',
-            'dns_ok' => $found,
-            'dns_checked_at' => now(),
-            'ssl_status' => $found ? 'pending' : $domain->ssl_status,
-        ])->save();
-
-        HostingAuditLog::log('domain.verification_checked', [
-            'actor_type' => $request->user()->is_admin ? 'admin' : 'user',
-            'actor_id' => $request->user()->id,
-            'hosted_website_id' => $website->id,
-            'client_id' => $website->user_id,
-            'outcome' => $found ? 'success' : 'failure',
-            'reason' => $found ? null : 'txt_not_found',
-            'meta' => ['domain' => $domain->domain],
-            'ip' => $request->ip(),
-        ]);
-
-        return back()->with(
-            'status',
-            $found
-                ? "Domain {$domain->domain} verified — DNS confirmed, SSL provisioning queued."
-                : 'Verification record not found yet. Add the TXT record and try again (DNS can take minutes to propagate).'
-        );
-    }
-
-    public function setPrimary(Request $request, HostedWebsite $website, WebsiteDomain $domain)
-    {
-        $this->authorize('update', $domain);
-        abort_if($domain->hosted_website_id !== $website->id, 404);
-
-        if (! $domain->isVerified()) {
-            return back()->withErrors(['domain' => 'Only verified domains can be primary.']);
-        }
-
-        DB::transaction(function () use ($website, $domain, $request) {
-            // Direct queries: in-memory models may already read is_primary
-            // as true, which would make save() a dirty-check no-op.
-            $website->domains()->update(['is_primary' => false]);
-            $website->domains()->where('id', $domain->id)->update(['is_primary' => true]);
-            $website->forceFill(['primary_domain_id' => $domain->id])->save();
-
-            HostingAuditLog::log('domain.primary_changed', [
-                'actor_type' => $request->user()->is_admin ? 'admin' : 'user',
-                'actor_id' => $request->user()->id,
-                'hosted_website_id' => $website->id,
-                'client_id' => $website->user_id,
-                'meta' => ['domain' => $domain->domain],
-                'ip' => $request->ip(),
-            ]);
-        });
-
-        return back()->with('status', "Primary domain set to {$domain->domain}.");
-    }
-
-    public function destroyDomain(Request $request, HostedWebsite $website, WebsiteDomain $domain)
-    {
-        $this->authorize('delete', $domain);
-        abort_if($domain->hosted_website_id !== $website->id, 404);
-
-        $name = $domain->domain;
-        $domain->forceDelete(); // explicit removal is permanent; website trash uses soft deletes
-
-        if ($website->primary_domain_id === $domain->id) {
-            $replacement = $website->domains()->first();
-            $website->forceFill(['primary_domain_id' => $replacement?->id])->save();
-            $replacement?->forceFill(['is_primary' => true])->save();
-        }
-
-        HostingAuditLog::log('domain.removed', [
-            'actor_type' => $request->user()->is_admin ? 'admin' : 'user',
-            'actor_id' => $request->user()->id,
-            'hosted_website_id' => $website->id,
-            'client_id' => $website->user_id,
-            'meta' => ['domain' => $name],
-            'ip' => $request->ip(),
-        ]);
-
-        return back()->with('status', "Domain {$name} removed.");
     }
 
     // ---------- Analytics ----------

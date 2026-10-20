@@ -1,7 +1,13 @@
 <?php
 
+use App\Livewire\Checkout\LoginForm;
+use App\Livewire\Checkout\RegisterForm;
+use App\Mail\OrderPlaced;
 use App\Models\PackageOrder;
 use App\Models\User;
+use App\Models\WebsiteDomain;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
 
 test('guests can browse checkout but must sign in to order', function () {
@@ -13,7 +19,7 @@ test('guests can browse checkout but must sign in to order', function () {
 });
 
 test('guests can register through the checkout Livewire form', function () {
-    Livewire::test(App\Livewire\Checkout\RegisterForm::class)
+    Livewire::test(RegisterForm::class)
         ->set('name', 'Jane Nakato')
         ->set('email', 'jane@example.com')
         ->set('password', 'password123')
@@ -21,13 +27,13 @@ test('guests can register through the checkout Livewire form', function () {
         ->call('register')
         ->assertRedirect(route('checkout'));
 
-    expect(App\Models\User::where('email', 'jane@example.com')->exists())->toBeTrue();
+    expect(User::where('email', 'jane@example.com')->exists())->toBeTrue();
 });
 
 test('guests can log in through the checkout Livewire form', function () {
     $user = User::factory()->create();
 
-    Livewire::test(App\Livewire\Checkout\LoginForm::class)
+    Livewire::test(LoginForm::class)
         ->set('email', $user->email)
         ->set('password', 'password')
         ->call('login')
@@ -48,9 +54,11 @@ test('corporate monthly orders include the domain one-time fee', function () {
         'phone' => '+256 700 000010',
     ]);
 
+    // Rate is derived: 1,400,000 ÷ 6 months = 233,334/month, domain +29,000.
     $order = PackageOrder::first();
-    expect($order->total_amount)->toBe(117000 * 6 + 29000)
-        ->and($order->due_today)->toBe(117000 + 29000);
+    expect($order->total_amount)->toBe(1400000 + 29000)
+        ->and($order->amount_per_period)->toBe(233334)
+        ->and($order->due_today)->toBe(233334 + 29000);
 });
 
 test('checkout page shows the preselected package', function () {
@@ -61,21 +69,25 @@ test('checkout page shows the preselected package', function () {
         ->assertSee('UGX 650,000', false);
 });
 
-test('checkout renders as a three-step wizard with progress bar', function () {
+test('checkout renders as a single professional page without a wizard', function () {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)->get('/checkout')->assertOk();
 
-    foreach ([1, 2, 3] as $step) {
-        $response->assertSee('data-step="'.$step.'"', false);
+    $response->assertDontSee('data-step="1"', false)
+        ->assertDontSee('data-step="2"', false)
+        ->assertDontSee('id="wiz-bar"', false)
+        ->assertDontSee('id="wiz-dots"', false)
+        ->assertDontSee('data-next', false)
+        ->assertDontSee('data-back', false);
+
+    foreach (['sec-package', 'sec-domain', 'sec-details', 'sec-pay', 'tour-summary'] as $id) {
+        $response->assertSee('id="'.$id.'"', false);
     }
 
-    $response->assertDontSee('data-step="5"', false);
-
-    $response->assertSee('id="wiz-bar"', false)
-        ->assertSee('id="wiz-dots"', false)
-        ->assertSee('data-next', false)
-        ->assertSee('data-back', false);
+    $response->assertSee('id="checkout-form"', false)
+        ->assertSee('id="pay-overlay"', false)
+        ->assertSee('Choose your package', false);
 });
 
 test('authenticated users can place a monthly package order', function () {
@@ -94,8 +106,9 @@ test('authenticated users can place a monthly package order', function () {
     $order = PackageOrder::first();
     expect($order)->not->toBeNull()
         ->and($order->user_id)->toBe($user->id)
-        ->and($order->total_amount)->toBe(30000 * 12 + 29000)
-        ->and($order->due_today)->toBe(30000 + 29000)
+        ->and($order->total_amount)->toBe(350000 + 29000)
+        ->and($order->amount_per_period)->toBe(29167)
+        ->and($order->due_today)->toBe(29167 + 29000)
         ->and($order->domain_fee)->toBe(29000)
         ->and($order->periods)->toBe(12)
         ->and($order->status)->toBe('pending');
@@ -103,7 +116,8 @@ test('authenticated users can place a monthly package order', function () {
     $response->assertRedirect(route('checkout.success', $order));
 });
 
-test('placing an order notifies the buyer and admins', function () {    $buyer = User::factory()->create();
+test('placing an order notifies the buyer and admins', function () {
+    $buyer = User::factory()->create();
     $admin = User::factory()->create(['is_admin' => true]);
 
     $this->actingAs($buyer)->post('/dashboard/checkout', [
@@ -133,10 +147,12 @@ test('pay per day on the START package shows the deposit-first breakdown', funct
         'phone' => '+256 700 000001',
     ]);
 
-    // 91 daily payments of UGX 700 + UGX 80,000 domain deposit, all due upfront first.
+    // START over 3 months = 91 days; 250,000 ÷ 91 = 2,748/day. The first
+    // payment is 10 days minimum (27,480) plus the 80,000 domain fee.
     $order = PackageOrder::first();
-    expect($order->total_amount)->toBe(700 * 91 + 80000)
-        ->and($order->due_today)->toBe(700 + 80000)
+    expect($order->total_amount)->toBe(250000 + 80000)
+        ->and($order->amount_per_period)->toBe(2748)
+        ->and($order->due_today)->toBe(27480 + 80000)
         ->and($order->periods)->toBe(91);
 });
 
@@ -153,8 +169,10 @@ test('order totals are computed server-side, not trusted from the client', funct
         'total_amount' => 1,
     ]);
 
-    // 52 weekly payments of UGX 4,800, regardless of the tampered field.
-    expect(PackageOrder::first()->total_amount)->toBe(4800 * 52);
+    // Weekly rate is derived (250,000 ÷ 52 = 4,808/week); the total is the
+    // package price, regardless of the tampered field.
+    expect(PackageOrder::first()->total_amount)->toBe(250000)
+        ->and(PackageOrder::first()->amount_per_period)->toBe(4808);
 });
 
 test('full payment always covers a single one-time charge', function () {
@@ -228,7 +246,8 @@ test('manual mobile money orders are marked submitted', function () {
     $order = PackageOrder::first();
     expect($order->status)->toBe('submitted')
         ->and($order->payment_method)->toBe('momo_manual')
-        ->and($order->total_amount)->toBe(21000 * 3);
+        ->and($order->total_amount)->toBe(250000)
+        ->and($order->amount_per_period)->toBe(83334);
 });
 
 test('payment verification fails gracefully without keys', function () {
@@ -261,8 +280,8 @@ test('payment verification fails gracefully without keys', function () {
 
 test('underpaid flutterwave callbacks do not mark the order paid', function () {
     config()->set('services.flutterwave.secret_key', 'test-secret');
-    Illuminate\Support\Facades\Http::fake([
-        'https://api.flutterwave.com/*' => Illuminate\Support\Facades\Http::response([
+    Http::fake([
+        'https://api.flutterwave.com/*' => Http::response([
             'data' => ['id' => 987654, 'status' => 'successful', 'currency' => 'UGX', 'amount' => 1000],
         ], 200),
     ]);
@@ -293,9 +312,10 @@ test('underpaid flutterwave callbacks do not mark the order paid', function () {
     expect($order->fresh()->status)->toBe('pending');
 });
 
-test('verified flutterwave payments mark the order paid', function () {    config()->set('services.flutterwave.secret_key', 'test-secret');
-    Illuminate\Support\Facades\Http::fake([
-        'https://api.flutterwave.com/*' => Illuminate\Support\Facades\Http::response([
+test('verified flutterwave payments mark the order paid', function () {
+    config()->set('services.flutterwave.secret_key', 'test-secret');
+    Http::fake([
+        'https://api.flutterwave.com/*' => Http::response([
             'data' => ['id' => 987655, 'status' => 'successful', 'currency' => 'UGX', 'amount' => 59000],
         ], 200),
     ]);
@@ -331,8 +351,8 @@ test('verified flutterwave payments mark the order paid', function () {    confi
 
 test('verification accepts per-attempt suffixed references', function () {
     config()->set('services.flutterwave.secret_key', 'test-secret');
-    Illuminate\Support\Facades\Http::fake([
-        'https://api.flutterwave.com/*' => Illuminate\Support\Facades\Http::response([
+    Http::fake([
+        'https://api.flutterwave.com/*' => Http::response([
             'data' => ['id' => 111222, 'status' => 'successful', 'currency' => 'UGX', 'amount' => 30000],
         ], 200),
     ]);
@@ -392,13 +412,13 @@ test('checkout explains when online payments are not configured', function () {
         ->assertSee('Submit order manually', false);
 });
 
-test('checkout mobile has sticky progress and an expandable summary sheet', function () {
+test('checkout keeps the order summary accessible on mobile', function () {
     $this->actingAs(User::factory()->create())->get('/checkout')
         ->assertOk()
-        ->assertSee('max-lg:sticky', false)
         ->assertSee('id="sum-toggle"', false)
         ->assertSee('id="sumDueMini"', false)
-        ->assertSee('id="sum-more"', false);
+        ->assertSee('id="sum-more"', false)
+        ->assertSee('id="pay-overlay"', false);
 });
 
 test('manual orders submit natively when the gateway is down', function () {
@@ -418,7 +438,7 @@ test('manual orders submit natively when the gateway is down', function () {
 });
 
 test('placing an order emails the customer and the admin inbox', function () {
-    Illuminate\Support\Facades\Mail::fake();
+    Mail::fake();
     $user = User::factory()->create();
 
     $this->actingAs($user)->post('/dashboard/checkout', [
@@ -429,9 +449,9 @@ test('placing an order emails the customer and the admin inbox', function () {
         'phone' => '+256 700 000030',
     ]);
 
-    Illuminate\Support\Facades\Mail::assertSent(App\Mail\OrderPlaced::class, 2);
-    Illuminate\Support\Facades\Mail::assertSent(App\Mail\OrderPlaced::class, fn ($mail) => $mail->hasTo($user->email));
-    Illuminate\Support\Facades\Mail::assertSent(App\Mail\OrderPlaced::class, fn ($mail) => $mail->hasTo(config('packages.admin_email')));
+    Mail::assertSent(OrderPlaced::class, 2);
+    Mail::assertSent(OrderPlaced::class, fn ($mail) => $mail->hasTo($user->email));
+    Mail::assertSent(OrderPlaced::class, fn ($mail) => $mail->hasTo(config('packages.admin_email')));
 });
 
 test('owners can download their invoice, strangers cannot', function () {
@@ -486,7 +506,7 @@ test('checkout offers a free subdomain captured on the order', function () {
 
 test('checkout rejects taken and reserved subdomain labels', function () {
     $user = User::factory()->create();
-    App\Models\WebsiteDomain::create([
+    WebsiteDomain::create([
         'hosted_website_id' => makeWebsite($user)->id,
         'user_id' => $user->id,
         'domain' => 'claimed.'.config('hosting.base_domain'),

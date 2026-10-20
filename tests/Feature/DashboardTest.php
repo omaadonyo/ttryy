@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Notifications\SiteAlert;
 
 test('guests are redirected to the login page', function () {
     $response = $this->get(route('dashboard'));
@@ -73,8 +74,9 @@ test('analytics page renders charts', function () {
         ->assertSee('id="an-tokens"', false);
 });
 
-test('notifications are tracked and can be opened', function () {    $user = User::factory()->create();
-    $user->notify(new App\Notifications\SiteAlert('Hello', 'World', route('dashboard'), 'info'));
+test('notifications are tracked and can be opened', function () {
+    $user = User::factory()->create();
+    $user->notify(new SiteAlert('Hello', 'World', route('dashboard'), 'info'));
 
     expect($user->unreadNotifications()->count())->toBe(1);
 
@@ -85,7 +87,7 @@ test('notifications are tracked and can be opened', function () {    $user = Use
 
     expect($user->fresh()->unreadNotifications()->count())->toBe(0);
 
-    $user->notify(new App\Notifications\SiteAlert('Again', 'Body'));
+    $user->notify(new SiteAlert('Again', 'Body'));
     $this->actingAs($user)->post(route('notifications.read-all'))->assertRedirect();
 
     expect($user->fresh()->unreadNotifications()->count())->toBe(0);
@@ -112,7 +114,7 @@ test('new users get a skippable onboarding tour of what to expect', function () 
 
 test('notification center lists with tabs and palette is present', function () {
     $user = User::factory()->create();
-    $user->notify(new App\Notifications\SiteAlert('Center check', 'Body', null, 'order'));
+    $user->notify(new SiteAlert('Center check', 'Body', null, 'order'));
 
     $this->actingAs($user)->get(route('notifications.index'))
         ->assertOk()
@@ -128,4 +130,16 @@ test('notification center lists with tabs and palette is present', function () {
         ->assertSee('id="palette-overlay"', false)
         ->assertSee('View all notifications', false)
         ->assertSee('Notifications', false);
+});
+
+test('the header bell dropdown lists recent notifications with an unread badge', function () {
+    $user = User::factory()->create();
+    $user->notify(new SiteAlert('Payment received — TTRYY-1', 'UGX 10,000 received', route('packages.index'), 'payment'));
+
+    $this->actingAs($user)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('Payment received — TTRYY-1', false)
+        ->assertSee('UGX 10,000 received', false)
+        ->assertSee('1 new', false)
+        ->assertSee('Mark all read', false);
 });

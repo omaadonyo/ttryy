@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\LaunchSignup;
+use App\Models\PackageOrder;
+use App\Models\User;
+
 test('returns a successful response', function () {
     $response = $this->get(route('home'));
 
@@ -18,11 +22,13 @@ test('landing header has profile menu, no whatsapp link, and legal pages exist',
         ->assertSee('Typical designer</th>', false)
         ->assertSee('id="edge-rails"', false)
         ->assertSee('edge-hline', false)
+        ->assertSee('id="hero3d"', false)
+        ->assertSee('three@0.160.0', false)
         ->assertSee('lg:grid-cols-2 lg:items-start', false)
         ->assertDontSee('ttryy: Yes', false)
         ->assertDontSee('Who does what', false);
 
-    $user = App\Models\User::factory()->create();
+    $user = User::factory()->create();
     $this->actingAs($user)->get(route('home'))
         ->assertOk()
         ->assertSee('id="landing-menu"', false)
@@ -37,7 +43,7 @@ test('landing header has profile menu, no whatsapp link, and legal pages exist',
 });
 
 test('scraper results use a uniform fixed height', function () {
-    $user = App\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     $this->actingAs($user)->get(route('scraper.index'))
         ->assertOk()
@@ -68,13 +74,13 @@ test('launch campaign page sells the 10k offer with form, countdown and terms', 
         'terms' => '1',
     ])->assertRedirect();
 
-    $signup = App\Models\LaunchSignup::where('phone', '+256700000099')->first();
+    $signup = LaunchSignup::where('phone', '+256700000099')->first();
     expect($signup)->not->toBeNull()->and($signup->status)->toBe('new');
 });
 
 test('admins manage launch signups and create accounts', function () {
-    $admin = App\Models\User::factory()->create(['is_admin' => true]);
-    $signup = App\Models\LaunchSignup::create([
+    $admin = User::factory()->create(['is_admin' => true]);
+    $signup = LaunchSignup::create([
         'name' => 'Hope Founder', 'phone' => '+256700000099', 'email' => 'hope.founder@example.com',
         'idea_name' => 'FarmFresh', 'idea' => 'An app connecting farmers directly to buyers in Kampala markets.',
     ]);
@@ -92,10 +98,10 @@ test('admins manage launch signups and create accounts', function () {
     $signup->refresh();
     expect($signup->status)->toBe('converted')->and($signup->user_id)->not->toBeNull();
 
-    $user = App\Models\User::find($signup->user_id);
+    $user = User::find($signup->user_id);
     expect($user->email)->toContain('hope');
 
-    $order = App\Models\PackageOrder::where('user_id', $user->id)->first();
+    $order = PackageOrder::where('user_id', $user->id)->first();
     expect($order)->not->toBeNull()
         ->and($order->total_amount)->toBe(10000)
         ->and($order->status)->toBe('pending')
@@ -103,8 +109,8 @@ test('admins manage launch signups and create accounts', function () {
 });
 
 test('launch account creation carries an already-paid fee onto the order', function () {
-    $admin = App\Models\User::factory()->create(['is_admin' => true]);
-    $signup = App\Models\LaunchSignup::create([
+    $admin = User::factory()->create(['is_admin' => true]);
+    $signup = LaunchSignup::create([
         'name' => 'Paid Founder', 'phone' => '+256700000098', 'email' => 'paid.founder@example.com',
         'idea_name' => 'PaidFresh', 'idea' => 'An app connecting farmers directly to buyers in Kampala markets.',
         'payment_status' => 'paid', 'paid_amount' => 10000, 'gateway_tx_id' => 'iotec-tx-1',
@@ -112,15 +118,15 @@ test('launch account creation carries an already-paid fee onto the order', funct
 
     $this->actingAs($admin)->post(route('admin.launch.create-user', $signup))->assertRedirect();
 
-    $order = App\Models\PackageOrder::where('user_id', $signup->fresh()->user_id)->first();
+    $order = PackageOrder::where('user_id', $signup->fresh()->user_id)->first();
     expect($order->status)->toBe('paid')
         ->and($order->paid_amount)->toBe(10000)
         ->and($order->payment_method)->toBe('iotec');
 });
 
 test('admins credit cash and mobile money against orders', function () {
-    $admin = App\Models\User::factory()->create(['is_admin' => true]);
-    $owner = App\Models\User::factory()->create();
+    $admin = User::factory()->create(['is_admin' => true]);
+    $owner = User::factory()->create();
     $order = makeOrder(['user_id' => $owner->id, 'status' => 'submitted', 'paid_amount' => 0]);
 
     $this->actingAs($admin)->patch(route('admin.orders.payment', $order), [

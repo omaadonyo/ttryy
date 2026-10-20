@@ -102,6 +102,12 @@
                                 </form>
                                 <span class="mx-1 text-zinc-300 dark:text-zinc-600">·</span>
                                 @endif
+                                <form method="POST" action="{{ route('admin.hosting.websites.destroy', $w) }}" class="inline" onsubmit="return confirm('Move {{ $w->name }} to trash? Its domains go with it and it can be restored.')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-xs font-bold text-red-600 hover:underline dark:text-red-400">Delete</button>
+                                </form>
+                                <span class="mx-1 text-zinc-300 dark:text-zinc-600">·</span>
                                 <a href="{{ route('admin.hosting.websites.show', $w) }}" class="text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Open →</a>
                                 @endif
                             </td>

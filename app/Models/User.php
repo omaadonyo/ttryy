@@ -7,7 +7,10 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -26,15 +29,16 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string|null $two_factor_recovery_codes
  * @property Carbon|null $two_factor_confirmed_at
  * @property string|null $remember_token
+ * @property Carbon|null $suspended_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'active_business_id'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, PasskeyAuthenticatable, SoftDeletes, TwoFactorAuthenticatable;
 
     /**
      * Get the attributes that should be cast.
@@ -47,7 +51,37 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'token_balance' => 'integer',
+            'balance_ugx' => 'integer',
+            'suspended_at' => 'datetime',
+            'last_login_at' => 'datetime',
         ];
+    }
+
+    /** Businesses this user is a member of (owner or staff). */
+    public function businesses(): BelongsToMany
+    {
+        return $this->belongsToMany(Business::class)->withPivot('role')->withTimestamps();
+    }
+
+    /** Businesses this user owns. */
+    public function ownedBusinesses(): HasMany
+    {
+        return $this->hasMany(Business::class, 'owner_id');
+    }
+
+    public function activeBusiness(): BelongsTo
+    {
+        return $this->belongsTo(Business::class, 'active_business_id');
+    }
+
+    /**
+     * A suspended account is blocked from the dashboard until an
+     * administrator reactivates it.
+     */
+    public function isSuspended(): bool
+    {
+        return $this->suspended_at !== null;
     }
 
     /**
@@ -94,6 +128,32 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     public function tokenTransactions(): HasMany
     {
         return $this->hasMany(TokenTransaction::class);
+    }
+
+    /**
+     * Cash wallet ledger (top-ups, order payments, refunds).
+     *
+     * @return HasMany<WalletTransaction, $this>
+     */
+    public function walletTransactions(): HasMany
+    {
+        return $this->hasMany(WalletTransaction::class);
+    }
+
+    /**
+     * @return HasMany<WalletTopup, $this>
+     */
+    public function walletTopups(): HasMany
+    {
+        return $this->hasMany(WalletTopup::class);
+    }
+
+    /**
+     * @return HasMany<OrderPayment, $this>
+     */
+    public function orderPayments(): HasMany
+    {
+        return $this->hasMany(OrderPayment::class);
     }
 
     /**

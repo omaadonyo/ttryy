@@ -11,7 +11,7 @@ class BtItem extends Model
     protected $table = 'bt_items';
 
     protected $fillable = [
-        'user_id', 'name', 'sku', 'unit', 'cost_price', 'sale_price',
+        'user_id', 'business_id', 'name', 'sku', 'unit', 'cost_price', 'sale_price',
         'stock', 'reorder_level',
     ];
 
@@ -28,6 +28,11 @@ class BtItem extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function business(): BelongsTo
+    {
+        return $this->belongsTo(Business::class);
     }
 
     public function moves(): HasMany

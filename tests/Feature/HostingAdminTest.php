@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\HostedWebsite;
+use App\Models\HostingAuditLog;
 use App\Models\HostingCommand;
 use App\Models\User;
 
@@ -20,7 +21,10 @@ test('admins can view the whole hosting estate', function () {
 
     $this->actingAs($admin)->get(route('admin.hosting.dashboard'))
         ->assertOk()
-        ->assertSee('Platform usage', false);
+        ->assertSee('Platform usage', false)
+        ->assertSee('id="admin-users-chart"', false)
+        ->assertSee('Tokens sold', false)
+        ->assertSee('Campaigns sent', false);
 
     $this->actingAs($admin)->get(route('admin.hosting.websites'))
         ->assertOk()
@@ -45,7 +49,7 @@ test('suspension takes effect immediately even when the service cannot be reache
         ->and($command->error)->toContain('not configured');
 
     expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_SUSPENDED);
-    expect(App\Models\HostingAuditLog::where('action', 'suspension.requested')->count())->toBe(1);
+    expect(HostingAuditLog::where('action', 'suspension.requested')->count())->toBe(1);
 });
 
 test('failed operations keep the immediate status and can be retried', function () {
@@ -74,7 +78,7 @@ test('audit log records admin actions with safe metadata', function () {
 
     $this->actingAs($admin)->post(route('admin.hosting.websites.health', $site))->assertRedirect();
 
-    $log = App\Models\HostingAuditLog::where('action', 'health.manual_check')->first();
+    $log = HostingAuditLog::where('action', 'health.manual_check')->first();
     expect($log)->not->toBeNull()
         ->and($log->actor_type)->toBe('admin')
         ->and($log->operation_id)->not->toBeNull();

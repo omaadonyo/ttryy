@@ -1,8 +1,10 @@
 <?php
 
 use App\Models\HostedWebsite;
+use App\Models\HostingAuditLog;
 use App\Models\HostingPlan;
 use App\Models\User;
+use App\Models\WebsiteDailyAnalytics;
 use App\Models\WebsiteDomain;
 use Illuminate\Support\Str;
 
@@ -21,7 +23,8 @@ function makeWebsite(User $user, array $overrides = []): HostedWebsite
     ], $overrides));
 }
 
-test('clients can view their own websites but not others', function () {    $mine = User::factory()->create();
+test('clients can view their own websites but not others', function () {
+    $mine = User::factory()->create();
     $theirs = User::factory()->create();
     $site = makeWebsite($mine, ['name' => 'Mine Site']);
     $other = makeWebsite($theirs, ['name' => 'Other Site']);
@@ -55,66 +58,53 @@ test('website registration creates records, subdomain and audit trail', function
         ->and($website->primary_domain_id)->not->toBeNull()
         ->and($website->commands()->where('action', 'provision')->count())->toBe(1);
 
-    expect(App\Models\HostingAuditLog::where('action', 'website.registered')->count())->toBe(1);
+    expect(HostingAuditLog::where('action', 'website.registered')->count())->toBe(1);
     expect($user->fresh()->unreadNotifications()->count())->toBe(1);
 
     $response->assertRedirect(route('hosting.show', $website));
 });
 
 test('duplicate and reserved subdomains are rejected', function () {
-    $user = User::factory()->create();
-    $website = makeWebsite($user);
+    $admin = User::factory()->create(['is_admin' => true]);
+    $website = makeWebsite(User::factory()->create());
 
     WebsiteDomain::create([
-        'hosted_website_id' => $website->id, 'user_id' => $user->id,
+        'hosted_website_id' => $website->id, 'user_id' => $website->user_id,
         'domain' => 'taken.'.config('hosting.base_domain'), 'type' => 'subdomain',
         'verification' => 'verified',
     ]);
 
-    $this->actingAs($user)->post(route('hosting.subdomains.store', $website), ['label' => 'taken'])
+    $this->actingAs($admin)->post(route('admin.hosting.domains.subdomain', $website), ['label' => 'taken'])
         ->assertSessionHasErrors('label');
 
-    $this->actingAs($user)->post(route('hosting.subdomains.store', $website), ['label' => 'admin'])
+    $this->actingAs($admin)->post(route('admin.hosting.domains.subdomain', $website), ['label' => 'admin'])
         ->assertSessionHasErrors('label');
 
-    $this->actingAs($user)->post(route('hosting.subdomains.store', $website), ['label' => 'BAD LABEL!!'])
+    $this->actingAs($admin)->post(route('admin.hosting.domains.subdomain', $website), ['label' => 'BAD LABEL!!'])
         ->assertSessionHasErrors('label');
 
-    $this->actingAs($user)->post(route('hosting.subdomains.store', $website), ['label' => 'brand-new-label'])
+    $this->actingAs($admin)->post(route('admin.hosting.domains.subdomain', $website), ['label' => 'brand-new-label'])
         ->assertRedirect();
     expect(WebsiteDomain::where('domain', 'brand-new-label.'.config('hosting.base_domain'))->exists())->toBeTrue();
 });
 
-test('unauthorized domain modifications are rejected', function () {
-    $mine = User::factory()->create();
-    $theirs = User::factory()->create();
-    $mySite = makeWebsite($mine);
-    $theirSite = makeWebsite($theirs);
-    $theirDomain = WebsiteDomain::create([
-        'hosted_website_id' => $theirSite->id, 'user_id' => $theirs->id,
+test('clients cannot mutate domains — management is admin-only', function () {
+    $owner = User::factory()->create();
+    $site = makeWebsite($owner);
+    $domain = WebsiteDomain::create([
+        'hosted_website_id' => $site->id, 'user_id' => $owner->id,
         'domain' => 'theirs.'.config('hosting.base_domain'), 'type' => 'subdomain',
         'verification' => 'verified',
     ]);
 
-    // Cross-user: 403.
-    $this->actingAs($mine)->delete(route('hosting.domains.destroy', [$mySite, $theirDomain]))
-        ->assertForbidden();
+    // The old client mutation endpoints are gone — the owner gets 404.
+    $this->actingAs($owner)->post('/dashboard/hosting/'.$site->id.'/subdomains', ['label' => 'new'])
+        ->assertStatus(404);
+    $this->actingAs($owner)->delete('/dashboard/hosting/'.$site->id.'/domains/'.$domain->id)
+        ->assertStatus(404);
 
-    // Cross-website even for the same owner: 404.
-    $myOther = makeWebsite($mine);
-    $this->actingAs($mine)->post(route('hosting.domains.verify', [$myOther, $theirDomain]))
-        ->assertStatus(403);
-
-    // Primary domains cannot be deleted.
-    $primary = WebsiteDomain::create([
-        'hosted_website_id' => $mySite->id, 'user_id' => $mine->id,
-        'domain' => 'primary.'.config('hosting.base_domain'), 'type' => 'subdomain',
-        'is_primary' => true, 'verification' => 'verified',
-    ]);
-    $mySite->forceFill(['primary_domain_id' => $primary->id])->save();
-
-    $this->actingAs($mine)->delete(route('hosting.domains.destroy', [$mySite, $primary]))
-        ->assertForbidden();
+    // Clients keep read-only visibility of their domains.
+    $this->actingAs($owner)->get(route('hosting.domains', $site))->assertOk();
 });
 
 test('analytics pages and exports are scoped to the owner', function () {
@@ -123,7 +113,7 @@ test('analytics pages and exports are scoped to the owner', function () {
     $site = makeWebsite($mine);
     $other = makeWebsite($theirs);
 
-    App\Models\WebsiteDailyAnalytics::create([
+    WebsiteDailyAnalytics::create([
         'hosted_website_id' => $other->id, 'date' => now()->toDateString(),
         'uniques' => 99, 'visits' => 100, 'pageviews' => 101,
     ]);
@@ -157,7 +147,7 @@ test('hosting index renders with renewal dates set', function () {
 
 test('deleting a website trashes it with domains and restores cleanly', function () {
     $user = User::factory()->create();
-    $site = makeWebsite($user, ['name' => 'Trash Site', 'status' => App\Models\HostedWebsite::STATUS_FAILED]);
+    $site = makeWebsite($user, ['name' => 'Trash Site', 'status' => HostedWebsite::STATUS_FAILED]);
     $domain = WebsiteDomain::create([
         'hosted_website_id' => $site->id, 'user_id' => $user->id,
         'domain' => 'trashme.'.config('hosting.base_domain'), 'type' => 'subdomain',
@@ -166,7 +156,7 @@ test('deleting a website trashes it with domains and restores cleanly', function
 
     $this->actingAs($user)->delete(route('hosting.destroy', $site))->assertRedirect();
 
-    expect(App\Models\HostedWebsite::where('id', $site->id)->exists())->toBeFalse();
+    expect(HostedWebsite::where('id', $site->id)->exists())->toBeFalse();
     $this->assertSoftDeleted('hosted_websites', ['id' => $site->id]);
     $this->assertSoftDeleted('website_domains', ['id' => $domain->id]);
 
@@ -181,20 +171,20 @@ test('deleting a website trashes it with domains and restores cleanly', function
 
     $this->actingAs($user)->post(route('hosting.restore', $site->id))->assertRedirect();
 
-    expect(App\Models\HostedWebsite::where('id', $site->id)->exists())->toBeTrue();
-    expect(App\Models\WebsiteDomain::where('id', $domain->id)->exists())->toBeTrue();
+    expect(HostedWebsite::where('id', $site->id)->exists())->toBeTrue();
+    expect(WebsiteDomain::where('id', $domain->id)->exists())->toBeTrue();
 });
 
 test('explicit domain removal stays permanent', function () {
-    $user = User::factory()->create();
-    $site = makeWebsite($user);
+    $admin = User::factory()->create(['is_admin' => true]);
+    $site = makeWebsite(User::factory()->create());
     $domain = WebsiteDomain::create([
-        'hosted_website_id' => $site->id, 'user_id' => $user->id,
+        'hosted_website_id' => $site->id, 'user_id' => $site->user_id,
         'domain' => 'gone.'.config('hosting.base_domain'), 'type' => 'subdomain',
         'verification' => 'verified',
     ]);
 
-    $this->actingAs($user)->delete(route('hosting.domains.destroy', [$site, $domain]))->assertRedirect();
+    $this->actingAs($admin)->delete(route('admin.hosting.domains.destroy', [$site, $domain]))->assertRedirect();
 
-    expect(App\Models\WebsiteDomain::withTrashed()->where('id', $domain->id)->exists())->toBeFalse();
+    expect(WebsiteDomain::withTrashed()->where('id', $domain->id)->exists())->toBeFalse();
 });

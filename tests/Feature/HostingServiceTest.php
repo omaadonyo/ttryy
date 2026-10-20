@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\HostedWebsite;
 use App\Models\HostingCommand;
 use App\Models\User;
 use App\Services\Hosting\Service\ServiceCommandProcessor;
@@ -87,11 +86,11 @@ test('exact replays are accepted but tampered replays fail', function () {
 
     // Idempotency at command level: the same operation uuid can never
     // create two command rows.
-    App\Models\HostingCommand::create([
+    HostingCommand::create([
         'uuid' => $meta['nonce'], 'hosted_website_id' => $site->id,
         'action' => 'suspend', 'state' => 'succeeded',
     ]);
-    expect(App\Models\HostingCommand::where('uuid', $meta['nonce'])->count())->toBe(1);
+    expect(HostingCommand::where('uuid', $meta['nonce'])->count())->toBe(1);
 });
 
 test('cross-website commands are rejected', function () {
@@ -127,8 +126,12 @@ test('responses never leak secrets', function () {
 test('service processor suspends and restores idempotently without destroying data', function () {
     $state = 'active';
     $files = ['content' => 'precious client data'];
-    $read = function () use (&$state) { return $state; };
-    $write = function ($next) use (&$state) { $state = $next; };
+    $read = function () use (&$state) {
+        return $state;
+    };
+    $write = function ($next) use (&$state) {
+        $state = $next;
+    };
 
     $ack = ServiceCommandProcessor::execute(
         ['action' => 'suspend', 'operation_id' => 'op-1'], $read, $write);

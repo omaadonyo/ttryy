@@ -1,10 +1,14 @@
 <x-layouts::app :title="__('Wallet')">
     @include('partials.toast')
     <div class="flex w-full flex-col gap-5">
-        <x-page-head title="Wallet" sub="Top up tokens and spend them on AI messages, group access and more.">
+        <x-page-head title="Wallet" sub="Your account balance pays subscriptions. Tokens power AI messages, group access and more.">
             <x-slot:actions>
-                <div class="inline-flex items-center gap-2 rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-bold text-white dark:bg-white dark:text-zinc-950">
+                <div class="inline-flex items-center gap-2 rounded-full bg-brand-600 px-5 py-2.5 text-sm font-bold text-white">
                     <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+                    <span id="cash-balance-head">UGX {{ number_format($cashBalance) }}</span>
+                </div>
+                <div class="inline-flex items-center gap-2 rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-bold text-white dark:bg-white dark:text-zinc-950">
+                    <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
                     <span id="wallet-balance">{{ number_format($balance) }}</span>&nbsp;tokens
                 </div>
                 <button onclick="startTour_wallet()" class="btn-ghost btn-sm">Take tour</button>
@@ -12,12 +16,73 @@
         </x-page-head>
 
         @include('partials.tour', ['key' => 'wallet', 'steps' => [
+            ['target' => '#tour-cash', 'title' => 'Account balance', 'body' => 'Cash kept separate from tokens. Top it up and use it to pay your subscriptions instantly.'],
             ['target' => '#tour-topup', 'title' => 'Top up in seconds', 'body' => 'Pick a pack and pay with Mobile Money or card. Tokens land instantly after verification.'],
             ['target' => '#tour-flow', 'title' => 'Token flow', 'body' => 'Earned vs used per day for the last 30 days — spot heavy spending weeks.'],
             ['target' => '#tour-ledger', 'title' => 'Every token accounted for', 'body' => 'Full ledger with running balances, plus recent top-up receipts.'],
         ]])
 
         @include('partials.onboard', ['key' => 'wallet', 'title' => 'Tokens run the growth engine', 'body' => 'AI sales messages and community join-links spend tokens. Top up with Mobile Money or card — credit lands instantly after verification.', 'link' => route('marketing.index'), 'linkLabel' => 'Use tokens in marketing →'])
+
+        <div id="tour-cash" class="card card-pad">
+            <div class="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                    <h2 class="section-title">Account balance</h2>
+                    <p class="page-sub">Cash you can spend on subscriptions — separate from tokens. Pay any order from here.</p>
+                </div>
+                <div class="text-right">
+                    <p class="eyebrow">Balance</p>
+                    <p class="stat-num" id="cash-balance">UGX {{ number_format($cashBalance) }}</p>
+                </div>
+            </div>
+            <div class="mt-4 flex flex-wrap items-end gap-3">
+                <div class="w-52">
+                    <label class="text-xs font-semibold" for="cash-amount">Amount to top up (UGX)</label>
+                    <input id="cash-amount" type="number" min="1000" step="1000" value="10000" class="mt-1 w-full bg-white dark:bg-[#17171A] border border-zinc-200 dark:border-white/15 rounded-lg px-4 py-2 text-sm outline-none focus:border-brand-600 text-zinc-900 dark:text-white">
+                </div>
+                <button id="cash-topup" class="btn-brand">Top up balance</button>
+                <a href="{{ route('packages.index') }}" class="btn-ghost">Pay an order</a>
+            </div>
+            <div class="mt-3 flex flex-wrap gap-2">
+                @foreach([5000, 10000, 25000, 50000, 100000] as $amt)
+                <button type="button" class="cash-quick rounded-full border border-zinc-200 dark:border-white/15 px-3 py-1 text-xs font-bold text-zinc-600 hover:border-brand-600 hover:text-brand-700 dark:text-zinc-300" data-amt="{{ $amt }}">UGX {{ number_format($amt) }}</button>
+                @endforeach
+            </div>
+            <p id="cash-status" class="mt-3 hidden text-sm font-semibold"></p>
+
+            <div class="mt-5 grid gap-4 md:grid-cols-2">
+                <div>
+                    <h3 class="text-sm font-bold text-zinc-900 dark:text-white">Balance history</h3>
+                    @if($cashLedger->isEmpty())
+                    <p class="mt-2 text-sm text-zinc-500">No balance activity yet.</p>
+                    @else
+                    <ul class="mt-2 space-y-2 text-sm">
+                        @foreach($cashLedger as $tx)
+                        <li class="flex justify-between gap-2">
+                            <span class="min-w-0 truncate text-zinc-500">{{ $tx->created_at->format('d M') }} · {{ $tx->description }}</span>
+                            <span class="shrink-0 font-bold {{ $tx->type === 'credit' ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-900 dark:text-white' }}">{{ $tx->type === 'credit' ? '+' : '−' }}UGX {{ number_format($tx->amount) }}</span>
+                        </li>
+                        @endforeach
+                    </ul>
+                    @endif
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-zinc-900 dark:text-white">Recent top-ups</h3>
+                    @if($cashTopups->isEmpty())
+                    <p class="mt-2 text-sm text-zinc-500">No top-ups yet.</p>
+                    @else
+                    <ul class="mt-2 space-y-2 text-sm">
+                        @foreach($cashTopups as $t)
+                        <li class="flex justify-between gap-2">
+                            <span class="font-mono text-xs text-zinc-500">{{ $t->reference }}</span>
+                            <span class="font-bold">UGX {{ number_format($t->amount_ugx) }} ({{ $t->status }})</span>
+                        </li>
+                        @endforeach
+                    </ul>
+                    @endif
+                </div>
+            </div>
+        </div>
 
         <div id="tour-topup" class="card card-pad">
             <h2 class="section-title">Top up with Mobile Money or card</h2>
@@ -131,6 +196,49 @@ document.querySelectorAll('[data-topup]').forEach(b => b.addEventListener('click
   }catch(e){ status.textContent = e.message || 'Top-up failed.'; toast(e.message || 'Top-up failed.', 'danger'); }
   b.disabled = false;
 }));
+document.querySelectorAll('.cash-quick').forEach(q => q.addEventListener('click', () => {
+  const input = document.getElementById('cash-amount'); if(input) input.value = q.dataset.amt;
+}));
+const cashBtn = document.getElementById('cash-topup');
+if(cashBtn) cashBtn.addEventListener('click', async () => {
+  const status = document.getElementById('cash-status');
+  const input = document.getElementById('cash-amount');
+  const token = document.querySelector('meta[name="csrf-token"]')?.content || '';
+  const amount = parseInt(input.value, 10);
+  status.classList.remove('hidden');
+  if(!amount || amount < 1000){ status.textContent = 'Enter at least UGX 1,000.'; status.className = 'mt-3 text-sm font-semibold text-red-600'; return; }
+  cashBtn.disabled = true; status.textContent = 'Creating top-up…'; status.className = 'mt-3 text-sm font-semibold text-zinc-500';
+  try{
+    const res = await fetch("{{ route('wallet.topup-cash') }}", { method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'X-Requested-With': 'XMLHttpRequest' },
+      body: JSON.stringify({ amount }) });
+    const j = await res.json();
+    if(!res.ok) throw new Error(j.message || 'Top-up failed.');
+    @if(config('services.flutterwave.public_key'))
+    if(typeof FlutterwaveCheckout === 'undefined') throw new Error('Payment popup failed to load. Check your connection.');
+    FlutterwaveCheckout({
+      public_key: j.public_key, tx_ref: j.reference + '-' + Date.now(), amount: j.amount_ugx, currency: 'UGX',
+      payment_options: 'mobilemoney,card', customer: { email: j.email, name: j.name },
+      customizations: { title: 'ttryy', description: 'Wallet top-up ' + j.reference + ' (UGX ' + j.amount_ugx + ')' },
+      callback: async resp => {
+        try{
+          const v = await fetch("{{ route('wallet.verify-cash') }}", { method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ transaction_id: resp.transaction_id || resp.id, tx_ref: j.reference }) });
+          const r = await v.json();
+          if(r.redirect){ flashToast('Balance topped up.'); window.location.href = r.redirect; }
+          else { status.textContent = r.message || 'Verification failed.'; toast(r.message || 'Verification failed.', 'danger'); }
+        }catch(e){ status.textContent = 'Verification failed. Contact support with reference ' + j.reference; toast('Verification failed. Contact support with reference ' + j.reference + '.', 'danger'); }
+      },
+      onclose: () => location.reload(),
+    });
+    @else
+    status.textContent = 'Online top-up is not connected yet — contact ttryy on WhatsApp to top up manually.';
+    toast('Online top-up is not connected yet — contact ttryy on WhatsApp.', 'warning');
+    @endif
+  }catch(e){ status.textContent = e.message || 'Top-up failed.'; toast(e.message || 'Top-up failed.', 'danger'); }
+  cashBtn.disabled = false;
+});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>

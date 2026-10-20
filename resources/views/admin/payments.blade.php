@@ -56,6 +56,7 @@
                             <th>Due today</th>
                             <th>When</th>
                             <th>Status</th>
+                            <th class="text-right!">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,13 +71,30 @@
                             <td>
                                 @if($order->status === 'paid')
                                 <span class="pill-green">{{ $order->status }}</span>
+                                @elseif($order->status === 'refunded')
+                                <span class="pill-red">refunded</span>
                                 @else
                                 <span class="pill-amber">{{ $order->status }}</span>
                                 @endif
                             </td>
+                            <td class="text-right whitespace-nowrap">
+                                @if($order->status === 'paid' && !$order->isRefunded())
+                                <form method="POST" action="{{ route('admin.orders.refund', $order) }}" class="inline" onsubmit="return confirm('Refund UGX {{ number_format($order->paid_amount) }} on {{ $order->reference }}?')">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="text-xs font-bold text-red-600 hover:underline dark:text-red-400">Refund</button>
+                                </form>
+                                <span class="mx-1 text-zinc-300 dark:text-zinc-600">·</span>
+                                @endif
+                                <form method="POST" action="{{ route('admin.orders.destroy', $order) }}" class="inline" onsubmit="return confirm('Delete payment record {{ $order->reference }}? This cannot be undone.')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-xs font-bold text-zinc-500 hover:underline dark:text-zinc-400">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                         @empty
-                        <tr><td colspan="7"><x-empty-state icon="payments" title="No payments yet" message="Verified collections and manual Mobile Money claims will appear here." /></td></tr>
+                        <tr><td colspan="8"><x-empty-state icon="payments" title="No payments yet" message="Verified collections and manual Mobile Money claims will appear here." /></td></tr>
                         @endforelse
                     </tbody>
                 </table>

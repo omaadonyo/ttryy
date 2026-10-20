@@ -7,8 +7,10 @@ use App\Models\HostedWebsite;
 use App\Models\HostingAuditLog;
 use App\Models\HostingCommand;
 use App\Models\PackageOrder;
+use App\Notifications\SiteAlert;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Ties hosting access to the order billing rhythm (daily / weekly /
@@ -137,11 +139,14 @@ class HostingSubscription
      */
     public static function suspendOverdue(): int
     {
+        $grace = max(0, (int) config('packages.grace_days', 0));
+        $cutoff = now()->subDays($grace);
+
         $suspended = 0;
 
         $sites = HostedWebsite::where('status', HostedWebsite::STATUS_ACTIVE)
             ->whereNotNull('next_renewal_at')
-            ->where('next_renewal_at', '<', now())
+            ->where('next_renewal_at', '<', $cutoff)
             ->get();
 
         foreach ($sites as $website) {
@@ -190,5 +195,56 @@ class HostingSubscription
         }
 
         return $suspended;
+    }
+
+    /**
+     * Nudge customers whose next payment is approaching or already overdue.
+     * Sends at most one reminder per website per day, and only on the
+     * configured reminder days (plus anything overdue).
+     *
+     * @return int number of reminders sent
+     */
+    public static function remindDue(): int
+    {
+        $reminders = array_map('intval', (array) config('packages.reminder_days', []));
+        $sent = 0;
+
+        $sites = HostedWebsite::where('status', HostedWebsite::STATUS_ACTIVE)
+            ->whereNotNull('next_renewal_at')
+            ->with('user')
+            ->get();
+
+        foreach ($sites as $website) {
+            if (! $website->user) {
+                continue;
+            }
+
+            $daysLeft = (int) now()->startOfDay()->diffInDays($website->next_renewal_at->startOfDay(), false);
+
+            if ($daysLeft > 0 && ! in_array($daysLeft, $reminders, true)) {
+                continue;
+            }
+
+            $key = 'hosting-renewal-reminder:'.$website->id.':'.now()->toDateString();
+
+            if (! Cache::add($key, true, now()->addHours(20))) {
+                continue;
+            }
+
+            $when = $daysLeft < 0
+                ? 'overdue by '.abs($daysLeft).' day(s)'
+                : ($daysLeft === 0 ? 'due today' : 'due in '.$daysLeft.' day(s)');
+
+            $website->user->notify(new SiteAlert(
+                'Website renewal '.($daysLeft < 0 ? 'overdue' : 'coming up'),
+                "{$website->name}: payment {$when}. Settle it to keep the site online.",
+                route('hosting.billing', $website),
+                'payment'
+            ));
+
+            $sent++;
+        }
+
+        return $sent;
     }
 }

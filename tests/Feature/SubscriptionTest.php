@@ -1,43 +1,9 @@
 <?php
 
-use App\Models\PackageOrder;
+use App\Models\HostedWebsite;
+use App\Models\SavedContact;
 use App\Models\User;
-use Illuminate\Support\Str;
-
-function makeOrder(array $overrides = []): PackageOrder
-{
-    $dates = [];
-    foreach (['created_at', 'updated_at'] as $key) {
-        if (array_key_exists($key, $overrides)) {
-            $dates[$key] = $overrides[$key];
-            unset($overrides[$key]);
-        }
-    }
-
-    $order = PackageOrder::create(array_merge([
-        'user_id' => User::factory()->create()->id,
-        'reference' => 'TTRYY-'.strtoupper(Str::random(6)),
-        'package' => 'GROW',
-        'billing_frequency' => 'monthly',
-        'domain' => 'budget',
-        'duration_months' => 12,
-        'periods' => 12,
-        'amount_per_period' => 30000,
-        'domain_fee' => 29000,
-        'total_amount' => 389000,
-        'due_today' => 59000,
-        'status' => 'paid',
-        'business_name' => 'Test Biz',
-        'phone' => '+256 700 000000',
-    ], $overrides));
-
-    if ($dates !== []) {
-        $order->forceFill($dates)->save();
-        $order->refresh();
-    }
-
-    return $order;
-}
+use App\Services\Hosting\HostingSubscription;
 
 test('paid orders report expiry, days left and progress', function () {
     $order = makeOrder(['created_at' => now()->subMonths(3), 'updated_at' => now()->subMonths(3)]);
@@ -120,7 +86,7 @@ test('members can save scraped contacts and view them', function () {
         ],
     ])->assertOk()->assertJsonPath('saved', 2);
 
-    expect(App\Models\SavedContact::count())->toBe(2);
+    expect(SavedContact::count())->toBe(2);
 
     $this->actingAs($user)->get(route('contacts.index'))
         ->assertOk()
@@ -130,18 +96,18 @@ test('members can save scraped contacts and view them', function () {
 test('saved contacts belong to their owner only', function () {
     $owner = User::factory()->create();
     $intruder = User::factory()->create();
-    $contact = App\Models\SavedContact::create([
+    $contact = SavedContact::create([
         'user_id' => $owner->id, 'niche' => 'Construction', 'name' => 'X Ltd',
     ]);
 
     $this->actingAs($intruder)->delete(route('contacts.destroy', $contact))->assertForbidden();
     $this->actingAs($owner)->delete(route('contacts.destroy', $contact))->assertRedirect();
-    expect(App\Models\SavedContact::count())->toBe(0);
+    expect(SavedContact::count())->toBe(0);
 });
 
 test('contacts export downloads a CSV', function () {
     $user = User::factory()->create();
-    App\Models\SavedContact::create([
+    SavedContact::create([
         'user_id' => $user->id, 'niche' => 'Construction', 'name' => 'Nile Builders Ltd',
         'contact' => 'Brian Mukasa', 'phone' => '+256 772 123 456',
     ]);
@@ -153,7 +119,7 @@ test('contacts export downloads a CSV', function () {
 
 test('marketing tool lists saved contacts for outreach', function () {
     $user = User::factory()->create();
-    App\Models\SavedContact::create([
+    SavedContact::create([
         'user_id' => $user->id, 'niche' => 'Construction', 'name' => 'Nile Builders Ltd',
         'contact' => 'Brian Mukasa', 'phone' => '+256 772 123 456',
     ]);
@@ -184,7 +150,7 @@ test('renewal covers as many periods as the amount paid', function () {
         'total_amount' => 255500, 'due_today' => 700, 'paid_amount' => 2100,
     ]);
 
-    expect(App\Services\Hosting\HostingSubscription::periodsCovered($daily))->toBe(3);
+    expect(HostingSubscription::periodsCovered($daily))->toBe(3);
 
     $first = makeOrder([
         'billing_frequency' => 'monthly', 'domain' => 'budget',
@@ -192,7 +158,7 @@ test('renewal covers as many periods as the amount paid', function () {
     ]);
 
     // First payment consumes the one-time domain fee, then one month.
-    expect(App\Services\Hosting\HostingSubscription::periodsCovered($first))->toBe(1);
+    expect(HostingSubscription::periodsCovered($first))->toBe(1);
 
     $second = makeOrder([
         'billing_frequency' => 'monthly', 'domain' => 'budget', 'periods_covered' => 1,
@@ -200,11 +166,11 @@ test('renewal covers as many periods as the amount paid', function () {
     ]);
 
     // Later payments buy whole months with no fee haircut.
-    expect(App\Services\Hosting\HostingSubscription::periodsCovered($second))->toBe(3);
+    expect(HostingSubscription::periodsCovered($second))->toBe(3);
 
     $full = makeOrder(['billing_frequency' => 'full', 'periods' => 1, 'paid_amount' => 250000]);
 
-    expect(App\Services\Hosting\HostingSubscription::periodsCovered($full))->toBe(1);
+    expect(HostingSubscription::periodsCovered($full))->toBe(1);
 
     $capped = makeOrder([
         'billing_frequency' => 'weekly', 'periods' => 52, 'periods_covered' => 51,
@@ -212,13 +178,13 @@ test('renewal covers as many periods as the amount paid', function () {
     ]);
 
     // Never extends past the plan even when overpaid.
-    expect(App\Services\Hosting\HostingSubscription::periodsCovered($capped))->toBe(1);
+    expect(HostingSubscription::periodsCovered($capped))->toBe(1);
 });
 
 test('recorded payments extend renewal by covered periods and restore overdue sites', function () {
     $owner = User::factory()->create();
     $site = makeWebsite($owner, [
-        'status' => App\Models\HostedWebsite::STATUS_SUSPENDED,
+        'status' => HostedWebsite::STATUS_SUSPENDED,
         'suspension_reason' => 'Overdue payment',
         'next_renewal_at' => now()->subDays(5),
     ]);
@@ -230,9 +196,9 @@ test('recorded payments extend renewal by covered periods and restore overdue si
         'total_amount' => 255500, 'due_today' => 700, 'paid_amount' => 2100,
     ]);
 
-    App\Services\Hosting\HostingSubscription::recordPayment($order);
+    HostingSubscription::recordPayment($order);
 
-    expect($site->fresh()->status)->toBe(App\Models\HostedWebsite::STATUS_ACTIVE)
+    expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_ACTIVE)
         ->and($site->fresh()->suspension_reason)->toBeNull()
         ->and($site->fresh()->next_renewal_at->gt(now()->addDays(2)))->toBeTrue()
         ->and($order->fresh()->periods_covered)->toBe(3);
@@ -245,11 +211,11 @@ test('admins suspend and restore websites with immediate effect', function () {
 
     $this->actingAs($admin)->post(route('admin.hosting.websites.suspend', $site), ['reason' => 'Test'])
         ->assertRedirect();
-    expect($site->fresh()->status)->toBe(App\Models\HostedWebsite::STATUS_SUSPENDED);
+    expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_SUSPENDED);
 
     $this->actingAs($admin)->post(route('admin.hosting.websites.restore', $site))
         ->assertRedirect();
-    expect($site->fresh()->status)->toBe(App\Models\HostedWebsite::STATUS_ACTIVE)
+    expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_ACTIVE)
         ->and($site->fresh()->suspension_reason)->toBeNull();
 });
 
@@ -264,6 +230,6 @@ test('orders page shows paid, remaining and progress', function () {
     $this->actingAs($user)->get(route('packages.index'))
         ->assertOk()
         ->assertSee('Paid UGX 59,000', false)
-        ->assertSee('UGX '.number_format($left).' left', false)
+        ->assertSee('UGX '.number_format($left), false)
         ->assertSee('width:'.$pct.'%', false);
 });

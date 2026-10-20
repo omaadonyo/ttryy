@@ -15,12 +15,17 @@ class BtContact extends Model
     public const SUPPLIER = 'supplier';
 
     protected $fillable = [
-        'user_id', 'kind', 'name', 'phone', 'email', 'address', 'notes',
+        'user_id', 'business_id', 'kind', 'name', 'phone', 'email', 'address', 'notes',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function business(): BelongsTo
+    {
+        return $this->belongsTo(Business::class);
     }
 
     public function documents(): HasMany

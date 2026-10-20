@@ -13,6 +13,13 @@ return [
     // Full upfront payment always covers 12 months of the website running.
     'durations' => [3, 6, 12],
 
+    // Minimum first payment. The customer must pay at least this much, and
+    // enough to cover `min_first_days` at the package's per-day rate. The
+    // installment rate itself is derived so the package total is fully
+    // covered inside the chosen term (see CheckoutController::quote).
+    'min_first_payment' => 10000,
+    'min_first_days' => 10,
+
     // Domain options. The fee is a one-time payment, always due upfront
     // together with the first installment.
     'domains' => [
@@ -24,6 +31,16 @@ return [
 
     'frequencies' => ['full', 'monthly', 'weekly', 'daily'],
 
+    // Hosting billing behaviour. Payment can be spread right down to a daily
+    // rate across the plan term. A short grace period keeps a website online
+    // after the renewal date slips, and reminder_days lists how many days
+    // before the next due date the customer gets a nudge.
+    'grace_days' => (int) env('HOSTING_GRACE_DAYS', 3),
+    'reminder_days' => [7, 3, 1],
+
+    // The daily/weekly/monthly figures below are legacy marketing reference
+    // only. Installments are now derived from `price` across the term so the
+    // total is always covered (CheckoutController::quote).
     'packages' => [
         'START' => [
             'price' => 250000,

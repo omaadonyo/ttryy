@@ -66,6 +66,8 @@ test('fresh directory pulls cost tokens, cached repeats are free', function () {
 });
 
 test('broke users get a top-up prompt instead of a search', function () {
+    Http::fake(['www.yellowpages.co.ug/*' => Http::response(proSampleHtml(), 200)]);
+
     $user = proUser(0);
 
     $this->actingAs($user)->postJson('/dashboard/scraper/search', [

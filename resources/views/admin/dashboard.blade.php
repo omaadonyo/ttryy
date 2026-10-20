@@ -10,7 +10,6 @@
         @include('partials.tour', ['key' => 'admin', 'steps' => [
             ['target' => '#tour-aostats', 'title' => 'Business health', 'body' => 'Orders by status, verified collections, outstanding totals and registered users.'],
             ['target' => '#tour-aorev', 'title' => 'Money in motion', 'body' => 'Collected revenue against order volume per month — spot slow months fast.'],
-            ['target' => '#tour-aousage', 'title' => 'Platform usage', 'body' => 'Token economy, user growth, email volume and content stats — how the product is really used.'],
             ['target' => '#tour-aotable', 'title' => 'Latest orders', 'body' => 'Newest orders with customers and statuses. Full management lives under Orders.'],
         ]])
 
@@ -43,54 +42,13 @@
             <div class="mt-3 h-60"><canvas id="admin-rev-chart"></canvas></div>
         </div>
 
-        <div id="tour-aousage" class="card card-pad">
+        <div id="tour-aousage" class="hidden card card-pad">
             <div class="flex items-center justify-between gap-3 flex-wrap">
                 <div>
                     <h2 class="section-title">Platform usage</h2>
-                    <p class="page-sub">How the product is actually being used.</p>
+                    <p class="page-sub">Moved to the Hosting control screen.</p>
                 </div>
-                <span class="pill-brand">{{ $totalUsers }} users</span>
-            </div>
-            <div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-4">
-                <div class="rounded-xl border border-zinc-200/70 bg-zinc-50 p-3 dark:border-white/10 dark:bg-white/5">
-                    <p class="eyebrow">Tokens sold</p>
-                    <p class="font-display mt-1 text-[22px] leading-none font-extrabold tracking-tight">{{ number_format($usage['tokensSold']) }}</p>
-                </div>
-                <div class="rounded-xl border border-zinc-200/70 bg-zinc-50 p-3 dark:border-white/10 dark:bg-white/5">
-                    <p class="eyebrow">Tokens used</p>
-                    <p class="font-display mt-1 text-[22px] leading-none font-extrabold tracking-tight">{{ number_format($usage['tokensUsed']) }}</p>
-                </div>
-                <div class="rounded-xl border border-zinc-200/70 bg-zinc-50 p-3 dark:border-white/10 dark:bg-white/5">
-                    <p class="eyebrow">Tokens held</p>
-                    <p class="font-display mt-1 text-[22px] leading-none font-extrabold tracking-tight text-brand-700 dark:text-brand-300">{{ number_format($usage['tokensHeld']) }}</p>
-                </div>
-                <div class="rounded-xl border border-zinc-200/70 bg-zinc-50 p-3 dark:border-white/10 dark:bg-white/5">
-                    <p class="eyebrow">Top-up revenue</p>
-                    <p class="font-display mt-1 text-[22px] leading-none font-extrabold tracking-tight">UGX {{ number_format($usage['topupRevenue']) }}</p>
-                </div>
-            </div>
-            <div class="mt-4 h-52"><canvas id="admin-users-chart"></canvas></div>
-            <div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-4">
-                <div class="rounded-xl border border-zinc-200/70 bg-zinc-50 p-3 dark:border-white/10 dark:bg-white/5">
-                    <p class="eyebrow">Campaigns sent</p>
-                    <p class="font-display mt-1 text-[22px] leading-none font-extrabold tracking-tight">{{ number_format($usage['campaigns']) }}</p>
-                    <p class="mt-1 text-xs text-zinc-500">{{ number_format($usage['emailSent']) }} emails · {{ $usage['emailRate'] }}% opened</p>
-                </div>
-                <div class="rounded-xl border border-zinc-200/70 bg-zinc-50 p-3 dark:border-white/10 dark:bg-white/5">
-                    <p class="eyebrow">Prospects indexed</p>
-                    <p class="font-display mt-1 text-[22px] leading-none font-extrabold tracking-tight">{{ number_format($usage['prospectsIndexed']) }}</p>
-                    <p class="mt-1 text-xs text-zinc-500">Across directories</p>
-                </div>
-                <div class="rounded-xl border border-zinc-200/70 bg-zinc-50 p-3 dark:border-white/10 dark:bg-white/5">
-                    <p class="eyebrow">Contacts saved</p>
-                    <p class="font-display mt-1 text-[22px] leading-none font-extrabold tracking-tight">{{ number_format($usage['contactsSaved']) }}</p>
-                    <p class="mt-1 text-xs text-zinc-500">By all users</p>
-                </div>
-                <div class="rounded-xl border border-zinc-200/70 bg-zinc-50 p-3 dark:border-white/10 dark:bg-white/5">
-                    <p class="eyebrow">Groups listed</p>
-                    <p class="font-display mt-1 text-[22px] leading-none font-extrabold tracking-tight">{{ number_format($usage['groupsListed']) }}</p>
-                    <p class="mt-1 text-xs text-zinc-500">Active communities</p>
-                </div>
+                <a href="{{ route('admin.hosting.dashboard') }}" class="btn-ghost btn-sm">Open Hosting control →</a>
             </div>
         </div>
 
@@ -152,14 +110,6 @@
         y: { beginAtZero: true, ticks: { precision: 0 } },
         y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { precision: 0 } },
       } } });
-  const users = document.getElementById('admin-users-chart');
-  if(users) new Chart(users, { type: 'line',
-    data: { labels: @json($usage['signupLabels']),
-      datasets: [{ label: 'New users', data: @json($usage['signups']),
-        borderColor: '#9e005d', backgroundColor: 'rgba(158,0,93,.12)', fill: true, tension: .35, pointRadius: 3 }] },
-    options: { responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } } });
 })();
 </script>
 </x-layouts::app>

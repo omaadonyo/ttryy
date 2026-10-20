@@ -1,7 +1,14 @@
 <?php
 
+use App\Models\EmailCampaign;
+use App\Models\PackageOrder;
+use App\Models\ScrapedProspect;
+use App\Models\User;
 use App\Services\DirectoryScraper;
+use App\Services\Wallet;
+use Database\Seeders\MarketingSeeder;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 function sampleListingHtml(): string
 {
@@ -71,10 +78,10 @@ test('phone normalization handles Ugandan formats', function () {
 });
 
 test('scraper endpoint serves the local index without refetching', function () {
-    $user = App\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     for ($i = 1; $i <= 10; $i++) {
-        App\Models\ScrapedProspect::create([
+        ScrapedProspect::create([
             'niche' => 'Construction', 'name' => "Indexed Builders {$i} Ltd", 'category' => 'Construction',
             'phone' => '+2567000001'.str_pad((string) $i, 2, '0', STR_PAD_LEFT), 'district' => 'Kampala', 'verified' => true,
             'source' => 'yellow-pages', 'hash' => md5('indexed-'.$i), 'fetched_at' => now(),
@@ -96,15 +103,15 @@ test('live scrape results are persisted and deduplicated', function () {
         'https://www.yellowpages.co.ug/*' => Http::response(sampleListingHtml(), 200),
     ]);
 
-    $user = App\Models\User::factory()->create();
-    App\Services\Wallet::credit($user, 100, 'Test top-up');
+    $user = User::factory()->create();
+    Wallet::credit($user, 100, 'Test top-up');
 
     $first = $this->actingAs($user)->postJson(route('scraper.search'), [
         'niche' => 'Construction',
         'keyword' => 'construction',
     ])->assertOk();
 
-    expect(App\Models\ScrapedProspect::count())->toBe(2);
+    expect(ScrapedProspect::count())->toBe(2);
 
     // Second identical scrape must not duplicate rows.
     $this->actingAs($user)->postJson(route('scraper.search'), [
@@ -112,12 +119,13 @@ test('live scrape results are persisted and deduplicated', function () {
         'keyword' => 'construction',
     ])->assertOk();
 
-    expect(App\Models\ScrapedProspect::count())->toBe(2)
+    expect(ScrapedProspect::count())->toBe(2)
         ->and($first->json('cached'))->toBeFalse();
 });
 
-test('email campaigns send, track opens and report', function () {    Illuminate\Support\Facades\Mail::fake();
-    $user = App\Models\User::factory()->create();
+test('email campaigns send, track opens and report', function () {
+    Mail::fake();
+    $user = User::factory()->create();
 
     $send = $this->actingAs($user)->postJson(route('marketing.campaigns.send'), [
         'subject' => 'Hello {business}',
@@ -127,7 +135,7 @@ test('email campaigns send, track opens and report', function () {    Illuminate
 
     expect($send->json('sent'))->toBe(2)->and($send->json('failed'))->toBe(0);
 
-    $campaign = App\Models\EmailCampaign::first();
+    $campaign = EmailCampaign::first();
     expect($campaign->recipients()->count())->toBe(2);
 
     $token = $campaign->recipients()->first()->token;
@@ -142,10 +150,10 @@ test('email campaigns send, track opens and report', function () {    Illuminate
 });
 
 test('placing an order notifies the buyer and admins', function () {
-    $buyer = App\Models\User::factory()->create();
-    $admin = App\Models\User::factory()->create(['is_admin' => true]);
+    $buyer = User::factory()->create();
+    $admin = User::factory()->create(['is_admin' => true]);
 
-    $order = App\Models\PackageOrder::create([
+    $order = PackageOrder::create([
         'user_id' => $buyer->id, 'reference' => 'TTRYY-TEST01', 'package' => 'GROW',
         'billing_frequency' => 'monthly', 'domain' => 'none', 'duration_months' => 12,
         'periods' => 12, 'amount_per_period' => 30000, 'domain_fee' => 0,
@@ -161,18 +169,18 @@ test('placing an order notifies the buyer and admins', function () {
 });
 
 test('prospects catalogue filters by search, niche and verified', function () {
-    App\Models\ScrapedProspect::create([
+    ScrapedProspect::create([
         'niche' => 'Construction', 'name' => 'Alpha Builders Ltd', 'category' => 'Contractors',
         'phone' => '+256700000001', 'district' => 'Kampala', 'verified' => true,
         'source' => 'web', 'hash' => md5('alpha'), 'fetched_at' => now(),
     ]);
-    App\Models\ScrapedProspect::create([
+    ScrapedProspect::create([
         'niche' => 'Medical Suppliers', 'name' => 'Beta Pharma Ltd', 'category' => 'Pharmacies',
         'phone' => '+256700000002', 'district' => 'Entebbe', 'verified' => false,
         'source' => 'web', 'hash' => md5('beta'), 'fetched_at' => now(),
     ]);
 
-    $user = App\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     $this->actingAs($user)->get(route('prospects.index'))
         ->assertOk()
@@ -200,8 +208,8 @@ test('prospects catalogue requires login', function () {
 });
 
 test('marketing page lists whatsapp groups with search and filter', function () {
-    $this->seed(Database\Seeders\MarketingSeeder::class);
-    $user = App\Models\User::factory()->create();
+    $this->seed(MarketingSeeder::class);
+    $user = User::factory()->create();
 
     $this->actingAs($user)->get(route('marketing.index'))
         ->assertOk()
@@ -211,7 +219,7 @@ test('marketing page lists whatsapp groups with search and filter', function () 
 });
 
 test('group suggestions validate input and accept valid ones', function () {
-    $user = App\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     $this->actingAs($user)->postJson(route('marketing.groups.suggest'), [
         'name' => 'Test',
@@ -243,19 +251,19 @@ test('bulk catalogue command discovers categories and indexes businesses', funct
 
     // Both category pages returned the same two businesses, so the
     // hash dedupe correctly keeps a single copy of each.
-    expect(App\Models\ScrapedProspect::count())->toBe(2)
-        ->and(App\Models\ScrapedProspect::where('name', 'Category Builders One')->exists())->toBeTrue();
+    expect(ScrapedProspect::count())->toBe(2)
+        ->and(ScrapedProspect::where('name', 'Category Builders One')->exists())->toBeTrue();
 });
 
 test('scraper search requires a niche', function () {
-    $this->actingAs(App\Models\User::factory()->create())
+    $this->actingAs(User::factory()->create())
         ->postJson(route('scraper.search'), ['keyword' => 'x'])
         ->assertUnprocessable();
 });
 
 test('campaign report always shows funnel and opens charts', function () {
-    $user = App\Models\User::factory()->create();
-    $campaign = App\Models\EmailCampaign::create([
+    $user = User::factory()->create();
+    $campaign = EmailCampaign::create([
         'user_id' => $user->id, 'subject' => 'Chart check', 'body' => 'Hi.',
         'status' => 'sent', 'total' => 2, 'sent' => 2, 'delivered' => 2,
     ]);
@@ -269,7 +277,7 @@ test('campaign report always shows funnel and opens charts', function () {
 });
 
 test('marketing page offers email presets, campaign table and toast helper', function () {
-    $user = App\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     $this->actingAs($user)->get(route('marketing.index'))
         ->assertOk()
@@ -280,7 +288,7 @@ test('marketing page offers email presets, campaign table and toast helper', fun
 });
 
 test('key pages include skippable guided tours', function () {
-    $user = App\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     $this->actingAs($user)->get(route('marketing.index'))
         ->assertOk()

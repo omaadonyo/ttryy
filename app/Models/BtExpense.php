@@ -14,7 +14,7 @@ class BtExpense extends Model
     public const UNPAID = 'unpaid';
 
     protected $fillable = [
-        'user_id', 'date', 'category', 'amount', 'status', 'contact_id', 'note',
+        'user_id', 'business_id', 'date', 'category', 'amount', 'status', 'contact_id', 'note', 'bank_account_id',
     ];
 
     protected function casts(): array
@@ -25,6 +25,11 @@ class BtExpense extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function business(): BelongsTo
+    {
+        return $this->belongsTo(Business::class);
     }
 
     public function supplier(): BelongsTo

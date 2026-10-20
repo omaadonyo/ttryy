@@ -3,6 +3,7 @@
     <div class="flex w-full flex-col gap-5">
         <x-page-head title="Payment history" sub="Every payment toward your websites, in one place.">
             <x-slot:actions>
+                <a href="{{ route('wallet.index') }}" class="btn-ghost">Top up wallet · UGX {{ number_format($walletBalance) }}</a>
                 <a href="{{ route('checkout') }}" class="btn-brand">New order</a>
                 <button onclick="startTour_payments()" class="btn-ghost btn-sm">Take tour</button>
             </x-slot:actions>
@@ -14,12 +15,13 @@
             ['target' => '#tour-ptable', 'title' => 'Every payment', 'body' => 'Date, reference, method, amount and status for the full history.'],
         ]])
 
-        <div id="tour-pstats" class="grid auto-rows-min gap-4 md:grid-cols-2">
+        <div id="tour-pstats" class="grid auto-rows-min gap-4 md:grid-cols-3">
             <div class="card card-pad border-transparent! bg-brand-600 text-white dark:border-transparent!">
                 <p class="text-[11px] font-bold tracking-[0.14em] text-white/60 uppercase">Total paid</p>
                 <p class="stat-num mt-2 text-white!">UGX {{ number_format($paidTotal) }}</p>
             </div>
             <x-stat label="Still outstanding" :value="'UGX '.number_format($outstanding)" hint="Clears as payments land" />
+            <x-stat label="Wallet balance" :value="'UGX '.number_format($walletBalance)" hint="Pay any order from here" />
         </div>
 
         <div id="tour-pchart" class="card card-pad">
@@ -43,6 +45,7 @@
                             <th>Method</th>
                             <th>Paid</th>
                             <th>Status</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -60,6 +63,13 @@
                                 <span class="pill-amber">{{ $order->status }}</span>
                                 @else
                                 <span class="pill-zinc">{{ $order->status }}</span>
+                                @endif
+                            </td>
+                            <td class="text-right whitespace-nowrap">
+                                @if($order->amountRemaining() > 0 && ! $order->isRefunded())
+                                <a href="{{ route('packages.index') }}" class="font-bold text-brand-700 hover:underline dark:text-brand-300">Pay →</a>
+                                @else
+                                <a href="{{ route('orders.invoice', $order) }}" class="font-semibold text-zinc-500 hover:underline">Invoice</a>
                                 @endif
                             </td>
                         </tr>

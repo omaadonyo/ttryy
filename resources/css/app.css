@@ -98,7 +98,7 @@ select:focus[data-flux-control] {
     .btn-danger { @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-bold whitespace-nowrap text-red-700 transition select-none hover:bg-red-100 active:scale-[.98] disabled:cursor-default disabled:opacity-60 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300 dark:hover:bg-red-500/20; }
     .btn-sm { @apply px-3 py-1.5 text-[13px]; }
 
-    .field { @apply w-full rounded-md border border-zinc-300 bg-white px-3.5 py-2 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20 dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-zinc-500; }
+    .field { @apply w-full rounded-md border border-zinc-300 bg-white px-3.5 py-2 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20 dark:border-zinc-700 dark:bg-white/5 dark:text-white dark:placeholder:text-zinc-500; }
     select.field { @apply pr-9; }
     .lbl { @apply mb-1.5 block text-[13px] font-semibold text-zinc-700 dark:text-zinc-300; }
 
@@ -141,7 +141,15 @@ select:focus[data-flux-control] {
     html[data-nav="mini"] .nav-caret,
     html[data-nav="mini"] #nav-brand-text,
     html[data-nav="mini"] #nav-foot-note { display: none; }
-    html[data-nav="mini"] .nav-link { justify-content: center; padding-left: 0; padding-right: 0; }
+    html[data-nav="mini"] .nav-link { position: relative; justify-content: center; padding-left: 0; padding-right: 0; }
+    html[data-nav="mini"] .nav-badge {
+        position: absolute;
+        top: .1rem;
+        right: calc(50% - .95rem);
+        margin-left: 0;
+        box-shadow: 0 0 0 2px var(--color-white);
+    }
+    html.dark[data-nav="mini"] .nav-badge { box-shadow: 0 0 0 2px var(--color-zinc-900); }
     html[data-nav="mini"] #nav-collapse svg { transform: rotate(180deg); }
 }
 #nav-collapse svg { transition: transform .3s ease; }

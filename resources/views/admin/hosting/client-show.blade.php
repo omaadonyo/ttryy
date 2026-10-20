@@ -14,6 +14,22 @@
         </div>
 
         <div class="card card-pad">
+            <div class="flex flex-wrap items-end justify-between gap-3">
+                <div>
+                    <h2 class="section-title">Credit tokens</h2>
+                    <p class="page-sub">Add tokens to {{ $client->name }}'s wallet with an audit note.</p>
+                </div>
+                <form method="POST" action="{{ route('admin.users.tokens', $client) }}" class="flex flex-wrap items-end gap-2">
+                    @csrf
+                    @method('PATCH')
+                    <input type="number" name="amount" min="1" max="10000000" placeholder="Tokens" class="field w-32" required>
+                    <input type="text" name="reason" maxlength="120" placeholder="Reason (optional)" class="field w-52">
+                    <button type="submit" class="btn-brand">Add tokens</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card card-pad">
             <h2 class="section-title">Websites</h2>
             <ul class="mt-3 space-y-2 text-sm">
                 @forelse($websites as $w)

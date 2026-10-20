@@ -2,11 +2,18 @@
 
 use App\Models\HostedWebsite;
 use App\Models\HostingCommand;
+use App\Models\PackageOrder;
 use App\Models\User;
+use App\Models\WebsiteAnalyticsEvent;
+use App\Models\WebsiteDomain;
+use App\Notifications\SiteAlert;
 use App\Services\Hosting\AnalyticsRecorder;
+use App\Services\Hosting\HostingSubscription;
 use App\Services\Hosting\ServiceAuthenticator;
+use App\Services\Hosting\ServiceCommander;
+use App\Services\Hosting\SubdomainProvisioner;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Notification;
 
 test('provisioning succeeds on service acknowledgment', function () {
     $owner = User::factory()->create();
@@ -21,8 +28,8 @@ test('provisioning succeeds on service acknowledgment', function () {
         ], 200),
     ]);
 
-    $command = App\Services\Hosting\ServiceCommander::build($site, HostingCommand::ACTION_PROVISION);
-    $command = App\Services\Hosting\ServiceCommander::deliver($command);
+    $command = ServiceCommander::build($site, HostingCommand::ACTION_PROVISION);
+    $command = ServiceCommander::deliver($command);
 
     expect($command->state)->toBe(HostingCommand::STATE_SUCCEEDED);
     expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_ACTIVE);
@@ -37,10 +44,10 @@ test('provisioning failure keeps the site out of active state', function () {
 
     Http::fake(['site-two.example/*' => Http::response('Server error', 500)]);
 
-    $command = App\Services\Hosting\ServiceCommander::build($site, HostingCommand::ACTION_PROVISION);
+    $command = ServiceCommander::build($site, HostingCommand::ACTION_PROVISION);
 
     for ($i = 0; $i < 4; $i++) {
-        $command = App\Services\Hosting\ServiceCommander::deliver($command->fresh());
+        $command = ServiceCommander::deliver($command->fresh());
     }
 
     expect($command->state)->toBe(HostingCommand::STATE_FAILED);
@@ -60,8 +67,8 @@ test('service acknowledgment flips status on delivery', function () {
         ], 200),
     ]);
 
-    $suspend = App\Services\Hosting\ServiceCommander::deliver(
-        App\Services\Hosting\ServiceCommander::build($site, HostingCommand::ACTION_SUSPEND, 'admin', null, ['reason' => 'Overdue'])
+    $suspend = ServiceCommander::deliver(
+        ServiceCommander::build($site, HostingCommand::ACTION_SUSPEND, 'admin', null, ['reason' => 'Overdue'])
     );
     expect($suspend->state)->toBe(HostingCommand::STATE_SUCCEEDED);
     expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_SUSPENDED);
@@ -73,8 +80,8 @@ test('service acknowledgment flips status on delivery', function () {
         ], 200),
     ]);
 
-    $restore = App\Services\Hosting\ServiceCommander::deliver(
-        App\Services\Hosting\ServiceCommander::build($site->fresh(), HostingCommand::ACTION_UNSUSPEND)
+    $restore = ServiceCommander::deliver(
+        ServiceCommander::build($site->fresh(), HostingCommand::ACTION_UNSUSPEND)
     );
     expect($restore->state)->toBe(HostingCommand::STATE_SUCCEEDED);
     expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_ACTIVE);
@@ -103,7 +110,7 @@ test('analytics beacon records events and aggregates honestly', function () {
     $this->get(route('hosting.beacon', $site->uuid).'?p=/pricing&utm_source=google')
         ->assertOk();
 
-    expect(App\Models\WebsiteAnalyticsEvent::where('hosted_website_id', $site->id)->count())->toBe(2);
+    expect(WebsiteAnalyticsEvent::where('hosted_website_id', $site->id)->count())->toBe(2);
 
     $day = AnalyticsRecorder::aggregateDay($site, now()->toDateString());
     expect($day->pageviews)->toBe(2)
@@ -115,11 +122,12 @@ test('analytics beacon records events and aggregates honestly', function () {
         ->assertHeader('content-disposition', 'attachment; filename=analytics-'.$site->uuid.'-30d.csv');
 });
 
-test('paid orders notify website owners', function () {    $admin = User::factory()->create(['is_admin' => true]);
+test('paid orders notify website owners', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
     $owner = User::factory()->create();
     $site = makeWebsite($owner);
 
-    $order = App\Models\PackageOrder::create([
+    $order = PackageOrder::create([
         'user_id' => $owner->id, 'hosted_website_id' => $site->id,
         'reference' => 'TTRYY-WF01', 'package' => 'GROW', 'billing_frequency' => 'monthly',
         'domain' => 'none', 'duration_months' => 12, 'periods' => 12,
@@ -138,7 +146,7 @@ test('verified payments extend renewal on the payment rhythm', function () {
     $owner = User::factory()->create();
     $site = makeWebsite($owner, ['next_renewal_at' => now()->subDay()]);
 
-    $order = App\Models\PackageOrder::create([
+    $order = PackageOrder::create([
         'user_id' => $owner->id, 'hosted_website_id' => $site->id,
         'reference' => 'TTRYY-RH01', 'package' => 'GROW', 'billing_frequency' => 'weekly',
         'domain' => 'none', 'duration_months' => 12, 'periods' => 52,
@@ -147,7 +155,7 @@ test('verified payments extend renewal on the payment rhythm', function () {
         'payment_method' => 'flutterwave', 'business_name' => 'RH Biz', 'phone' => '+256700000041',
     ]);
 
-    App\Services\Hosting\HostingSubscription::recordPayment($order);
+    HostingSubscription::recordPayment($order);
 
     $renewal = $site->fresh()->next_renewal_at;
     expect($renewal)->not->toBeNull()
@@ -157,11 +165,11 @@ test('verified payments extend renewal on the payment rhythm', function () {
 test('overdue sweep suspends immediately and never duplicates', function () {
     $owner = User::factory()->create();
     $site = makeWebsite($owner, [
-        'status' => App\Models\HostedWebsite::STATUS_ACTIVE,
-        'next_renewal_at' => now()->subDays(3),
+        'status' => HostedWebsite::STATUS_ACTIVE,
+        'next_renewal_at' => now()->subDays(10),
     ]);
 
-    App\Models\PackageOrder::create([
+    PackageOrder::create([
         'user_id' => $owner->id, 'hosted_website_id' => $site->id,
         'reference' => 'TTRYY-OD01', 'package' => 'START', 'billing_frequency' => 'monthly',
         'domain' => 'none', 'duration_months' => 12, 'periods' => 12,
@@ -170,11 +178,50 @@ test('overdue sweep suspends immediately and never duplicates', function () {
         'payment_method' => 'flutterwave', 'business_name' => 'OD Biz', 'phone' => '+256700000042',
     ]);
 
-    expect(App\Services\Hosting\HostingSubscription::suspendOverdue())->toBe(1);
-    expect($site->fresh()->status)->toBe(App\Models\HostedWebsite::STATUS_SUSPENDED)
+    expect(HostingSubscription::suspendOverdue())->toBe(1);
+    expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_SUSPENDED)
         ->and($site->fresh()->suspension_reason)->toBe('Overdue payment');
-    expect(App\Services\Hosting\HostingSubscription::suspendOverdue())->toBe(0);
-    expect(App\Models\HostingCommand::where('hosted_website_id', $site->id)->where('action', 'suspend')->count())->toBe(1);
+    expect(HostingSubscription::suspendOverdue())->toBe(0);
+    expect(HostingCommand::where('hosted_website_id', $site->id)->where('action', 'suspend')->count())->toBe(1);
+});
+
+test('the grace period keeps a just-overdue website online', function () {
+    $owner = User::factory()->create();
+    $site = makeWebsite($owner, [
+        'status' => HostedWebsite::STATUS_ACTIVE,
+        'next_renewal_at' => now()->subDay(),
+    ]);
+
+    PackageOrder::create([
+        'user_id' => $owner->id, 'hosted_website_id' => $site->id,
+        'reference' => 'TTRYY-GR01', 'package' => 'START', 'billing_frequency' => 'daily',
+        'domain' => 'none', 'duration_months' => 12, 'periods' => 365,
+        'amount_per_period' => 700, 'domain_fee' => 0, 'total_amount' => 255500,
+        'due_today' => 700, 'currency' => 'UGX', 'status' => 'pending',
+        'payment_method' => 'flutterwave', 'business_name' => 'GR Biz', 'phone' => '+256700000043',
+    ]);
+
+    expect(HostingSubscription::suspendOverdue())->toBe(0);
+    expect($site->fresh()->status)->toBe(HostedWebsite::STATUS_ACTIVE);
+});
+
+test('renewal reminders notify customers whose payment is due', function () {
+    Notification::fake();
+
+    $owner = User::factory()->create();
+    makeWebsite($owner, [
+        'status' => HostedWebsite::STATUS_ACTIVE,
+        'next_renewal_at' => now()->addDay(),
+    ]);
+    makeWebsite(User::factory()->create(), [
+        'status' => HostedWebsite::STATUS_ACTIVE,
+        'next_renewal_at' => now()->addDays(40),
+    ]);
+
+    $sent = HostingSubscription::remindDue();
+
+    expect($sent)->toBe(1);
+    Notification::assertSentTo($owner, SiteAlert::class);
 });
 
 test('admins manage domains and link orders to websites', function () {
@@ -184,14 +231,14 @@ test('admins manage domains and link orders to websites', function () {
 
     $this->actingAs($admin)->post(route('admin.hosting.domains.subdomain', $site), ['label' => 'admin-made'])
         ->assertRedirect();
-    expect(App\Models\WebsiteDomain::where('domain', 'admin-made.'.config('hosting.base_domain'))->exists())->toBeTrue();
+    expect(WebsiteDomain::where('domain', 'admin-made.'.config('hosting.base_domain'))->exists())->toBeTrue();
 
     $domain = $site->domains()->first();
     $this->actingAs($admin)->post(route('admin.hosting.domains.primary', [$site, $domain->id]))
         ->assertRedirect();
     expect($domain->fresh()->is_primary)->toBeTrue();
 
-    $order = App\Models\PackageOrder::create([
+    $order = PackageOrder::create([
         'user_id' => $owner->id, 'reference' => 'TTRYY-LK01', 'package' => 'GROW',
         'billing_frequency' => 'monthly', 'domain' => 'none', 'duration_months' => 12,
         'periods' => 12, 'amount_per_period' => 30000, 'domain_fee' => 0,
@@ -208,13 +255,13 @@ test('admins manage domains and link orders to websites', function () {
 test('subdomain provisioner is honest without infrastructure', function () {
     $owner = User::factory()->create();
     $site = makeWebsite($owner);
-    $domain = App\Models\WebsiteDomain::create([
+    $domain = WebsiteDomain::create([
         'hosted_website_id' => $site->id, 'user_id' => $owner->id,
         'domain' => 'probe-xyz.'.config('hosting.base_domain'), 'type' => 'subdomain',
         'verification' => 'verified',
     ]);
 
-    $result = App\Services\Hosting\SubdomainProvisioner::provision($domain);
+    $result = SubdomainProvisioner::provision($domain);
 
     expect($result['ok'])->toBeTrue()->and($result['mode'])->toBe('wildcard');
 });

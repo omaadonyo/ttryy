@@ -45,6 +45,7 @@
                             <th>Type</th>
                             <th>Verification</th>
                             <th>SSL</th>
+                            <th class="text-right!">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,9 +57,20 @@
                             <td class="text-xs">{{ $d->type }}</td>
                             <td><span class="{{ $d->verification === 'verified' ? 'pill-green' : ($d->verification === 'pending' ? 'pill-amber' : 'pill-zinc') }}">{{ $d->verification }}</span></td>
                             <td><span class="{{ $d->ssl_status === 'active' ? 'pill-green' : ($d->ssl_status === 'pending' ? 'pill-amber' : ($d->ssl_status === 'failed' ? 'pill-red' : 'pill-zinc')) }}">{{ $d->ssl_status }}</span></td>
+                            <td class="text-right whitespace-nowrap">
+                                @if($d->website)
+                                <form method="POST" action="{{ route('admin.hosting.domains.destroy', [$d->website, $d]) }}" class="inline" onsubmit="return confirm('Delete {{ $d->domain }}? This is permanent.')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-xs font-bold text-red-600 hover:underline dark:text-red-400">Delete</button>
+                                </form>
+                                @else
+                                <span class="text-xs text-zinc-400">—</span>
+                                @endif
+                            </td>
                         </tr>
                         @empty
-                        <tr><td colspan="6"><x-empty-state icon="search" title="No domains found" message="Try different filters." /></td></tr>
+                        <tr><td colspan="7"><x-empty-state icon="search" title="No domains found" message="Try different filters." /></td></tr>
                         @endforelse
                     </tbody>
                 </table>

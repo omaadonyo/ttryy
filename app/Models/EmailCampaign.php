@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -47,7 +48,7 @@ class EmailCampaign extends Model
             ->orderBy('day')
             ->get()
             ->map(fn ($r) => [
-                'label' => \Carbon\Carbon::parse($r->day)->format('d M'),
+                'label' => Carbon::parse($r->day)->format('d M'),
                 'opens' => (int) $r->opens,
             ])->all();
     }

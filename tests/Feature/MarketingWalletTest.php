@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\MessageTemplate;
+use App\Models\TokenTransaction;
 use App\Models\User;
+use App\Models\WhatsappGroup;
 use Illuminate\Support\Facades\Http;
 
 test('wallet page shows balance and packs', function () {
@@ -31,7 +34,7 @@ test('token topup creates a pending order and verifies paid on callback', functi
     ])->assertOk();
 
     expect($user->fresh()->token_balance)->toBe(500)
-        ->and(App\Models\TokenTransaction::where('user_id', $user->id)->where('type', 'credit')->count())->toBe(1);
+        ->and(TokenTransaction::where('user_id', $user->id)->where('type', 'credit')->count())->toBe(1);
 });
 
 test('ai generation deducts tokens and falls back without a key', function () {
@@ -64,7 +67,7 @@ test('ai generation is refused with insufficient balance', function () {
 test('group unlock deducts once and is idempotent', function () {
     $user = User::factory()->create();
     $user->forceFill(['token_balance' => 50])->save();
-    $group = App\Models\WhatsappGroup::create([
+    $group = WhatsappGroup::create([
         'name' => 'Test Group', 'niche' => 'SMEs', 'description' => 'Test',
         'invite_link' => 'https://chat.whatsapp.com/TESTLINK',
         'member_count' => 100, 'token_cost' => 10, 'is_active' => true,
@@ -84,7 +87,7 @@ test('group unlock deducts once and is idempotent', function () {
 
 test('group unlock is refused with insufficient balance', function () {
     $user = User::factory()->create();
-    $group = App\Models\WhatsappGroup::create([
+    $group = WhatsappGroup::create([
         'name' => 'Poor Group', 'description' => 'Test',
         'invite_link' => 'https://chat.whatsapp.com/POOR',
         'member_count' => 10, 'token_cost' => 10, 'is_active' => true,
@@ -101,15 +104,15 @@ test('users can save and delete their own message templates', function () {
         'body' => 'Hi {name}, ready to close?',
     ])->assertOk();
 
-    expect(App\Models\MessageTemplate::where('user_id', $user->id)->count())->toBe(1);
+    expect(MessageTemplate::where('user_id', $user->id)->count())->toBe(1);
 
     $this->actingAs($user)->deleteJson(route('marketing.templates.destroy', $created->json('id')))->assertOk();
-    expect(App\Models\MessageTemplate::where('user_id', $user->id)->count())->toBe(0);
+    expect(MessageTemplate::where('user_id', $user->id)->count())->toBe(0);
 });
 
 test('users cannot delete builtin or other users templates', function () {
     $user = User::factory()->create();
-    $builtin = App\Models\MessageTemplate::create(['user_id' => null, 'name' => 'Built-in', 'body' => 'Hi']);
+    $builtin = MessageTemplate::create(['user_id' => null, 'name' => 'Built-in', 'body' => 'Hi']);
 
     $this->actingAs($user)->deleteJson(route('marketing.templates.destroy', $builtin))->assertForbidden();
 });

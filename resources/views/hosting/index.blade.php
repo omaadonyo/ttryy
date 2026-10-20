@@ -87,7 +87,14 @@
                             <td><span class="{{ $statusPill($w->status) }}">{{ str_replace('_', ' ', $w->status) }}</span></td>
                             <td><span class="{{ $healthPill($w->health_status) }}">{{ $w->health_status }}</span><p class="text-[11px] text-zinc-400">{{ $w->last_health_check_at?->diffForHumans() ?? 'never checked' }}</p></td>
                             <td class="text-xs whitespace-nowrap text-zinc-500">{{ $w->next_renewal_at?->format('d M Y') ?? '—' }}</td>
-                            <td class="text-right whitespace-nowrap"><a href="{{ route('hosting.show', $w) }}" class="text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Manage →</a></td>
+                            <td class="text-right whitespace-nowrap">
+                                <a href="{{ route('hosting.show', $w) }}" class="text-xs font-bold text-brand-700 hover:underline dark:text-brand-300">Manage →</a>
+                                <form method="POST" action="{{ route('hosting.destroy', $w) }}" class="inline" onsubmit="return confirm('Move {{ $w->name }} to trash? You can restore it any time.')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="ml-2 text-xs font-bold text-red-600 hover:underline dark:text-red-400">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

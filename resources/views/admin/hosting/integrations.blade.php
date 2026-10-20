@@ -35,6 +35,7 @@
                 <p class="rounded-lg bg-zinc-950 p-3 text-emerald-300">GET /hosting-service/status</p>
                 <p class="rounded-lg bg-zinc-950 p-3 text-emerald-300">GET /hosting-service/health</p>
             </div>
+            <p class="mt-3 text-[13px] text-zinc-500 dark:text-zinc-400">A ready-to-copy integration (classes, routes, HMAC verifier, 503 middleware and suspension page) lives in <span class="font-mono text-xs">hosting-kit/</span> — see <span class="font-mono text-xs">hosting-kit/README.md</span> for the 5-minute install.</p>
         </div>
     </div>
 </x-layouts::app>

@@ -12,6 +12,12 @@
                 ['label' => 'Dashboard', 'icon' => 'home', 'href' => route('dashboard'), 'active' => request()->routeIs('dashboard')],
                 ['label' => 'Notifications', 'icon' => 'bell', 'href' => route('notifications.index'), 'active' => request()->routeIs('notifications.*'), 'badge' => auth()->user()?->unreadNotifications()->count() ?: null],
             ],
+            'My websites' => [
+                ['label' => 'Hosting', 'icon' => 'server-stack', 'href' => route('hosting.index'), 'active' => request()->routeIs('hosting.*')],
+                ['label' => 'My packages', 'icon' => 'shopping-bag', 'href' => route('packages.index'), 'active' => request()->routeIs('packages.*')],
+                ['label' => 'Payments', 'icon' => 'banknotes', 'href' => route('payments.index'), 'active' => request()->routeIs('payments.*')],
+                ['label' => 'Wallet', 'icon' => 'wallet', 'href' => route('wallet.index'), 'active' => request()->routeIs('wallet.*')],
+            ],
             'Growth' => [
                 ['label' => 'Prospect scraper', 'icon' => 'magnifying-glass', 'href' => route('scraper.index'), 'active' => request()->routeIs('scraper.*')],
                 ['label' => 'Prospects', 'icon' => 'building-office-2', 'href' => route('prospects.index'), 'active' => request()->routeIs('prospects.*')],
@@ -22,10 +28,6 @@
             'Business' => [
                 ['label' => 'Business Tools', 'icon' => 'calculator', 'href' => route('tools.index'), 'active' => request()->routeIs('tools.*')],
                 ['label' => 'New order', 'icon' => 'plus', 'href' => route('checkout'), 'active' => request()->routeIs('checkout*')],
-                ['label' => 'My packages', 'icon' => 'shopping-bag', 'href' => route('packages.index'), 'active' => request()->routeIs('packages.*')],
-                ['label' => 'Hosting', 'icon' => 'server-stack', 'href' => route('hosting.index'), 'active' => request()->routeIs('hosting.*')],
-                ['label' => 'Payments', 'icon' => 'banknotes', 'href' => route('payments.index'), 'active' => request()->routeIs('payments.*')],
-                ['label' => 'Wallet', 'icon' => 'wallet', 'href' => route('wallet.index'), 'active' => request()->routeIs('wallet.*')],
             ],
         ];
         if(auth()->user()?->is_admin){
@@ -33,10 +35,21 @@
                 ['label' => 'Overview', 'icon' => 'chart-bar', 'href' => route('admin.dashboard'), 'active' => request()->routeIs('admin.dashboard')],
                 ['label' => 'Orders', 'icon' => 'shopping-bag', 'href' => route('admin.orders'), 'active' => request()->routeIs('admin.orders*')],
                 ['label' => 'Payments', 'icon' => 'banknotes', 'href' => route('admin.payments'), 'active' => request()->routeIs('admin.payments')],
-                ['label' => 'Users', 'icon' => 'users', 'href' => route('admin.users'), 'active' => request()->routeIs('admin.users*')],
-                ['label' => 'Launch 10K', 'icon' => 'rocket-launch', 'href' => route('admin.launch.index'), 'active' => request()->routeIs('admin.launch.*')],
-                ['label' => 'Hosting', 'icon' => 'circle-stack', 'href' => route('admin.hosting.dashboard'), 'active' => request()->routeIs('admin.hosting.*')],
                 ['label' => 'Packages', 'icon' => 'squares-2x2', 'href' => route('admin.packages'), 'active' => request()->routeIs('admin.packages')],
+                ['label' => 'Launch 10K', 'icon' => 'rocket-launch', 'href' => route('admin.launch.index'), 'active' => request()->routeIs('admin.launch.*')],
+            ];
+            $navSections['Customers'] = [
+                ['label' => 'Users', 'icon' => 'users', 'href' => route('admin.users'), 'active' => request()->routeIs('admin.users*')],
+                ['label' => 'Hosting clients', 'icon' => 'identification', 'href' => route('admin.hosting.clients'), 'active' => request()->routeIs('admin.hosting.clients*')],
+            ];
+            $navSections['Hosting ops'] = [
+                ['label' => 'Hosting control', 'icon' => 'circle-stack', 'href' => route('admin.hosting.dashboard'), 'active' => request()->routeIs('admin.hosting.dashboard')],
+                ['label' => 'Websites', 'icon' => 'globe-alt', 'href' => route('admin.hosting.websites'), 'active' => request()->routeIs('admin.hosting.websites*')],
+                ['label' => 'Domains', 'icon' => 'link', 'href' => route('admin.hosting.domains'), 'active' => request()->routeIs('admin.hosting.domains')],
+                ['label' => 'Operations', 'icon' => 'arrow-path', 'href' => route('admin.hosting.operations'), 'active' => request()->routeIs('admin.hosting.operations*')],
+                ['label' => 'Health', 'icon' => 'heart', 'href' => route('admin.hosting.health'), 'active' => request()->routeIs('admin.hosting.health')],
+                ['label' => 'Audit', 'icon' => 'clipboard-document-list', 'href' => route('admin.hosting.audit'), 'active' => request()->routeIs('admin.hosting.audit')],
+                ['label' => 'Integrations', 'icon' => 'puzzle-piece', 'href' => route('admin.hosting.integrations'), 'active' => request()->routeIs('admin.hosting.integrations')],
             ];
         }
         $initials = collect(explode(' ', trim(auth()->user()?->name ?? '?')))->map(fn($p) => mb_substr($p, 0, 1))->take(2)->implode('');
@@ -233,7 +246,8 @@
             { group: 'Actions', label: 'View all notifications', href: @json(route('notifications.index')) },
             { group: 'Actions', label: 'Back to the website', href: @json(url('/')) },
         ];
-        let paletteActive = 0, paletteShown = [];
+        let paletteActive = 0, paletteShown = [], paletteToken = 0;
+        const ESC = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
         function openPalette(e){
             if(e) e.stopPropagation();
             document.getElementById('palette-overlay').classList.remove('hidden');
@@ -245,27 +259,51 @@
         function closePalette(){
             document.getElementById('palette-overlay').classList.add('hidden');
         }
-        function paintPalette(q){
+        function staticGroups(needle){
+            const n = needle.toLowerCase();
+            const items = PALETTE_ITEMS.filter(i => !n || i.label.toLowerCase().includes(n) || i.group.toLowerCase().includes(n)).slice(0, 12);
+            const map = new Map();
+            items.forEach(i => { if(!map.has(i.group)) map.set(i.group, []); map.get(i.group).push({ label: i.label, sub: '', href: i.href }); });
+            return [...map].map(([group, items]) => ({ group, items }));
+        }
+        function renderPalette(groups){
             const list = document.getElementById('palette-list');
-            const needle = (q || '').toLowerCase().trim();
-            paletteShown = PALETTE_ITEMS.filter(i => !needle || i.label.toLowerCase().includes(needle) || i.group.toLowerCase().includes(needle)).slice(0, 12);
-            paletteActive = 0;
+            paletteShown = []; paletteActive = 0;
+            let html = '';
+            groups.forEach(g => {
+                if(!g.items || !g.items.length) return;
+                html += `<p class="px-3.5 pt-3 pb-1 text-[11px] font-bold tracking-[0.14em] text-zinc-400 uppercase">${ESC(g.group)}</p>`;
+                g.items.forEach(it => {
+                    const idx = paletteShown.length;
+                    paletteShown.push(it);
+                    html += `<a href="${ESC(it.href)}" data-pal="${idx}" class="pal-item flex items-center justify-between gap-2 rounded-lg px-3.5 py-2.5 text-sm transition hover:bg-zinc-950/5 dark:hover:bg-white/10">`
+                        + `<span class="min-w-0"><span class="block truncate font-semibold">${ESC(it.label)}</span>`
+                        + (it.sub ? `<span class="block truncate text-xs opacity-60">${ESC(it.sub)}</span>` : '')
+                        + `</span><span class="text-xs text-zinc-400">↵</span></a>`;
+                });
+            });
             if(!paletteShown.length){
                 list.innerHTML = '<p class="px-3.5 py-6 text-center text-sm text-zinc-500">Nothing found — try another search.</p>';
                 return;
             }
-            let lastGroup = null, html = '';
-            paletteShown.forEach((item, idx) => {
-                if(item.group !== lastGroup){
-                    html += `<p class="px-3.5 pt-3 pb-1 text-[11px] font-bold tracking-[0.14em] text-zinc-400 uppercase">${item.group.replaceAll('<','&lt;')}</p>`;
-                    lastGroup = item.group;
-                }
-                html += `<a href="${item.href}" data-pal="${idx}" class="pal-item flex items-center justify-between gap-2 rounded-lg px-3.5 py-2.5 text-sm transition ${idx === paletteActive ? 'bg-brand-600 text-white' : 'hover:bg-zinc-950/5 dark:hover:bg-white/10'}">`
-                    + `<span class="truncate font-semibold">${item.label.replaceAll('<','&lt;')}</span>`
-                    + `<span class="text-xs ${idx === paletteActive ? 'text-white/70' : 'text-zinc-400'}">↵</span></a>`;
-            });
             list.innerHTML = html;
             list.querySelectorAll('[data-pal]').forEach(a => a.addEventListener('click', closePalette));
+            paintPaletteActive();
+        }
+        async function paintPalette(q){
+            const needle = (q || '').trim();
+            const bases = staticGroups(needle);
+            renderPalette(bases);
+            const token = ++paletteToken;
+            if(needle.length < 2) return;
+            try{
+                const res = await fetch("{{ route('dashboard.search') }}?q=" + encodeURIComponent(needle), {
+                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await res.json();
+                if(token !== paletteToken) return;
+                renderPalette(bases.concat(data.groups || []));
+            }catch(e){ /* keep static results if search fails */ }
         }
         function paintPaletteActive(){
             document.querySelectorAll('#palette-list [data-pal]').forEach(a => {

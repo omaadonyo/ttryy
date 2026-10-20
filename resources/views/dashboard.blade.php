@@ -100,6 +100,7 @@
                         Awaiting payment — your website goes live once the first payment lands.
                         @endif
                     </p>
+                    <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{{ $spotlight->installmentLabel() }} · {{ $spotlight->duration_months }} months · {{ $spotlight->periods }} payments</p>
                 </div>
                 @if($spotlight->status === 'paid')
                 <span class="pill-green">{{ $spotlight->isActive() ? 'active' : 'expired' }}</span>
@@ -110,10 +111,7 @@
                 @endif
             </div>
             @if($spotlight->isActive() || $spotlight->isExpired())
-            <div class="mt-4 h-2 overflow-hidden rounded-full bg-zinc-100 dark:bg-white/10">
-                <div class="h-2 rounded-full bg-brand-600" style="width:{{ $spotlight->progressPercent() }}%"></div>
-            </div>
-            <p class="mt-1.5 text-xs text-zinc-500">{{ $spotlight->progressPercent() }}% of subscription period used</p>
+            <x-progress class="mt-4" :percent="$spotlight->progressPercent()" :caption="$spotlight->progressPercent().'% of subscription period used'" />
             @endif
         </div>
         @endif

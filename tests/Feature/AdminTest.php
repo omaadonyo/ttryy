@@ -37,13 +37,10 @@ test('admin overview shows revenue chart and users show stats', function () {
         ->assertSee('Administrators', false);
 });
 
-test('admin overview tracks platform usage', function () {
+test('admin overview links platform usage to hosting control', function () {
     $this->actingAs(adminUser())->get(route('admin.dashboard'))
         ->assertOk()
-        ->assertSee('Platform usage', false)
-        ->assertSee('id="admin-users-chart"', false)
-        ->assertSee('Tokens sold', false)
-        ->assertSee('Campaigns sent', false);
+        ->assertSee('Hosting control', false);
 });
 
 test('admin orders and payments show performance strips', function () {

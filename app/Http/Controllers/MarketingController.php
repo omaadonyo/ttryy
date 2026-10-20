@@ -7,6 +7,7 @@ use App\Models\EmailCampaign;
 use App\Models\MessageTemplate;
 use App\Models\SavedContact;
 use App\Models\WhatsappGroup;
+use App\Notifications\SiteAlert;
 use App\Services\DirectoryScraper;
 use App\Services\SalesCopyService;
 use App\Services\Wallet;
@@ -185,7 +186,7 @@ class MarketingController extends Controller
             return response()->json(['message' => 'Directory search failed. Please try again in a minute.'], 422);
         }
 
-        if (($result['total_found'] ?? 0) > 0 && !($result['cached'] ?? false)) {
+        if (($result['total_found'] ?? 0) > 0 && ! ($result['cached'] ?? false)) {
             if (! Wallet::canAfford($request->user(), $cost)) {
                 return response()->json([
                     'message' => "Scraping is a Pro tool — this fresh pull needs {$cost} tokens. Top up your wallet to see the results.",
@@ -223,7 +224,7 @@ class MarketingController extends Controller
                 }
             );
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::warning('Group suggestion email failed', ['error' => $e->getMessage()]);
+            Log::warning('Group suggestion email failed', ['error' => $e->getMessage()]);
 
             return response()->json(['message' => 'Suggestion saved. Our team will review it shortly.']);
         }
@@ -312,7 +313,7 @@ class MarketingController extends Controller
             'failed' => $failed,
         ]);
 
-        $request->user()->notify(new \App\Notifications\SiteAlert(
+        $request->user()->notify(new SiteAlert(
             "Campaign '{$validated['subject']}' sent",
             "{$sent} recipient".($sent === 1 ? '' : 's').' · opens are tracked on the report.',
             route('marketing.campaigns.show', $campaign),
@@ -333,10 +334,10 @@ class MarketingController extends Controller
         $text = str_replace('{name}', e($first), e($body));
         $pixel = url('/t/'.$token);
 
-        return "<div style=\"font-family:Arial,sans-serif;max-width:560px;\">"
-            ."<h2 style=\"margin:0 0 12px;\">".e($subject).'</h2>'
+        return '<div style="font-family:Arial,sans-serif;max-width:560px;">'
+            .'<h2 style="margin:0 0 12px;">'.e($subject).'</h2>'
             .'<div>'.nl2br($text).'</div>'
-            ."<p style=\"color:#71717a;font-size:12px;\">Sent via ttryy Marketing</p>"
+            .'<p style="color:#71717a;font-size:12px;">Sent via ttryy Marketing</p>'
             ."<img src=\"{$pixel}\" width=\"1\" height=\"1\" alt=\"\" />"
             .'</div>';
     }

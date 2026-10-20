@@ -94,6 +94,13 @@
   .dark body > section{ border-top-color:rgba(255,255,255,.08); }
   .scan-pulse{ animation:scanPulse 1.1s ease-in-out infinite; }
   @keyframes scanPulse{ 0%,100%{ opacity:1;} 50%{ opacity:.35;} }
+  #hero3d{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; opacity:0; transition:opacity 1.4s ease; -webkit-mask-image:radial-gradient(ellipse 72% 92% at 74% 44%, black 28%, transparent 76%); mask-image:radial-gradient(ellipse 72% 92% at 74% 44%, black 28%, transparent 76%); }
+  #hero3d.ready{ opacity:.9; }
+  @media (max-width:1023px){
+    #hero3d{ -webkit-mask-image:radial-gradient(ellipse 94% 62% at 50% 26%, black 22%, transparent 82%); mask-image:radial-gradient(ellipse 94% 62% at 50% 26%, black 22%, transparent 82%); }
+    #hero3d.ready{ opacity:.45; }
+  }
+  @media (prefers-reduced-motion: reduce){ #hero3d{ display:none; } }
 </style>
 </head>
 <body class="relative bg-white text-zinc-900 dark:bg-[#0A0A0B] dark:text-zinc-300 overflow-x-clip">
@@ -204,6 +211,7 @@
 <!-- HERO -->
 <section id="home" class="relative overflow-hidden bg-zinc-50 dark:bg-[#0A0A0B]">
   <div class="absolute inset-0 sqgrid pointer-events-none" aria-hidden="true"></div>
+  <canvas id="hero3d" aria-hidden="true"></canvas>
   <div class="relative mx-auto w-[92%] md:w-[80%] px-4 sm:px-6 pt-12 pb-12 lg:pt-20 lg:pb-16 grid lg:grid-cols-2 gap-12 items-center">
     <div class="reveal visible">
       <p class="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-600 dark:bg-white/5 dark:text-zinc-300"><span class="size-1.5 rounded-full bg-[#9e005d]"></span>Hosting from UGX 10,000 · free yourname.ttryy.com</p>
@@ -1166,6 +1174,102 @@ paintThemeIcons();
   window.addEventListener('resize', later);
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(paint);
   setTimeout(paint, 1200);
+})();
+</script>
+<script type="module">
+(async function(){
+  const canvas=document.getElementById('hero3d'), hero=document.getElementById('home');
+  if(!canvas||!hero) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  try{ const c=document.createElement('canvas'); if(!(c.getContext('webgl')||c.getContext('experimental-webgl'))) return; }catch(e){ return; }
+  let THREE;
+  try{ THREE=await import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js'); }catch(e){ return; }
+
+  const isDark=()=>document.documentElement.classList.contains('dark');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+  renderer.outputColorSpace=THREE.SRGBColorSpace;
+  renderer.setClearColor(0x000000,0);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(58,1,0.1,200);
+  camera.position.z=34;
+  const group=new THREE.Group();
+  scene.add(group);
+
+  const COUNT=260, RADIUS=15, GOLDEN=Math.PI*(3-Math.sqrt(5)), nodes=[];
+  for(let i=0;i<COUNT;i++){
+    const y=1-(i/(COUNT-1))*2, r=Math.sqrt(Math.max(0,1-y*y)), th=GOLDEN*i;
+    nodes.push(new THREE.Vector3(Math.cos(th)*r*RADIUS,y*RADIUS*0.92,Math.sin(th)*r*RADIUS));
+  }
+  function glowSprite(){
+    const s=64, cv=document.createElement('canvas'); cv.width=cv.height=s;
+    const g=cv.getContext('2d'), grd=g.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2);
+    grd.addColorStop(0,'rgba(255,255,255,1)');
+    grd.addColorStop(.3,'rgba(255,255,255,.85)');
+    grd.addColorStop(1,'rgba(255,255,255,0)');
+    g.fillStyle=grd; g.fillRect(0,0,s,s);
+    const t=new THREE.CanvasTexture(cv); t.colorSpace=THREE.SRGBColorSpace; return t;
+  }
+  const sprite=glowSprite();
+  const pMat=new THREE.PointsMaterial({size:.8,map:sprite,transparent:true,depthWrite:false,sizeAttenuation:true});
+  group.add(new THREE.Points(new THREE.BufferGeometry().setFromPoints(nodes),pMat));
+  const aMat=new THREE.PointsMaterial({size:2.1,map:sprite,transparent:true,depthWrite:false,sizeAttenuation:true});
+  group.add(new THREE.Points(new THREE.BufferGeometry().setFromPoints(nodes.filter((_,i)=>i%7===0)),aMat));
+
+  const segs=[], MAXD=5.4;
+  for(let i=0;i<COUNT;i++) for(let j=i+1;j<COUNT;j++){
+    if(nodes[i].distanceTo(nodes[j])<MAXD) segs.push(nodes[i].x,nodes[i].y,nodes[i].z,nodes[j].x,nodes[j].y,nodes[j].z);
+  }
+  const lGeo=new THREE.BufferGeometry();
+  lGeo.setAttribute('position',new THREE.Float32BufferAttribute(segs,3));
+  const lMat=new THREE.LineBasicMaterial({transparent:true,depthWrite:false});
+  group.add(new THREE.LineSegments(lGeo,lMat));
+
+  function applyTheme(){
+    const dark=isDark(), blend=dark?THREE.AdditiveBlending:THREE.NormalBlending;
+    pMat.color.set(dark?'#ff5aa3':'#9e005d'); pMat.opacity=dark?.85:.7;
+    aMat.color.set(dark?'#ff8cc4':'#c20072'); aMat.opacity=dark?.95:.8;
+    lMat.color.set(dark?'#ff8cc4':'#b5006a'); lMat.opacity=dark?.3:.18;
+    [pMat,aMat,lMat].forEach(m=>{ if(m.blending!==blend){ m.blending=blend; m.needsUpdate=true; } });
+  }
+  applyTheme();
+  new MutationObserver(applyTheme).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+
+  const pointer={x:0,y:0}, cur={x:0,y:0};
+  window.addEventListener('pointermove',e=>{
+    const r=hero.getBoundingClientRect();
+    pointer.x=Math.max(-1,Math.min(1,((e.clientX-r.left)/r.width)*2-1));
+    pointer.y=Math.max(-1,Math.min(1,((e.clientY-r.top)/r.height)*2-1));
+  },{passive:true});
+
+  function resize(){
+    const w=hero.clientWidth, h=hero.clientHeight; if(!w||!h) return;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    renderer.setSize(w,h,false);
+    camera.aspect=w/h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize',resize);
+  resize();
+
+  let raf=null, running=false, elapsed=0, last=0, seen=false;
+  function loop(now){
+    if(!running) return;
+    if(!last) last=now;
+    elapsed+=(now-last)/1000; last=now;
+    cur.x+=(pointer.x-cur.x)*.045;
+    cur.y+=(pointer.y-cur.y)*.045;
+    group.rotation.y=elapsed*.16+cur.x*.5;
+    group.rotation.x=cur.y*-.38+Math.sin(elapsed*.7)*.05;
+    group.position.y=Math.sin(elapsed*1.1)*.7;
+    renderer.render(scene,camera);
+    raf=requestAnimationFrame(loop);
+  }
+  function start(){ if(running) return; running=true; last=0; raf=requestAnimationFrame(loop); }
+  function stop(){ running=false; if(raf) cancelAnimationFrame(raf); raf=null; }
+
+  new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){ if(!seen){ seen=true; canvas.classList.add('ready'); } start(); } else stop();
+  }),{threshold:.05}).observe(hero);
+  document.addEventListener('visibilitychange',()=>{ if(document.hidden) stop(); else if(hero.getBoundingClientRect().bottom>0) start(); });
 })();
 </script>
 </body>

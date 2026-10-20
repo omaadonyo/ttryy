@@ -190,7 +190,7 @@ class DirectoryScraper
     {
         $rows = [];
 
-        $dom = new \DOMDocument();
+        $dom = new \DOMDocument;
         libxml_use_internal_errors(true);
         $dom->loadHTML('<?xml encoding="utf-8" ?>'.$html);
         libxml_clear_errors();
