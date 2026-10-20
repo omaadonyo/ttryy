@@ -36,6 +36,8 @@
                 ['label' => 'Orders', 'icon' => 'shopping-bag', 'href' => route('admin.orders'), 'active' => request()->routeIs('admin.orders*')],
                 ['label' => 'Payments', 'icon' => 'banknotes', 'href' => route('admin.payments'), 'active' => request()->routeIs('admin.payments')],
                 ['label' => 'Packages', 'icon' => 'squares-2x2', 'href' => route('admin.packages'), 'active' => request()->routeIs('admin.packages')],
+                ['label' => 'Business Tools', 'icon' => 'briefcase', 'href' => route('admin.businesses'), 'active' => request()->routeIs('admin.businesses*')],
+                ['label' => 'Suggestions', 'icon' => 'light-bulb', 'href' => route('admin.suggestions'), 'active' => request()->routeIs('admin.suggestions*')],
                 ['label' => 'Launch 10K', 'icon' => 'rocket-launch', 'href' => route('admin.launch.index'), 'active' => request()->routeIs('admin.launch.*')],
             ];
             $navSections['Customers'] = [

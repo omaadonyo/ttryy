@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Business;
+use App\Models\BusinessSubscription;
 use App\Models\CampaignRecipient;
 use App\Models\EmailCampaign;
 use App\Models\PackageOrder;
 use App\Models\SavedContact;
 use App\Models\ScrapedProspect;
+use App\Models\Suggestion;
 use App\Models\TokenTopup;
 use App\Models\TokenTransaction;
 use App\Models\User;
 use App\Models\WhatsappGroup;
 use App\Notifications\SiteAlert;
+use App\Services\BusinessPlan;
 use App\Services\Hosting\HostingSubscription;
 use App\Services\Wallet;
 use Illuminate\Http\Request;
@@ -371,5 +375,93 @@ class AdminController extends Controller
         }
 
         return view('admin.packages', ['stats' => $stats]);
+    }
+
+    /* --------------------------- business tools --------------------------- */
+
+    public function businesses(Request $request)
+    {
+        $query = Business::with('owner')->withCount(['users', 'items', 'documents']);
+
+        if ($request->filled('status')) {
+            if ($request->string('status')->toString() === 'premium') {
+                $query->where('plan', BusinessPlan::PREMIUM)->where('premium_until', '>', now());
+            } else {
+                $query->where(fn ($q) => $q->where('plan', '!=', BusinessPlan::PREMIUM)->orWhereNull('premium_until')->orWhere('premium_until', '<=', now()));
+            }
+        }
+
+        if ($request->filled('search')) {
+            $search = '%'.$request->string('search').'%';
+            $query->where(fn ($q) => $q->where('name', 'like', $search)
+                ->orWhere('phone', 'like', $search)
+                ->orWhere('email', 'like', $search));
+        }
+
+        return view('admin.businesses', [
+            'businesses' => $query->latest()->paginate(15)->withQueryString(),
+            'filters' => $request->only(['status', 'search']),
+            'prices' => BusinessPlan::PRICES,
+            'summary' => [
+                'total' => Business::count(),
+                'premium' => Business::where('plan', BusinessPlan::PREMIUM)->where('premium_until', '>', now())->count(),
+                'revenue' => (int) BusinessSubscription::where('source', 'wallet')->whereIn('status', ['active', 'expired'])->sum('amount'),
+            ],
+        ]);
+    }
+
+    public function grantPremium(Request $request, Business $business)
+    {
+        $data = $request->validate([
+            'cycle' => ['required', Rule::in([BusinessSubscription::DAILY, BusinessSubscription::MONTHLY])],
+        ]);
+
+        $subscription = BusinessPlan::subscribe($business, $request->user(), $data['cycle'], $request->user(), false);
+
+        $business->owner?->notify(new SiteAlert(
+            'Business Tools Premium active',
+            $business->name.' now has premium until '.$subscription->ends_at->toFormattedDateString().'.',
+            route('tools.index'),
+            'payment'
+        ));
+
+        return back()->with('status', $business->name.' upgraded until '.$subscription->ends_at->toFormattedDateString().'.');
+    }
+
+    public function revokePremium(Business $business)
+    {
+        BusinessPlan::revoke($business);
+
+        return back()->with('status', $business->name.' returned to the free plan.');
+    }
+
+    /* --------------------------- suggestions --------------------------- */
+
+    public function suggestions(Request $request)
+    {
+        $query = Suggestion::with('user');
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->string('status'));
+        }
+
+        return view('admin.suggestions', [
+            'suggestions' => $query->orderByDesc('votes')->latest()->paginate(20)->withQueryString(),
+            'filters' => $request->only(['status']),
+            'statuses' => Suggestion::STATUSES,
+            'counts' => collect(Suggestion::STATUSES)->mapWithKeys(fn ($s) => [$s => Suggestion::where('status', $s)->count()]),
+        ]);
+    }
+
+    public function updateSuggestion(Request $request, Suggestion $suggestion)
+    {
+        $data = $request->validate([
+            'status' => ['required', Rule::in(Suggestion::STATUSES)],
+            'reply' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $suggestion->update($data);
+
+        return back()->with('status', 'Idea updated to '.$data['status'].'.');
     }
 }

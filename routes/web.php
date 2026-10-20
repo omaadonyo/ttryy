@@ -65,6 +65,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('users/trashed/{id}/restore', [AdminController::class, 'restoreUser'])->name('users.restore');
     Route::delete('users/trashed/{id}/purge', [AdminController::class, 'purgeUser'])->name('users.purge');
     Route::get('packages', [AdminController::class, 'packages'])->name('packages');
+    Route::get('businesses', [AdminController::class, 'businesses'])->name('businesses');
+    Route::post('businesses/{business}/premium', [AdminController::class, 'grantPremium'])->name('businesses.premium');
+    Route::delete('businesses/{business}/premium', [AdminController::class, 'revokePremium'])->name('businesses.premium.revoke');
+    Route::get('suggestions', [AdminController::class, 'suggestions'])->name('suggestions');
+    Route::patch('suggestions/{suggestion}', [AdminController::class, 'updateSuggestion'])->name('suggestions.update');
     Route::get('hosting', [AdminHostingController::class, 'dashboard'])->name('hosting.dashboard');
     Route::get('hosting/websites', [AdminHostingController::class, 'websites'])->name('hosting.websites');
     Route::post('hosting/websites/trashed/{id}/recover', [AdminHostingController::class, 'recoverTrash'])->name('hosting.websites.recover');
@@ -157,10 +162,14 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
         Route::get('api/state', [BusinessToolsController::class, 'apiState'])->name('api.state');
         Route::get('api/reports', [BusinessToolsController::class, 'apiReports'])->name('api.reports');
         Route::get('api/fx', [BusinessToolsController::class, 'apiFx'])->name('api.fx');
+        Route::get('api/suggestions', [BusinessToolsController::class, 'suggestions'])->name('api.suggestions');
         Route::get('api/activity', [BusinessToolsController::class, 'apiActivity'])->name('api.activity');
         Route::get('api/notifications', [BusinessToolsController::class, 'apiNotifications'])->name('api.notifications');
         Route::get('api/documents/{doc}', [BusinessToolsController::class, 'apiDoc'])->name('api.doc');
         Route::post('notifications/read', [BusinessToolsController::class, 'readNotifications'])->name('notifications.read');
+        Route::post('subscribe', [BusinessToolsController::class, 'subscribe'])->name('subscribe');
+        Route::post('suggestions', [BusinessToolsController::class, 'storeSuggestion'])->name('suggestions.store');
+        Route::post('suggestions/{suggestion}/vote', [BusinessToolsController::class, 'voteSuggestion'])->name('suggestions.vote');
         Route::get('reports', [BusinessToolsController::class, 'index'])->name('reports');
         Route::get('settings', [BusinessToolsController::class, 'settingsPage'])->name('settings');
         Route::patch('settings', [BusinessToolsController::class, 'updateSettings'])->name('settings.update');

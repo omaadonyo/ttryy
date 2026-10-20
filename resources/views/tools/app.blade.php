@@ -173,6 +173,22 @@ $nav = [
                         </div>
                     </div>
                 </div>
+                <button type="button" @click="openUpgrade()" :title="planTitle()"
+                    class="hidden items-center gap-2 rounded-full border bg-white px-3 py-1.5 text-left transition hover:border-brand-300 sm:flex dark:bg-zinc-900"
+                    :class="plan.premium ? 'border-emerald-300 dark:border-emerald-500/40' : 'border-amber-300 dark:border-amber-500/40'">
+                    <span class="grid size-5 shrink-0 place-items-center rounded-full"
+                        :class="plan.premium ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-300' : 'bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-300'">
+                        <svg x-show="plan.premium" class="size-3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <svg x-show="!plan.premium" class="size-3.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+                    </span>
+                    <span class="leading-tight">
+                        <span class="block text-[11px] font-extrabold" x-text="plan.premium ? 'Premium' : 'Free plan'"></span>
+                        <span class="block text-[10px] text-zinc-500" x-text="planSummaryLine()"></span>
+                    </span>
+                    <span class="h-1.5 w-14 shrink-0 overflow-hidden rounded-full bg-zinc-200 dark:bg-white/10">
+                        <span class="block h-full rounded-full transition-all" :class="planTone()" :style="'width:' + planPercent() + '%'"></span>
+                    </span>
+                </button>
                 <div x-show="boot.user.is_owner" class="flex items-center gap-1" role="group" aria-label="Display currency">
                     <div class="flex items-center rounded-full bg-zinc-950/5 p-0.5 text-[11px] font-bold dark:bg-white/10">
                         <button type="button" @click="setCurrency('UGX')" :class="displayCurrency === 'UGX' ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'" class="rounded-full px-2.5 py-1 transition">UGX</button>
@@ -208,6 +224,7 @@ $nav = [
                     class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-bold transition">
                     <svg class="size-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">{!! $icons[$icon] !!}</svg>
                     <span x-show="!sidebarCollapsed" class="flex-1 truncate">{!! $label !!}</span>
+                    <svg x-show="!sidebarCollapsed && isLocked('{{ $key }}')" x-cloak class="size-3.5 shrink-0 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-label="Premium"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
                     <span x-show="!sidebarCollapsed && badgeCount('{{ $key }}') > 0" x-cloak x-text="badgeCount('{{ $key }}')"
                         :class="tab === '{{ $key }}' ? 'bg-white/20 text-white dark:bg-zinc-900/20 dark:text-zinc-900' : 'bg-brand-600 text-white'"
                         class="grid min-w-[20px] place-items-center rounded-full px-1.5 text-[10px] font-bold leading-5"></span>
@@ -233,6 +250,7 @@ $nav = [
                                 class="flex shrink-0 items-center gap-2 rounded-full border border-zinc-200 px-3.5 py-1.5 text-xs font-bold whitespace-nowrap dark:border-white/10">
                                 <svg class="size-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">{!! $icons[$icon] !!}</svg>
                                 {!! $label !!}
+                                <svg x-show="isLocked('{{ $key }}')" x-cloak class="size-3 shrink-0 text-amber-500" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
                                 <span x-show="badgeCount('{{ $key }}') > 0" x-cloak x-text="badgeCount('{{ $key }}')"
                                     class="grid min-w-[18px] place-items-center rounded-full bg-brand-600 px-1 text-[10px] font-bold leading-5 text-white"></span>
                             </button>
@@ -917,6 +935,7 @@ $nav = [
 
                 {{-- ============================== REPORTS ============================== --}}
                 <section class="bt-panel" :class="tab === 'reports' && 'is-active bt-fade-in'">
+                    <x-tools.premium tab="reports" description="Revenue, profit and cash-flow analytics are part of Business Tools Premium.">
                     @include('tools.panels.report-header', ['title' => 'Reports', 'eyebrow' => 'Analytics'])
                     <div class="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                         <div class="card card-pad"><p class="text-[11px] font-bold uppercase tracking-wider text-zinc-500">Revenue</p><p class="font-display mt-2 text-2xl font-extrabold" x-text="money(report.pnl.revenue)"></p></div>
@@ -957,10 +976,12 @@ $nav = [
                             </div>
                         </div>
                     </div>
+                    </x-tools.premium>
                 </section>
 
                 {{-- ============================== CASH FLOW ============================== --}}
                 <section class="bt-panel" :class="tab === 'cashflow' && 'is-active bt-fade-in'">
+                    <x-tools.premium tab="cashflow" description="See every receipt in and payment out, with running net movement.">
                     @include('tools.panels.report-header', ['title' => 'Cash Flow', 'eyebrow' => 'Liquidity'])
                     <div class="mt-5 grid gap-4 lg:grid-cols-2">
                         <div class="card card-pad">
@@ -985,10 +1006,12 @@ $nav = [
                     <div class="card card-pad mt-4 flex items-center justify-between">
                         <span class="font-semibold">Net movement</span><span class="font-display text-2xl font-extrabold" x-text="money(report.cashflow.net)"></span>
                     </div>
+                    </x-tools.premium>
                 </section>
 
                 {{-- ============================== P&L ============================== --}}
                 <section class="bt-panel" :class="tab === 'pnl' && 'is-active bt-fade-in'">
+                    <x-tools.premium tab="pnl" description="Track revenue, cost of goods sold and margins in one profit &amp; loss statement.">
                     @include('tools.panels.report-header', ['title' => 'Profit &amp; Loss', 'eyebrow' => 'Performance'])
                     <div class="mt-5 grid gap-4 xl:grid-cols-2">
                         <div class="card card-pad">
@@ -1009,10 +1032,12 @@ $nav = [
                             </div>
                         </div>
                     </div>
+                    </x-tools.premium>
                 </section>
 
                 {{-- ============================== BALANCE SHEET ============================== --}}
                 <section class="bt-panel" :class="tab === 'balancesheet' && 'is-active bt-fade-in'">
+                    <x-tools.premium tab="balancesheet" description="Your assets, liabilities and equity, computed live from the ledgers.">
                     @include('tools.panels.report-header', ['title' => 'Balance Sheet', 'eyebrow' => 'Position'])
                     <div class="mt-5 grid gap-4 lg:grid-cols-2">
                         <div class="card card-pad">
@@ -1040,6 +1065,7 @@ $nav = [
                             <p class="mt-4 text-xs text-zinc-500">Assets = Liabilities + Equity, computed live from your ledgers.</p>
                         </div>
                     </div>
+                    </x-tools.premium>
                 </section>
 
                 {{-- ============================== REMINDERS ============================== --}}
@@ -1142,6 +1168,7 @@ $nav = [
 
                 {{-- ============================== ACTIVITY ============================== --}}
                 <section class="bt-panel" :class="tab === 'activity' && 'is-active bt-fade-in'">
+                    <x-tools.premium tab="activity" description="A full audit trail of every action, who did it and from where, is part of Premium.">
                     <div class="flex flex-wrap items-end justify-between gap-3">
                         <div>
                             <p class="eyebrow text-brand-600 dark:text-brand-300">Audit trail</p>
@@ -1170,6 +1197,7 @@ $nav = [
                         </div>
                         <x-tools.empty x-show="!filteredActivity.length" x-cloak icon="<circle cx='12' cy='12' r='9'/><path d='M12 7v5l3 3'/>" title="No activity yet" description="Actions you and your team take will appear here with the IP address." />
                     </div>
+                    </x-tools.premium>
                 </section>
 
                 {{-- ============================== NOTIFICATIONS ============================== --}}
@@ -1870,6 +1898,120 @@ $nav = [
         </div>
     </div>
 
+    {{-- ============================== PREMIUM / UPGRADE ============================== --}}
+    <div x-show="upgradeOpen" x-cloak class="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-zinc-950/60 p-4" @keydown.escape.window="upgradeOpen = false">
+        <div class="bt-fade-in w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-zinc-900" @click.outside="upgradeOpen = false">
+            <div class="flex items-center justify-between border-b border-zinc-200 px-5 py-4 dark:border-white/10">
+                <div class="flex items-center gap-2">
+                    <span class="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-white">
+                        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+                    </span>
+                    <div>
+                        <h2 class="font-display text-lg font-extrabold leading-none">Business Tools Premium</h2>
+                        <p class="text-[11px] text-zinc-500" x-text="plan.premium ? ('Active — ' + (plan.until_human || '')) : 'Unlock every feature and lift the caps'"></p>
+                    </div>
+                </div>
+                <button type="button" @click="upgradeOpen = false" class="grid size-9 place-items-center rounded-full hover:bg-zinc-100 dark:hover:bg-white/10">✕</button>
+            </div>
+
+            <div class="px-5 py-5">
+                <div class="grid gap-2.5">
+                    <template x-for="row in planRows" :key="'pl'+row.key">
+                        <div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-bold uppercase tracking-wider text-zinc-500" x-text="row.label"></span>
+                                <span class="font-semibold" x-text="row.max === null ? (row.used + ' · unlimited') : (row.used + ' / ' + row.max)"></span>
+                            </div>
+                            <div class="mt-1 h-2 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-white/10">
+                                <div class="h-full rounded-full transition-all" :class="row.max === null ? 'bg-emerald-500' : (row.used >= row.max ? 'bg-red-500' : 'bg-brand-600')"
+                                    :style="'width:' + rowPercent(row) + '%'"></div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <template x-if="!plan.premium">
+                    <div class="mt-5">
+                        <p class="text-xs font-bold uppercase tracking-wider text-zinc-500">Choose a plan</p>
+                        <div class="mt-2 grid gap-2 sm:grid-cols-2">
+                            <button type="button" @click="upgradeCycle = 'daily'" :class="upgradeCycle === 'daily' ? 'border-brand-500 bg-brand-50 dark:bg-brand-500/10' : 'border-zinc-200 dark:border-white/10'" class="rounded-xl border p-3 text-left">
+                                <p class="text-sm font-extrabold">Daily</p>
+                                <p class="text-xs text-zinc-500">UGX 800 per day</p>
+                            </button>
+                            <button type="button" @click="upgradeCycle = 'monthly'" :class="upgradeCycle === 'monthly' ? 'border-brand-500 bg-brand-50 dark:bg-brand-500/10' : 'border-zinc-200 dark:border-white/10'" class="rounded-xl border p-3 text-left">
+                                <p class="text-sm font-extrabold">Monthly <span class="pill-green">Save</span></p>
+                                <p class="text-xs text-zinc-500">UGX 10,000 per month</p>
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <div class="flex items-center justify-between gap-3 border-t border-zinc-200 px-5 py-4 dark:border-white/10">
+                <div class="text-xs text-zinc-500">
+                    Wallet: <span class="font-bold text-zinc-800 dark:text-zinc-200" x-text="'UGX ' + Number(plan.wallet || 0).toLocaleString()"></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a :href="routes.wallet" class="btn-ghost btn-sm">Top up</a>
+                    <button type="button" @click="subscribe()" :disabled="saving" class="btn-brand btn-sm" x-text="plan.premium ? 'Extend plan' : ('Pay UGX ' + Number(plan.prices[upgradeCycle]).toLocaleString())"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- ============================== SUGGESTIONS (IDEAS & VOTING) ============================== --}}
+    <div class="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-3">
+        <div x-show="ideasOpen" x-cloak x-transition.opacity
+            class="flex max-h-[70vh] w-[22rem] flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl dark:border-white/10 dark:bg-zinc-900">
+            <div class="flex items-center justify-between border-b border-zinc-100 px-4 py-3 dark:border-white/10">
+                <div>
+                    <p class="text-sm font-extrabold">Ideas &amp; voting</p>
+                    <p class="text-[11px] text-zinc-500">Suggest a feature — popular ideas ship.</p>
+                </div>
+                <button type="button" @click="ideasOpen = false" class="grid size-8 place-items-center rounded-full hover:bg-zinc-100 dark:hover:bg-white/10">✕</button>
+            </div>
+
+            <div class="bt-scroll flex-1 overflow-y-auto px-3 py-3">
+                <template x-for="s in suggestions" :key="'sg'+s.id">
+                    <div class="mb-2 rounded-xl border border-zinc-100 p-3 dark:border-white/10">
+                        <div class="flex items-start gap-3">
+                            <button type="button" @click="voteSuggestion(s)"
+                                :class="s.voted ? 'border-brand-500 bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-200' : 'border-zinc-200 text-zinc-500 dark:border-white/15'"
+                                class="flex w-11 shrink-0 flex-col items-center rounded-lg border px-2 py-1.5 font-bold transition hover:border-brand-400">
+                                <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>
+                                <span class="text-xs" x-text="s.votes"></span>
+                            </button>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-2">
+                                    <p class="truncate text-sm font-bold" x-text="s.title"></p>
+                                    <span class="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide"
+                                        :class="s.status === 'shipped' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300' : (s.status === 'planned' ? 'bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-200' : 'bg-zinc-100 text-zinc-500 dark:bg-white/10 dark:text-zinc-300')"
+                                        x-text="s.status"></span>
+                                </div>
+                                <p x-show="s.body" class="mt-0.5 line-clamp-2 text-xs text-zinc-500" x-text="s.body"></p>
+                                <p class="mt-1 text-[10px] text-zinc-400"><span x-text="s.author"></span> · <span x-text="s.created_at"></span></p>
+                                <p x-show="s.reply" class="mt-1 rounded-lg bg-emerald-50 px-2 py-1 text-[11px] text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300" x-text="'Reply: ' + s.reply"></p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <p x-show="!suggestions.length" class="py-8 text-center text-sm text-zinc-500">No ideas yet — be the first!</p>
+            </div>
+
+            <form class="border-t border-zinc-100 px-3 py-3 dark:border-white/10" @submit.prevent="submitIdea()">
+                <input x-model="ideaForm.title" maxlength="140" placeholder="I wish Business Tools could…" class="field" />
+                <textarea x-model="ideaForm.body" rows="2" placeholder="Add detail (optional)" class="field mt-2"></textarea>
+                <button type="submit" :disabled="saving || !ideaForm.title" class="btn-brand btn-sm mt-2 w-full">Share idea</button>
+            </form>
+        </div>
+
+        <button type="button" @click="toggleIdeas()" class="relative grid size-12 place-items-center rounded-full bg-brand-600 text-white shadow-xl transition hover:bg-brand-700" aria-label="Ideas and voting">
+            <svg class="size-6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3a6 6 0 00-4 10.5V17h8v-3.5A6 6 0 0012 3z"/><path d="M9 21h6"/></svg>
+            <span x-show="!ideasOpen && suggestionCount" x-cloak x-text="suggestionCount"
+                class="absolute -right-1 -top-1 grid min-w-[20px] place-items-center rounded-full bg-amber-500 px-1 text-[10px] font-bold leading-5 text-white"></span>
+        </button>
+    </div>
+
     {{-- ============================== SUBMIT PRELOADER ============================== --}}
     <div x-show="saving" x-cloak class="fixed inset-0 z-[70] grid place-items-center bg-zinc-950/30 backdrop-blur-[1px]">
         <div class="flex items-center gap-3 rounded-2xl bg-white px-6 py-4 shadow-2xl dark:bg-zinc-800">
@@ -1960,6 +2102,12 @@ window.btTools = function (boot) {
         employees: boot.employees || [],
         payslips: boot.payslips || [],
         journal: boot.journal || [],
+        plan: boot.plan || { premium: false, plan: 'free', limits: {}, usage: {}, prices: { daily: 800, monthly: 10000 }, premium_tabs: [] },
+        suggestions: boot.suggestions || [],
+        upgradeOpen: false,
+        upgradeCycle: 'monthly',
+        ideasOpen: false,
+        ideaForm: { title: '', body: '' },
 
         sidebarCollapsed: false,
         businessOpen: false,
@@ -2054,6 +2202,76 @@ window.btTools = function (boot) {
         notificationTone: function (kind) {
             return { invoice: 'bg-brand-500', payment: 'bg-emerald-500', team: 'bg-amber-500' }[kind] || 'bg-zinc-400';
         },
+
+        /* ---------------- plans, premium gating, ideas ---------------- */
+        isLocked: function (tab) {
+            return !this.plan.premium && (this.plan.premium_tabs || []).indexOf(tab) !== -1;
+        },
+        openUpgrade: function () { this.upgradeOpen = true; },
+        planRows: function () {
+            var u = this.plan.usage || {}, l = this.plan.limits || {};
+            return [
+                { key: 'businesses', label: 'Businesses', used: u.businesses || 0, max: l.businesses === undefined ? null : l.businesses },
+                { key: 'staff', label: 'Team members', used: u.staff || 0, max: l.staff === undefined ? null : l.staff },
+                { key: 'items', label: 'Products', used: u.items || 0, max: l.items === undefined ? null : l.items },
+                { key: 'documents', label: 'Documents', used: u.documents || 0, max: l.documents === undefined ? null : l.documents }
+            ];
+        },
+        rowPercent: function (row) {
+            if (row.max === null || row.max === undefined || row.max < 1) return 100;
+            return Math.min(100, Math.round(row.used / row.max * 100));
+        },
+        planPercent: function () {
+            if (this.plan.premium) return 100;
+            var rows = this.planRows(), worst = 0;
+            var self = this;
+            rows.forEach(function (r) { if (r.max) worst = Math.max(worst, r.used / r.max); });
+            return Math.min(100, Math.round(worst * 100));
+        },
+        planTone: function () {
+            if (this.plan.premium) return 'bg-emerald-500';
+            return this.planPercent() >= 100 ? 'bg-red-500' : (this.planPercent() >= 60 ? 'bg-amber-500' : 'bg-brand-600');
+        },
+        planSummaryLine: function () {
+            if (this.plan.premium) return (this.plan.days_left || 0) + ' days left';
+            return this.planPercent() + '% of free limits used';
+        },
+        planTitle: function () {
+            var rows = this.planRows(), self = this;
+            return rows.map(function (r) { return r.label + ': ' + r.used + (r.max === null ? ' (unlimited)' : ' / ' + r.max); }).join('\n');
+        },
+        subscribe: async function () {
+            var d = await this.send(this.routes.subscribe, 'POST', { cycle: this.upgradeCycle });
+            if (d) {
+                if (d.state) this.applyState(d.state);
+                this.upgradeOpen = false;
+                this.notify('Premium activated.', 'ok');
+            }
+        },
+        toggleIdeas: function () {
+            this.ideasOpen = !this.ideasOpen;
+            if (this.ideasOpen) this.loadSuggestions();
+        },
+        loadSuggestions: async function () {
+            try {
+                var res = await fetch(this.routes.suggestions, { headers: { 'Accept': 'application/json' } });
+                if (res.ok) { var d = await res.json(); this.suggestions = d.suggestions || []; }
+            } catch (e) {}
+        },
+        submitIdea: async function () {
+            if (!this.ideaForm.title) return;
+            var d = await this.send(this.routes.suggestionStore, 'POST', { title: this.ideaForm.title, body: this.ideaForm.body });
+            if (d) {
+                this.suggestions = d.suggestions || this.suggestions;
+                this.ideaForm = { title: '', body: '' };
+                this.notify('Idea shared — thanks!', 'ok');
+            }
+        },
+        voteSuggestion: async function (s) {
+            var d = await this.send(this.routes.suggestionVote.replace('_ID_', s.id), 'POST');
+            if (d && d.suggestions) this.suggestions = d.suggestions;
+        },
+        get suggestionCount() { return this.suggestions.length; },
 
         get openInvoices() {
             return this.documents.filter(function (d) { return d.type === 'invoice' && d.balance > 0; });
@@ -2232,6 +2450,8 @@ window.btTools = function (boot) {
             if (d.employees) this.employees = d.employees;
             if (d.payslips) this.payslips = d.payslips;
             if (d.journal) this.journal = d.journal;
+            if (d.plan) this.plan = d.plan;
+            if (d.suggestions) this.suggestions = d.suggestions;
         },
 
         refreshState: async function () {

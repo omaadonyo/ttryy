@@ -13,10 +13,14 @@ use App\Models\Payslip;
 use App\Models\User;
 use App\Services\BusinessContext;
 
-function accUser(): User
+function accUser(bool $premium = true): User
 {
     $user = User::factory()->create();
-    app(BusinessContext::class)->forUser($user);
+    $business = app(BusinessContext::class)->forUser($user);
+
+    if ($premium) {
+        $business->forceFill(['plan' => 'premium', 'premium_until' => now()->addMonth()])->save();
+    }
 
     return $user;
 }

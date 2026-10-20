@@ -25,6 +25,8 @@ test('admins can open every admin page', function () {
     $this->actingAs(adminUser())->get(route('admin.payments'))->assertOk();
     $this->actingAs(adminUser())->get(route('admin.users'))->assertOk();
     $this->actingAs(adminUser())->get(route('admin.packages'))->assertOk()->assertSee('CORPORATE', false);
+    $this->actingAs(adminUser())->get(route('admin.businesses'))->assertOk()->assertSee('Business Tools subscriptions', false);
+    $this->actingAs(adminUser())->get(route('admin.suggestions'))->assertOk()->assertSee('Feature suggestions', false);
 });
 
 test('admin overview shows revenue chart and users show stats', function () {

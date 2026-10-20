@@ -11,17 +11,32 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Business extends Model
 {
     protected $fillable = [
-        'owner_id', 'name', 'phone', 'email', 'address',
+        'owner_id', 'plan', 'premium_until', 'name', 'phone', 'email', 'address',
         'currency', 'tax_rate', 'receipt_footer', 'quotation_footer', 'invoice_footer',
     ];
 
     protected $attributes = [
         'currency' => 'USD',
+        'plan' => 'free',
     ];
 
     protected function casts(): array
     {
-        return ['tax_rate' => 'float'];
+        return [
+            'tax_rate' => 'float',
+            'premium_until' => 'datetime',
+        ];
+    }
+
+    /** A business is premium only while its paid window is still open. */
+    public function isPremium(): bool
+    {
+        return $this->plan === 'premium' && $this->premium_until !== null && $this->premium_until->isFuture();
+    }
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(BusinessSubscription::class);
     }
 
     /** Alias so PDF/verify views can keep reading ->business_name. */

@@ -12,10 +12,15 @@ use App\Services\BusinessContext;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
-function btUser(): User
+function btUser(bool $premium = true): User
 {
     $user = User::factory()->create();
-    app(BusinessContext::class)->forUser($user);
+    $business = app(BusinessContext::class)->forUser($user);
+
+    // Most tests exercise paid features; free-plan limits have their own tests.
+    if ($premium) {
+        $business->forceFill(['plan' => 'premium', 'premium_until' => now()->addMonth()])->save();
+    }
 
     return $user;
 }

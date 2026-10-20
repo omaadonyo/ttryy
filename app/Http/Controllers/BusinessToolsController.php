@@ -15,17 +15,22 @@ use App\Models\BtExpense;
 use App\Models\BtItem;
 use App\Models\BtStockMove;
 use App\Models\Business;
+use App\Models\BusinessSubscription;
 use App\Models\Employee;
 use App\Models\JournalEntry;
 use App\Models\JournalLine;
 use App\Models\Payslip;
 use App\Models\Reminder;
+use App\Models\Suggestion;
+use App\Models\SuggestionVote;
 use App\Models\User;
 use App\Notifications\SiteAlert;
 use App\Services\Accounting\ChartOfAccounts;
 use App\Services\Accounting\Ledger;
 use App\Services\ActivityLogger;
 use App\Services\BusinessContext;
+use App\Services\BusinessPlan;
+use App\Services\CashWallet;
 use App\Services\Currency\ExchangeRates;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Endroid\QrCode\QrCode;
@@ -162,6 +167,55 @@ class BusinessToolsController extends Controller
         }
 
         return back()->withErrors([$field => $message])->withInput();
+    }
+
+    /**
+     * Free-plan guard. Returns a 422 response when a cap has been reached,
+     * or null when the action is allowed.
+     */
+    private function guardLimit(Request $request, string $key, int $used)
+    {
+        $limit = BusinessPlan::limits($this->business())[$key] ?? null;
+
+        if ($limit === null || $used < $limit) {
+            return null;
+        }
+
+        return $this->fail($request, $key, 'The free plan allows '.$this->limitLabel($key, $limit).'. Upgrade to Business Tools Premium for unlimited use.');
+    }
+
+    private function limitLabel(string $key, int $limit): string
+    {
+        return match ($key) {
+            'businesses' => $limit.' business'.($limit === 1 ? '' : 'es'),
+            'staff' => $limit.' team member'.($limit === 1 ? '' : 's'),
+            'items' => $limit.' product'.($limit === 1 ? '' : 's'),
+            'documents' => $limit.' document of each type',
+            default => (string) $limit,
+        };
+    }
+
+    /** How many documents of a type already exist for the active business. */
+    private function docsOfType(string $type): int
+    {
+        return BtDocument::where('business_id', $this->bid())->where('type', $type)->count();
+    }
+
+    /**
+     * Document cap: the free plan allows one document of each type. Premium
+     * returns null so every type is unlimited.
+     */
+    private function guardDocLimit(Request $request, string $type)
+    {
+        if (BusinessPlan::isPremium($this->business())) {
+            return null;
+        }
+
+        if ($this->docsOfType($type) < BusinessPlan::FREE_MAX_DOCS) {
+            return null;
+        }
+
+        return $this->fail($request, 'documents', 'The free plan allows '.BusinessPlan::FREE_MAX_DOCS.' document of each type. Upgrade to Business Tools Premium for unlimited documents.');
     }
 
     /**
@@ -706,6 +760,7 @@ class BusinessToolsController extends Controller
         $user = $request->user();
         $bid = $this->bid();
         $business = $this->business();
+        $premium = BusinessPlan::isPremium($business);
 
         // Open-invoice balance per contact, in one query.
         $balances = BtDocument::where('business_id', $bid)
@@ -761,12 +816,16 @@ class BusinessToolsController extends Controller
                 ->map(fn ($e) => $this->journalJson($e, true))->all(),
             'reminders' => Reminder::where('business_id', $bid)->with(['document.contact', 'user'])
                 ->latest()->take(60)->get()->map(fn ($r) => $this->reminderJson($r))->all(),
-            'activity' => ActivityLog::where('business_id', $bid)->with('user')
-                ->latest()->take(80)->get()->map(fn ($a) => $this->activityJson($a))->all(),
+            'activity' => $premium
+                ? ActivityLog::where('business_id', $bid)->with('user')
+                    ->latest()->take(80)->get()->map(fn ($a) => $this->activityJson($a))->all()
+                : $this->dummyActivity(),
             'notifications' => $this->notificationData($user),
             'stats' => $this->stats($bid),
             'months' => $this->months($bid),
-            'report' => $this->reportData($bid, $from, $to) + ['from' => $from, 'to' => $to],
+            'report' => ($premium ? $this->reportData($bid, $from, $to) : $this->dummyReport()) + ['from' => $from, 'to' => $to],
+            'plan' => $this->planPayload($business, $user, $premium),
+            'suggestions' => $this->suggestionList($user),
             'verifyBase' => url('/tools/verify'),
             'fx' => app(ExchangeRates::class)->snapshot(),
             'conversions' => self::CONVERSIONS,
@@ -790,6 +849,107 @@ class BusinessToolsController extends Controller
         ];
     }
 
+    /**
+     * Plan snapshot for the header widget: which caps apply, how much is used
+     * and what an upgrade costs.
+     */
+    private function planPayload(Business $business, User $user, ?bool $premium = null): array
+    {
+        $premium ??= BusinessPlan::isPremium($business);
+
+        return [
+            'premium' => $premium,
+            'plan' => $business->plan ?: BusinessPlan::FREE,
+            'until' => $business->premium_until?->toIso8601String(),
+            'until_human' => $business->premium_until?->diffForHumans(),
+            'days_left' => $business->premium_until ? max(0, (int) now()->diffInDays($business->premium_until, false)) : 0,
+            'limits' => BusinessPlan::limits($business),
+            'usage' => BusinessPlan::usage($business),
+            'prices' => BusinessPlan::PRICES,
+            'premium_tabs' => BusinessPlan::PREMIUM_TABS,
+            'wallet' => (int) $user->balance_ugx,
+            'last' => $business->subscriptions()->latest()->first()?->only(['cycle', 'amount', 'starts_at', 'ends_at', 'source']),
+        ];
+    }
+
+    /**
+     * Neutral figures shown in place of a premium report. Nothing here reflects
+     * real activity, so the blurred preview cannot be copied.
+     */
+    private function dummyReport(): array
+    {
+        $cash = 5240000;
+        $receivables = 1620000;
+        $inventory = 2410000;
+        $payables = 890000;
+        $assets = $cash + $receivables + $inventory;
+
+        return [
+            'cashflow' => [
+                'inflows' => [
+                    ['number' => 'RCT-0001', 'date' => now()->subDays(12)->toDateString(), 'contact' => 'Sample Customer', 'amount' => 1850000],
+                    ['number' => 'RCT-0002', 'date' => now()->subDays(6)->toDateString(), 'contact' => 'Sample Customer', 'amount' => 1240000],
+                    ['number' => 'RCT-0003', 'date' => now()->subDays(2)->toDateString(), 'contact' => 'Sample Customer', 'amount' => 980000],
+                ],
+                'outflows' => [
+                    ['category' => 'Transport', 'date' => now()->subDays(10)->toDateString(), 'amount' => 320000],
+                    ['category' => 'Rent', 'date' => now()->subDays(8)->toDateString(), 'amount' => 750000],
+                    ['category' => 'Utilities', 'date' => now()->subDays(4)->toDateString(), 'amount' => 210000],
+                ],
+                'in_total' => 4070000, 'out_total' => 1280000, 'net' => 2790000,
+            ],
+            'pnl' => [
+                'revenue' => 4070000, 'cogs' => 1480000, 'gross' => 2590000,
+                'expense_total' => 1280000, 'net' => 1310000,
+                'by_category' => [
+                    ['category' => 'Rent', 'amount' => 750000],
+                    ['category' => 'Transport', 'amount' => 320000],
+                    ['category' => 'Utilities', 'amount' => 210000],
+                ],
+                'paid_count' => 6,
+            ],
+            'balance' => [
+                'cash' => $cash, 'receivables' => $receivables, 'inventory' => $inventory,
+                'assets' => $assets, 'payables' => $payables, 'equity' => $assets - $payables,
+            ],
+            'ledger' => [
+                'rows' => [
+                    ['id' => -1, 'code' => '1000', 'name' => 'Cash on hand', 'type' => 'asset', 'debit' => 5240000, 'credit' => 0],
+                    ['id' => -2, 'code' => '1100', 'name' => 'Accounts receivable', 'type' => 'asset', 'debit' => 1620000, 'credit' => 0],
+                    ['id' => -3, 'code' => '1200', 'name' => 'Inventory', 'type' => 'asset', 'debit' => 2410000, 'credit' => 0],
+                    ['id' => -5, 'code' => '5000', 'name' => 'Cost of goods sold', 'type' => 'expense', 'debit' => 1480000, 'credit' => 0],
+                    ['id' => -6, 'code' => '6000', 'name' => 'Operating expenses', 'type' => 'expense', 'debit' => 1280000, 'credit' => 0],
+                    ['id' => -7, 'code' => '2000', 'name' => 'Accounts payable', 'type' => 'liability', 'debit' => 0, 'credit' => 890000],
+                    ['id' => -4, 'code' => '4000', 'name' => 'Sales revenue', 'type' => 'income', 'debit' => 0, 'credit' => 4070000],
+                    ['id' => -8, 'code' => '3000', 'name' => 'Owner equity', 'type' => 'equity', 'debit' => 0, 'credit' => 7070000],
+                ],
+                'debit_total' => 12030000,
+                'credit_total' => 12030000,
+            ],
+        ];
+    }
+
+    /** Neutral audit-trail lines shown while the activity log is locked. */
+    private function dummyActivity(): array
+    {
+        $rows = [
+            ['Sample User', 'invoice.created', 'Created invoice INV-0001', 3],
+            ['Sample User', 'receipt.created', 'Recorded a payment of UGX 1,850,000', 8],
+            ['Sample User', 'item.created', 'Added item Cement 50kg', 15],
+            ['Sample User', 'contact.created', 'Added customer Sample Customer', 26],
+            ['Sample User', 'settings.updated', 'Updated business profile', 40],
+            ['Sample User', 'staff.added', 'Added a teammate', 61],
+        ];
+
+        return array_map(fn ($r) => [
+            'id' => -1 * ($r[3] + 1),
+            'action' => $r[1],
+            'description' => $r[2],
+            'user' => $r[0],
+            'created_at' => now()->subDays($r[3])->diffForHumans(),
+        ], $rows);
+    }
+
     private function routes(): array
     {
         return [
@@ -799,12 +959,17 @@ class BusinessToolsController extends Controller
             'fx' => route('tools.api.fx'),
             'notifications' => route('tools.api.notifications'),
             'notificationsRead' => route('tools.notifications.read'),
+            'wallet' => route('wallet.index'),
             'apiDoc' => route('tools.api.doc', ['doc' => '_ID_']),
             'settings' => route('tools.settings.update'),
             'businessStore' => route('tools.businesses.store'),
             'businessUpdate' => route('tools.businesses.update', ['business' => '_ID_']),
             'businessDestroy' => route('tools.businesses.destroy', ['business' => '_ID_']),
             'businessSwitch' => route('tools.businesses.switch', ['business' => '_ID_']),
+            'subscribe' => route('tools.subscribe'),
+            'suggestions' => route('tools.api.suggestions'),
+            'suggestionStore' => route('tools.suggestions.store'),
+            'suggestionVote' => route('tools.suggestions.vote', ['suggestion' => '_ID_']),
             'staffStore' => route('tools.staff.store'),
             'staffUpdate' => route('tools.staff.update', ['staff' => '_ID_']),
             'staffDestroy' => route('tools.staff.destroy', ['staff' => '_ID_']),
@@ -1171,7 +1336,11 @@ class BusinessToolsController extends Controller
         $from = (string) $request->query('from', now()->startOfMonth()->toDateString());
         $to = (string) $request->query('to', now()->toDateString());
 
-        return response()->json($this->reportData($this->bid(), $from, $to) + ['from' => $from, 'to' => $to]);
+        $data = BusinessPlan::isPremium($this->business())
+            ? $this->reportData($this->bid(), $from, $to)
+            : $this->dummyReport();
+
+        return response()->json($data + ['from' => $from, 'to' => $to]);
     }
 
     public function apiFx(Request $request)
@@ -1184,8 +1353,10 @@ class BusinessToolsController extends Controller
     public function apiActivity(Request $request)
     {
         return response()->json([
-            'activity' => ActivityLog::where('business_id', $this->bid())->with('user')
-                ->latest()->take(120)->get()->map(fn ($a) => $this->activityJson($a))->all(),
+            'activity' => BusinessPlan::isPremium($this->business())
+                ? ActivityLog::where('business_id', $this->bid())->with('user')
+                    ->latest()->take(120)->get()->map(fn ($a) => $this->activityJson($a))->all()
+                : $this->dummyActivity(),
         ]);
     }
 
@@ -1277,6 +1448,100 @@ class BusinessToolsController extends Controller
         ]);
     }
 
+    /* ------------------------------ subscription ------------------------------ */
+
+    /** Buy or extend Business Tools Premium from the cash wallet. */
+    public function subscribe(Request $request)
+    {
+        $business = $this->business();
+
+        abort_unless($business->isOwner($request->user()), 403);
+
+        $data = $request->validate([
+            'cycle' => ['required', Rule::in([BusinessSubscription::DAILY, BusinessSubscription::MONTHLY])],
+        ]);
+
+        $price = BusinessPlan::price($data['cycle']);
+
+        if (! CashWallet::canAfford($request->user(), $price)) {
+            return $this->fail($request, 'cycle', 'Top up your wallet with at least UGX '.number_format($price).' to start premium.');
+        }
+
+        $subscription = BusinessPlan::subscribe($business, $request->user(), $data['cycle']);
+
+        $this->log('subscription.started', 'Premium activated ('.$data['cycle'].') — '.$subscription->ends_at->toFormattedDateString());
+
+        return $this->ok($request, 'Premium active until '.$subscription->ends_at->toFormattedDateString().'.', [
+            'state' => $this->bootstrap($request),
+        ]);
+    }
+
+    /* ------------------------------ suggestions ------------------------------ */
+
+    public function suggestions(Request $request)
+    {
+        return response()->json(['suggestions' => $this->suggestionList($request->user())]);
+    }
+
+    public function storeSuggestion(Request $request)
+    {
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:140'],
+            'body' => ['nullable', 'string', 'max:2000'],
+        ]);
+
+        $suggestion = Suggestion::create([
+            'user_id' => $request->user()->id,
+            'business_id' => $this->bid(),
+            'title' => $data['title'],
+            'body' => $data['body'] ?? null,
+            'status' => Suggestion::NEW,
+        ]);
+
+        SuggestionVote::firstOrCreate(['suggestion_id' => $suggestion->id, 'user_id' => $request->user()->id]);
+        $suggestion->forceFill(['votes' => $suggestion->ballots()->count()])->save();
+
+        return $this->ok($request, 'Idea shared — thanks!', [
+            'suggestions' => $this->suggestionList($request->user()),
+        ]);
+    }
+
+    public function voteSuggestion(Request $request, Suggestion $suggestion)
+    {
+        $user = $request->user();
+        $existing = SuggestionVote::where('suggestion_id', $suggestion->id)->where('user_id', $user->id)->first();
+
+        if ($existing) {
+            $existing->delete();
+        } else {
+            SuggestionVote::create(['suggestion_id' => $suggestion->id, 'user_id' => $user->id]);
+        }
+
+        $suggestion->forceFill(['votes' => $suggestion->ballots()->count()])->save();
+
+        return $this->ok($request, $existing ? 'Vote removed.' : 'Voted.', [
+            'suggestions' => $this->suggestionList($user),
+        ]);
+    }
+
+    private function suggestionList(User $user, int $limit = 60): array
+    {
+        $myVotes = SuggestionVote::where('user_id', $user->id)->pluck('suggestion_id')->all();
+
+        return Suggestion::with('user')->latest()->take($limit)->get()->map(fn ($s) => [
+            'id' => $s->id,
+            'title' => $s->title,
+            'body' => $s->body,
+            'status' => $s->status,
+            'reply' => $s->reply,
+            'votes' => (int) $s->votes,
+            'voted' => in_array($s->id, $myVotes, true),
+            'author' => $s->user?->name ?? 'Someone',
+            'mine' => $s->user_id === $user->id,
+            'created_at' => $s->created_at?->diffForHumans(),
+        ])->values()->all();
+    }
+
     public function storeBusiness(Request $request)
     {
         $data = $request->validate([
@@ -1287,8 +1552,22 @@ class BusinessToolsController extends Controller
             'currency' => ['nullable', 'string', 'max:8'],
         ]);
 
+        $owned = Business::where('owner_id', $request->user()->id)->count();
+
+        if ($blocked = $this->guardLimit($request, 'businesses', $owned)) {
+            return $blocked;
+        }
+
+        $current = $this->business();
+        $keepPremium = BusinessPlan::isPremium($current);
+
         $business = app(BusinessContext::class)->create($request->user(), $data['name']);
         $business->update(collect($data)->except('name')->filter()->all());
+
+        // A premium account keeps its plan across the businesses it opens.
+        if ($keepPremium) {
+            $business->forceFill(['plan' => BusinessPlan::PREMIUM, 'premium_until' => $current->premium_until])->save();
+        }
 
         $request->user()->forceFill(['active_business_id' => $business->id])->save();
         $this->log('business.created', 'Created business "'.$business->name.'"', $business);
@@ -1368,6 +1647,10 @@ class BusinessToolsController extends Controller
             return $this->fail($request, 'email', 'That person already has access to this business.');
         }
 
+        if ($blocked = $this->guardLimit($request, 'staff', $business->users()->count())) {
+            return $blocked;
+        }
+
         $newAccount = false;
         $tempPassword = null;
 
@@ -1377,7 +1660,7 @@ class BusinessToolsController extends Controller
             $newAccount = true;
             $tempPassword = Str::password(10);
             $user = User::create([
-                'name' => $data['name'] ?: Str::headline(Str::before($data['email'], '@')),
+                'name' => ($data['name'] ?? null) ?: Str::headline(Str::before($data['email'], '@')),
                 'email' => $data['email'],
                 'password' => Hash::make($tempPassword),
             ]);
@@ -1511,6 +1794,10 @@ class BusinessToolsController extends Controller
             'reorder_level' => ['nullable', 'integer', 'min:0', 'max:1000000'],
         ]);
 
+        if ($blocked = $this->guardLimit($request, 'items', BtItem::where('business_id', $this->bid())->count())) {
+            return $blocked;
+        }
+
         $item = BtItem::create($data + [
             'user_id' => $request->user()->id,
             'business_id' => $this->bid(),
@@ -1615,7 +1902,15 @@ class BusinessToolsController extends Controller
 
         // Receipts, credit notes and supplier payments settle a bill.
         if (in_array($type, [BtDocument::RECEIPT, BtDocument::CREDIT_NOTE, BtDocument::PURCHASE_PAYMENT], true) && ! empty($data['invoice_id'])) {
+            if ($blocked = $this->guardDocLimit($request, $type)) {
+                return $blocked;
+            }
+
             return $this->storeSettlement($request, $data, $type);
+        }
+
+        if ($blocked = $this->guardDocLimit($request, $type)) {
+            return $blocked;
         }
 
         [$rows, $subtotal] = $this->buildLines($data['lines'] ?? [], $bid, $purchase);
@@ -1802,6 +2097,10 @@ class BusinessToolsController extends Controller
 
         abort_unless(in_array($target, $options, true), 404);
 
+        if ($blocked = $this->guardDocLimit($request, $target)) {
+            return $blocked;
+        }
+
         $rows = $doc->lines->map(fn ($l) => [
             'item_id' => $l->item_id, 'description' => $l->description, 'qty' => (float) $l->qty,
             'unit_price' => $l->unit_price, 'unit_cost' => $l->unit_cost, 'line_total' => $l->line_total,
@@ -1882,6 +2181,10 @@ class BusinessToolsController extends Controller
     {
         $this->owned($doc);
         abort_unless(in_array($doc->type, self::CLONEABLE, true), 404);
+
+        if ($blocked = $this->guardDocLimit($request, $doc->type)) {
+            return $blocked;
+        }
 
         $type = $doc->type;
 
@@ -2147,6 +2450,14 @@ class BusinessToolsController extends Controller
 
         if (($short = $this->checkStock($rows, $bid))) {
             return $this->fail($request, 'lines', $short);
+        }
+
+        if ($blocked = $this->guardDocLimit($request, BtDocument::INVOICE)) {
+            return $blocked;
+        }
+
+        if ($blocked = $this->guardDocLimit($request, BtDocument::RECEIPT)) {
+            return $blocked;
         }
 
         $invoice = null;
